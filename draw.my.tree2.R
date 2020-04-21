@@ -67,7 +67,7 @@ draw.my.tree2 <- function( in.tree.df=NULL, tree = NULL, genes.df = NULL, cluste
   clone.out <- draw.sample.clones(v=v,wid=wid,len=len,tree=tree,extra.len=extra.len,x=x1,y=y1, fixed_angle=fixed_angle, sig.shape=sig.shape,beta_in=beta_in,branching=branching, no_ccf=no_ccf, spread=spread)
   tree <- clone.out$tree
   print(tree)
-
+  offset <- line.lwd*1/96
   #make lines for PGA
   tree.out <- add_segs3(tree, clone.out$v,offset=offset,scale.x.real=scale.x.real)
   tree_segs <- tree.out$tree_segs 
@@ -273,7 +273,7 @@ print("trees")
       lims <- current.panel.limits() 
       panel.draw_tree(...)
       grid.remove(trellis.grobname(name="ticks.right","panel",column=1,row=1))
-      grid.remove(trellis.grobname(name="ticks.top","panel",column=1,row=1))
+      # grid.remove(trellis.grobname(name="ticks.top","panel",column=1,row=1))
       #left axis
       grid.lines(x=lims$xlim[1],y=lims$ylim,default.units="native",gp=gpar(col="black",alpha=1,lwd=2.5))    
       # panel.abline(v=lims$xlim[1],col="black",alpha=1,lwd=2.5)      

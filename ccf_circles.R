@@ -7,7 +7,7 @@ library(BoutrosLab.plotting.general)
 library(tidyr)
 library(gtable)
 
-multiregion_ccfs <- function(tree_in, ccf_names, tumour_name, tree_gTree,width=1.5, nrow=2, ncol=2){
+multiregion_ccfs <- function(tree_in, ccf_names, tumour_name, tree_gTree,width=1.5, nrow=2, ncol=2, widths=c(4.5,3), height=5){
 	in.df <- tree_in[,c(2,3,8)]
 
 	colnames(in.df)[2] <- "tip"
@@ -34,7 +34,7 @@ multiregion_ccfs <- function(tree_in, ccf_names, tumour_name, tree_gTree,width=1
 		print(col)
 		position.df  <- data.frame(clone = in.df$tip, diameter=numeric(length=length(in.df$tip)), position=numeric(length=length(in.df$tip)))
 		glist_list <- list()
-		if(nrow(in.df[which(in.df[,col]>0),]) == 0){
+		if(nrow(in.df[which(in.df[,col] > 0.01),]) == 0){
 			test_tree <- gTree(children=gList(rectGrob(gp=gpar(fill="#FFFFFF",col="transparent")),
 			 textGrob(ccf_names[i],x=unit(0.5,"npc"),y=unit(1.3,"npc"),gp=gpar(cex=0.8)), 
 			 textGrob("All zero CCFs", gp=gpar(col="black",cex=0.8), y=0.4)),
@@ -54,7 +54,7 @@ multiregion_ccfs <- function(tree_in, ccf_names, tumour_name, tree_gTree,width=1
 		grid.newpage()		
 		for (tier in unique(in.df$tier)){
 
-			nodes <- in.df[which(in.df$tier == tier & in.df[,col]>0), c(1,2,col,ncol(in.df))]
+			nodes <- in.df[which(in.df$tier == tier & in.df[,col]>0.01), c(1,2,col,ncol(in.df))]
 			tier_grobs <- gList()
 			tier_ccf <- 0
 			# browser()
@@ -87,7 +87,7 @@ multiregion_ccfs <- function(tree_in, ccf_names, tumour_name, tree_gTree,width=1
 				samp_circ <- grid.circle(draw=TRUE,name=paste("test",node$tip,sep=""),y=unit(0,"npc"), x = unit(position,"inches"), r=unit(0.5*sample_diameter,"inches"), gp=gpar(alpha=0.8,col=node$fill, lwd=2.5, fill=node$fill),default.units="inches",vp=vp1)
 				test_tree <- addGrob(test_tree,samp_circ)
 				
-				child <- in.df[in.df$parent == node$tip & in.df[,col] > 0,]
+				child <- in.df[in.df$parent == node$tip & in.df[,col] > 0.01,]
 				print("child")
 				print(child)
 				print(nrow(child))
@@ -119,17 +119,18 @@ multiregion_ccfs <- function(tree_in, ccf_names, tumour_name, tree_gTree,width=1
 		print(position.df)
 		print(ccfs)
 		all_ccfs <- c(0,position.df$position+0.5*position.df$diameter)
+		all_ccfs <- sort(unique(round(all_ccfs, 1)))
 		print(all_ccfs)
 		axis_grob <- xaxisGrob(at=all_ccfs, label = round(all_ccfs,1), gp=gpar(cex=0.65), main=TRUE, vp=viewport(y=unit(0.49,"npc"), width=unit(width,"in"),height=unit(width/2,"in"),clip=FALSE))
+		axis_lab <- textGrob("CCF",gp=gpar(cex=0.75), vp=viewport(y=unit(-0.5,"npc"), width=unit(width,"in"),height=unit(width/2*0.25,"in"), clip="off", just="top"))
 		test_tree <- addGrob(test_tree,axis_grob)
+		test_tree <- arrangeGrob(test_tree, axis_lab, nrow=2, ncol=1, heights=unit(c(width/2, width/2*0.25), "in"))
 
-		out.df <-  in.df[in.df[,col] > 0,c(2,col)]
+		out.df <-  in.df[in.df[,col] > 0.01,c(2,col)]
 		out.df[,2] <- round(out.df[,2],2)
 
 		# ccf_grob <- tableGrob(d=out.df, rows=c(), cols=c("clone","CCF"), theme=ttheme_minimal(base_size=6, padding=unit(c(0.5,1),"mm")), vp=viewport(width=unit(width,"in"),height=unit(width/2,"in"),y=unit(-0.4,"npc"),just=c("left","top"))
 		# test_tree <- addGrob(test_tree,ccf_grob)
-
-
 		samp_list[[i]] <- test_tree
 		dev.off()
 	}
@@ -144,11 +145,12 @@ multiregion_ccfs <- function(tree_in, ccf_names, tumour_name, tree_gTree,width=1
 
 	titleGrob <- textGrob(tumour_name,gp=gpar(cex=1.7,fontface=2),vp=viewport(y=unit(0.2,"npc"))) 
 	# tree_gTree$vp$height
-	test2 <- arrangeGrob(titleGrob, tree_gTree, test, ncol=2, nrow=2, widths=unit(c(4.5,3),"inches"),heights=unit(c(0.05,0.95),"npc"),layout_matrix=rbind(c(1,1),c(2,3)),vp=viewport(height=unit(5,"inches")))
+
+	test2 <- arrangeGrob(titleGrob, tree_gTree, test, ncol=2, nrow=2, widths=unit(widths,"inches"),heights=unit(c(0.05,0.95),"npc"),layout_matrix=rbind(c(1,1),c(2,3)),vp=viewport(height=unit(height,"inches")))
 	test2 <- gtable_add_grob(test2, grobs = rectGrob(gp = gpar(fill = 'white', lwd = 0,col="white")), 1, 1, nrow(test2), ncol(test2), 0);
 
 
-	cairo_pdf(paste0("multisample",tumour_name,".pdf"), onefile=FALSE,width=8.5)
+	cairo_pdf(paste0("multisample",tumour_name,".pdf"), onefile=FALSE,width=sum(widths))
 	plot(test2)
 	dev.off()
 	return(test2)
