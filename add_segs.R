@@ -129,9 +129,10 @@ get_seg_coords <- function(tree,v,offset=0,rad=0,scale1=NULL){
                                                           return(data.frame(basex,basey,tipx,tipy))
                                                           })
 
-    print(second_tree_segs_adjusted)
     second_tree_segs_adjusted <- second_tree_segs_adjusted[which(second_tree_segs_adjusted$basey !=second_tree_segs_adjusted$tipy),]
   }
+  print(tree_segs_adjusted)
+  print(second_tree_segs_adjusted)
   tree.out <- list(tree_segs = tree_segs_adjusted, tree_segs2=second_tree_segs_adjusted)
   return(tree.out)    
 }

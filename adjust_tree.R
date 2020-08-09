@@ -1,13 +1,13 @@
-adjust_lengths <- function(x,cols,in.tree.rad){
+adjust_lengths <- function(x, cols, node_df){
   out.df <- x
   for (c in cols){
     if(x[1,c] > 0){
       length_adj <- x[1,c]
     if( x[1,c] == x[1,cols[length(cols)]] ){    #if max
-      length_adj <- length_adj + in.tree.rad$rad[in.tree.rad$lab==x$tip]
+      length_adj <- length_adj + node_df$rad[node_df$lab==x$tip]
     } 
     if(x$parent != -1){
-      length_adj <- length_adj + in.tree.rad$rad[in.tree.rad$lab==x$parent]
+      length_adj <- length_adj + node_df$rad[node_df$lab==x$parent]
      }
      }  else{length_adj <- 0}
         var.name <- paste0(names(x)[c],'.adj')
@@ -15,6 +15,23 @@ adjust_lengths <- function(x,cols,in.tree.rad){
         colnames(out.df)[ncol(out.df)] <- var.name
   }
   return(out.df)
+}
+
+
+adjust_branch_lengths <- function(node_df, tree, rad, scale1){
+   if (is.null(node_df$rad)){
+    rad <- rad*(1/scale1)
+    node_df$rad <- rep(rad,nrow(node_df))
+  }
+  node_df$rad[node_df$lab==-1] <- 0
+  print(node_df)
+  length_cols <- grep("length", colnames(tree))
+  tree.adj <- adply(tree, 1, function(x) adjust_lengths(x,length_cols,node_df))  
+
+  tree$length <- tree.adj$length.adj
+  tree$length1 <- tree.adj$length1.adj
+  tree$length2.c <- tree.adj$length2.c.adj
+  return(tree)
 }
 
 
