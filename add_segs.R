@@ -37,7 +37,8 @@ add_segs3 <- function(tree,v,offset=0,rad=0,scale.x.real=NULL){
                                                         return(data.frame(basex,basey,tipx,tipy))
                                                         })
 
-  tree_segs_adjusted <- tree_segs_adjusted[which(tree_segs_adjusted$basey !=tree_segs_adjusted$tipy),]
+  # browser()
+  tree_segs_adjusted <- tree_segs_adjusted[which(!(tree_segs_adjusted$basey == tree_segs_adjusted$tipy & tree_segs_adjusted$basex == tree_segs_adjusted$tipx)),]
   
 
   # if(!is.null(tree$length2.c)){
@@ -62,7 +63,7 @@ add_segs3 <- function(tree,v,offset=0,rad=0,scale.x.real=NULL){
                                                           })
 
     print(second_tree_segs_adjusted)
-    second_tree_segs_adjusted <- second_tree_segs_adjusted[which(second_tree_segs_adjusted$basey !=second_tree_segs_adjusted$tipy),]
+    second_tree_segs_adjusted <- second_tree_segs_adjusted[which(!(second_tree_segs_adjusted$basey == second_tree_segs_adjusted$tipy & second_tree_segs_adjusted$basex == second_tree_segs_adjusted$tipx)),]
   }
   tree.out <- list(tree_segs = tree_segs_adjusted,tree_segs2=second_tree_segs_adjusted)
   return(tree.out)    
@@ -140,7 +141,9 @@ get_seg_coords <- function(tree,v,offset=0,rad=0,scale1=NULL){
 
 add_tree_segs <- function(clone.out,  rad, line.lwd, scale1,  seg1.col, seg2.col){
   offset <- line.lwd*1/96
-  print(offset)
+  if(!('length2' %in% colnames(clone.out$tree))){
+    offset <- 0
+  }
   tree.out <- get_seg_coords(clone.out$tree, clone.out$v, offset, rad, scale1)
   tree_segs1 <- tree.out[[1]]
   tree_segs2 <- tree.out[[2]]
