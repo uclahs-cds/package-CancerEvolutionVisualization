@@ -82,19 +82,22 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
       label.bottom <- 0
       str.heightsum <- 0
       cex <- orig_cex 
-      print("cex")
-      print(cex)
+
 
       #centre the height of all the text relative to the line
       while(str.heightsum == 0 | (label.bottom + str.heightsum) > (title.y+panel_height) | (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s]+rad*0.5)){
-        if((label.bottom + str.heightsum) > (tree.max.adjusted$y0[s]+rad*0.5)){
+
+        if((label.bottom + str.heightsum) > (tree.max.adjusted$y0[s]+rad*0.5) & length(gene.list[[s]]) > 1){
           split_genes <- TRUE        
         }
+        # if(s == 2){
+        #   browser()
+        # }
         str.heights <- sapply(gene.list[[s]], function(x) strheight(x,unit="inches",cex=cex))
         spacing=0.33*mean(str.heights)
         str.heightsum <- sum(str.heights)+spacing*length(str.heights)-spacing
         
-        if(split == TRUE & split_genes){
+        if(split == TRUE & split_genes ){
           str.heights.left <- str.heights[1:ceiling(length(gene.list[[s]])/2)]
           str.heights.right <- str.heights[(ceiling(length(gene.list[[s]])/2)+1):length(gene.list[[s]])]
           str.heightsum_left <- sum(str.heights.left)+spacing*length(str.heights.left)-spacing
@@ -140,8 +143,8 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
           
           ypos = label.bottom + (g-1)*spacing+heights-spacing
           
-          print("ypos")
-          print(ypos)
+          # print("ypos")
+          # print(ypos)
           #back computing the x position based on the intercept and the slope
           xpos = ifelse(is.infinite(slope),tree.max.adjusted$x0[s],(ypos-intercept)/slope)
           xline.dist <- line.dist
@@ -149,9 +152,9 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
 
         gene_positions = data.frame(labels=character(length=length(gene.list[[s]])), x=numeric(length=length(gene.list[[s]])), y=numeric(length=length(gene.list[[s]]))) 
         if( split == TRUE & split_genes ){
+            # browser()
           if ( g <= ceiling(length(gene.col[[s]])/2)){
             # offset_left <- ceiling(length(gene.col[[s]])/2)
-            # browser()
             heights <- ifelse((g-1) == 0,0,sum(str.heights.left[c(1:(g-1))]))
             ypos <- label.bottom + (g-1)*spacing+heights-spacing
             text_grob_list[[idx]] <- textGrob(gene.list[[s]][g],x=unit(xpos-xline.dist,"inches"),y=unit(ypos,"inches"),just=c("right","bottom"), gp=gpar(col=gene.col[[s]][g],cex=cex))
@@ -165,7 +168,7 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
           }
           
         }else if( alternating == TRUE ){ #alternate between putting the genes to the left and to the right of the node
-
+          print("here")
           if (s%%2>0 ){
             xline.dist.adj <- (-1)*xline.dist
             just <- c("right","bottom")
@@ -178,7 +181,6 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
           }
             text_grob_list[[idx]] <- textGrob(gene.list[[s]][g],x=unit(xpos+xline.dist.adj,"inches"),y=unit(ypos,"inches"),just=just, gp=gpar(col=gene.col[[s]][g],cex=cex))
           if(adjust_axis_overlap){
-            print("here")
             overlaps_axis  <- axis_overlap(xpos, gene.list[[s]][g], xline.dist.adj, axis.type,cex, panel_width, return_cex=TRUE)
 
             if(!is.null(overlaps_axis)){ #if a gene overlaps the axis shrink the gene labels until it doesn't
@@ -210,8 +212,8 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
           if(length(overlap$nodes) > 0 && label_nodes == TRUE && !(tree.max.adjusted[overlap$nodes] %in% tree.max.adjusted$parent)){  #TODO make this more general,
             ypos <- ypos - abs(xline.dist) - rad
             xline.dist <- 0
-            hjust <- "center"
-            print(ypos)
+            # hjust <- "center"
+            # print(ypos)
           } else{
             hjust <- ifelse(xline.dist > 0,"left","right")              
           }
@@ -224,8 +226,8 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
               return(text_grob_list)
             }
           }
-            print("hjust")
-            print(hjust)
+            # print("hjust")
+            # print(hjust)
             text_grob_list[[idx]] <- textGrob(gene.list[[s]][g],x=unit(xpos+xline.dist,"inches"),y=unit(ypos,"inches"),just=c(hjust,vjust), gp=gpar(col=gene.col[[s]][g],cex=cex))
           }
           
@@ -238,7 +240,7 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
 }
 
 
-add_text2 <- function(tree,genes,label_nodes=FALSE, cex=1,line.dist=0.5,v=NULL, title.y=NULL, panel_height=NULL, panel_width=NULL, xlims=NULL, ymax=ymax,axis.type=NULL,scale=NULL,rad=NULL,alternating=TRUE, split=TRUE){
+add_text2 <- function(tree,genes,label_nodes=FALSE, cex=1,line.dist=0.5,v=NULL, title.y=NULL, panel_height=NULL, panel_width=NULL, xlims=NULL, ymax=ymax,axis.type=NULL,scale=NULL,rad=NULL,alternating=TRUE, split=TRUE, clone.out=NULL ){
   radn <- rad*1/scale #radius in native units
   genes <- genes[genes$node %in% tree$tip,]
   gene.list <- alply(seq_len(nrow(tree)), 1,function(x) return(character()))
@@ -284,8 +286,7 @@ add_text2 <- function(tree,genes,label_nodes=FALSE, cex=1,line.dist=0.5,v=NULL, 
   
   print("tree.max")
   print(tree.max)
-  print("gene.list")
-  print(gene.list)
+
   #the length of the visible line segments
   tree.max.adjusted <- adply(tree.max,1, function(x){
                                             if(x$tipx == x$basex){ #straight line
@@ -311,9 +312,14 @@ add_text2 <- function(tree,genes,label_nodes=FALSE, cex=1,line.dist=0.5,v=NULL, 
                                             return(data.frame(basex,basey,tipx,tipy))
                                             }
                                           )
-  #push a viewport the same size as the final panel so we can do calculations based on absolute size units
-  pushViewport(viewport(height=unit(panel_height,"inches"), name="ref",width=unit(panel_width,"inches"),xscale=xlims,yscale=c(ymax,-2)))
 
+
+  #push a viewport the same size as the final panel so we can do calculations based on absolute size units
+  if(!is.null(clone.out)){
+    pushViewport(clone.out$vp)
+  }else{
+    pushViewport(viewport(height=unit(panel_height,"inches"), name="ref",width=unit(panel_width,"inches"),xscale=xlims,yscale=c(ymax,-2)))
+  }
   tree.max.adjusted$x0 <- convertX(unit(tree.max.adjusted$basex,"native"),"inches",valueOnly=TRUE)
   tree.max.adjusted$x1 <- convertX(unit(tree.max.adjusted$tipx,"native"),"inches",valueOnly=TRUE)
   tree.max.adjusted$y0 <- convertY(unit(tree.max.adjusted$basey,"native"),"inches",valueOnly=TRUE) 
@@ -324,14 +330,17 @@ add_text2 <- function(tree,genes,label_nodes=FALSE, cex=1,line.dist=0.5,v=NULL, 
 
   tree.max.adjusted$slope <- (tree.max.adjusted$y1 - tree.max.adjusted$y0)/(tree.max.adjusted$x1-tree.max.adjusted$x0)            
   tree.max.adjusted$intercept <-  tree.max.adjusted$y1-tree.max.adjusted$slope*tree.max.adjusted$x1
-
+  
+  print("tree.max.adjusted")
+  print(tree.max.adjusted)
+  
   text_grob_list <- position_genes(tree.max.adjusted=tree.max.adjusted, gene.list=gene.list, gene.col=gene.col, axis.type=axis.type, panel_height=panel_height, panel_width = panel_width, title.y=title.y, line.dist=line.dist,cex=cex, rad=rad, alternating=alternating, split=split, label_nodes=label_nodes)
-
-  text_grob_glist <- do.call(gList,text_grob_list)
-  print(class(text_grob_glist))
-  text_tree <- gTree(children=text_grob_glist,childrenvp = viewport(height=unit(panel_height,"inches"), name="ref",width=unit(panel_width,"inches"),xscale=xlims,yscale=c(ymax,-2), clip='off'))
-  # popViewport()
-  return(list(text_tree, tree.max.adjusted))
+  return(text_grob_list)
+  # text_grob_glist <- do.call(gList,text_grob_list)
+  # print(class(text_grob_glist))
+  # text_tree <- gTree(children=text_grob_glist,childrenvp = viewport(height=unit(panel_height,"inches"), name="ref",width=unit(panel_width,"inches"),xscale=xlims,yscale=c(ymax,-2), clip='off'))
+  # # popViewport()
+  # return(list(text_tree, tree.max.adjusted))
 }
 
 
