@@ -1,7 +1,6 @@
 add_vaf <- function(v){
   v <- v[order(v$parent),]
-  for (i in unique(v$lab)){
-    print(i)
+  for (i in seq_along(v$lab)){
     if(v$parent[i] == -1){
       v$vaf[i] <- 1
     }else{
