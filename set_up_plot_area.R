@@ -1,11 +1,11 @@
-calculate_main_plot_size <- function(clone.out, scale1, wid, min_width, xaxis_space_left, xaxis_space_right){
-	ymax <- max(clone.out$v$len) + clone.out$v$y[1]
+calculate_main_plot_size <- function(clone.out, scale1, wid, min_width, xaxis_space_left, xaxis_space_right, rad){
+	ymax <- max(clone.out$v$len) + clone.out$v$y[1]+2*rad/scale1
 	height <- (ymax+2)*scale1
 	
 	if(is.null(min_width)){
 	  xmax <- wid
-	  width <- wid*scale1+xaxis_space_left + xaxis_space_right
-	  xlims <- c(-xmax/2-(xaxis_space_left*1/scale1), xmax/2+xaxis_space_right*(1/scale1))
+	  width <- wid*scale1+xaxis_space_left + xaxis_space_right + 4*rad
+	  xlims <- c(-xmax/2-(xaxis_space_left*1/scale1 +2*rad/scale1), xmax/2+(xaxis_space_right*(1/scale1) +2*rad/scale1))
 	 } else{	  
 	  xmin <- min(c(clone.out$v$x))
 	  xmax <- max(c(clone.out$v$x))
@@ -15,11 +15,11 @@ calculate_main_plot_size <- function(clone.out, scale1, wid, min_width, xaxis_sp
 	  if(diff > 0){
 	    xmin <- xmin-0.5*diff*1/scale1
 	    xmax <- xmax+0.5*diff*1/scale1
-	    xlims <- c(xmin-(xaxis_space_left*1/scale1),xmax+xaxis_space_right*(1/scale1))
+	    xlims <- c(xmin-(xaxis_space_left*1/scale1 +2*rad/scale1),xmax+xaxis_space_right*(1/scale1)+2*rad/scale1)
 	    width <- (max(xlims)-min(xlims))*scale1
 	  }
 	}
-
+	print(xlims)
 	clone.out$height <- height
 	clone.out$width <- width
 	clone.out$xlims <- xlims
