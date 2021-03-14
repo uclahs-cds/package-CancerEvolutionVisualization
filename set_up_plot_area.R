@@ -144,3 +144,21 @@ add_xaxis <- function(clone.out, scale1, axis_label="CCF", no_ccf=FALSE, axis_la
 
 	clone.out$grobs <- c(clone.out$grobs, list(xaxis_gtree))
 }
+
+
+add_title <- function(clone.out, title, title.cex, title.y=NULL, title.y.units="npc"){
+		y_pos <- unit(1.08,"npc")
+		if(!is.null(title.y)){
+			plot_top <- convertY(unit(1,"npc"),title.y.units,valueOnly=TRUE)
+			y_pos <- plot_top + title.y
+		}
+		title_label <- textGrob(title, just="center",gp=gpar(col='black',cex=title.cex))
+		title_grob <- gTree(children=gList(title_label),name="title.gtree", cl="title_label", vp=vpStack(make_plot_viewport(clone.out, clip="off"), viewport(y=unit(y_pos, title.y.units), x=unit(0,"native"), height=grobHeight(title_label), width=grobWidth(title_label), just=c("centre","bottom"))))
+
+		# normal_label <- textGrob("N",x=unit(0.5,"npc"),y=unit(0.5,"npc"),name="normal.label", just="center",gp=gpar(col='black',cex=label_cex))  
+		# normal_box <- rectGrob(x=unit(0.5,"npc"), y=unit(0.5,"npc"),name="normal.box", height=grobHeight(normal_label)*1.2, width=grobWidth(normal_label)*1.2, just=c("center","center"),gp=gpar(col="black",fill="transparent", lwd=1.5,lty="31"))
+		# # normal_box <- rectGrob(x=unit(0.5,"npc"), y=unit(0.5,"npc"),name="normal.box", width=unit(2*rad,"inches"), height=unit(2*rad,"inches"), just=c("center","center"),gp=gpar(col="black",fill="transparent", lwd=1.5,lty="31")) unit(convertY(grobHeight(normal_box),"inches", valueOnly=TRUE),"inches")
+		# normal_grob <- gTree(children=gList(normal_box, normal_label),name="normal.gtree", cl="normal_node", vp=vpStack(make_plot_viewport(clone.out, clip="off"), viewport(y=unit(1,"npc"), x=unit(0,"native"), height=grobHeight(normal_box), width=grobWidth(normal_box), just=c("centre","bottom"))))
+		# # normal_grob <- gTree(children=gList(normal_box, normal_label),name="normal.gtree", cl="normal_node", vp=viewport(y=unit(0.5,"native"), x=unit(0,"native"), just=c("centre","bottom") ))
+		clone.out$grobs <- c(clone.out$grobs, list(title_grob))
+}
