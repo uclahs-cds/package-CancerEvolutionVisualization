@@ -8,19 +8,22 @@ prep.tree <- function(samp=NULL,trees=NULL,cnas = NULL, snvs = NULL, pga=NULL, C
     colnames(tree.df) <- tree.df[1,]
     colnames(tree.df)[1] <- "Sample"
     tree.df <- tree.df[c(2:nrow(tree.df)),]
-  } else if(any(grepl("parent",trees[1,])==TRUE)){
-    colnames(tree.df) <- trees[1,]
-    colnames(tree.df)[1] <- "Sample"
+  # } else if(any(grepl("parent",trees[1,])==TRUE)){
+  #   colnames(tree.df) <- trees[1,]
+  #   colnames(tree.df)[1] <- "Sample"
   } else if(any(grepl("parent",colnames(trees))==TRUE)){
     colnames(tree.df) <- colnames(trees)
     colnames(tree.df)[1] <- "Sample"
   }else{stop("No column names detected")}
   
-  tree.df <- tree.df[,c(2:ncol(tree.df))]
-  tree.df$parent[tree.df$parent ==0] <- -1
+
+  
+  tree.df$parent[tree.df$parent == 0] <- -1
   tree.df$cellular_prevalence <- as.numeric(tree.df[,CF_col])  
   
-  tree.df <- reorder_clones(tree.df)
+  if(all(!is.na(tree.df$cellular_prevalence))){
+    tree.df <- reorder_clones(tree.df)
+  }
   
   out.df <- data.frame(lab=c(-1,tree.df$child),  
                            ccf=as.numeric(c(1,tree.df$cellular_prevalence)),
@@ -50,7 +53,8 @@ prep.tree <- function(samp=NULL,trees=NULL,cnas = NULL, snvs = NULL, pga=NULL, C
       #    pga.df$PGA_accumulated <- pga.df$PGA_accumulated/100
     }
     pga.df$CP <- as.numeric(pga.df$CP)
-    pga.df$Node[pga.df$Node ==0] <- -1  
+    pga.df$Node[pga.df$Node == 0] <- -1 
+    # browser() 
     pga.df$Node <- order(-pga.df$CP)    
     out.tree <- data.frame(parent=as.numeric(tree.df$parent),tip = as.numeric(tree.df$child), length1=(pga.df$PGA[-1]*100), length2=as.numeric(tree.df$num_ssms),stringsAsFactors = FALSE)
   } else{
@@ -121,7 +125,7 @@ prep.smchet <- function(out_1C = NULL, out_2A = NULL,  out_3A = NULL, samp.name 
         colnames(pred_counts) <- c("tip","length1")
         tree <- merge(tree, pred_counts, by="tip")
       }
-      cluster_list[["col"]] <- data.frame(lab=sort(unique(c(truth2A))), c.col=col[seq_along(unique(truth2A))], stringsAsFactors=FALSE)
+      cluster_list[["col"]] <- data.frame(lab=sort(unique(c(truth2A))), colour=col[seq_along(unique(truth2A))], stringsAsFactors=FALSE)
     }
 
 
@@ -172,15 +176,15 @@ prep.smchet <- function(out_1C = NULL, out_2A = NULL,  out_3A = NULL, samp.name 
     if(!is.null(out_2A)){
       col_df <- cluster_list[["col"]]
     } else if (!is.null(col)){
-      col_df <- data.frame(lab=unique(in.tree.df$lab), c.col, stringsAsFactors=FALSE) 
+      col_df <- data.frame(lab=unique(in.tree.df$lab), col, stringsAsFactors=FALSE) 
     }
     in.tree.df <- merge(in.tree.df, col_df, by="lab", all.x=TRUE)
-    in.tree.df$c.col <- as.character(in.tree.df$c.col)
+    in.tree.df$colour <- as.character(in.tree.df$colour)
     in.tree.df$plot.lab <- as.character(in.tree.df$plot.lab)
     return(list(in.tree.df = in.tree.df,tree = tree, out.name = out.name, w.padding=w.padding, samp.name = samp.name, branching=branching,add.genes=add.genes, genes.df = genes.df, axis.type="none", cluster_list=cluster_list))
-
-  
 }
+
+
 process_1C <- function(out_1C){
   in.df <- read.table(out_1C, header=FALSE)
   colnames(in.df)[1:2] <- c("tip","length1")
