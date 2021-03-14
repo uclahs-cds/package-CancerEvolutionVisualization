@@ -1,4 +1,20 @@
+add_vaf <- function(v){
+  v <- v[order(v$parent),]
+  for (i in unique(v$lab)){
+    print(i)
+    if(v$parent[i] == -1){
+      v$vaf[i] <- 1
+    }else{
+      parent <- v[which(v$lab == v$parent[i]),]    
+      v$vaf[i] <- parent$vaf/nrow(v[v$parent == parent$lab,])
+    }
+  }
+  return(v)
+}
 position_clones <- function(v,tree,wid){
+  if(!('vaf' %in% colnames(v)) | all(is.na(v[v$parent != -1,]$vaf))){
+    v <- add_vaf(v)
+  }
   v$x.mid <- 0
   v$x1 <- 0
   v$x2 <- 0
@@ -8,9 +24,8 @@ position_clones <- function(v,tree,wid){
     parent <- v[which(v$lab==p),]
     #if there is only one child center them with the parent
 
-
-    if(nrow(children)==1){
-      if(p==-1){
+    if(nrow(children) == 1){
+      if(p == -1){
         v$x.mid[v$lab == children$lab] <- 0
         v$x1[v$lab == children$lab] <- -wid/2
         v$x2[v$lab == children$lab] <- wid/2
@@ -29,7 +44,7 @@ position_clones <- function(v,tree,wid){
         children <- children_ascending[child_order,-ncol(children_ascending)]
 
       }
-      if(p==-1){
+      if(p == -1){
         parent <- data.frame(vaf=1,x.mid=0)
       }
       child_vaf_sum <- sum(children$vaf*wid)
@@ -41,7 +56,6 @@ position_clones <- function(v,tree,wid){
         child <- children[c,]
         if(c==1){
           v$x.mid[v$lab==child$lab[1]] <- position+child$vaf[1]*wid/2
-
           position <- position+child$vaf[1]*wid
         }else{
           v$x.mid[v$lab==child$lab[1]] <- position+child$vaf[1]*wid/2+per_gap
@@ -53,6 +67,55 @@ position_clones <- function(v,tree,wid){
     }
   }
   return(v)
+}
+
+position_nodes_fixed <- function(v, tree, fixed_angle, len){
+  for (i in seq_along(v$lab)){
+    vi <- v[i,]
+    if (!is.na(vi$parent) && vi$parent == -1){ #if root the clone extends the full width of the plot
+      x0 <- 0
+      y0 <- tree$length[tree$parent==-1]
+      len0 <- len + y0
+
+    }else{ #parent not root -- not trunk clone
+      par <- v[v$lab == vi$parent,] #get parent clone
+
+      siblings <- v[which(v$parent == par$lab),]
+      if(nrow(siblings) == 1){
+        parent_angle <- 0
+      } else if(nrow(siblings)==2){           
+        if (any(siblings$x > par$x)) {
+          parent_angle <-  -fixed_angle      
+        }else{
+          parent_angle <- fixed_angle
+        }
+      }  else if(nrow(siblings) == 3){                
+        if (any(siblings$x > par$x)) {
+          parent_angle <-  -fixed_angle      
+        }else if(any(siblings$x < par$x)){
+          parent_angle <- fixed_angle
+        }else{
+          parent_angle <- 0
+        }
+      } 
+
+      r <- tree$length[which(tree$parent==par$lab & tree$tip == vi$lab)]
+      x.shift <- r*sin(parent_angle)
+      x0 <- par$x + x.shift
+      y.shift <- r*cos(parent_angle)
+      y0 <- par$y + y.shift
+      len0 <- par$len + y.shift
+      tree$angle[which(tree$parent==par$lab & tree$tip == vi$lab)] <- parent_angle 
+    }
+
+      v[i,]$len <- len0
+      v[i,]$y <- y0
+      v[i,]$x <- x0
+  }
+  clone_env <-  new.env(parent = emptyenv())
+  clone_env$v <- v
+  clone_env$tree <- tree
+  return(clone_env)
 }
 
 position_clones_no_vaf <- function(v, wid, spread=TRUE){
