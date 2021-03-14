@@ -55,7 +55,7 @@ position_nodes_radial <- function(v,tree,extra_len, spread=1){
 	w <- spread*pi 
 	xpos <- 0
 	ypos <- 0
-	tau <- -pi/4
+	tau <- -pi/2.5
 	vi <- v[v$parent==-1,]
 	preorder_traversal <- function(node=NULL, tree=NULL, w=NULL, tau=NULL, eta=NULL, spread=1){
 		vi <- v[v$lab == node,]
