@@ -77,7 +77,7 @@ get_seg_coords <- function(tree,v,offset=0,rad=0,scale1=NULL){
   tree_segs <- adply(tree, 1, function(x) {
     if(x$parent ==-1){
       basey = 0;
-      basex = 0
+      basex = 0;
     } else{
       basey <- v$y[v$lab == x$parent]; 
       basex <- v$x[v$lab == x$parent]; 

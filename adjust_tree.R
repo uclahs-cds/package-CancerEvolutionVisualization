@@ -2,13 +2,13 @@ adjust_lengths <- function(x, cols, node_df){
   out.df <- x
   for (c in cols){
     if(x[1,c] > 0){
-      length_adj <- x[1,c]
-    if( x[1,c] == x[1,cols[length(cols)]] ){    #if max
-      length_adj <- length_adj + node_df$rad[node_df$lab==x$tip]
-    } 
-    if(x$parent != -1){
-      length_adj <- length_adj + node_df$rad[node_df$lab==x$parent]
-     }
+        length_adj <- x[1,c]
+      if( x[1,c] == x[1,cols[length(cols)]] ){    #if max
+        length_adj <- length_adj + node_df$rad[node_df$lab==x$tip]
+      } 
+      if(x$parent != -1){
+        length_adj <- length_adj + node_df$rad[node_df$lab==x$parent]
+       }
      }  else{length_adj <- 0}
         var.name <- paste0(names(x)[c],'.adj')
         out.df <- cbind(out.df,length_adj)
