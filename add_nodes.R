@@ -33,10 +33,14 @@ add_node_ellipse <- function( clone.out, rad, label_nodes=NULL, label_cex=NA, ad
 	# clone.out$grobs <- c(clone.out$grobs, list(pointsGrob(x=unit(clone.out$v$x, "native"), y=unit(clone.out$v$y, "native"), gp=gpar(col="red", cex=1))))
 }
 
-add_normal <- function(clone.out, rad, label_cex){
-		normal_label <- textGrob("N",x=unit(0.5,"npc"),y=unit(0.5,"npc"),name="normal.label", just="center",gp=gpar(col='black',cex=label_cex))  
-		normal_box <- rectGrob(x=unit(0.5,"npc"), y=unit(0.5,"npc"),name="normal.box", height=grobHeight(normal_label)*1.2, width=grobWidth(normal_label)*1.2, just=c("center","center"),gp=gpar(col="black",fill="transparent", lwd=1.5,lty="31"))
-		# normal_box <- rectGrob(x=unit(0.5,"npc"), y=unit(0.5,"npc"),name="normal.box", width=unit(2*rad,"inches"), height=unit(2*rad,"inches"), just=c("center","center"),gp=gpar(col="black",fill="transparent", lwd=1.5,lty="31")) unit(convertY(grobHeight(normal_box),"inches", valueOnly=TRUE),"inches")
+add_normal <- function(clone.out, rad, label_cex, normal_cex=1){
+	print("normal_cex")
+	print(normal_cex)
+		normal_box <- rectGrob(x=unit(0.5,"npc"), y=unit(0.5,"npc"),name="normal.box", width=unit(2*rad*normal_cex,"inches"), height=unit(2*rad*normal_cex,"inches"), just=c("center","center"),gp=gpar(col="black",fill="transparent", lwd=1.5,lty="31")) 
+		# normal_cex <- convertY(grobHeight(normal_label,"inches", valueOnly=TRUE))*1.05*72/12
+		normal_label <- textGrob("N",x=unit(0.5,"npc"),y=unit(0.5,"npc"),name="normal.label", just="center",gp=gpar(col='black',cex=convertY(grobHeight(normal_box),"inches", valueOnly=TRUE)*1.05*72/12))
+		# normal_label <- textGrob("N",x=unit(0.5,"npc"),y=unit(0.5,"npc"),name="normal.label", just="center",gp=gpar(col='black',cex=normal_cex))  
+		# normal_box <- rectGrob(x=unit(0.5,"npc"), y=unit(0.5,"npc"),name="normal.box", height=grobHeight(normal_label)*1.2, width=grobWidth(normal_label)*1.2, just=c("center","center"),gp=gpar(col="black",fill="transparent", lwd=1.5,lty="31"))
 		normal_grob <- gTree(children=gList(normal_box, normal_label),name="normal.gtree", cl="normal_node", vp=vpStack(make_plot_viewport(clone.out, clip="off"), viewport(y=unit(1,"npc"), x=unit(0,"native"), height=grobHeight(normal_box), width=grobWidth(normal_box), just=c("centre","bottom"))))
 		# normal_grob <- gTree(children=gList(normal_box, normal_label),name="normal.gtree", cl="normal_node", vp=viewport(y=unit(0.5,"native"), x=unit(0,"native"), just=c("centre","bottom") ))
 		clone.out$grobs <- c(clone.out$grobs, list(normal_grob))
@@ -47,6 +51,7 @@ add_normal <- function(clone.out, rad, label_cex){
 # 		normal_box <- rectGrob(x=unit(0.5,"npc"), y=unit(0.5,"npc"),name="normal.box", width=1.1*stringWidth(normal_label), height=1.1*stringHeight(normal_label), just=c("center","center"),gp=gpar(col="black",lwd=1.5,lty="31"))
 # 		setChildren(normal_gtree, gList(normal_box, normal_label))
 # }
+
 add_pie_nodes <- function(clone.out, rad, cluster_list){
 	pie_grobs <- list()
 	clone.out$v <- clone.out$v[order(clone.out$v$lab),]
@@ -56,31 +61,33 @@ add_pie_nodes <- function(clone.out, rad, cluster_list){
 	clone.out$grobs <- c(clone.out$grobs, pie_grobs)
 }
 
-pieGrob <- function(x, y, rad=.1, prop_list, col_df){
+pieGrob <- function(x, y, rad=.1, prop_list, col_df, xy.units="native"){
 	r <-1
 	x0 <- 0
 	y0 <- 0
 	slice_list <- list()
-
+	print(prop_list)
 	for(i in seq_along(prop_list)){
 		angle <- 2*pi*sum(prop_list[1:i])
-		x0 <- if(i ==1) 0 else r*sin(2*pi*sum(prop_list[1:(i-1)]))
+		x0 <- if(i == 1) 0 else r*sin(2*pi*sum(prop_list[1:(i-1)]))
 		x1 <- r*sin(angle)
 		y0 <-  if(i ==1) 0 else r*cos(2*pi*sum(prop_list[1:(i-1)]))
 		y1 <-  r*cos(angle)
 		x_edge1 <- c(0,x0)
 		x_edge2 <- c(x1,0)
-		x_arc <- sapply(seq(if(i==1) 0 else 2*pi*prop_list[i-1], angle, length=1000), function(deg) r*sin(deg))
+		x_arc <- sapply(seq(if(i==1) 0 else 2*pi*sum(prop_list[1:(i-1)]), angle, length=1000), function(deg) r*sin(deg))
 		xc <- c(x_edge1, x_arc, x_edge2)
 		
-		y_arc <- sapply(seq(if(i==1) 0 else 2*pi*prop_list[i-1], angle, length=1000), function(deg) r*cos(deg))
+		y_arc <- sapply(seq(if(i==1) 0 else 2*pi*sum(prop_list[1:(i-1)]), angle, length=1000), function(deg) r*cos(deg))
 		y_edge1 <- c(0,y0)
 		y_edge2 <- c(y1,0)		
 		yc <- c(y_edge1, y_arc, y_edge2)
-		slice_list[[i]] <- polygonGrob(unit(xc,"native"), unit(yc,"native"), gp=gpar(fill=col_df[col_df$lab == names(prop_list)[i],]$colour, col=col_df[col_df$lab == names(prop_list)[i],]$colour))
+		slice_list[[i]] <- polygonGrob(unit(xc,"native"), unit(yc,"native"), gp=gpar(fill=col_df[col_df$lab == names(prop_list)[i],]$colour, col='transparent'))
+		# slice_list[[i]] <- polygonGrob(unit(xc,"native"), unit(yc,"native"), gp=gpar(fill=col_df[col_df$lab == names(prop_list)[i],]$colour, col=col_df[col_df$lab == names(prop_list)[i],]$colour))
 	}
+	# slice_list <- slice_list[order(prop_list)]
 	pie_glist <- do.call(gList,  slice_list)
-	pie_tree <- gTree(children=pie_glist, vp=viewport(x=unit(x,"native"), y=unit(y,"native"), width=unit(2*rad,"inches"), height=unit(2*rad, "inches"), xscale=c(-1,1), yscale=c(-1,1), angle=if(i == 2) 90 else 0) )
+	pie_tree <- gTree(children=pie_glist, vp=viewport(x=unit(x, xy.units), y=unit(y, xy.units), width=unit(2*rad,"inches"), height=unit(2*rad, "inches"), xscale=c(-1,1), yscale=c(-1,1), angle=if(i == 2) 90 else 0) )
 	return(pie_tree)
 }
 
