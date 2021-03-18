@@ -28,7 +28,7 @@ make_polygon <- function(x0, y0, x1,x2, wid=1, len=1, col='gray',  sig_shape=4, 
 	y1 <- y0 + beta
 
 	while(y1 <= y0){
-	y1 = y1+1
+		y1 = y1+1
 	}
 
 	yy <- seq(y0, y1, length.out=100)
@@ -54,14 +54,10 @@ position_polygons <- function(clone_env, i, wid, x, y, len, sig_shape=4, beta_in
 	v <- clone_env$v
 	tree <- clone_env$tree
 	clones <- clone_env$clones
-	
-	# v <- get("v",envir = env)
+
 	# get the row of v that corresponds to the clone
 	vi <- v[i,]
-	# browser()
-	# tree <- get("tree",envir= env)
-	# clones <- env$clones
-
+	print(i)
 	if (!is.na(vi$parent) && vi$parent == -1){ #if root the clone extends the full width of the plot
 		x0 <- x 
 		y0 <- y
@@ -80,7 +76,7 @@ position_polygons <- function(clone_env, i, wid, x, y, len, sig_shape=4, beta_in
 			dist <- par$x.mid-par$x
 			parent_angle <- ifelse(is.null(fixed_angle) & no_ccf == FALSE, atan(dist/par$len), 0)
 			# parent_angle <- ifelse(is.null(fixed_angle) & no_ccf=FALSE, atan(dist/par$len), 0)
-		} else if(nrow(siblings)==2){
+		} else if(nrow(siblings) == 2){
 			sibling_coords <- c(siblings$x1, siblings$x2)
 			x1_max <- sibling_coords[which.max(abs(sibling_coords))]
 			x2_max <- sibling_coords[which.max(abs(sibling_coords-x1_max))]
@@ -100,7 +96,7 @@ position_polygons <- function(clone_env, i, wid, x, y, len, sig_shape=4, beta_in
 				} else if(v$lab == siblings$lab[which.max(siblings$x.mid)]){ #align rightmost child with the right outer clone border
 					parent_angle <- ifelse(is.null(fixed_angle), atan(abs(par$x1)/par$len), fixed_angle)           
 				} else{
-					parent_angle <- atan((vi$x.mid - par$x.mid)/par$len)
+					parent_angle <- if(par$len > 0) atan((vi$x.mid - par$x.mid)/par$len) else 0
 				}
 		}
 
@@ -111,46 +107,46 @@ position_polygons <- function(clone_env, i, wid, x, y, len, sig_shape=4, beta_in
 		y0 <- par$y + y.shift
 		len0 <- par$len - y.shift
 
+		# if(no_ccf == FALSE){
 		#make sure the node isn't outside of the parent clone
 		par.coords <- data.frame(x=clones[[as.integer(which(v$lab == par$lab))]][["x"]], y= clones[[as.integer(which(v$lab == par$lab))]][["y"]])
 
 		par$x1 <- clones[[as.integer(which(v$lab == par$lab))]][["x1"]]
 		par$x2 <- clones[[as.integer(which(v$lab == par$lab))]][["x2"]]
-		# browser()
 		par.coords.pos <- par.coords[1:match(par$x1,par.coords$x),]
 		par.coords.neg <- par.coords[match(par$x2,par.coords$x):length(par.coords$x),]
 
 		match.x.pos  <- par.coords.pos$x[which.min(abs(par.coords.pos$y-y0))]
 		match.x.neg  <- par.coords.neg$x[which.min(abs(par.coords.neg$y-y0))]
-		while((match.x.pos > x0 & match.x.neg > x0) | (match.x.pos < x0 & match.x.neg < x0)){
-			print("moving node")
-			print(match.x.pos)
+			while((match.x.pos > x0 & match.x.neg > x0) | (match.x.pos < x0 & match.x.neg < x0)){
+				print("moving node")
+				print(match.x.pos)
 
-			print(match.x.neg)
-			print(x0)
-			closer <-  ifelse(match.x.pos > x0, min(match.x.pos,match.x.neg), max(match.x.pos,match.x.neg))
-			further <-  ifelse(match.x.pos > x0, max(match.x.pos,match.x.neg), min(match.x.pos,match.x.neg))
-			x0 <-  closer + 0.25*(further-closer)
-			y.shift <- sqrt(r^2-x0^2)
-			x.shift <- x0-par$x
-			x0 <- par$x+x.shift
-			parent_angle <- asin(y.shift/r)
-			# print("iter")
-			match.x.pos  <- par.coords.pos$x[which.min(abs(par.coords.pos$y-y0))]
-			match.x.neg  <- par.coords.neg$x[which.min(abs(par.coords.neg$y-y0))]
-		}
+				print(match.x.neg)
+				print(x0)
+				closer <-  ifelse(match.x.pos > x0, min(match.x.pos,match.x.neg), max(match.x.pos,match.x.neg))
+				further <-  ifelse(match.x.pos > x0, max(match.x.pos,match.x.neg), min(match.x.pos,match.x.neg))
+				x0 <-  closer + 0.25*(further-closer)
+				y.shift <- sqrt(r^2-x0^2)
+				x.shift <- x0-par$x
+				x0 <- par$x+x.shift
+				parent_angle <- asin(y.shift/r)
+				# print("iter")
+				match.x.pos  <- par.coords.pos$x[which.min(abs(par.coords.pos$y-y0))]
+				match.x.neg  <- par.coords.neg$x[which.min(abs(par.coords.neg$y-y0))]
+			}
 
-		len0 <- par$len - y.shift
-		tree$angle[which(tree$parent==par$lab & tree$tip == vi$lab)] <- parent_angle 
+		# }
+			len0 <- par$len - y.shift
+			tree$angle[which(tree$parent==par$lab & tree$tip == vi$lab)] <- parent_angle 
 	}
-
 	v[i,]$len <- len0
 	v[i,]$y <- y0
 	v[i,]$x <- x0
 	clone_env$v <- v
 	clone_env$tree <- tree
 
-	# print(v)
+	# browser()
 	clone_points <- make_polygon( x0=x0, y0=y0, x1=x1, x2=x2, wid=wid*vi$vaf, len=len0, col=vi$color, sig_shape=sig_shape, beta_in=beta_in)
  	return(c(clone_points, x0=x0, y0=y0,len=len0,x1=x1,x2=x2,alpha=vi$alpha))
 }
@@ -164,11 +160,13 @@ get_clones <- function(x=0, y=0, wid=1.2, len=len, sig_shape=3, beta_in=3, branc
 	for (j in 1:(nrow(clone_env$v))){
 	   clone_env$clones[[j]] <- position_polygons(clone_env, j, wid=wid, x=x,y=y,len=len,sig_shape=sig_shape, beta_in=beta_in, branching=branching, no_ccf=no_ccf, fixed_angle=fixed_angle)
 		beta.add <- 0.5
-		if(adjust_beta){
+		if(adjust_beta & no_ccf == FALSE){
 			#if the polygon gets cut off before it can occupy the full width adjust the beta value to make it curve more sharply
 			while(all(clone_env$clones[[j]]$y[which(abs(clone_env$clones[[j]]$x) == max(abs(clone_env$clones[[j]]$x)))] > (clone_env$coords.df$len[1]+y))){
 			  clone_env$clones[[j]] <- position_polygons(clone_env, j, wid=wid, x=x, y=y, len=len, sig_shape=sig_shape, beta_in=beta_in+beta.add, branching=branching, no_ccf=no_ccf, fixed_angle=fixed_angle)
-			  clone_env$coords.df[j,] <- unlist(clone_env$clones[[j]][c(4:10)])
+			  for(var in colnames(clone_env$coords.df)){
+			  		clone_env$coords.df[j,var] <- clone_env$clones[[j]][var]
+			  }		
 			  beta.add <- beta.add + 0.5
 			  print(c("new beta",beta.add,clone_env$clones[[j]]$y[which.max(clone_env$clones[[j]]$x[-which.max(clone_env$clones[[j]]$x)])], clone_env$coords.df$len[1]))
 			}
@@ -186,7 +184,7 @@ compute_clones <- function(v, x=1, y=0, wid=1.2, extra_len=1,tree=NULL, fixed_an
 	root = v[!is.na(v$parent) & v$parent == -1,]
 	v <- v[is.na(v$parent) | v$parent != -1,]
 	v <- rbind(root, v)
-	if(no_ccf & is.null(fixed_angle) & nrow(v) > 5){
+	if(no_ccf & (is.null(fixed_angle) & nrow(v) > 6) | any(table(v$parent) > 2)){
 		v <- count_leaves_per_node(v)
 		tmp <-  position_nodes_radial(v, tree, extra.len, spread)
 		clone_env <-  new.env(parent = emptyenv())
@@ -198,7 +196,6 @@ compute_clones <- function(v, x=1, y=0, wid=1.2, extra_len=1,tree=NULL, fixed_an
 		clone_env <-  position_nodes_fixed(v, tree, fixed_angle=fixed_angle, len=extra.len)
 		return(clone_env)
 	} else{
-		print(v)
 		v <- position_clones(v,tree,wid)
 	}
 	v$x <- 0
@@ -211,10 +208,12 @@ compute_clones <- function(v, x=1, y=0, wid=1.2, extra_len=1,tree=NULL, fixed_an
 	clone_env$tree <- tree
 
 	print("first pass")
-	print(beta_in)
+		print(v)
+	# print(beta_in)
 	get_clones(x=x, y=y, len=len, sig_shape=sig_shape, beta_in=beta_in, branching=branching, no_ccf=no_ccf, fixed_angle=fixed_angle, spread=spread, clone_env=clone_env)
 	#if the end of the polygon is shorter than the last clone polygon or the desired length make the polygon longer and recompute
 	# browser()
+
 	while (max(clone_env$coords.df$y0) > (clone_env$coords.df$len[1]+y) | (min(clone_env$coords.df$len) < extra.len )){
 		 print("while loop")
 		 len <- len +(extra.len-min(clone_env$coords.df$len))+0.0001
