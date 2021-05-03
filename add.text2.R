@@ -33,11 +33,22 @@ axis_overlap <- function(xpos,gene,line.dist, axis.type, cex,panel_width, return
   return(overlaps)
 }
 
-check_overlap <- function(xpos,ypos,gene,line.dist, tree.max.adjusted, cex,rad){
+check_overlap <- function(xpos,ypos,gene, tree.max.adjusted, hjust,rad){
   # function checks if the gene label will cross over any of the branch lines
-
-  gene.xrange <- sort(c(xpos, xpos+line.dist/abs(line.dist)*(strwidth(gene,unit="inches",cex=cex))))
   
+
+  if(hjust == "centre"){
+      left <- xpos - as.numeric(convertX(stringWidth(gene),"in"))/2
+      right <- xpos + as.numeric(convertX(stringWidth(gene),"in"))/2
+   }else if( hjust == "left"){
+      left<- xpos 
+      right <- xpos + as.numeric(convertX(stringWidth(gene),"in"))
+   }else if( hjust == "right"){
+      right <- xpos 
+      left <- xpos - as.numeric(convertX(stringWidth(gene),"in"))
+   }
+   gene.xrange <- c(left, right)
+
   node_segs <- adply(tree.max.adjusted[,c('tip','parent','x','y')], 1, function(w){
                                                        data.frame(y0 = (w$y+rad), y1 =(w$y-rad), x0=(w$x-rad), x1=(w$x+rad))
                                             })
@@ -58,7 +69,7 @@ check_overlap <- function(xpos,ypos,gene,line.dist, tree.max.adjusted, cex,rad){
     }
     node.intercept[i] <- ifelse(((ypos<node_segs$y0[i]) & (ypos>node_segs$y1[i]) & (gene.xrange[1]<node_segs$x0[i]) &  (gene.xrange[2]>node_segs$x0[i])),TRUE,FALSE)
   }
-
+  # browser()
  intercepts_lines <- tree.max.adjusted$tip[line.intercept]
  intercepts_nodes <- tree.max.adjusted$tip[node.intercept]
  return(list(lines=intercepts_lines, nodes=intercepts_nodes))
@@ -66,7 +77,7 @@ check_overlap <- function(xpos,ypos,gene,line.dist, tree.max.adjusted, cex,rad){
 }
 
 
-position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL, axis.type=axis.type, panel_height=NULL, panel_width=NULL, title.y=NULL, line.dist=line.dist, cex=NULL, rad=rad, alternating=FALSE, split=FALSE, label_nodes=FALSE, adjust_axis_overlap=TRUE){
+position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL, axis.type=axis.type, panel_height=NULL, panel_width=NULL, title.y=NULL, line.dist=line.dist, hjust=NULL, rad=rad, alternating=FALSE, split=FALSE, label_nodes=FALSE, adjust_axis_overlap=TRUE, cex=cex){
   text_grob_list <- vector("list",length(unlist(gene.list)))
   orig_cex <- cex
   idx <- 1
@@ -95,7 +106,7 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
         #   browser()
         # }
         str.heights <- sapply(gene.list[[s]], function(x) strheight(x,unit="inches",cex=cex))
-        spacing=0.33*mean(str.heights)
+        spacing <- 0.33*mean(str.heights)
         str.heightsum <- sum(str.heights)+spacing*length(str.heights)-spacing
         
         if(split == TRUE & split_genes ){
@@ -200,12 +211,12 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
           }else{
             xline.dist <- abs(xline.dist)
           }
-
+          hjust <- ifelse(xline.dist > 0,"left","right")  
           if(label_nodes == TRUE){
             node <- tree.max.adjusted[which(tree.max.adjusted$tip == tree.max.adjusted$tip[s]),]
             parent <- tree.max.adjusted[which(tree.max.adjusted$tip == tree.max.adjusted$parent[s]),]
             children <- tree.max.adjusted[which(tree.max.adjusted$parent == tree.max.adjusted$tip[s]),]
-            if(nrow(children) > 0){
+            if(nrow(children) > 1){
               if(nrow(children[which(children$x > node$x),]) > nrow(children[which(children$x < node$x),])){
                 xline.dist <- -1*abs(xline.dist)
               }else if(nrow(children[which(children$x > node$x),]) < nrow(children[which(children$x < node$x),])){
@@ -215,17 +226,26 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
               if( (max(children$y)+rad) > label.bottom){
                 ypos <- ypos+rad
               }
+              hjust <- ifelse(xline.dist > 0,"left","right")  
             }else{
-              # browser()
+              print(paste("xpos", xpos))
               leaves <- tree.max.adjusted[!(tree.max.adjusted$tip %in% tree.max.adjusted$parent),]
               leaves <- leaves[order(leaves$x),]
-              if(all(diff(leaves$x) < 2.5*rad) & all(diff(leaves$y) < 2.5*rad)){
-                if(node$tip %in% leaves[c(2:(nrow(leaves)-1)),]){
-                  ypos <- node$y - (xline.dist + rad)*cos(node$angle)
-                  xpos <- node$x - (xline.dist)*sin(node$angle)
+              # if(nrow(leaves) > 1 &&  all(diff(leaves$x) < 2.5*rad) & all(diff(leaves$y) < 2.5*rad)){
+              # if(node$tip == 2){
+              #   browser()
+              # }
+                if((nrow(leaves) > 2  | (nrow(tree.max.adjusted) == 3 & nrow(leaves) == 2)) && node$angle !=0 & node$tip %in% leaves[c(2:(nrow(leaves)-1)),]$tip) {
+                  # text_height <- as.numeric(convertY(stringHeight(gene.list[[s]][g]),"in"))
+                  text_height <- as.numeric(convertY(grobHeight(textGrob(gene.list[[s]][g], gp=gpar(cex=cex))),"in"))
+                  text_width <- as.numeric(convertX(grobWidth(textGrob(gene.list[[s]][g], gp=gpar(cex=cex))),"in"))
+                  ypos <- node$y - (text_height*.8 + rad) *cos(node$angle)
+                  xpos <- node$x + ( text_width*.25  )*sin(node$angle)
+                  # hjust <- "centre"
+                  xline.dist <- 0
+                  # ypos <- node$y - (xline.dist + text_height)*cos(node$angle)
                 }
-              }
-              # browser()
+              print(paste("xpos", xpos))
             }
           }
           if(label_nodes == TRUE && tree.max.adjusted$parent[s] %in% tree.max.adjusted$tip &&  ((tree.max.adjusted[which(tree.max.adjusted$tip == tree.max.adjusted$parent[s]),]$y - tree.max.adjusted$y[s]) < rad)) {
@@ -240,21 +260,21 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
               ypos <- tree.max.adjusted$y[s]
               cex <- orig_cex
               if(tree.max.adjusted$x[s]  > parent$x){
-                xline.dist <- abs(xline.dist)+rad  
+                xline.dist <- abs(xline.dist) 
                 hjust <- "left"   
               }else{
                 # browser()
                 hjust <- "right"
-                xline.dist <- -1*(abs(xline.dist)+rad)
+                xline.dist <- -1*(abs(xline.dist))
               }
             }
           } else{          
-            overlap <- check_overlap(xpos+xline.dist,ypos,gene.list[[s]][g],xline.dist, tree.max.adjusted,cex, rad)        
+            overlap <- check_overlap(xpos+xline.dist,ypos,gene.list[[s]][g], tree.max.adjusted, hjust, rad)        
             if(length(unlist(overlap)) > 0 ){
               print("overlapping")
               xline.dist <- xline.dist*-1
-              
-              overlap <- check_overlap(xpos+xline.dist,ypos,gene.list[[s]][g],xline.dist, tree.max.adjusted,cex, rad)
+              hjust <- ifelse(xline.dist > 0,"left","right")
+              overlap <- check_overlap(xpos+xline.dist,ypos,gene.list[[s]][g], tree.max.adjusted, hjust, rad)
               if( length(unlist(overlap)) > 0 ){
                 print("still overlapping")
                 xline.dist <- xline.dist*-1
@@ -262,14 +282,14 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
               }
             }          
 
-            if(length(overlap$nodes) > 0 && label_nodes == TRUE && !(tree.max.adjusted[overlap$nodes] %in% tree.max.adjusted$parent)){  #TODO make this more general,
-              ypos <- ypos - abs(xline.dist) - rad
-              xline.dist <- 0
-              hjust <- "center"
-              # print(ypos)
-            } else{
-              hjust <- ifelse(xline.dist > 0,"left","right")              
-            }
+            # if(length(overlap$nodes) > 0 && label_nodes == TRUE && !(tree.max.adjusted[overlap$nodes] %in% tree.max.adjusted$parent)){  #TODO make this more general,
+            #   # browser()
+            #   # ypos <- ypos - abs(xline.dist) - rad
+            #   # xline.dist <- 0
+            #   # hjust <- "center"
+            # } else{
+            #   hjust <- ifelse(xline.dist > 0,"left","right")              
+            # }
 
             if(adjust_axis_overlap){
               overlaps_axis  <- axis_overlap(xpos, gene.list[[s]][g], xline.dist, axis.type,cex, panel_width, return_cex=TRUE)
@@ -280,8 +300,8 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
               }
             }
           }
-            # print("hjust")
-            # print(hjust)
+
+            print(paste("xpos", xpos+xline.dist))
             text_grob_list[[idx]] <- textGrob(gene.list[[s]][g],x=unit(xpos+xline.dist,"inches"),y=unit(ypos,"inches"),just=c(hjust,vjust), gp=gpar(col=gene.col[[s]][g],cex=cex))
           }
           
