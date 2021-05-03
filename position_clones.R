@@ -2,11 +2,13 @@ add_vaf <- function(v){
   v <- v[order(v$parent),]
   for (i in seq_along(v$lab)){
     if(v$parent[i] == -1){
-      v$vaf[i] <- 1
+      # v$vaf[i] <- 1
+      parent <- data.frame(lab=-1, vaf=1)
     }else{
-      parent <- v[which(v$lab == v$parent[i]),]    
-      v$vaf[i] <- parent$vaf/nrow(v[v$parent == parent$lab,])
+      parent <- v[which(v$lab == v$parent[i]),]
     }
+      v$vaf[i] <- parent$vaf/nrow(v[v$parent == parent$lab,])
+    
   }
   return(v)
 }

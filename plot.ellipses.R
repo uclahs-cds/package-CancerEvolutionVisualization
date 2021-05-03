@@ -1,16 +1,41 @@
+
+# panel.cluster.ellipse <- function( coords.df, rad, ...){
+
+# 	if(!('plot.lab' %in% colnames(coords.df))){
+# 		coords.df$plot.lab	 <- coords.df$lab
+# 	}
+# 	coords.df$plot.lab <- as.character(coords.df$plot.lab)
+# 	if(!('circle' %in% colnames(coords.df))){
+# 		coords.df$circle <- sapply(coords.df$plot.lab, function(x) return(nchar(x)<3))
+# 	}
+	
+# 	if(any(coords.df$circle == TRUE)){
+# 		grid.circle(x = unit(coords.df$x[which(coords.df$circle == TRUE)], "native"), y = unit(coords.df$y[which(coords.df$circle == TRUE)],"native"), r = unit(rad,"inches"), gp=gpar(fill=coords.df$c.col,col="transparent",lwd=2),default.units="native",...)
+# 	# grid.rect(y=unit(coords.df$x[which(coords.df$lab==i)], "native"), x=unit(coords.df$y[which(coords.df$lab==i)], "native"), height=unit(2*rad,"inches"), width=unit(2*rad, "inches"),gp=gpar(col="black"))
+	
+# 	}
+# 	if(any(coords.df$circle == FALSE)){
+# 		grid.ellipse(x = unit(coords.df$x[which(coords.df$circle == FALSE)],"native"), y = unit(coords.df$y[which(coords.df$circle == FALSE)],"native"), size = rad*1.2, ar=3/5, gp=gpar(fill=coords.df$c.col, col=coords.df$c.col), angle=pi/2, position.units="native",...)
+# 	}
+# }
 panel.cluster.ellipse <- function( coords.df, rad, ...){
+
 	if(!('plot.lab' %in% colnames(coords.df))){
 		coords.df$plot.lab	 <- coords.df$lab
 	}
 	coords.df$plot.lab <- as.character(coords.df$plot.lab)
-	coords.df$circle <- sapply(coords.df$plot.lab, function(x) return(nchar(x)<3))
-	if(any(coords.df$circle==TRUE)){
-		grid.circle(x = unit(coords.df$x[coords.df$circle==TRUE], "native"), y = unit(coords.df$y[coords.df$circle==TRUE],"native"), r = unit(rad,"inches"), gp=gpar(fill=coords.df$c.col,col="transparent",lwd=2),default.units="native",...)
-	# grid.rect(y=unit(coords.df$x[coords.df$lab==i], "native"), x=unit(coords.df$y[coords.df$lab==i], "native"), height=unit(2*rad,"inches"), width=unit(2*rad, "inches"),gp=gpar(col="black"))
-	
+	if(!('node' %in% colnames(coords.df))){
+		coords.df$node <- sapply(coords.df$plot.lab, function(x) if(nchar(x)<3) return('circle') else return('ellipse'))
 	}
-	if(any(coords.df$circle!=TRUE)){
-		grid.ellipse(x = unit(coords.df$x[coords.df$circle!=TRUE],"native"), y = unit(coords.df$y[coords.df$circle!=TRUE],"native"), size = rad*1.2, ar=3/5, gp=gpar(fill=coords.df$c.col, col=coords.df$c.col), angle=pi/2, position.units="native",...)
+	
+	if(any(coords.df$node == 'circle')){
+		grid.circle(x = unit(coords.df$x[which(coords.df$node == 'circle')], "native"), y = unit(coords.df$y[which(coords.df$node == 'circle')],"native"), r = unit(rad,"inches"), gp=gpar(fill=coords.df[which(coords.df$node == 'circle'),]$c.col,col="transparent",lwd=2),default.units="native",...)
+	}
+	if(any(coords.df$node == 'rect')){
+		grid.rect(y=unit(coords.df$x[which(coords.df$node == 'rect')], "native"), x=unit(coords.df$y[which(coords.df$node == 'rect')], "native"), height=unit(2*rad,"inches"), width=unit(2*rad, "inches"),gp=gpar(col="black", fill='white',lwd=1.5, lty="31"))	
+	}
+	if(any(coords.df$node == 'ellipse')){
+		grid.ellipse(x = unit(coords.df$x[which(coords.df$node == 'ellipse')],"native"), y = unit(coords.df$y[which(coords.df$node == 'ellipse')],"native"), size = rad*1.2, ar=3/5, gp=gpar(fill=coords.df[which(coords.df$node == 'ellipse'),]$c.col, col=coords.df[which(coords.df$node == 'ellipse'),]$c.col), angle=pi/2, position.units="native",...)
 	}
 }
 
@@ -19,6 +44,7 @@ panel.cluster.pie <- function(x=NULL, y=NULL, coords.df, cluster_list, rad, ...)
 		coords.df$plot.lab	 <- coords.df$lab
 	}
 	coords.df$plot.lab <- as.character(coords.df$plot.lab)
+
 	coords.df$circle <- sapply(coords.df$lab, function(x) return(length(cluster_list[[paste0("N",x)]])<2))
 	orig_par <- par()
 	par(new=TRUE)

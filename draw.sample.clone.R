@@ -10,7 +10,16 @@ draw.sample.clones <- function(v, x=1, y=0, wid, len=9, extra.len=1,tree=NULL, f
     v = v[is.na(v$parent) | v$parent != -1,]
     v = rbind(root, v)
     if(no_ccf ){
-      # browser()
+      # v$y <- 0
+      # poly_tumour <- if(nrow(v[v$parent == -1,]) > 0) TRUE else FALSE
+      # if(poly_tumour == TRUE){
+      #   v$parent <- v$parent + 1
+      #   v$parent[v$parent== 0] <- 1
+      #   v$lab <- as.numeric(v$lab) + 1
+      #   print(v)
+      #   v <- rbind(data.frame(lab=1, ccf=NA, color='orange', parent=-1, excluded=NA, bell=NA, alpha=0.5, c.col="orange", vaf=1, x=0, x1=0, y=0), v)
+      # }
+      print(v)
       v <- count_leaves_per_node(v)
       clone.out <-  position_nodes_radial(v, tree, extra.len,spread)
       return(clone.out)

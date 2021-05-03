@@ -3,7 +3,7 @@ draw.my.tree2 <- function( in.tree.df=NULL, tree = NULL, genes.df = NULL, cluste
                           seg1.col="black",seg2.col="green", add.normal=FALSE, add.bells = TRUE, add.circle=TRUE, add.genes=TRUE, length_from_edge=TRUE,add.labels=TRUE,
                           branching=TRUE, axis.type='PGA',w.padding=0.3,h.padding=0.3,lab.cex =1.55,lin.width, line.dist=0.1,circle.col="grey29",line.lwd=3,title.cex=1.7,
                           curve=3,axis.space.left=0, min_width=NULL, axis.space.right=0,alternate.genes=FALSE, axis.cex =1.45, snv.interval=400,pga.cap=TRUE, title.y=0.3,
-                          label_nodes=FALSE, pga.interval=10, spread=1,xlab="",node.cex=1.4){
+                          label_nodes=FALSE, pga.interval=10, spread=1,xlab="",node.cex=1.4, poly_tumour=FALSE){
   
   
   
@@ -41,6 +41,8 @@ draw.my.tree2 <- function( in.tree.df=NULL, tree = NULL, genes.df = NULL, cluste
   if(add.circle==TRUE && length_from_edge==TRUE){
     tree <- adjust_tree(v,tree,rad, scale.x.real)  
   }
+
+  print(raw.tree)
   print(tree)
 
   #remove any nodes that shouldn't be plotted
@@ -72,14 +74,18 @@ draw.my.tree2 <- function( in.tree.df=NULL, tree = NULL, genes.df = NULL, cluste
   tree.out <- add_segs3(tree, clone.out$v,offset=offset,scale.x.real=scale.x.real)
   tree_segs <- tree.out$tree_segs 
 
-  tree_segs <- tree_segs[which(tree_segs$basey !=tree_segs$tipy),]
+print("trees")
+  print(tree.out)
+  # print(tree_segs2) 
+
+  tree_segs <- tree_segs[which(!(tree_segs$basey == tree_segs$tipy &  tree_segs$basex == tree_segs$tipx)),]
   
   #get lines for SNVs
   tree_segs2 = NULL
 
   if (!is.null(tree.out[[2]])){
     tree_segs2 <-  tree.out$tree_segs2
-    tree_segs2 <- tree_segs2[which(tree_segs2$basey !=tree_segs2$tipy),]
+    tree_segs2 <- tree_segs2[which(!(tree_segs2$basey ==tree_segs2$tipy &  tree_segs2$basex == tree_segs2$tipx)),]
   }
 
 print("trees")
@@ -87,6 +93,21 @@ print("trees")
   print(tree_segs2) 
 
   
+  if( add.circle==TRUE && poly_tumour == TRUE){
+    if(!('plot.lab' %in% colnames(clone.out$v))){
+      clone.out$v$plot.lab   <- clone.out$v$lab
+    }
+    clone.out$v$plot.lab <- as.character(clone.out$v$plot.lab)
+    
+    # clone.out$v$circle <- sapply(clone.out$v$plot.lab, function(x) return(nchar(x)<3))
+    # clone.out$v$circle[clone.out$v$lab == 1] <- NA
+    clone.out$v$node <- sapply(clone.out$v$plot.lab, function(x) if(nchar(x)<3) return('circle') else return('ellipse'))
+    clone.out$v$node[clone.out$v$lab == 1] <- 'rect'
+    clone.out$v$plot.lab[clone.out$v$lab == 1] <- 'N' 
+    clone.out$v$plot.lab[clone.out$v$lab != 1] <- clone.out$v$lab[clone.out$v$lab != 1]-1
+    add.normal <- FALSE
+  }
+
   #make labels for nodes
   if(add.labels){
   
@@ -148,10 +169,12 @@ print("trees")
   
   gene_grobs <- NULL
 
-   print("clones")
+
+  
+  print("clones")
   print(clone.out$v)
 
-print("trees")
+  print("trees")
   print(tree_segs)
   print(tree_segs2)
 
@@ -169,20 +192,27 @@ print("trees")
      
       }
       #make lines for SNVs
-      if(!is.null(tree_segs2) ){
+      if(!is.null(tree_segs2) & nrow(tree_segs2) > 0 ){
         # grid.segments(y0=tree_segs2$basex,x0=tree_segs2$basey,y1=tree_segs2$tipx, x1=tree_segs2$tipy, default.units="native", gp=gpar(col=seg2.col,lwd=line.lwd))
         grid.segments(x0=tree_segs2$basex,y0=tree_segs2$basey,x1=tree_segs2$tipx, y1=tree_segs2$tipy, default.units="native", gp=gpar(col=seg2.col,lwd=line.lwd))
      
       }
       
-       if(add.circle ==TRUE ){
-       panel.cluster.ellipse(coords.df = clone.out$v, rad=rad)
+       if(add.circle == TRUE ){
+         upViewport()
+         downViewport(trellis.vpname("panel",1,1,clip.off=TRUE))
+         panel.cluster.ellipse(coords.df = clone.out$v, rad=rad)
+         upViewport()
+         downViewport(trellis.vpname("panel",1,1))
        # panel.cluster.pie(coords.df = clone.out$v, cluster_list=cluster_list, rad=rad)
       }
 
 
       if(add.labels == TRUE ){
         grid.text(lab, x=unit(x,"native"), y=unit(y,"native"),just=c("center","center"), gp=gpar(col='#FFFFFF',cex=node.cex))
+        if(poly_tumour == TRUE){
+          grid.text(lab[which(lab=='N')], x=unit(x[which(lab=='N')],"native"), y=unit(y[which(lab=='N')],"native"),just=c("center","center"), gp=gpar(col='black',cex=node.cex))
+        }
       }
 
       if(add.normal ==TRUE){
