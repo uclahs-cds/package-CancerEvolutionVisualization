@@ -66,7 +66,6 @@ pieGrob <- function(x, y, rad=.1, prop_list, col_df, xy.units="native"){
 	x0 <- 0
 	y0 <- 0
 	slice_list <- list()
-	print(prop_list)
 	for(i in seq_along(prop_list)){
 		angle <- 2*pi*sum(prop_list[1:i])
 		x0 <- if(i == 1) 0 else r*sin(2*pi*sum(prop_list[1:(i-1)]))

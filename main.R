@@ -33,7 +33,7 @@ make_clone_tree_grobs <- function(ccf_df, tree,  scale1, scale2, wid,
 	}
 	v <- v[order(v$lab),]
 	no_ccf <- FALSE
-	clone.out$no_ccf <- no_ccf
+	
 	if(!('ccf' %in% colnames(ccf_df)) | all(is.na(ccf_df$ccf)) | add_polygons == FALSE){
 	  v$vaf <- NULL
 	  v$vaf[v$parent == -1] <- 1
@@ -74,8 +74,9 @@ make_clone_tree_grobs <- function(ccf_df, tree,  scale1, scale2, wid,
 	}
 	
 	# browser()
+	extra_len <- extra_len*(1/scale1)
 	clone.out <- make_clone_polygons(v, tree, wid, scale1, scale2, extra_len, node_col, spread=spread, sig_shape=sig_shape, fixed_angle=fixed_angle, beta_in=sig_curve, add_polygons= add_polygons, no_ccf=no_ccf)
-	
+	clone.out$no_ccf <- no_ccf
 	plot_size <- calculate_main_plot_size(clone.out, scale1, wid, min_width, xaxis_space_left, xaxis_space_right, rad)
 	if(!no_ccf){
 		add_clone_grobs(clone.out)
