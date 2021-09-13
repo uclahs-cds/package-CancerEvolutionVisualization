@@ -1,6 +1,7 @@
 calculate_main_plot_size <- function(clone.out, scale1, wid, min_width, xaxis_space_left, xaxis_space_right, rad){
-	ymax <- max(clone.out$v$len) + clone.out$v$y[1]+2*rad/scale1
-	height <- (ymax+2)*scale1
+	ymax <- max(clone.out$v$len) + clone.out$v$y[1]
+	# ymax <- max(clone.out$v$len) + clone.out$v$y[1]+2*rad/scale1
+	height <- (ymax)*scale1
 	
 	if(is.null(min_width)){
 	  xmax <- wid
@@ -47,7 +48,7 @@ add_axis_label <- function(axisGrob, axis_label, axis_position, axis_label_cex, 
 		just <- c("centre","top")
 		rot <- 0
 		x <- unit(0.5, "npc")
-		y <- (getGrob(axisGrob, "labels")$y+getGrob(axisGrob, "ticks")$y1)*1.5		
+		y <- (getGrob(axisGrob, "labels")$y+getGrob(axisGrob, "ticks")$y1)*1.75
 	} else {
 		pushViewport(vp)
 		tcklen  <- unit(diff(c(as.numeric(getGrob(axisGrob, "ticks")$x0), as.numeric(getGrob(axisGrob, "ticks")$x1))),"lines")
@@ -91,7 +92,7 @@ add_axes <- function(clone.out,  scale1, scale2=NULL, yaxis_position="left", xax
 		conversion_factor <- scale1/scale2
 		ymax1 <- add_yaxis(clone.out, yaxis_position="left", axis1_label=yaxis1_label, yaxis1_interval=yaxis1_interval, no_ccf=no_ccf, axis_label_cex=axis_label_cex[['y']], axis_cex=axis_cex[['y']],ylabels=ylabels1, ylimit=ylimit)
 		# print("done axis1")
-		add_yaxis(clone.out, yaxis_position="right", conversion_factor=conversion_factor, axis1_label=yaxis2_label, yaxis1_interval=yaxis2_interval, no_ccf=no_ccf, axis_label_cex=axis_label_cex[['y']], axis_cex=axis_cex[['y']],ylabels=ylabels2, ylimit=ymax1*conversion_factor)
+		add_yaxis(clone.out, yaxis_position="right", conversion_factor=conversion_factor, axis1_label=yaxis2_label, yaxis1_interval=yaxis2_interval, no_ccf=no_ccf, axis_label_cex=axis_label_cex[['y']], axis_cex=axis_cex[['y']],ylabels=ylabels2, ylimit=ymax1)
 		# print("done axis2")
 		#debugging
 		# clone.out$grobs <- c(clone.out$grobs, list(yaxisGrob(at=c(0,1,3954*scale2,2,3), label=c(0,1,"", 2,3), gp=gpar(cex=axis_label_cex[['y']]), main=FALSE, vp=viewport(height=unit(clone.out$height,"inches"), width=unit(clone.out$width+.35, "inches"), name="ruler.vp", xscale=clone.out$xlims,  yscale=c(clone.out$ymax*scale1,0),gp=gpar(fill='pink'), clip="off")  )))
@@ -102,7 +103,7 @@ add_axes <- function(clone.out,  scale1, scale2=NULL, yaxis_position="left", xax
 
 add_yaxis <- function(clone.out, yaxis_position="left", conversion_factor=1, axis1_label="PGA", yaxis2_label=NULL, yaxis1_interval=NA, no_ccf=FALSE, ylimit=NULL, axis_label_cex=list(x=1.55,y=1.55), axis_cex=list(x=1,y=1), ylabels=NULL){
 	vp_unclipped <- make_plot_viewport(clone.out, clip="off") #necessary to get the right positioning
-	
+	# browser()
 	if(!is.null(ylimit) && ylimit == 'node'| (is.null(ylimit) & no_ccf == TRUE)){
 		ymax <- max(clone.out$v$y )
 	}else if (!is.null(ylimit) && ylimit == 'plot_length'| (is.null(ylimit) & no_ccf == FALSE)){

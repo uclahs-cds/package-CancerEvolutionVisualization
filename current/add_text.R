@@ -228,7 +228,7 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
               }
               hjust <- ifelse(xline.dist > 0,"left","right")  
             }else{
-              print(paste("hjust ", hjust, "xline.dist ", xline.dist, " xpos", xpos))
+              # print(paste("hjust ", hjust, "xline.dist ", xline.dist, " xpos", xpos))
               leaves <- tree.max.adjusted[!(tree.max.adjusted$tip %in% tree.max.adjusted$parent),]
               leaves <- leaves[order(leaves$x),]
               # if(nrow(leaves) > 1 &&  all(diff(leaves$x) < 2.5*rad) & all(diff(leaves$y) < 2.5*rad)){

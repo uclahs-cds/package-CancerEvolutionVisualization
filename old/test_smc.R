@@ -56,8 +56,9 @@ pattern = "unique_6clust_.*_split_bottom.csv"
 pattern = "unique_6clust_.*_merged_bottom.txt"
 pattern = "unique_2clust_.*_ottom.txt"
 
-path = "~/Shad_scoring/smc_het_eval/"
-pattern = "unique_.*clust_[0-9].*.txt"
+path = "~/Shad_scoring/smc_het_eval/tree_permutations/"
+# pattern = "unique_.*clust_[0-9].*.txt"
+pattern = "unique_4clust_[0].*.txt"
 
 files = list.files(path, full.names=TRUE,pattern=pattern)
 files_2A <- files[grep("_2A", files)]
@@ -82,14 +83,14 @@ col <- c("#969492",
 "#db794a")
 
 for (i in seq_along(files_2A)){
-	# i = 1
+	i = 5
 	file_2A = files_2A[i]
 	file_3A = files_3A[i]
 	truth_2A = paste0( str_extract(file_2A, ".*_\\d+_"), "truth_2A.txt")
 	outname = names[i]
 
 	print(file_2A)
-	# source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/prep.tree.R')
+	source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/prep.tree.R')
 	inputs <- prep.smchet(out_3A=file_3A,  out_2A=c(truth_2A,file_2A), samp.name="test", col=col)
 	samp <- get_casename(outname)
 

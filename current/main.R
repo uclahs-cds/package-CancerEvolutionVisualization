@@ -97,7 +97,7 @@ make_clone_tree_grobs <- function(ccf_df, tree,  scale1, scale2, wid,
 	}
 	print(length(clone.out$grobs))
 	if(yaxis_position != "none" ){
-		add_axes(clone.out, yaxis_position, scale1=scale1, scale2=scale2,  axis_label_cex=axis_label_cex, axis_cex=axis_cex, no_ccf=no_ccf, xaxis_label=xaxis_label,  yaxis1_label=yaxis1_label, yaxis2_label=yaxis2_label, yaxis1_interval=yaxis1_interval, yaxis2_interval=yaxis2_interval, ylimit=ylimit,...)
+		add_axes(clone.out, yaxis_position, scale1=scale1, scale2=scale2,  axis_label_cex=axis_label_cex, axis_cex=axis_cex, no_ccf=no_ccf, xaxis_label=xaxis_label,  yaxis1_label=yaxis1_label, yaxis2_label=yaxis2_label, yaxis1_interval=yaxis1_interval, yaxis2_interval=yaxis2_interval, ylimit=ylimit)
 	}
 	if(add_genes == TRUE & !is.null(genes_df)){			
 	    gene_grobs <- add_text2(clone.out$tree, genes_df,label_nodes=genes_on_nodes, line.dist= gene_line_dist, title.y=clone.out$height, panel_height=clone.out$height, panel_width=clone.out$width, xlims=clone.out$xlims, ymax=clone.out$ymax, cex=gene.cex, v=clone.out$v, axis.type=yaxis_position, rad=rad, scale=scale1, clone.out=clone.out, alternating=FALSE)
