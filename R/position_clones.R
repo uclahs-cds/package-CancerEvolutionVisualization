@@ -2,7 +2,6 @@ add_vaf <- function(v){
   v <- v[order(v$parent),]
   for (i in seq_along(v$lab)){
     if(v$parent[i] == -1){
-      # v$vaf[i] <- 1
       parent <- data.frame(lab=-1, vaf=1)
     }else{
       parent <- v[which(v$lab == v$parent[i]),]
@@ -19,12 +18,12 @@ position_clones <- function(v,tree,wid){
   v$x.mid <- 0
   v$x1 <- 0
   v$x2 <- 0
-  # browser()
+  
   for (p in unique(v$parent)){
     children <- v[which(v$parent==p),]
     parent <- v[which(v$lab==p),]
+    
     #if there is only one child center them with the parent
-
     if(nrow(children) == 1){
       if(p == -1){
         v$x.mid[v$lab == children$lab] <- 0
@@ -40,7 +39,6 @@ position_clones <- function(v,tree,wid){
         children$length <- sapply(children$lab, function(x) tree$length[tree$tip == x])
         children_ascending <- children[order(children$length),]
 
-        # browser()
         child_order <- unlist(lapply(c(1:ceiling(nrow(children)/2)), function(x) if(x < (nrow(children)-x+1)) return(c(x,(nrow(children)-x+1))) else return(x)))
         children <- children_ascending[child_order,-ncol(children_ascending)]
 
@@ -78,9 +76,11 @@ position_nodes_fixed <- function(v, tree, fixed_angle, len){
       y0 <- tree$length[tree$parent==-1]
       len0 <- len + y0
 
-    }else{ #parent not root -- not trunk clone
-      par <- v[v$lab == vi$parent,] #get parent clone
-
+    }else{ 
+      #parent not root -- not trunk clone
+      par <- v[v$lab == vi$parent,] 
+      
+      #get parent clone
       siblings <- v[which(v$parent == par$lab),]
       if(nrow(siblings) == 1){
         parent_angle <- 0
@@ -120,7 +120,6 @@ position_nodes_fixed <- function(v, tree, fixed_angle, len){
 }
 
 position_clones_no_vaf <- function(v, wid, spread=TRUE){
-
   v$y.mid <- 0
   v$y1 <- 0
   v$y2 <- 0
@@ -134,7 +133,8 @@ position_clones_no_vaf <- function(v, wid, spread=TRUE){
         v$y.mid[v$lab == children$lab] <- 0
         v$y1[v$lab == children$lab] <- -wid/2
         v$y2[v$lab == children$lab] <- wid/2
-      }else{ # only children are centered on their parent clones midline
+      }else{ 
+        # only children are centered on their parent clones midline
         v$y.mid[v$lab == children$lab] <- v$y.mid[v$lab==p]
         if(spread==TRUE){
           v$vaf[v$lab == children$lab] <- v$vaf[v$lab == p]
@@ -166,9 +166,6 @@ position_clones_no_vaf <- function(v, wid, spread=TRUE){
           last_bound <- last_bound + 1
         }
       } else{
-        # browser()
-        print("parent")
-        print(parent)
         child_vaf <- parent$vaf/nrow(children)
         position <- parent$y.mid-wid/2*parent$vaf
         v$vaf[which(v$parent==p)] <- child_vaf
@@ -176,9 +173,6 @@ position_clones_no_vaf <- function(v, wid, spread=TRUE){
    
       for (c in seq_along(children$lab)){
         child <- children[c,]
-        
-        print("position")
-        print(position)
         v$y.mid[v$lab==child$lab[1]] <- position + child$vaf[1]*wid/2
         v$y1[v$lab==child$lab[1]] <- v$y.mid[v$lab==child$lab[1]]-child$vaf[1]*wid/2
         v$y2[v$lab==child$lab[1]] <- v$y.mid[v$lab==child$lab[1]]+child$vaf[1]*wid/2
@@ -187,22 +181,5 @@ position_clones_no_vaf <- function(v, wid, spread=TRUE){
       }
     }
   }
-  print("position_clones")
-  print(v)
   return(v)
 }
-
-# estimate_min_len(v,tree){
-#   len <- 0
-#   tiered_tree <- get_num_tiers(tree)
-#   for (i in unique(tiered_tree$tiers)){
-#     tier <- tiered_tree[tiered_tree$tier ==i,]
-#     if(nrow(v_tier)==1){
-#       len <- len + tree$length[which(tree$tip == tier$lab)]
-#     }else{
-#       for (j in v_tier$tip){
-        
-#       }
-#     }
-#   }
-# }

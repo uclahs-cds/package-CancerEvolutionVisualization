@@ -1,31 +1,10 @@
-
-library(grid)
-library(gridExtra)
-library(gtable)
-library(plyr)
-library(devtools)
-package_dir <- '~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/'
-source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/current/prep.tree.R')
-source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/current/add_segs.R')
-source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/current/tree_tiers.R')
-source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/current/tree_tiers.R')
-source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/current/adjust_tree.R')
-source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/current/position_nodes_radial.R')
-source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/current/set_up_plot_area.R')
-source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/current/add_text.R')
-source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/current/position_clones.R')
-source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/current/calculate_clone_polygons.R')
-source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/current/main.R')
-source('~/cluster/svn/Collaborators/BrendaGallie/Rb1_follow_up/WGS/subclone_plotting/current/add_nodes.R')
-
-trees_df <- read.table(paste0(package_dir, "/test_data/TMHN_WGS_TSP_all_trees.txt"),header=FALSE,stringsAsFactors =FALSE, fill=TRUE)
-snvs_df <- read.table(paste0(package_dir,"/test_data/2019-01-09_Driver_SNV_stacked.txt"),header=TRUE,stringsAsFactors =FALSE)
-cnas_df <- read.table(paste0(package_dir,"/test_data/2019-01-10_Driver_CNA_stacked.txt"),header=TRUE,stringsAsFactors =FALSE)
+trees_df <- read.table("data/TMHN_WGS_TSP_all_trees.txt", header=FALSE, stringsAsFactors=FALSE, fill=TRUE);
+snvs_df <- read.table("data/2019-01-09_Driver_SNV_stacked.txt", header=TRUE, stringsAsFactors=FALSE);
+cnas_df <- read.table("data/2019-01-10_Driver_CNA_stacked.txt", header=TRUE, stringsAsFactors=FALSE);
 colours <- c(NA, '#999793', "#5884BB", "#FCF9BF","#0a610d", "#c946bd")
 
 names(cnas_df)[2] <- 'gene'
 names(cnas_df)[1] <- 'Sample'
-
 
 sample=unique(trees_df[,1])[3]
 filename <- paste0(sample, "_single.pdf")
@@ -47,7 +26,6 @@ axis.type="both"
 
 inputs <- prep.tree(samp=sample,trees=samp_tree, cnas=samp_cnas,axis.type='both',snvs=samp_snvs,colours=colours,pga=samp_pga,pga.percent=TRUE, normal.included = FALSE)
 
-
 scale.x.real <- 1/20
 out <- SRCGrob(inputs$in.tree.df, inputs$tree, genes_df= inputs$genes.df,filename=filename,scale2=scale2,wid=2, extra_len=.1,
 	        scale1 = scale.x.real,  w_padding = inputs$w.padding, h_padding=1, rad=0.1, gene.cex=0.85, fixed_angle=pi/6,
@@ -61,5 +39,3 @@ pdf("test.pdf", height=15)
 grid.newpage()
 grid.draw(out[[1]])
 dev.off()
-
-

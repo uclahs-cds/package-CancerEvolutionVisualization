@@ -3,7 +3,7 @@ add_segs3 <- function(tree,v,offset=0,rad=0,scale.x.real=NULL){
   #calculate offset based on the line width
   offset <- offset*1/scale.x.real
   offset <- offset/2
-  # browser()
+
   tree_segs_adjusted <- tree_segs <- adply(tree, 1, function(x) {
     if(x$parent ==-1){
       basey = 0;
@@ -37,15 +37,11 @@ add_segs3 <- function(tree,v,offset=0,rad=0,scale.x.real=NULL){
                                                         return(data.frame(basex,basey,tipx,tipy))
                                                         })
 
-  # browser()
-  tree_segs_adjusted <- tree_segs_adjusted[which(!(tree_segs_adjusted$basey == tree_segs_adjusted$tipy & tree_segs_adjusted$basex == tree_segs_adjusted$tipx)),]
-  
-
-  # if(!is.null(tree$length2.c)){
+    tree_segs_adjusted <- tree_segs_adjusted[which(!(tree_segs_adjusted$basey == tree_segs_adjusted$tipy & tree_segs_adjusted$basex == tree_segs_adjusted$tipx)),]
+    
     second_tree_segs <- tree_segs
     second_tree_segs$tipy <- second_tree_segs$basey+second_tree_segs$length2.c*cos(second_tree_segs$angle)
     second_tree_segs$tipx <- second_tree_segs$basex+second_tree_segs$length2.c*sin(second_tree_segs$angle)
-
 
     second_tree_segs_adjusted <- adply(second_tree_segs,1, function(r){
                                                           offset_x  <- offset*cos(r$angle)
@@ -62,7 +58,6 @@ add_segs3 <- function(tree,v,offset=0,rad=0,scale.x.real=NULL){
                                                           return(data.frame(basex,basey,tipx,tipy))
                                                           })
 
-    print(second_tree_segs_adjusted)
     second_tree_segs_adjusted <- second_tree_segs_adjusted[which(!(second_tree_segs_adjusted$basey == second_tree_segs_adjusted$tipy & second_tree_segs_adjusted$basex == second_tree_segs_adjusted$tipx)),]
   }
   tree.out <- list(tree_segs = tree_segs_adjusted,tree_segs2=second_tree_segs_adjusted)
@@ -73,7 +68,7 @@ get_seg_coords <- function(tree,v,offset=0,rad=0,scale1=NULL){
   #calculate offset based on the line width
   offset <- offset*1/scale1
   offset <- offset/2
-  # browser()
+
   tree_segs <- adply(tree, 1, function(x) {
     if(x$parent ==-1){
       basey = 0;
@@ -109,7 +104,6 @@ get_seg_coords <- function(tree,v,offset=0,rad=0,scale1=NULL){
   tree_segs_adjusted <- tree_segs_adjusted[which(tree_segs_adjusted$basey !=tree_segs_adjusted$tipy),]
   
   if (length(grep("length",colnames(tree)))== 4){  
-  # if(!is.null(tree$length2.c)){
     second_tree_segs <- tree_segs
     second_tree_segs$tipy <- second_tree_segs$basey+second_tree_segs$length2.c*cos(second_tree_segs$angle)
     second_tree_segs$tipx <- second_tree_segs$basex+second_tree_segs$length2.c*sin(second_tree_segs$angle)
@@ -132,8 +126,7 @@ get_seg_coords <- function(tree,v,offset=0,rad=0,scale1=NULL){
 
     second_tree_segs_adjusted <- second_tree_segs_adjusted[which(second_tree_segs_adjusted$basey !=second_tree_segs_adjusted$tipy),]
   }
-  print(tree_segs_adjusted)
-  print(second_tree_segs_adjusted)
+  
   tree.out <- list(tree_segs = tree_segs_adjusted, tree_segs2=second_tree_segs_adjusted)
   return(tree.out)    
 }

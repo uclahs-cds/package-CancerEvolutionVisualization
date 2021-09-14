@@ -1,4 +1,3 @@
-
 get_num_tiers <- function(tree){
 	tier_env <- new.env()
 	tree$tier <- 1
@@ -23,7 +22,3 @@ get_num_tiers <- function(tree){
 	n_tiers = max(tier_tree$tier)
 	return(tier_tree)
 }
-
-# calculate_tree_len <- function(tree,len){
-# 	for (tier in unique())
-# }

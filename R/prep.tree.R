@@ -2,21 +2,14 @@ prep.tree <- function(samp=NULL,trees=NULL,cnas = NULL, snvs = NULL, pga=NULL, C
   if(!(samp %in% trees[,1] )){stop("Sample not found in trees file")}
   tree.df <- trees[trees[,1] == samp,]
   
-  # if(!(samp %in% cnas$Sample ) & !is.null(cnas)){stop("Sample not found in CNA file") }
-  # if(!(is.null(snvs) ) & !(samp %in% snvs$Sample)){stop("Sample not found in SNV file") }
   if(any(grepl("parent",tree.df[1,])==TRUE)){
     colnames(tree.df) <- tree.df[1,]
     colnames(tree.df)[1] <- "Sample"
     tree.df <- tree.df[c(2:nrow(tree.df)),]
-  # } else if(any(grepl("parent",trees[1,])==TRUE)){
-  #   colnames(tree.df) <- trees[1,]
-  #   colnames(tree.df)[1] <- "Sample"
   } else if(any(grepl("parent",colnames(trees))==TRUE)){
     colnames(tree.df) <- colnames(trees)
     colnames(tree.df)[1] <- "Sample"
   }else{stop("No column names detected")}
-  
-
   
   tree.df$parent[tree.df$parent == 0] <- -1
   tree.df$cellular_prevalence <- as.numeric(tree.df[,CF_col])  
@@ -38,7 +31,6 @@ prep.tree <- function(samp=NULL,trees=NULL,cnas = NULL, snvs = NULL, pga=NULL, C
   }
   
   if(!(is.null(pga))){
-
     if(!(samp %in% pga$Sample )){stop("Sample not found in PGA file")}
     pga.df <- pga[pga$Sample==samp,]
     names.pga <- colnames(pga)
@@ -47,20 +39,17 @@ prep.tree <- function(samp=NULL,trees=NULL,cnas = NULL, snvs = NULL, pga=NULL, C
     }
     pga.df$Node <- as.numeric(pga.df$Node)
     pga.df$PGA <- as.numeric(pga.df$PGA)
-    # pga.df$PGA_accumulated <- as.numeric(pga.df$PGA_accumulated)
+    
     if(pga.percent==TRUE){
       pga.df$PGA <- pga.df$PGA/100
-      #    pga.df$PGA_accumulated <- pga.df$PGA_accumulated/100
     }
     pga.df$CP <- as.numeric(pga.df$CP)
     pga.df$Node[pga.df$Node == 0] <- -1 
-    # browser() 
+
     pga.df$Node <- order(-pga.df$CP)    
     out.tree <- data.frame(parent=as.numeric(tree.df$parent),tip = as.numeric(tree.df$child), length1=(pga.df$PGA[-1]*100), length2=as.numeric(tree.df$num_ssms),stringsAsFactors = FALSE)
   } else{
-
     out.tree <- data.frame(parent=as.numeric(tree.df$parent),tip = as.numeric(tree.df$child), length1=as.numeric(tree.df$num_ssms),stringsAsFactors = FALSE)
-  
   }
   genes.df <-  NULL
 
@@ -128,7 +117,6 @@ prep.smchet <- function(out_1C = NULL, out_2A = NULL,  out_3A = NULL, samp.name 
       cluster_list[["col"]] <- data.frame(lab=sort(unique(c(truth2A))), colour=col[seq_along(unique(truth2A))], stringsAsFactors=FALSE)
     }
 
-
     add.genes <- FALSE
     genes.df <- NULL
 
@@ -137,12 +125,9 @@ prep.smchet <- function(out_1C = NULL, out_2A = NULL,  out_3A = NULL, samp.name 
       percents <- round(prop.ssms,2)*100
       labs <- tree$plot.lab
       labs <- str_replace_all(labs, "(\\d)","N\\1")
-      # labs <- str_replace_all(labs, "/","+")
-      # labs[grep("\\+",x,invert=TRUE)] <- str_replace_all(labs[grep("\\+",x,invert=TRUE)], "(\\d)","N\\1")
       genes.df <- data.frame(node=tree$tip, gene=paste0(labs, ": ",percents,"%"), cn = rep(NA,length(nrow(tree))), stringsAsFactors=FALSE)
       add.genes <- TRUE
     }
-
 
     #if no ssm assignment is provided then either give each branch the same number of ssms or a proportion of the total
      if((is.null(out_1C) & is.null(out_2A)) | !is.null(branch.length) ){
@@ -153,14 +138,12 @@ prep.smchet <- function(out_1C = NULL, out_2A = NULL,  out_3A = NULL, samp.name 
           stop("branch length must be a single number or the same length as the number of nodes")        
         }
       nssm <- tot_ssm*branch.length
-      # nssm <- rmultinom(n=1, size=tot_ssm, prob=branch.length)
       tree$length1 <- nssm
       }
     }
 
     tree <- tree[order(tree$tip),]
      
-
     branching <- ifelse(any(duplicated(tree$parent)== TRUE),TRUE,FALSE)
     out.name <- paste0("SMC_",samp.name,".pdf")
     w.padding = 2
@@ -172,7 +155,6 @@ prep.smchet <- function(out_1C = NULL, out_2A = NULL,  out_3A = NULL, samp.name 
     }
     in.tree.df$ccf <- NULL  
 
-
     if(!is.null(out_2A)){
       col_df <- cluster_list[["col"]]
     } else if (!is.null(col)){
@@ -183,7 +165,6 @@ prep.smchet <- function(out_1C = NULL, out_2A = NULL,  out_3A = NULL, samp.name 
     in.tree.df$plot.lab <- as.character(in.tree.df$plot.lab)
     return(list(in.tree.df = in.tree.df,tree = tree, out.name = out.name, w.padding=w.padding, samp.name = samp.name, branching=branching,add.genes=add.genes, genes.df = genes.df, axis.type="none", cluster_list=cluster_list))
 }
-
 
 process_1C <- function(out_1C){
   in.df <- read.table(out_1C, header=FALSE)
@@ -211,18 +192,14 @@ process_2A <- function(truth=NULL, pred=NULL){
   origins <- dlply(out2A, .(pred), function(x) {props=table(x$truth)/nrow(x); props[props!=0]})
   names(origins) <- paste0("N", names(origins))
   return(origins)
-  
 }
 
 reorder_clones <- function(in.df){
   new.df <- in.df
   new.df$new.lab <- order(-as.numeric(new.df$cellular_prevalence))
-  #  new.df$new.lab[new.df$new.lab == 0 ] <- -1
   new.df$new.par <- sapply(new.df$parent, function(x){ return(new.df$new.lab[new.df$child==x])})
   in.df$child <- new.df$new.lab
   in.df$parent <- new.df$new.par
   in.df$parent[in.df$child == 1] <- -1
   return(in.df)
 }
-
-
