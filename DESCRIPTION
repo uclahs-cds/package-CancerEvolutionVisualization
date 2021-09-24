@@ -11,5 +11,7 @@ Depends:
 	gtable,
 Imports:
     plyr
+Suggests:
+    testthat
 LazyLoad: yes
 LazyData: yes
