@@ -1,6 +1,6 @@
 axis_overlap <- function(xpos,gene,line.dist, axis.type, cex,panel_width, return_cex=FALSE){
   # function checks if the gene label will cross over the axis
-  gene.xrange <- sort(c(xpos+line.dist, xpos+line.dist+ strwidth(gene,unit="inches",cex=cex)*line.dist/abs(line.dist)))
+  gene.xrange <- sort(c(xpos+line.dist, xpos+line.dist+ strwidth(gene,units="inches",cex=cex)*line.dist/abs(line.dist)))
   overlaps <- NULL
   if(axis.type == "PGA" | axis.type == "SNV single" | axis.type == "left"){
     if(any(gene.xrange < 0)){
@@ -92,7 +92,7 @@ position_genes <- function(tree.max.adjusted=NULL, gene.list=NULL, gene.col=NULL
           split_genes <- TRUE        
         }
 
-        str.heights <- sapply(gene.list[[s]], function(x) strheight(x,unit="inches",cex=cex))
+        str.heights <- sapply(gene.list[[s]], function(x) strheight(x,units="inches",cex=cex))
         spacing <- 0.33*mean(str.heights)
         str.heightsum <- sum(str.heights)+spacing*length(str.heights)-spacing
         

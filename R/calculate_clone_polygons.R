@@ -176,14 +176,14 @@ compute_clones <- function(v, x=1, y=0, wid=1.2, extra_len=1,tree=NULL, fixed_an
 	v <- rbind(root, v)
 	if(no_ccf & (is.null(fixed_angle) & nrow(v) > 6) | any(table(v$parent) > 2)){
 		v <- count_leaves_per_node(v)
-		tmp <-  position_nodes_radial(v, tree, extra.len, spread)
+		tmp <-  position_nodes_radial(v, tree, extra_len, spread)
 		clone_env <-  new.env(parent = emptyenv())
 		clone_env$v <- tmp$v
 		clone_env$tree <- tmp$tree
 		return(clone_env)
 	} else if(no_ccf & !is.null(fixed_angle) ){
 		#position nodes fixed angle
-		clone_env <-  position_nodes_fixed(v, tree, fixed_angle=fixed_angle, len=extra.len)
+		clone_env <-  position_nodes_fixed(v, tree, fixed_angle=fixed_angle, len=extra_len)
 		return(clone_env)
 	} else{
 		v <- position_clones(v,tree,wid)
@@ -200,8 +200,8 @@ compute_clones <- function(v, x=1, y=0, wid=1.2, extra_len=1,tree=NULL, fixed_an
 	get_clones(x=x, y=y, len=len, sig_shape=sig_shape, beta_in=beta_in, branching=branching, no_ccf=no_ccf, fixed_angle=fixed_angle, spread=spread, clone_env=clone_env)
 	
 	#if the end of the polygon is shorter than the last clone polygon or the desired length make the polygon longer and recompute
-	while (max(clone_env$coords.df$y0) > (clone_env$coords.df$len[1]+y) | (min(clone_env$coords.df$len) < extra.len )){
-		 len <- len +(extra.len-min(clone_env$coords.df$len))+0.0001
+	while (max(clone_env$coords.df$y0) > (clone_env$coords.df$len[1]+y) | (min(clone_env$coords.df$len) < extra_len )){
+		 len <- len +(extra_len-min(clone_env$coords.df$len))+0.0001
 		 get_clones(x=x, y=y, wid=wid, len=len, sig_shape=sig_shape, beta_in=beta_in, branching=branching, no_ccf=no_ccf, fixed_angle=fixed_angle, spread=spread, clone_env=clone_env)
 	}
 
@@ -218,74 +218,4 @@ add_clone_grobs <- function(clone.out, ...){
       polygon_list[[j]] <- polygonGrob(x=clone.out$clones[[j]]$x, y= clone.out$clones[[j]]$y, default.units="native", gp=gpar(fill=clone.out$clones[[j]]$col,col='transparent',alpha=clone.out$clones[[j]]$alpha))
     }
   clone.out$grobs <- c(clone.out$grobs, polygon_list)
-}
-
-position_only_nodes <- function(){
-        if(branching==FALSE){
-          parent_angle <- 0
-        }
-
-          siblings <- v[which(v$parent==par$lab),]
-
-          if(nrow(siblings)>1 & nrow(siblings)<4){
-            if(spread == TRUE){
-            	dist_left <- abs(-wid/2 - par$x)
-        		dist_right <- abs(wid/2 - par$x)
-            	dist <- min(dist_left, dist_right)
-            }else{
-	            x2_max <- siblings$x2[which.max(abs(siblings$x2))]
-	            x1_max <- siblings$x1[which.max(abs(siblings$x1))]
-	            dist_left <- abs(x1_max- par$x)
-	            dist_right <- abs(x2_max - par$x)
-        	}
-            dist <- min(dist_left, dist_right)
-
-           if (abs(xi-par$x.mid)<1e-3 & is.null(fixed_angle)){
-                         parent_angle <- 0
-            } else if (xi > par$x.mid){
-
-              parent_angle <- ifelse(is.null(fixed_angle),atan(dist/par$len), fixed_angle)
-
-            } else if (xi<par$x.mid){
-              parent_angle <- ifelse(is.null(fixed_angle),atan(-dist/par$len), -fixed_angle)
-            }
-          } else if(nrow(siblings)>3 ){
-            x2_max <- siblings$x2[which.max(abs(siblings$x2))]
-            x1_max <- siblings$x1[which.max(abs(siblings$x1))]
-            if(spread == TRUE){
-            	dist <- min(dist_left, dist_right)
-            	}else{
-            dist <- abs(x1_max-y2_mxx)/2
-
-            	}
-            if(x1_max != vi$x1 & x2_max != vi$x2){
-               dist <- abs(xi - par$x)
-            }
- 
-           if (abs(xi-par$x.mid)<1e-3){
-				parent_angle <- 0
-            } else if (xi > par$x.mid){
-				parent_angle <- ifelse(is.null(fixed_angle),atan(dist/par$len), fixed_angle)
-            } else if (xi<par$x.mid){
-				parent_angle <- ifelse(is.null(fixed_angle),atan(-dist/par$len), -fixed_angle)
-            }
-          } else{
-            parent_angle <- tree$angle[which(tree$parent == par$parent & tree$tip == par$lab)]
-          }
-        
-        r = tree$length[which(tree$parent == par$lab & tree$tip == vi$lab)]
-        x.shift = r*sin(parent_angle)
-        x0 = par$x + x.shift
-        y.shift = r*cos(parent_angle)
-        y0 = par$y+y.shift
-        len0 = par$len - y.shift
-
-        v[i,]$len <- len0
-        v[i,]$y <- y0
-        v[i,]$x <- x0
-        tree$angle[which(tree$parent==par$lab & tree$tip == vi$lab)] <- parent_angle
-   
-        assign("v",v,envir=env)
-        assign("tree",tree,envir=env)
-       return(c(x0=x0,y0=y0,len=len0,x1=x1,x2=x2))
 }
