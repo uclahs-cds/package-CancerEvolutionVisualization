@@ -1,11 +1,8 @@
 test_that(
     'Simple Example', {
-        names(cnas_df)[2] <- 'gene'
-        names(cnas_df)[1] <- 'Sample'
-
-        sample=unique(trees_df[,1])[3]
+        sample <- 'WHO003';
         filename <- paste0(sample, "_single.pdf")
-        samp_tree <- trees_df[trees_df$V1 == sample,]
+        samp_tree <- trees_df[trees_df$Sample == sample,]
         samp_cnas <- cnas_df[cnas_df$Sample == sample,]
         samp_snvs <- snvs_df[snvs_df$Sample ==sample,]
 
@@ -19,9 +16,8 @@ test_that(
         snv.interval<- 1000
         pga.interval <-10
         extra.len <- 17
-        axis.type="both"
         
-        inputs <- prep.tree(samp=sample,trees=samp_tree, cnas=samp_cnas,axis.type='both',snvs=samp_snvs,colours=colours,pga=samp_pga,pga.percent=TRUE, normal.included = FALSE)
+        inputs <- prep.tree(samp=sample,trees=samp_tree, cnas=samp_cnas,snvs=samp_snvs,colours=colours,pga=samp_pga,pga.percent=TRUE, normal.included = FALSE)
 
         scale.x.real <- 1/20
 
