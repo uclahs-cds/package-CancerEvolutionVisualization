@@ -8,9 +8,27 @@ test_that(
                 cnas = sampled$cnas,
                 snvs = sampled$snvs,
                 sample = sample,
-                add_polygons = TRUE,
                 add_normal = TRUE,
-                add_genes = TRUE
+                add_genes = TRUE,
+                yaxis_position = 'both'
+                );
+            
+            test.tree(
+                tree = sampled$tree,
+                cnas = sampled$cnas,
+                snvs = sampled$snvs,
+                sample = sample,
+                label_nodes = FALSE,
+                add_polygons = FALSE,
+                yaxis_position = 'both'
+                );
+            
+            test.tree(
+                tree = sampled$tree,
+                cnas = sampled$cnas,
+                snvs = sampled$snvs,
+                sample = sample,
+                yaxis_position = 'left'
                 );
             }
         }
