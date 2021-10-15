@@ -1,7 +1,7 @@
 test_that(
     'Non-Branching Examples', {
         for (sample in unique(trees_df$Sample)) {
-            sampled <- sampled <- test.sample(sample, trees_df, cnas_df, snvs_df);
+            sampled <- test.sample(sample, trees_df, cnas_df, snvs_df);
             
             test.tree(
                 tree = sampled$tree,
