@@ -1,10 +1,21 @@
 test.segment.grobs <- function(example, test) {
-    get.segment.keys <- function(x) {
-        x$childrenOrder[c('tree_segs1', 'tree_segs2')];
+    get.segment.grobs <- function(x) {
+        axis.keys <- stringr::str_subset(x$childrenOrder, 'axis');
+        
+        c(
+            list(getGrob(x, 'tree.segs.1')),
+            list(getGrob(x, 'tree.segs.2')),
+            sapply(
+                x$children[axis.keys],
+                FUN = function(ax) {
+                    list(getGrob(ax, gPath('axis.content', 'ticks')));
+                    }
+                )
+            );
         }
     
-    example.keys <- get.segment.keys(example);
-    test.keys <- get.segment.keys(test);
+    example.grobs <- get.segment.grobs(example);
+    test.grobs <- get.segment.grobs(test);
     
     compare.segments <- function(x, y) {
         coords.equal <- sapply(
@@ -25,11 +36,11 @@ test.segment.grobs <- function(example, test) {
         }
     
     all(sapply(
-        1:(length(example.keys)), 
+        1:(length(example.grobs)), 
         FUN = function(i) {
             compare.segments(
-                example$children[[example.keys[i]]],
-                test$children[[test.keys[i]]]
+                example.grobs[[i]],
+                test.grobs[[i]]
                 );
             }
         ));
