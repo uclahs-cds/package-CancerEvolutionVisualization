@@ -1,12 +1,10 @@
 test.segment.grobs <- function(example, test) {
     get.segment.grobs <- function(x) {
-        axis.keys <- stringr::str_subset(x$childrenOrder, 'axis');
-        
         c(
             list(getGrob(x, 'tree.segs.1')),
             list(getGrob(x, 'tree.segs.2')),
             sapply(
-                x$children[axis.keys],
+                x$children[get.axis.keys(x)],
                 FUN = function(ax) {
                     list(getGrob(ax, gPath('axis.content', 'ticks')));
                     }
@@ -26,7 +24,7 @@ test.segment.grobs <- function(example, test) {
                 );
         
         gp.equal <- identical(x$gp, y$gp);
-        arrow.equal <- x$arrow == y$arrow;
+        arrow.equal <- identical(x$arrow, y$arrow);
         
         return(all(
             coords.equal,
@@ -39,6 +37,44 @@ test.segment.grobs <- function(example, test) {
         1:(length(example.grobs)), 
         FUN = function(i) {
             compare.segments(
+                example.grobs[[i]],
+                test.grobs[[i]]
+                );
+            }
+        ));
+    }
+
+test.line.grobs <- function(example, test) {
+    get.line.grobs <- function(x) {
+        sapply(
+            x$children[get.axis.keys(x)],
+            FUN = function(ax) {
+                list(getGrob(ax, gPath('axis.content', 'major')));
+                }
+            );
+            
+        }
+    
+    compare.lines <- function(x, y) {
+        coords.equal <- all(sapply(
+            c('x', 'y'),
+            FUN = function(k) {
+                units.are.equal(x[[k]], y[[k]])
+                }
+            ));
+        
+        arrow.equal <- identical(x$arrow, y$arrow);
+        
+        all(coords.equal, arrow.equal);
+        }
+    
+    example.grobs <- get.line.grobs(example);
+    test.grobs <- get.line.grobs(test);
+    
+    all(sapply(
+        1:(length(example.grobs)),
+        FUN = function(i) {
+            compare.lines(
                 example.grobs[[i]],
                 test.grobs[[i]]
                 );
@@ -64,7 +100,7 @@ test.text.grobs <- function(example, test) {
             FUN = function(coord) {
                 units.are.equal(x[[coord]], y[[coord]]);
                 }
-        ));
+            ));
         
         
         all(
@@ -77,14 +113,12 @@ test.text.grobs <- function(example, test) {
         }
     
     get.text.grobs <- function(x) {
-        axis.keys <- stringr::str_subset(x$childrenOrder, 'axis');
-        
         c(
             getGrob(x, 'gene.text')$children,
             list(getGrob(x, 'node.labels')),
             getGrob(x, 'title.text')$children,
             sapply(
-                x$children[axis.keys],
+                x$children[get.axis.keys(x)],
                 FUN = function(ax) {
                     c(
                         list(getGrob(ax, 'axis.label')),
@@ -145,4 +179,8 @@ units.are.equal <- function(x, y) {
     length(x) == length(y) & 
         all(unitType(x) == unitType(y)) & 
         all(as.numeric(x - y) == 0)
-}
+    }
+
+get.axis.keys <- function(x) {
+    stringr::str_subset(x$childrenOrder, 'axis');
+    }
