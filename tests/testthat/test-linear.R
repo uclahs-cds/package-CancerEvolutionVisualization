@@ -2,7 +2,8 @@ test_that(
     'Linear case values', {
         load('data/linear.Rda');
         expect_true(all(
-            test.segments(linear.example, linear.example)
+            test.segment.grobs(linear.example, linear.example),
+            test.text.grobs(linear.example, linear.example)
             ));
         }
     );

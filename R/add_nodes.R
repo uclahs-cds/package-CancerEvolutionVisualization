@@ -5,13 +5,14 @@ add_node_ellipse <- function( clone.out, rad, label_nodes=NULL, label_cex=NA, ad
 	clone.out$v$plot.lab <- as.character(clone.out$v$plot.lab)
 	clone.out$v$circle <- sapply(clone.out$v$plot.lab, function(x) return(nchar(x)<3))
 	nodes_grob <- list()
+	node.grob.name <- 'node.polygons';
 	if(any(clone.out$v$circle==TRUE)){		
 		#more precise than circleGrob
-		circle_grobs <- ellipseGrob(x = unit(clone.out$v$x[clone.out$v$circle==TRUE],"native"), y = unit(clone.out$v$y[clone.out$v$circle==TRUE],"native"), size = rad, ar=1, gp=gpar(fill=clone.out$v$colour, col=clone.out$v$colour), angle=pi/2, position.units="native",size.units="inches",...)
+		circle_grobs <- ellipseGrob(name = node.grob.name, x = unit(clone.out$v$x[clone.out$v$circle==TRUE],"native"), y = unit(clone.out$v$y[clone.out$v$circle==TRUE],"native"), size = rad, ar=1, gp=gpar(fill=clone.out$v$colour, col=clone.out$v$colour), angle=pi/2, position.units="native",size.units="inches",...)
 		clone.out$grobs <- c(clone.out$grobs, list(circle_grobs))				
 	}
 	if(any(clone.out$v$circle!=TRUE)){
-		ellipse_grobs <- ellipseGrob(x = unit(clone.out$v$x[clone.out$v$circle!=TRUE],"native"), y = unit(clone.out$v$y[clone.out$v$circle!=TRUE],"native"), size = rad*1.2, ar=3/5, gp=gpar(fill=clone.out$v$colour, col=clone.out$v$colour), angle=pi/2, position.units="native",size.units="inches",...)
+		ellipse_grobs <- ellipseGrob(name = node.grob.name, x = unit(clone.out$v$x[clone.out$v$circle!=TRUE],"native"), y = unit(clone.out$v$y[clone.out$v$circle!=TRUE],"native"), size = rad*1.2, ar=3/5, gp=gpar(fill=clone.out$v$colour, col=clone.out$v$colour), angle=pi/2, position.units="native",size.units="inches",...)
     	clone.out$grobs <- c(clone.out$grobs, list(ellipse_grobs))
 	}
 
@@ -20,7 +21,7 @@ add_node_ellipse <- function( clone.out, rad, label_nodes=NULL, label_cex=NA, ad
 			label_cex <- rad*2/(get.gpar("fontsize")$fontsize/72)
 		}
 		lab <- if("plot.lab" %in% colnames(clone.out$v)) clone.out$v$plot.lab else  clone.out$v$lab
-  		node_label_grob <- textGrob(lab, x=unit(clone.out$v$x, "native"), y=unit(clone.out$v$y, "native"), just=c("center","center"), gp=gpar(col='#FFFFFF',cex=label_cex))
+  		node_label_grob <- textGrob(name = 'node.labels', lab, x=unit(clone.out$v$x, "native"), y=unit(clone.out$v$y, "native"), just=c("center","center"), gp=gpar(col='#FFFFFF',cex=label_cex))
   		clone.out$grobs <- c(clone.out$grobs, list(node_label_grob))
 	}
 }

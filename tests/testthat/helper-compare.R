@@ -1,4 +1,4 @@
-test.segments <- function(example, test) {
+test.segment.grobs <- function(example, test) {
     get.segment.keys <- function(x) {
         x$childrenOrder[c('tree_segs1', 'tree_segs2')];
         }
@@ -30,6 +30,69 @@ test.segments <- function(example, test) {
             compare.segments(
                 example$children[[example.keys[i]]],
                 test$children[[test.keys[i]]]
+                );
+            }
+        ));
+    }
+
+test.text.grobs <- function(example, test) {
+    compare.text <- function(x, y) {
+        labels.equal <- identical(x$label, y$label);
+        
+        just.equal <- (
+            x$just == y$just 
+            & identical(x$hjust, y$hjust) 
+            & identical(x$vjust, y$vjust)
+            );
+        
+        rot.equal <- x$rot == y$rot;
+        gp.equal <- identical(x$gp, y$gp);
+        
+        coords.equal <- all(sapply(
+            c('x', 'y'),
+            FUN = function(coord) {
+                units.are.equal(x[[coord]], y[[coord]]);
+                }
+        ));
+        
+        
+        all(
+            labels.equal,
+            coords.equal,
+            just.equal,
+            rot.equal,
+            gp.equal
+            );
+        }
+    
+    get.text.grobs <- function(x) {
+        axis.keys <- stringr::str_subset(x$childrenOrder, 'axis');
+        
+        c(
+            getGrob(x, 'gene.text')$children,
+            list(getGrob(x, 'node.labels')),
+            getGrob(x, 'title.text')$children,
+            sapply(
+                x$children[axis.keys],
+                FUN = function(ax) {
+                    c(
+                        list(getGrob(ax, 'axis.label')),
+                        list(getGrob(ax, gPath('axis.content', 'labels')))
+                        )
+                    }
+                )
+            );
+        }
+    
+    example.grobs <- get.text.grobs(example);
+    test.grobs <- get.text.grobs(test);
+
+    all(sapply(
+        1:(length(example.grobs)),
+        FUN = function(i) {
+            compare.text(
+                example.grobs[[i]],
+                test.grobs[[i]]
                 );
             }
         ));
