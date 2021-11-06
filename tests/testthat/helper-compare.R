@@ -98,9 +98,40 @@ test.text.grobs <- function(example, test) {
         ));
     }
 
+test.polygon.grobs <- function(example, test) {
+    get.polygon.keys <- function(x) {
+        stringr::str_subset(x$childrenOrder, 'polygon')
+        }
+    
+    compare.polygons <- function(x, y) {
+        coords.equal <- all(sapply(
+            c('x', 'y'),
+            FUN = function(coord) {
+                units.are.equal(x[[coord]], y[[coord]]);
+                }
+            ));
+        
+        gp.equal <- identical(x$gp, y$gp);
+        
+        all(coords.equal, gp.equal);
+        }
+    
+    example.keys <- get.polygon.keys(example);
+    test.keys <- get.polygon.keys(test);
+    
+    all(sapply(
+        1:(length(example.keys)),
+        FUN = function(i) {
+            compare.polygons(
+                getGrob(example, example.keys[[i]]),
+                getGrob(test, test.keys[[i]])
+                )
+            }
+        ));
+    }
 
 units.are.equal <- function(x, y) {
     length(x) == length(y) & 
         all(unitType(x) == unitType(y)) & 
         all(as.numeric(x - y) == 0)
-    }
+}
