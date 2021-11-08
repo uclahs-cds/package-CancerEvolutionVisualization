@@ -1,10 +1,16 @@
 compare.trees <- function(example, test) {
     # Utilities
-    units.are.equal <- function(x, y) {
-    length(x) == length(y) & 
-        all(unitType(x) == unitType(y)) & 
-        all(as.numeric(x - y) == 0)
-    }
+    units.are.equal <- function(x, y, threshold = 0) {
+        get.differences <- function() {
+            round(
+                as.numeric(convertUnit(x, 'native') - convertUnit(y, 'native')),
+                3
+                );
+            }
+        length(x) == length(y) &
+            all(unitType(x) == unitType(y)) &
+            all(get.differences() <= threshold)
+        }
 
     get.axis.keys <- function(x) {
         stringr::str_subset(x$childrenOrder, 'axis');
@@ -111,10 +117,9 @@ compare.trees <- function(example, test) {
             coords.equal <- all(sapply(
                 c('x', 'y'),
                 FUN = function(coord) {
-                    units.are.equal(x[[coord]], y[[coord]]);
+                    units.are.equal(x[[coord]], y[[coord]], 10);
                     }
                 ));
-            
             
             all(
                 labels.equal,
