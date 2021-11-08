@@ -1,5 +1,4 @@
 add_node_ellipse <- function( clone.out, rad, label_nodes=NULL, label_cex=NA, add_normal=FALSE, scale1,...){
-	
 	if(!('plot.lab' %in% colnames(clone.out$v))){
 		clone.out$v$plot.lab	 <- clone.out$v$lab
 	}
@@ -15,7 +14,7 @@ add_node_ellipse <- function( clone.out, rad, label_nodes=NULL, label_cex=NA, ad
 		ellipse_grobs <- ellipseGrob(x = unit(clone.out$v$x[clone.out$v$circle!=TRUE],"native"), y = unit(clone.out$v$y[clone.out$v$circle!=TRUE],"native"), size = rad*1.2, ar=3/5, gp=gpar(fill=clone.out$v$colour, col=clone.out$v$colour), angle=pi/2, position.units="native",size.units="inches",...)
     	clone.out$grobs <- c(clone.out$grobs, list(ellipse_grobs))
 	}
-		# nodes_grob <- c(_grob, list(ellipse_grobs))
+
 	if(!is.null(label_nodes) && label_nodes == TRUE){
 		if(is.na(label_cex)){
 			label_cex <- rad*2/(get.gpar("fontsize")$fontsize/72)
@@ -24,33 +23,14 @@ add_node_ellipse <- function( clone.out, rad, label_nodes=NULL, label_cex=NA, ad
   		node_label_grob <- textGrob(lab, x=unit(clone.out$v$x, "native"), y=unit(clone.out$v$y, "native"), just=c("center","center"), gp=gpar(col='#FFFFFF',cex=label_cex))
   		clone.out$grobs <- c(clone.out$grobs, list(node_label_grob))
 	}
-	
-	#debugging
-	# clone.out$grobs <- c(clone.out$grobs, list(segmentsGrob(x0=unit(clone.out$xlims[1], "native"), x1=unit(clone.out$xlims[2], "native"), y0=unit(clone.out$v$y, "native"), y1=unit(clone.out$v$y, "native"), gp=gpar(col="red", cex=1))))
-	# clone.out$grobs <- c(clone.out$grobs, list(segmentsGrob(x0=unit(clone.out$xlims[1], "native"), x1=unit(clone.out$xlims[2], "native"), y0=unit(clone.out$v$y-rad/scale1, "native"),y1=unit(clone.out$v$y-rad/scale1, "native"), gp=gpar(col="red", cex=1))))
-	# clone.out$grobs <- c(clone.out$grobs, list(segmentsGrob(x0=unit(clone.out$xlims[1], "native"), x1=unit(clone.out$xlims[2], "native"), y0=unit(clone.out$v$y+rad/scale1, "native"),y1=unit(clone.out$v$y+rad/scale1, "native"), gp=gpar(col="red", cex=1))))
-	# clone.out$grobs <- c(clone.out$grobs, list(segmentsGrob(x0=unit(clone.out$xlims[1], "native"), x1=unit(clone.out$xlims[2], "native"), y0=unit(30, "native"),y1=unit(30, "native"), gp=gpar(col="blue", cex=1))))
-	# clone.out$grobs <- c(clone.out$grobs, list(pointsGrob(x=unit(clone.out$v$x, "native"), y=unit(clone.out$v$y, "native"), gp=gpar(col="red", cex=1))))
 }
 
 add_normal <- function(clone.out, rad, label_cex, normal_cex=1){
-	print("normal_cex")
-	print(normal_cex)
 		normal_box <- rectGrob(x=unit(0.5,"npc"), y=unit(0.5,"npc"),name="normal.box", width=unit(2*rad*normal_cex,"inches"), height=unit(2*rad*normal_cex,"inches"), just=c("center","center"),gp=gpar(col="black",fill="transparent", lwd=1.5,lty="31")) 
-		# normal_cex <- convertY(grobHeight(normal_label,"inches", valueOnly=TRUE))*1.05*72/12
 		normal_label <- textGrob("N",x=unit(0.5,"npc"),y=unit(0.5,"npc"),name="normal.label", just="center",gp=gpar(col='black',cex=convertY(grobHeight(normal_box),"inches", valueOnly=TRUE)*1.05*72/12))
-		# normal_label <- textGrob("N",x=unit(0.5,"npc"),y=unit(0.5,"npc"),name="normal.label", just="center",gp=gpar(col='black',cex=normal_cex))  
-		# normal_box <- rectGrob(x=unit(0.5,"npc"), y=unit(0.5,"npc"),name="normal.box", height=grobHeight(normal_label)*1.2, width=grobWidth(normal_label)*1.2, just=c("center","center"),gp=gpar(col="black",fill="transparent", lwd=1.5,lty="31"))
-		normal_grob <- gTree(children=gList(normal_box, normal_label),name="normal.gtree", cl="normal_node", vp=vpStack(make_plot_viewport(clone.out, clip="off"), viewport(y=unit(1,"npc"), x=unit(0,"native"), height=grobHeight(normal_box), width=grobWidth(normal_box), just=c("centre","bottom"))))
-		# normal_grob <- gTree(children=gList(normal_box, normal_label),name="normal.gtree", cl="normal_node", vp=viewport(y=unit(0.5,"native"), x=unit(0,"native"), just=c("centre","bottom") ))
-		clone.out$grobs <- c(clone.out$grobs, list(normal_grob))
+        normal_grob <- gTree(children=gList(normal_box, normal_label),name="normal.gtree", cl="normal_node", vp=vpStack(make_plot_viewport(clone.out, clip="off"), viewport(y=unit(1,"npc"), x=unit(0,"native"), height=grobHeight(normal_box), width=grobWidth(normal_box), just=c("centre","bottom"))))
+        clone.out$grobs <- c(clone.out$grobs, list(normal_grob))
 	}
-
-# makeContent.add_normal <- function(normal_gtree){
-# 		normal_label <- textGrob("N",x=unit(0.5,"npc"),y=unit(0.5,"npc"),name="normal.label", just="center",gp=gpar(col='black',cex=label_cex))
-# 		normal_box <- rectGrob(x=unit(0.5,"npc"), y=unit(0.5,"npc"),name="normal.box", width=1.1*stringWidth(normal_label), height=1.1*stringHeight(normal_label), just=c("center","center"),gp=gpar(col="black",lwd=1.5,lty="31"))
-# 		setChildren(normal_gtree, gList(normal_box, normal_label))
-# }
 
 add_pie_nodes <- function(clone.out, rad, cluster_list){
 	pie_grobs <- list()
@@ -82,14 +62,12 @@ pieGrob <- function(x, y, rad=.1, prop_list, col_df, xy.units="native"){
 		y_edge2 <- c(y1,0)		
 		yc <- c(y_edge1, y_arc, y_edge2)
 		slice_list[[i]] <- polygonGrob(unit(xc,"native"), unit(yc,"native"), gp=gpar(fill=col_df[col_df$lab == names(prop_list)[i],]$colour, col='transparent'))
-		# slice_list[[i]] <- polygonGrob(unit(xc,"native"), unit(yc,"native"), gp=gpar(fill=col_df[col_df$lab == names(prop_list)[i],]$colour, col=col_df[col_df$lab == names(prop_list)[i],]$colour))
-	}
-	# slice_list <- slice_list[order(prop_list)]
+		}
+
 	pie_glist <- do.call(gList,  slice_list)
 	pie_tree <- gTree(children=pie_glist, vp=viewport(x=unit(x, xy.units), y=unit(y, xy.units), width=unit(2*rad,"inches"), height=unit(2*rad, "inches"), xscale=c(-1,1), yscale=c(-1,1), angle=if(i == 2) 90 else 0) )
 	return(pie_tree)
 }
-
 
 gridPie <- function (xpos = 0, ypos = 0, x, edges = 200, radius = 1, col = NULL, 
     startpos = 0, shadow = FALSE, shadow.col = c("#ffffff", "#cccccc"), 
@@ -111,10 +89,9 @@ gridPie <- function (xpos = 0, ypos = 0, x, edges = 200, radius = 1, col = NULL,
         col <- rep(col, nx)
     xylim <- par("usr")
     plotdim <- par("pin")
-    yradius <- radius * (xylim[4] - xylim[3])/(xylim[2] - xylim[1]) * 
-        plotdim[1]/plotdim[2]
+    yradius <- radius * (xylim[4] - xylim[3])/(xylim[2] - xylim[1]) * plotdim[1]/plotdim[2]
     bc <- 2 * pi * (x[1:nx] + dx/2) + startpos
- 	# browser()
+
     for (i in 1:nx) {
         n <- max(2, floor(edges * dx[i]))
         t2p <- 2 * pi * seq(x[i], x[i + 1], length = n) + startpos
@@ -126,5 +103,6 @@ gridPie <- function (xpos = 0, ypos = 0, x, edges = 200, radius = 1, col = NULL,
         xc <- cos(t2p) * radius
         yc <- sin(t2p) * radius
     }
-    invisible(bc)
+    
+    return(bc)
 }

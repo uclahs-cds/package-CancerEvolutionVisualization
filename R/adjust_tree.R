@@ -17,14 +17,12 @@ adjust_lengths <- function(x, cols, node_df){
   return(out.df)
 }
 
-
 adjust_branch_lengths <- function(node_df, tree, rad, scale1){
    if (is.null(node_df$rad)){
     rad <- rad*(1/scale1)
     node_df$rad <- rep(rad,nrow(node_df))
   }
   node_df$rad[node_df$lab==-1] <- 0
-  print(node_df)
   length_cols <- grep("length", colnames(tree))
   tree.adj <- adply(tree, 1, function(x) adjust_lengths(x,length_cols,node_df))  
 
@@ -33,7 +31,6 @@ adjust_branch_lengths <- function(node_df, tree, rad, scale1){
   tree$length2.c <- tree.adj$length2.c.adj
   return(tree)
 }
-
 
 adjust_tree <- function(in.tree.rad, tree.in,rad,scale.x.real){
    if (is.null(in.tree.rad$rad)){

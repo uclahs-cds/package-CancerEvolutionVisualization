@@ -16,5 +16,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           path: SubclonePlot
+      - run: R -e "install.packages('plyr')"
       - run: R CMD build --compact-vignettes="gs+qpdf" SubclonePlot
       - run: R CMD check --as-cran --run-donttest SubclonePlot_*.tar.gz
