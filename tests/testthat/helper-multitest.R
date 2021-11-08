@@ -1,6 +1,6 @@
-test.tree <- function(tree, cnas, snvs, sample, ...) {
+create.test.tree <- function(tree, cnas, snvs, sample, ...) {
     samp_pga <- tree[,c(1,3,9,6,10)]
-    colnames(samp_pga) <- c('Sample','Node','PGA','CP','pipeline')
+    colnames(samp_pga) <- c('Sample','Node','PGA','CP','pipeline');
     samp_pga <- samp_pga[which(samp_pga$Node !='child'),]
     
     title_dist <- 0.905
@@ -23,10 +23,10 @@ test.tree <- function(tree, cnas, snvs, sample, ...) {
                    ...
                    );
     
-    expect_true(!is.null(out[[1]]));
+    return(out[[1]]);
     }
 
-test.sample <- function(sample, tree, cnas, snvs) {
+sample.test.data <- function(sample, tree, cnas, snvs) {
     samp_tree <- trees_df[trees_df$Sample == sample, ];
     samp_cnas <- cnas_df[cnas_df$Sample == sample, ];
     samp_snvs <- snvs_df[snvs_df$Sample == sample, ];
