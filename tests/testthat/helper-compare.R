@@ -189,9 +189,9 @@ compare.trees <- function(example, test) {
         }
 
     all(
-        test.segment.grobs(linear.example, linear.example),
-        test.text.grobs(linear.example, linear.example),
-        test.polygon.grobs(linear.example, linear.example),
-        test.line.grobs(linear.example, linear.example)
+        test.segment.grobs(example, test),
+        test.text.grobs(example, test),
+        test.polygon.grobs(example, test),
+        test.line.grobs(example, test)
         );
     }
