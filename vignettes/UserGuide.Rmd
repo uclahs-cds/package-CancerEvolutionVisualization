@@ -1,0 +1,13 @@
+---
+title: "User Guide"
+author:
+- name: 'Dan Knight'
+  email: danknight@mednet.ucla.edu
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: > 
+  %\VignetteIndexEntry{User Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
