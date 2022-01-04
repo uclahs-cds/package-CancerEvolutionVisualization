@@ -12,10 +12,107 @@ vignette: >
 ---
 
 # Introduction
-CancerEvolutionVisualization creates publication quality phylogenetic tree plots. For simple plots,
+CancerEvolutionVisualization (CEV) creates publication quality phylogenetic tree plots. For simple plots,
 this package will handle most settings right out of the box. However, more complex
 plots may require some trial and error to achieve the right arrangement of nodes
 and branches.
 
 This guide will show best practices for creating plots, as well as examples
 of common use cases and tips for refining plot settings.
+
+
+# Input Data
+There are many methods for determining subpopulations within genomic data, and 
+you should be free to use whatever method you prefer for a given dataset. This
+package only handles visualization - not analysis. Therefore, data must be prepared
+and formatted before being passed to any CEV functions.
+
+## Tree Dataframe
+This is the primary source of data for a plot. It defines the tree's structure
+of parent and child nodes. It also provides information about the number of
+mutations at each node.
+
+
+### Ex. 1: Parent Data
+```{r echo=F}
+load('data/input.examples.Rda');
+```
+
+The simplest input format is a column containing the parent node of each
+individual node. (A node will only have one parent.) The root node will not have
+a parent, so a value of `NA` is used.
+
+```{r echo=F}
+knitr::kable(
+    tree.input[, 'parent'],
+    col.names = c(colnames(tree.input)[1]),
+    row.names = TRUE
+    );
+```
+
+### Ex. 2: Branch Lengths
+
+It's common to associate branch lengths with a the values of a particular variable 
+(for example, PGA or SNVs). Up to twoIncluding a `length1` and/or `length2` column will
+enable this branch scaling behaviour, and automatically add y-axis ticks and labels.
+
+Multiple length values can be used together. All columns whose names contain `length`
+will be used. (For example, `length1` and `snv.length` are both valid.) Multiple 
+columns will result in multiple (distinctly coloured) parallel lines. Any branch 
+length conflicts will be resolved automatically. For each branch, the next node
+will be placed at the end of the longest line.
+
+```{r echo=F}
+knitr::kable(
+    tree.input[, 1:3],
+    row.names = TRUE
+    );
+```
+
+### Ex. 3: Showing Cellular Prevalence
+
+A `cellular.prevalence` column can also be added. These values must range between 0 and 1, and the sum of all child nodes must not be larger than their parent node's value.
+
+```{r echo=F}
+knitr::kable(
+    tree.input[, c(1, 5)],
+    row.names = TRUE
+    );
+```
+
+### Ex. 4: Branch Angles
+
+CEV will automatically set branch angles, but the optional `angle` column will override this on a branch-by-branch basis. This can be helpful when trying to perfect a complex plot. A value of 0 will set the branch completely vertical. Positive values will rotate the branch clockwise (in degrees), and negative values will rotate counterclockwise. `NA` values will be ignored.
+
+```{r echo=F}
+knitr::kable(
+    tree.input[, c(1, 4)],
+    row.names = TRUE
+    );
+```
+
+## Gene Dataframe
+This secondary dataframe can be used to add gene name labels corresponding to each 
+node. 
+
+### Ex. 5: Gene Labels
+Each row must include a node ID for the gene. Genes will be stacked next to the 
+specified node.
+
+```{r echo=F}
+knitr::kable(
+    gene.input[, 1:2],
+    col.names = colnames(gene.input)[1:2]
+    );
+```
+
+### Ex. 6: CNAs and SNVs
+- An optional `CNA` column can be included to colour the text depending on 
+the gene's CNA loss/gain (or neutrality).
+- A boolean column can also be added to italicise genes that contain SNVs.
+
+```{r echo=F}
+knitr::kable(
+    gene.input
+    );
+```
