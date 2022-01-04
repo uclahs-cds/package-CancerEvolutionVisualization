@@ -11,3 +11,11 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
+# Introduction
+CancerEvolutionVisualization creates publication quality phylogenetic tree plots. For simple plots,
+this package will handle most settings right out of the box. However, more complex
+plots may require some trial and error to achieve the right arrangement of nodes
+and branches.
+
+This guide will show best practices for creating plots, as well as examples
+of common use cases and tips for refining plot settings.
