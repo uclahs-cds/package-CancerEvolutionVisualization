@@ -354,12 +354,14 @@ add_text2 <- function(tree,genes,label_nodes=FALSE, cex=1,line.dist=0.5,v=NULL, 
 
   text_grob_list <- position_genes(tree.max.adjusted=tree.max.adjusted, gene.list=gene.list, gene.col=gene.col, axis.type=axis.type, panel_height=panel_height, panel_width = panel_width, title.y=title.y, line.dist=line.dist,cex=cex, rad=rad, alternating=alternating, split=split, label_nodes=label_nodes)
   text_grob_glist <- do.call(gList, text_grob_list)
-
+  
+  grob.name = 'gene.text';
+  
   if(!is.null(clone.out)){
     popViewport()
-    text_tree <- gTree(children=text_grob_glist, vp=make_plot_viewport(clone.out, clip="off"))
+    text_tree <- gTree(name = grob.name, children=text_grob_glist, vp=make_plot_viewport(clone.out, clip="off"))
     return(text_tree)
   }
-  text_tree <- gTree(children=text_grob_glist,childrenvp = viewport(height=unit(panel_height,"inches"), name="ref",width=unit(panel_width,"inches"),xscale=xlims,yscale=c(ymax,-2), clip='off'))
+  text_tree <- gTree(name = grob.name, children=text_grob_glist,childrenvp = viewport(height=unit(panel_height,"inches"), name="ref",width=unit(panel_width,"inches"),xscale=xlims,yscale=c(ymax,-2), clip='off'))
   return(list(text_tree, tree.max.adjusted))
 }

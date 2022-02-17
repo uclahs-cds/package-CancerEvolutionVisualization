@@ -1,0 +1,11 @@
+SubclonePlotting 0.1.0 2021-11-08 (Dan Knight)
+
+UPDATE
+* Add functions for deep comparison of plot Grobs.
+* Update tests to use new comparisons and add test cases.
+
+
+--------------------------------------------------------------------------
+SubclonePlotting 0.0.0 2021-09-13 (Adriana Salcedo)
+
+INITIAL FEATURES

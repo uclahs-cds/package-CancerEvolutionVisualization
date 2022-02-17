@@ -141,12 +141,12 @@ add_tree_segs <- function(clone.out,  rad, line.lwd, scale1,  seg1.col, seg2.col
   tree_segs1 <- tree.out[[1]]
   tree_segs2 <- tree.out[[2]]
   out <- list()
-  out$tree_segs1 <- segmentsGrob(x0=tree_segs1$basex,y0=tree_segs1$basey,x1=tree_segs1$tipx, y1=tree_segs1$tipy, default.units="native", gp=gpar(col=seg1.col,lwd=line.lwd))
+  out$tree_segs1 <- segmentsGrob(name = 'tree.segs.1', x0=tree_segs1$basex,y0=tree_segs1$basey,x1=tree_segs1$tipx, y1=tree_segs1$tipy, default.units="native", gp=gpar(col=seg1.col,lwd=line.lwd))
   
   if(!is.null(tree_segs2)){
     tree_segs2 <- tree_segs2[which(tree_segs2$basey !=tree_segs2$tipy),]
     if( nrow(tree_segs2) > 0) {
-    out$tree_segs2 <- segmentsGrob(x0=tree_segs2$basex,y0=tree_segs2$basey,x1=tree_segs2$tipx, y1=tree_segs2$tipy, default.units="native", gp=gpar(col=seg2.col,lwd=line.lwd))
+    out$tree_segs2 <- segmentsGrob(name = 'tree.segs.2', x0=tree_segs2$basex,y0=tree_segs2$basey,x1=tree_segs2$tipx, y1=tree_segs2$tipy, default.units="native", gp=gpar(col=seg2.col,lwd=line.lwd))
     }
   }
   clone.out$grobs <- c(clone.out$grobs, out)

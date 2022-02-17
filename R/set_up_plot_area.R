@@ -65,8 +65,8 @@ add_axis_label <- function(axisGrob, axis_label, axis_position, axis_label_cex, 
 		popViewport()
 	}
 
-	axis_lab <- textGrob(axis_label, gp=gpar(cex=axis_label_cex), vjust=0, x=x, rot=rot, y=y)
-	axis_gtree <- gTree(children=gList(axis_lab, axisGrob), vp=vp)
+	axis_lab <- textGrob(name = 'axis.label', axis_label, gp=gpar(cex=axis_label_cex), vjust=0, x=x, rot=rot, y=y)
+	axis_gtree <- gTree(name = paste0('axis.', axis_position), children=gList(axis_lab, axisGrob), vp=vp)
 	return(axis_gtree)
 }
 
@@ -111,7 +111,7 @@ add_yaxis <- function(clone.out, yaxis_position="left", conversion_factor=1, axi
 	}
 
 	yat <- ylabels/conversion_factor
-	yaxis1 <- yaxisGrob(at=yat, label=ylabels, gp=gpar(cex=axis_cex), main=ifelse(yaxis_position=="left",TRUE,FALSE))
+	yaxis1 <- yaxisGrob(name = 'axis.content', at=yat, label=ylabels, gp=gpar(cex=axis_cex), main=ifelse(yaxis_position=="left",TRUE,FALSE))
 	
 	if(max(yat)/conversion_factor != ymax & no_ccf == FALSE){ #extending the axis line beyond the last tick 
 		yaxis1 <- extend_axis(yaxis1, limits=unit(c(0,ymax),"native"), type="y")
@@ -130,7 +130,7 @@ add_xaxis <- function(clone.out, scale1, axis_label="CCF", no_ccf=FALSE, axis_la
 	xat <- c(min(clone_widths), max(clone_widths))
 	xlabels <- c(0,paste0(round(max(clone.out$v$ccf)*100,0),'%'))
 	
-	xaxis <- xaxisGrob(at=xat, label=xlabels, gp=gpar(cex=axis_label_cex), main=TRUE)
+	xaxis <- xaxisGrob(name = 'axis.content', at=xat, label=xlabels, gp=gpar(cex=axis_label_cex), main=TRUE)
 	
 	#move the labels up a little 
 	xaxis_labels <- editGrob(getGrob(xaxis, "labels"), y= unit(-.09, "npc"), vjust=1)
