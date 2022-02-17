@@ -1,4 +1,4 @@
 library(testthat)
-library(SubclonePlot)
+library(CancerEvolutionVisualization)
 
-test_check("SubclonePlot")
+test_check("CancerEvolutionVisualization")
