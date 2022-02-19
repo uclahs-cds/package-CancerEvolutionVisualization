@@ -1,9 +1,8 @@
 prep.tree <- function(
-    samp = NULL,
-    trees = NULL,
+    tree.df = NULL,
     cnas = NULL,
     snvs = NULL,
-    pga = NULL,
+    pga.df = NULL,
     CF_col = "cellular_prevalence",
     pga.percent = FALSE,
     bells = TRUE,
@@ -11,24 +10,11 @@ prep.tree <- function(
     axis.type = 'both',
     w.padding = NULL,
     colours = colours) {
-
-    if (!(samp %in% trees[, 1])){
-        stop("Sample not found in trees file");
+    
+    if (!('parent' %in% colnames(tree.df))) {
+        stop('No parent column provided');
         }
-
-    tree.df <- trees[trees[,1] == samp,];
-
-    if (any(grepl("parent", tree.df[1, ]) == TRUE)) {
-        colnames(tree.df) <- tree.df[1, ];
-        colnames(tree.df)[1] <- "Sample";
-        tree.df <- tree.df[c(2:nrow(tree.df)), ];
-    } else if (any(grepl("parent",colnames(trees)) == TRUE)) {
-        colnames(tree.df) <- colnames(trees);
-        colnames(tree.df)[1] <- "Sample";
-    } else {
-        stop("No column names detected");
-        }
-
+    
     tree.df$parent[tree.df$parent == 0] <- -1;
     tree.df$cellular_prevalence <- as.numeric(tree.df[, CF_col]);
 
@@ -51,16 +37,11 @@ prep.tree <- function(
         out.df$alpha[which(out.df$color == "#FCF9BF")] <- 0.8;
         }
 
-    if (!(is.null(pga))) {
-        if (!(samp %in% pga$Sample)) {
-            stop("Sample not found in PGA file");
-            }
-
-        pga.df <- pga[pga$Sample == samp, ];
-        names.pga <- colnames(pga);
+    if (!(is.null(pga.df))) {
+        names.pga <- colnames(pga.df);
 
         if (!normal.included) {
-            pga.df <- rbind(c(samp, 0, 0, 0, 'Normal', 1), pga.df);
+            pga.df <- rbind(c('SAMPLENAME', 0, 0, 0, 'Normal', 1), pga.df);
             }
 
         pga.df$Node <- as.numeric(pga.df$Node);
@@ -93,31 +74,30 @@ prep.tree <- function(
  
     genes.df <-  NULL
 
-    if ((!is.null(cnas) | !is.null(snvs)) & ((samp %in% cnas$Sample ) | (samp %in% snvs$Sample ))) {
-        if (!is.null(cnas) & (samp %in% cnas$Sample)) {
-            cnas.df <- cnas[cnas$Sample == samp,c(2:4)];
+    if (!is.null(cnas) | !is.null(snvs)) {
+        if (!is.null(cnas)) {
+            cnas.df <- cnas[, c(2:4)];
             cnas.df <- cnas.df[which(!is.na(cnas.df$node)), ];
             }
     
-        if (!is.null(snvs) & (samp %in% snvs$Sample)) {
-            snvs.df <- snvs[snvs$Sample == samp,c(2:3)];
+        if (!is.null(snvs)) {
+            snvs.df <- snvs[, c(2:3)];
             snvs.df$cn <- NA;
             snvs.df <- snvs.df[which(!is.na(snvs.df$node)), ];
             }
 
-        if (!is.null(cnas) & !is.null(snvs) & (samp %in% cnas$Sample) & (samp %in% snvs$Sample)) {
+        if (!is.null(cnas) & !is.null(snvs)) {
             genes.df <- rbind(cnas.df, snvs.df);
-        } else if (!is.null(snvs) & (samp %in% snvs$Sample)) {
+        } else if (!is.null(snvs)) {
             genes.df <- snvs.df;
-        } else if (!is.null(cnas) & (samp %in% cnas$Sample)) {
+        } else if (!is.null(cnas)) {
             genes.df <- cnas.df;
             }
 
         genes.df <- genes.df[order(genes.df$node,genes.df$cn), ];
         }
 
-    out.name <- paste0("SR_", samp, "_", axis.type, ".pdf");
-    samp.name <- samp;
+    out.name <- paste0("SR_", axis.type, ".pdf");
     add.genes <- ifelse((is.null(genes.df) || nrow(genes.df) == 0 ), FALSE, TRUE);
 
     if (is.null(w.padding)) {
@@ -136,7 +116,6 @@ prep.tree <- function(
         genes.df = genes.df,
         out.name = out.name,
         w.padding = w.padding,
-        samp.name = samp.name,
         branching = branching,
         add.genes = add.genes,
         axis.type = axis.type
