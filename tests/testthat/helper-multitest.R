@@ -10,7 +10,7 @@ create.test.tree <- function(tree, cnas, snvs, sample, ...) {
     pga.interval <-10
     extra.len <- 17
     
-    inputs <- prep.tree(samp=sample,trees=tree, cnas=cnas,snvs=snvs,colours=colours,pga=samp_pga,pga.percent=TRUE, normal.included = FALSE)
+    inputs <- prep.tree(tree.df = tree, cnas=cnas,snvs=snvs,colours=colours,pga=samp_pga,pga.percent=TRUE, normal.included = FALSE)
     
     scale.x.real <- 1/20
     
@@ -32,4 +32,4 @@ sample.test.data <- function(sample, tree, cnas, snvs) {
     samp_snvs <- snvs_df[snvs_df$Sample == sample, ];
     
     return(list(tree = samp_tree, cnas = samp_cnas, snvs = samp_snvs));
-    }
+}

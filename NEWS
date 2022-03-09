@@ -1,3 +1,10 @@
+CancerEvolutionVisualization 0.1.1 2022-02-23 (Dan Knight)
+
+UPDATE
+* Remove input sampling (assume that data has been prepared properly)
+
+
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 0.1.0 2021-11-08 (Dan Knight)
 
 UPDATE
@@ -9,3 +16,5 @@ UPDATE
 CancerEvolutionVisualization 0.0.0 2021-09-13 (Adriana Salcedo)
 
 INITIAL FEATURES
+
+- Tree, CNA, and SNV input sampling
