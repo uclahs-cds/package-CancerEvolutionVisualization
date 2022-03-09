@@ -15,7 +15,7 @@ prep.tree <- function(
         stop('No parent column provided');
         }
     
-    tree.df$parent[tree.df$parent == 0] <- -1;
+    tree.df$parent <- prep.tree.parent(tree.df$parent);
     tree.df$cellular_prevalence <- as.numeric(tree.df[, CF_col]);
 
     if (all(!is.na(tree.df$cellular_prevalence))) {
@@ -120,6 +120,11 @@ prep.tree <- function(
         add.genes = add.genes,
         axis.type = axis.type
         ));
+    }
+
+prep.tree.parent <- function(parent.column) {
+    parent.column[parent.column %in% c(0, NA)] <- -1;
+    return(parent.column);
     }
 
 process_1C <- function(out_1C){
