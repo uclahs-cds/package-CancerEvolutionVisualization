@@ -155,12 +155,18 @@ process_2A <- function(truth=NULL, pred=NULL){
   return(origins)
 }
 
-reorder_clones <- function(in.df){
-  new.df <- in.df
-  new.df$new.lab <- order(-as.numeric(new.df$cellular_prevalence))
-  new.df$new.par <- sapply(new.df$parent, function(x){ return(new.df$new.lab[new.df$child==x])})
-  in.df$child <- new.df$new.lab
-  in.df$parent <- new.df$new.par
-  in.df$parent[in.df$child == 1] <- -1
-  return(in.df)
-}
+reorder_clones <- function(in.df) {
+    new.df <- in.df;
+    
+    new.df$new.lab <- order(-as.numeric(new.df$cellular_prevalence));
+    new.df$new.par <- sapply(new.df$parent, function(x) {
+        new.df$new.lab[new.df$child == x];
+        }
+    );
+
+    in.df$child <- new.df$new.lab;
+    in.df$parent <- new.df$new.par;
+    in.df$parent[in.df$child == 1] <- -1;
+
+    return(in.df);
+    }
