@@ -3,7 +3,6 @@ prep.tree <- function(
     cnas = NULL,
     snvs = NULL,
     pga.df = NULL,
-    CF_col = "cellular_prevalence",
     pga.percent = FALSE,
     bells = TRUE,
     normal.included = TRUE,
@@ -15,16 +14,20 @@ prep.tree <- function(
         stop('No parent column provided');
         }
     
+    if (!('CP' %in% colnames(tree.df))) {
+        stop('No CP column provided');
+    }
+    
     tree.df$parent <- prep.tree.parent(tree.df$parent);
-    tree.df$cellular_prevalence <- as.numeric(tree.df[, CF_col]);
+    tree.df$CP <- as.numeric(tree.df$CP);
 
-    if (all(!is.na(tree.df$cellular_prevalence))) {
+    if (all(!is.na(tree.df$CP))) {
         tree.df <- reorder_clones(tree.df);
         }
 
     out.df <- data.frame(
         lab = c(-1, tree.df$child),
-        ccf = as.numeric(c(1, tree.df$cellular_prevalence)),
+        ccf = as.numeric(c(1, tree.df$CP)),
         color = colours[1:(nrow(tree.df) + 1)],
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
@@ -158,7 +161,7 @@ process_2A <- function(truth=NULL, pred=NULL){
 reorder_clones <- function(in.df) {
     new.df <- in.df;
     
-    new.df$new.lab <- order(-as.numeric(new.df$cellular_prevalence));
+    new.df$new.lab <- order(-as.numeric(new.df$CP));
     new.df$new.par <- sapply(new.df$parent, function(x) {
         new.df$new.lab[new.df$child == x];
         }
