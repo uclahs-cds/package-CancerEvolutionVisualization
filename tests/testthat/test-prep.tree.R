@@ -48,3 +48,39 @@ test_that(
             expected.length
             );
     });
+
+test_that(
+    'reorder.clones output is correct', {
+        parent <- c(0, 1);
+        child <- c(1, 2);
+        CP <- c(0.52, 0.43);
+
+        tree <- data.frame(
+             parent = parent,
+             child = child,
+             CP = CP
+             );
+        
+        reordered <- reorder_clones(tree);
+
+        expected.output <- data.frame(
+            parent = c(-1, parent[2:length(parent)]),
+            child = child,
+            CP = CP
+            );
+
+        expect_equal(
+            as.numeric(reordered$parent),
+            expected.output$parent
+            );
+
+        expect_equal(
+            as.numeric(reordered$child),
+            expected.output$child
+            );
+
+        expect_equal(
+            as.numeric(reordered$CP),
+            expected.output$CP
+            );
+    });
