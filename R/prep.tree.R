@@ -37,10 +37,6 @@ prep.tree <- function(
         stringsAsFactors = FALSE
         );
 
-    if ("#FCF9BF" %in% out.df$color) {
-        out.df$alpha[which(out.df$color == "#FCF9BF")] <- 0.8;
-        }
-
     if (!(is.null(pga.df))) {
         names.pga <- colnames(pga.df);
 
