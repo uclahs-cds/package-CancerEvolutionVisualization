@@ -189,7 +189,7 @@ reset.node.names <- function(tree.df) {
     new.names['-1'] <- -1;
 
     # Convert parent values to character to safely index names list
-    tree.df$parent <- as.numeric(new.names[as.character(tree.df$parent)]);
+    tree.df$parent <- as.numeric(unlist(new.names[as.character(tree.df$parent)]));
 
     return(tree.df);
     }

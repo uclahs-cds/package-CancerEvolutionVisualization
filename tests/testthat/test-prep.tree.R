@@ -84,3 +84,38 @@ test_that(
             expected.output$CP
             );
     });
+
+test_that(
+    'reorder.nodes result is in the correct order', {
+        tree.in.order <- data.frame(
+            CP = c(1, 0.65, 0.32),
+            parent = c(NA, 1, 1)
+            );
+
+        reordered <- reorder.nodes(tree.in.order[c(3, 1, 2), ]);
+
+        expected.order <- rownames(tree.in.order);
+
+        expect_equal(
+            rownames(reordered),
+            expected.order
+            );
+    });
+
+test_that(
+    'reset.node.names handles new row names', {
+        tree <- data.frame(
+            parent = c(-1, 'one', 'two', 'two'),
+            CP = c(0.96, 0.76, 0.28, 0.31),
+            row.names = c('one', 'two', 'three', 'four')
+            );
+
+        tree.new.names <- reset.node.names(tree);
+
+        expected.row.names <- as.character(1:length(rownames(tree)));
+
+        expect_equal(
+           rownames(tree.new.names),
+           expected.row.names
+        );
+    });
