@@ -160,7 +160,7 @@ process_2A <- function(truth=NULL, pred=NULL){
 
 reorder_clones <- function(in.df) {
     new.df <- in.df;
-    
+
     new.df$new.lab <- order(-as.numeric(new.df$CP));
     new.df$new.par <- sapply(new.df$parent, function(x) {
         new.df$new.lab[new.df$child == x];
@@ -172,4 +172,24 @@ reorder_clones <- function(in.df) {
     in.df$parent[in.df$child == 1] <- -1;
 
     return(in.df);
+    }
+
+reorder.nodes <- function(tree.df) {
+    return(tree.df[order(tree.df$CP, decreasing = TRUE), ]);
+    }
+
+reset.node.names <- function(tree.df) {
+    new.names <- as.list(1:length(rownames(tree.df)));
+    names(new.names) <- rownames(tree.df);
+
+    rownames(tree.df) <- new.names;
+
+    # Include -1 value for root node.
+    # This may be temporary, as NULL/NA will likely replace -1
+    new.names['-1'] <- -1;
+
+    # Convert parent values to character to safely index names list
+    tree.df$parent <- as.numeric(new.names[as.character(tree.df$parent)]);
+
+    return(tree.df);
     }
