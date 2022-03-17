@@ -31,5 +31,7 @@ sample.test.data <- function(sample, tree, cnas, snvs) {
     samp_cnas <- cnas_df[cnas_df$Sample == sample, ];
     samp_snvs <- snvs_df[snvs_df$Sample == sample, ];
     
+    rownames(samp_tree) <- 1:length(rownames(samp_tree));
+    
     return(list(tree = samp_tree, cnas = samp_cnas, snvs = samp_snvs));
 }

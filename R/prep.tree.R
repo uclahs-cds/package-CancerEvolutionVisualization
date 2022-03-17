@@ -22,7 +22,8 @@ prep.tree <- function(
     tree.df$CP <- as.numeric(tree.df$CP);
 
     if (all(!is.na(tree.df$CP))) {
-        tree.df <- reorder_clones(tree.df);
+        tree.df <- reset.node.names(reorder.nodes(tree.df));
+        tree.df$child <- rownames(tree.df);
         }
 
     out.df <- data.frame(
