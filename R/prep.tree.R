@@ -16,9 +16,14 @@ prep.tree <- function(
     
     if (!('CP' %in% colnames(tree.df))) {
         stop('No CP column provided');
-    }
-    
+        }
+
     tree.df$parent <- prep.tree.parent(tree.df$parent);
+    
+    if (!check.parent.values(rownames(tree.df), tree.df$parent)) {
+        stop('Parent column references invalid node');
+        }
+    
     tree.df$CP <- as.numeric(tree.df$CP);
 
     if (all(!is.na(tree.df$CP))) {
@@ -189,4 +194,18 @@ reset.node.names <- function(tree.df) {
     tree.df$parent <- as.numeric(unlist(new.names[as.character(tree.df$parent)]));
 
     return(tree.df);
+    }
+
+check.parent.values <- function(node.names, parent.col) {
+    unique.node.names <- as.list(setNames(
+        !vector(length = length(unique(node.names))),
+        unique(node.names)
+        ));
+
+    all(sapply(
+        parent.col,
+        FUN = function(parent) {
+            !is.null(unlist(unique.node.names[parent])) | parent == -1;
+            }
+        ));
     }

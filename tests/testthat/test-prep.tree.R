@@ -119,3 +119,27 @@ test_that(
            expected.row.names
         );
     });
+
+test_that(
+    'check.parent.values handles valid values', {
+        node.names <- 1:10
+        parents <- c(1:10, 5, 6, 4);
+
+        expect_true(check.parent.values(node.names, parents));
+    });
+
+test_that(
+    'check.parent.values handles invalid values', {
+        node.names <- 1:5
+        parents <- c(1:10, 2, 1);
+
+        expect_false(check.parent.values(node.names, parents));
+    });
+
+test_that(
+    'check.parent.values handles -1 values', {
+        node.names <- 1:10
+        parents <- c(-1, 1:5, 4, 1);
+
+        expect_true(check.parent.values(node.names, parents));
+    });
