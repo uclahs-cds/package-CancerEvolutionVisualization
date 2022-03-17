@@ -28,8 +28,9 @@ prep.tree <- function(
 
     if (all(!is.na(tree.df$CP))) {
         tree.df <- reset.node.names(reorder.nodes(tree.df));
-        tree.df$child <- rownames(tree.df);
         }
+
+    tree.df$child <- rownames(tree.df);
 
     out.df <- data.frame(
         lab = c(-1, tree.df$child),
