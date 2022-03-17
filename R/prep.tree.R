@@ -46,7 +46,7 @@ prep.tree <- function(
         names.pga <- colnames(pga.df);
 
         if (!normal.included) {
-            pga.df <- rbind(c('SAMPLENAME', 0, 0, 0, 'Normal', 1), pga.df);
+            pga.df <- rbind(c(0, 0, 0, 'Normal', 1), pga.df);
             }
 
         pga.df$Node <- as.numeric(pga.df$Node);

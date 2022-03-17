@@ -1,41 +1,36 @@
 test_that(
-    'Non-Branching Examples', {
-        for (sample in unique(trees_df$Sample)) {
-            sampled <- sample.test.data(sample, trees_df, cnas_df, snvs_df);
+'Linear Example', {
+        expect_true(!is.null(
+            create.test.tree(
+                tree = trees_df,
+                cnas = cnas_df,
+                snvs = snvs_df,
+                sample = sample,
+                add_normal = TRUE,
+                add_genes = TRUE,
+                yaxis_position = 'both'
+                )
+            ));
 
-            expect_true(!is.null(
-                create.test.tree(
-                    tree = sampled$tree,
-                    cnas = sampled$cnas,
-                    snvs = sampled$snvs,
-                    sample = sample,
-                    add_normal = TRUE,
-                    add_genes = TRUE,
-                    yaxis_position = 'both'
-                    )
-                ));
+        expect_true(!is.null(
+            create.test.tree(
+                tree = trees_df,
+                cnas = cnas_df,
+                snvs = snvs_df,
+                sample = sample,
+                label_nodes = FALSE,
+                add_polygons = FALSE,
+                yaxis_position = 'both'
+                )
+            ));
 
-            expect_true(!is.null(
-                create.test.tree(
-                    tree = sampled$tree,
-                    cnas = sampled$cnas,
-                    snvs = sampled$snvs,
-                    sample = sample,
-                    label_nodes = FALSE,
-                    add_polygons = FALSE,
-                    yaxis_position = 'both'
-                    )
-                ));
-
-            expect_true(!is.null(
-                create.test.tree(
-                    tree = sampled$tree,
-                    cnas = sampled$cnas,
-                    snvs = sampled$snvs,
-                    sample = sample,
-                    yaxis_position = 'left'
-                    )
-                ));
-            }
-        }
-    );
+        expect_true(!is.null(
+            create.test.tree(
+                tree = trees_df,
+                cnas = cnas_df,
+                snvs = snvs_df,
+                sample = sample,
+                yaxis_position = 'left'
+                )
+            ));
+        });
