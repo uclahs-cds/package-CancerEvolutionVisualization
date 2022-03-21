@@ -8,7 +8,7 @@ prep.tree <- function(
     normal.included = TRUE,
     axis.type = 'both',
     w.padding = NULL,
-    colours = colours) {
+    colour.scheme = colours) {
     
     if (!('parent' %in% colnames(tree.df))) {
         stop('No parent column provided');
@@ -35,7 +35,7 @@ prep.tree <- function(
     out.df <- data.frame(
         lab = c(-1, tree.df$child),
         ccf = as.numeric(c(1, tree.df$CP)),
-        color = colours[1:(nrow(tree.df) + 1)],
+        color = colour.scheme[1:(nrow(tree.df) + 1)],
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
