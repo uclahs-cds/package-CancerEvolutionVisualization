@@ -3,29 +3,39 @@ prep.tree <- function(
     cnas = NULL,
     snvs = NULL,
     pga.df = NULL,
-    CF_col = "cellular_prevalence",
     pga.percent = FALSE,
     bells = TRUE,
     normal.included = TRUE,
     axis.type = 'both',
     w.padding = NULL,
-    colours = colours) {
+    colour.scheme = colours) {
     
     if (!('parent' %in% colnames(tree.df))) {
         stop('No parent column provided');
         }
     
-    tree.df$parent[tree.df$parent == 0] <- -1;
-    tree.df$cellular_prevalence <- as.numeric(tree.df[, CF_col]);
-
-    if (all(!is.na(tree.df$cellular_prevalence))) {
-        tree.df <- reorder_clones(tree.df);
+    if (!('CP' %in% colnames(tree.df))) {
+        stop('No CP column provided');
         }
+
+    tree.df$parent <- prep.tree.parent(tree.df$parent);
+    
+    if (!check.parent.values(rownames(tree.df), tree.df$parent)) {
+        stop('Parent column references invalid node');
+        }
+    
+    tree.df$CP <- as.numeric(tree.df$CP);
+
+    if (all(!is.na(tree.df$CP))) {
+        tree.df <- reset.node.names(reorder.nodes(tree.df));
+        }
+
+    tree.df$child <- rownames(tree.df);
 
     out.df <- data.frame(
         lab = c(-1, tree.df$child),
-        ccf = as.numeric(c(1, tree.df$cellular_prevalence)),
-        color = colours[1:(nrow(tree.df) + 1)],
+        ccf = as.numeric(c(1, tree.df$CP)),
+        color = colour.scheme[1:(nrow(tree.df) + 1)],
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
@@ -33,15 +43,11 @@ prep.tree <- function(
         stringsAsFactors = FALSE
         );
 
-    if ("#FCF9BF" %in% out.df$color) {
-        out.df$alpha[which(out.df$color == "#FCF9BF")] <- 0.8;
-        }
-
     if (!(is.null(pga.df))) {
         names.pga <- colnames(pga.df);
 
         if (!normal.included) {
-            pga.df <- rbind(c('SAMPLENAME', 0, 0, 0, 'Normal', 1), pga.df);
+            pga.df <- rbind(c(0, 0, 0, 'Normal', 1), pga.df);
             }
 
         pga.df$Node <- as.numeric(pga.df$Node);
@@ -122,6 +128,11 @@ prep.tree <- function(
         ));
     }
 
+prep.tree.parent <- function(parent.column) {
+    parent.column[parent.column %in% c(0, NA)] <- -1;
+    return(parent.column);
+    }
+
 process_1C <- function(out_1C){
   in.df <- read.table(out_1C, header=FALSE)
   colnames(in.df)[1:2] <- c("tip","length1")
@@ -150,12 +161,52 @@ process_2A <- function(truth=NULL, pred=NULL){
   return(origins)
 }
 
-reorder_clones <- function(in.df){
-  new.df <- in.df
-  new.df$new.lab <- order(-as.numeric(new.df$cellular_prevalence))
-  new.df$new.par <- sapply(new.df$parent, function(x){ return(new.df$new.lab[new.df$child==x])})
-  in.df$child <- new.df$new.lab
-  in.df$parent <- new.df$new.par
-  in.df$parent[in.df$child == 1] <- -1
-  return(in.df)
-}
+reorder_clones <- function(in.df) {
+    new.df <- in.df;
+
+    new.df$new.lab <- order(-as.numeric(new.df$CP));
+    new.df$new.par <- sapply(new.df$parent, function(x) {
+        new.df$new.lab[new.df$child == x];
+        }
+    );
+
+    in.df$child <- new.df$new.lab;
+    in.df$parent <- new.df$new.par;
+    in.df$parent[in.df$child == 1] <- -1;
+
+    return(in.df);
+    }
+
+reorder.nodes <- function(tree.df) {
+    return(tree.df[order(tree.df$CP, decreasing = TRUE), ]);
+    }
+
+reset.node.names <- function(tree.df) {
+    new.names <- as.list(1:nrow(tree.df));
+    names(new.names) <- rownames(tree.df);
+
+    rownames(tree.df) <- new.names;
+
+    # Include -1 value for root node.
+    # This may be temporary, as NULL/NA will likely replace -1
+    new.names['-1'] <- -1;
+
+    # Convert parent values to character to safely index names list
+    tree.df$parent <- as.numeric(unlist(new.names[as.character(tree.df$parent)]));
+
+    return(tree.df);
+    }
+
+check.parent.values <- function(node.names, parent.col) {
+    unique.node.names <- as.list(setNames(
+        !vector(length = length(unique(node.names))),
+        unique(node.names)
+        ));
+
+    all(sapply(
+        parent.col,
+        FUN = function(parent) {
+            !is.null(unlist(unique.node.names[parent])) | parent == -1;
+            }
+        ));
+    }
