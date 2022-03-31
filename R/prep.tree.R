@@ -182,7 +182,7 @@ reorder.nodes <- function(tree.df) {
     }
 
 reset.node.names <- function(tree.df) {
-    new.names <- as.list(1:length(rownames(tree.df)));
+    new.names <- as.list(1:nrow(tree.df));
     names(new.names) <- rownames(tree.df);
 
     rownames(tree.df) <- new.names;
