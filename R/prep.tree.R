@@ -193,19 +193,36 @@ get.tree.length.colnames <- function(column.names) {
     }
 
 format.branch.length.colnames <- function(column.names) {
-    sapply(
-        1:length(column.names), 
-        function(i) { 
-            paste0('length', i);
+        if (length(column.names) > 0) {
+            sapply(
+                1:length(column.names), 
+                FUN = branch.length.colname
+            );
+        } else { 
+            vector(); 
             }
-        );
+    }
+
+branch.length.colname <- function(i) {
+    paste0('length', i);
+    }
+
+get.default.branch.lengths <- function(num.rows) {
+    lengths <- data.frame(a = rep(1, times = num.rows));
+    colnames(lengths) <- c(branch.length.colname(1));
+    
+    return(lengths);
     }
 
 get.branch.lengths <- function(tree.df) {
-    length.cols <- get.branch.length.colnames(colnames(tree.df));
+    length.cols <- get.tree.length.colnames(colnames(tree.df));
     
-    lengths.df <- data.frame(tree.df[, length.cols]);
-    colnames(lengths.df) <- format.branch.length.colnames(length.cols);
-    
-    return(lengths.df);
+    if (length(length.cols) > 0) {
+        lengths.df <- data.frame(tree.df[, length.cols]);
+        colnames(lengths.df) <- format.branch.length.colnames(length.cols);
+        
+        return(lengths.df);
+    } else {
+        return(get.default.branch.lengths(nrow(tree.df)));
+        }
     }
