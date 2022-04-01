@@ -43,41 +43,12 @@ prep.tree <- function(
         stringsAsFactors = FALSE
         );
 
-    if (!(is.null(pga.df))) {
-        names.pga <- colnames(pga.df);
+    out.tree <- data.frame(
+        parent = as.numeric(tree.df$parent),
+        tip = as.numeric(tree.df$child),
+        get.branch.lengths(tree.df)
+        );
 
-        if (!normal.included) {
-            pga.df <- rbind(c(0, 0, 0, 'Normal', 1), pga.df);
-            }
-
-        pga.df$Node <- as.numeric(pga.df$Node);
-        pga.df$PGA <- as.numeric(pga.df$PGA);
-
-        if (pga.percent == TRUE) {
-            pga.df$PGA <- pga.df$PGA / 100;
-            } 
-
-        pga.df$CP <- as.numeric(pga.df$CP);
-        pga.df$Node[pga.df$Node == 0] <- -1;
-
-        pga.df$Node <- order(-pga.df$CP);
-        
-        out.tree <- data.frame(
-            parent = as.numeric(tree.df$parent),
-            tip = as.numeric(tree.df$child),
-            length1 = (pga.df$PGA[-1] * 100),
-            length2 = as.numeric(tree.df$num_ssms),
-            stringsAsFactors = FALSE
-            );
-    } else {
-        out.tree <- data.frame(
-            parent = as.numeric(tree.df$parent),
-            tip = as.numeric(tree.df$child),
-            length1 = as.numeric(tree.df$num_ssms),
-            stringsAsFactors = FALSE
-            );
-        }
- 
     genes.df <-  NULL
 
     if (!is.null(cnas) | !is.null(snvs)) {
@@ -209,4 +180,32 @@ check.parent.values <- function(node.names, parent.col) {
             !is.null(unlist(unique.node.names[parent])) | parent == -1;
             }
         ));
+    }
+
+get.tree.length.colnames <- function(column.names) {
+    # Temporarily limit number of parallel branches
+    max.branches <- 2;
+    
+    return(head(
+        grep('length', column.names),
+        max.branches
+        ));
+    }
+
+format.branch.length.colnames <- function(column.names) {
+    sapply(
+        1:length(column.names), 
+        function(i) { 
+            paste0('length', i);
+            }
+        );
+    }
+
+get.branch.lengths <- function(tree.df) {
+    length.cols <- get.branch.length.colnames(colnames(tree.df));
+    
+    lengths.df <- data.frame(tree.df[, length.cols]);
+    colnames(lengths.df) <- format.branch.length.colnames(length.cols);
+    
+    return(lengths.df);
     }
