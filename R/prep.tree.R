@@ -46,7 +46,7 @@ prep.tree <- function(
     out.tree <- data.frame(
         parent = as.numeric(tree.df$parent),
         tip = as.numeric(tree.df$child),
-        get.branch.lengths(tree.df)
+        prep.branch.lengths(tree.df)
         );
 
     genes.df <-  NULL
@@ -180,58 +180,4 @@ check.parent.values <- function(node.names, parent.col) {
             !is.null(unlist(unique.node.names[parent])) | parent == -1;
             }
         ));
-    }
-
-get.tree.length.colnames <- function(column.names) {
-    # Temporarily limit number of parallel branches
-    max.branches <- 2;
-    
-    length.cols <- head(
-        grep('length', column.names),
-        max.branches
-        );
-    
-    if (length(length.cols) > max.branches) {
-        warning(paste(
-                'Only the first 2 "length" columns will be used.',
-                'More branch lengths will be supported in a future version.'
-            ));
-        }
-    
-    return(length.cols);
-    }
-
-format.branch.length.colnames <- function(column.names) {
-        if (length(column.names) > 0) {
-            sapply(
-                1:length(column.names), 
-                FUN = branch.length.colname
-            );
-        } else { 
-            vector(); 
-            }
-    }
-
-branch.length.colname <- function(i) {
-    paste0('length', i);
-    }
-
-get.default.branch.lengths <- function(num.rows) {
-    lengths <- data.frame(a = rep(1, times = num.rows));
-    colnames(lengths) <- c(branch.length.colname(1));
-    
-    return(lengths);
-    }
-
-get.branch.lengths <- function(tree.df) {
-    length.cols <- get.tree.length.colnames(colnames(tree.df));
-    
-    if (length(length.cols) > 0) {
-        lengths.df <- data.frame(tree.df[, length.cols]);
-        colnames(lengths.df) <- format.branch.length.colnames(length.cols);
-        
-        return(lengths.df);
-    } else {
-        return(get.default.branch.lengths(nrow(tree.df)));
-        }
     }
