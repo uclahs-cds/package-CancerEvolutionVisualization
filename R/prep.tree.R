@@ -186,10 +186,19 @@ get.tree.length.colnames <- function(column.names) {
     # Temporarily limit number of parallel branches
     max.branches <- 2;
     
-    return(head(
+    length.cols <- head(
         grep('length', column.names),
         max.branches
-        ));
+        );
+    
+    if (length(length.cols) > max.branches) {
+        warning(paste(
+                'Only the first 2 "length" columns will be used.',
+                'More branch lengths will be supported in a future version.'
+            ));
+        }
+    
+    return(length.cols);
     }
 
 format.branch.length.colnames <- function(column.names) {
