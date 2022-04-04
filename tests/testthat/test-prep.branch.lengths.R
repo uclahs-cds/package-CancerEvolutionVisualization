@@ -21,10 +21,24 @@ test_that(
 
         max.branches <- 2;
         
+        
+        tryCatch(
+            result.colnames <- extract.length.colnames(length.columns)
+            );
+        
         expect_length(
-            extract.length.colnames(length.columns),
+            result.colnames,
             max.branches
             );
+    });
+
+test_that(
+    'extract.length.colnames reports when length columns have been truncated', {
+        length.columns <- rep('length', 5);
+
+        max.branches <- 3;
+        
+        expect_message(extract.length.colnames(length.columns));
     });
 
 test_that(

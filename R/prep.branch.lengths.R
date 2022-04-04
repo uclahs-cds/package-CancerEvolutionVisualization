@@ -3,19 +3,19 @@ extract.length.colnames <- function(column.names) {
     # Temporarily limit number of parallel branches
     max.branches <- 2;
 
-    length.cols <- head(
-        grep('length', column.names),
-        max.branches
-        );
+    length.cols <- grep('length', column.names);
 
     if (length(length.cols) > max.branches) {
-        warning(paste(
+        message(paste(
                 'Only the first 2 "length" columns will be used.',
                 'More branch lengths will be supported in a future version.'
             ));
         }
 
-    return(length.cols);
+    return(head(
+        length.cols,
+        max.branches
+        ));
     }
 
 get.branch.length.colnames <- function(num.columns) {
