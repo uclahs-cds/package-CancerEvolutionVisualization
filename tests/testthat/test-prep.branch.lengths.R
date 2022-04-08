@@ -30,7 +30,7 @@ test_that(
             result.colnames <- limit.branch.length.columns(length.columns)
             );
         
-        expect_less_than(
+        expect_lt(
             length(result.colnames),
             10
             );
@@ -104,4 +104,11 @@ test_that(
         branch.lengths <- prep.branch.lengths(original.tree);
         
         expect_true(is.data.frame(branch.lengths));
+    });
+
+test_that(
+    'prep.branch.lengths warns when column values are non-numeric', {
+        tree <- data.frame(length1 = c('invalid', 2));
+        
+        expect_warning(prep.branch.lengths(tree));
     });

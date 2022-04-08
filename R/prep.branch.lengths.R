@@ -23,7 +23,18 @@ validate.branch.colname <- function(column.name) {
     }
 
 validate.branch.length.values <- function(length.column) {
-    all(!is.na(as.numeric(length.column)));
+    return(tryCatch(
+        {
+            numeric.values <- as.numeric(length.column);
+            
+            return(
+                # Catches dropped NULL values
+                length(numeric.values) == length(length.column) &&
+                all(!is.na(numeric.values))
+                );
+            },
+        warning = function(cond) { return(FALSE); }
+        ));
     }
 
 # Temporarily limit number of parallel branches
@@ -41,9 +52,22 @@ limit.branch.length.columns <- function(column.names, max.cols = 2) {
 prep.branch.lengths <- function(tree.df) {
     length.cols <- limit.branch.length.columns(
         Filter(
-            function(column.name) { 
-                validate.branch.colname(column.name) && 
-                    validate.branch.length.values(tree.df[, column.name]) 
+            function(column.name) {
+                col.name.is.valid <- validate.branch.colname(column.name);
+                values.are.valid <- NULL;
+                
+                if (col.name.is.valid) { 
+                    values.are.valid <- validate.branch.length.values(tree.df[, column.name]);
+                    
+                    if (!values.are.valid) {
+                        warning(paste(
+                            'Branch length column', column.name, 'contains non-numeric values.',
+                            'It will not be used.'
+                            ));
+                        }
+                    }
+
+                return(col.name.is.valid && values.are.valid);
                 },
             colnames(tree.df)
             )
