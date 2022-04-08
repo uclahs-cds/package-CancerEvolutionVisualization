@@ -47,8 +47,8 @@ SRCGrob <- function(
     title.y.units = "npc",
     ...
     ) {
-    
-    clone.out <- make_clone_tree_grobs(
+
+    clone.out <- make.clone.tree.grobs(
         ccf_df = ccf_df,
         tree = tree_df,
         genes_df = genes_df,
