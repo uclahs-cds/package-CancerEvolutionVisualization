@@ -1,23 +1,3 @@
-
-extract.length.colnames <- function(column.names) {
-    # Temporarily limit number of parallel branches
-    max.branches <- 2;
-
-    length.cols <- grep('length', column.names);
-
-    if (length(length.cols) > max.branches) {
-        message(paste(
-                'Only the first 2 "length" columns will be used.',
-                'More branch lengths will be supported in a future version.'
-            ));
-        }
-
-    return(head(
-        length.cols,
-        max.branches
-        ));
-    }
-
 get.branch.length.colnames <- function(num.columns) {
         if (num.columns > 0) {
             sapply(
@@ -38,8 +18,36 @@ get.default.branch.lengths <- function(num.rows) {
     return(lengths);
     }
 
+validate.branch.colname <- function(column.name) {
+    grepl('length', column.name);
+    }
+
+validate.branch.length.values <- function(length.column) {
+    all(!is.na(as.numeric(length.column)));
+    }
+
+# Temporarily limit number of parallel branches
+limit.branch.length.columns <- function(column.names, max.cols = 2) {
+    if (length(column.names) > max.cols) {
+        message(paste(
+                'Only the first 2 "length" columns will be used.',
+                'More branch lengths will be supported in a future version.'
+            ));
+        }
+    
+    return(head(column.names, max.cols));
+    }
+
 prep.branch.lengths <- function(tree.df) {
-    length.cols <- extract.length.colnames(colnames(tree.df));
+    length.cols <- limit.branch.length.columns(
+        Filter(
+            function(column.name) { 
+                validate.branch.colname(column.name) && 
+                    validate.branch.length.values(tree.df[, column.name]) 
+                },
+            colnames(tree.df)
+            )
+        );
 
     if (length(length.cols) > 0) {
         lengths.df <- data.frame(tree.df[, length.cols]);

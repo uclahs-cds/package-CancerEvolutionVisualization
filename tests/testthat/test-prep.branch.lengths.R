@@ -1,44 +1,48 @@
 test_that(
-    'extract.length.colnames handles valid case', {
-        length.columns <- c('length2', '1length');
-        
-        start.index <- 4;
-        
-        # Fill all indices before start index with invalid column names
-        all.columns <- c(rep('no', start.index - 1), length.columns, 'test', 'col');
-    
-        expected.output <- start.index:(start.index + length(length.columns) - 1);
-
-        expect_setequal(
-              extract.length.colnames(all.columns),
-              expected.output
-        );
+    'validate.branch.colname handles valid case', {
+        expect_true(validate.branch.colname('length10'));
     });
 
 test_that(
-    'extract.length.colnames limits number of columns', {
-        length.columns <- rep('length', 10);
+    'validate.branch.colname handles invalid case', {
+        expect_false(validate.branch.colname('invalid'));
+    });
 
-        max.branches <- 2;
+test_that(
+    'validate.branch.length.values handles valid case', {
+        length.column <- 1:10;
         
+        expect_true(validate.branch.length.values(length.column));
+    });
+
+test_that(
+    'validate.branch.length.values handles invalid case', {
+        length.column <- rep('invalid', 5);
+        
+        expect_false(validate.branch.length.values(length.column));
+    });
+
+test_that(
+    'limit.branch.length.columns uses default limit', {
+        length.columns <- rep('length', 10);
         
         tryCatch(
-            result.colnames <- extract.length.colnames(length.columns)
+            result.colnames <- limit.branch.length.columns(length.columns)
             );
         
-        expect_length(
-            result.colnames,
-            max.branches
+        expect_less_than(
+            length(result.colnames),
+            10
             );
     });
 
 test_that(
-    'extract.length.colnames reports when length columns have been truncated', {
+    'limit.branch.length.columns reports when length columns have been truncated', {
         length.columns <- rep('length', 5);
 
         max.branches <- 3;
         
-        expect_message(extract.length.colnames(length.columns));
+        expect_message(limit.branch.length.columns(length.columns));
     });
 
 test_that(
