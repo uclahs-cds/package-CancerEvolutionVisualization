@@ -72,8 +72,9 @@ make_clone_tree_grobs <- function(ccf_df, tree,  scale1, scale2, wid,
 	clone.out <- make_clone_polygons(v, tree, wid, scale1, scale2, extra_len, node_col, spread=spread, sig_shape=sig_shape, fixed_angle=fixed_angle, beta_in=sig_curve, add_polygons= add_polygons, no_ccf=no_ccf)
 	clone.out$no_ccf <- no_ccf
 	plot_size <- calculate_main_plot_size(clone.out, scale1, wid, min_width, xaxis_space_left, xaxis_space_right, rad)
-	if(!no_ccf){
-		add_clone_grobs(clone.out)
+
+	if (!no_ccf) {
+		get.CP.polygons(clone.out);
 	}
 
 	add_tree_segs(clone.out, rad, line.lwd, scale1, seg1.col, seg2.col)
