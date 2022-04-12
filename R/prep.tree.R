@@ -2,10 +2,7 @@ prep.tree <- function(
     tree.df = NULL,
     cnas = NULL,
     snvs = NULL,
-    pga.df = NULL,
-    pga.percent = FALSE,
     bells = TRUE,
-    normal.included = TRUE,
     axis.type = 'both',
     w.padding = NULL,
     colour.scheme = colours) {
@@ -74,7 +71,6 @@ prep.tree <- function(
         genes.df <- genes.df[order(genes.df$node,genes.df$cn), ];
         }
 
-    out.name <- paste0("SR_", axis.type, ".pdf");
     add.genes <- ifelse((is.null(genes.df) || nrow(genes.df) == 0 ), FALSE, TRUE);
 
     if (is.null(w.padding)) {
@@ -91,11 +87,9 @@ prep.tree <- function(
         in.tree.df = out.df,
         tree = out.tree,
         genes.df = genes.df,
-        out.name = out.name,
         w.padding = w.padding,
         branching = branching,
-        add.genes = add.genes,
-        axis.type = axis.type
+        add.genes = add.genes
         ));
     }
 

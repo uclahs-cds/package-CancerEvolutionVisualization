@@ -1,8 +1,4 @@
 create.test.tree <- function(tree, cnas, snvs, sample, ...) {
-    samp_pga <- tree[, c('child', 'PGA', 'CP', 'PGA_Loss')]
-    colnames(samp_pga) <- c('Node','PGA','CP','pipeline');
-    # samp_pga <- samp_pga[which(samp_pga$Node !='child'),]
-    
     title_dist <- 0.905
     scale.x.real <- 1/30
     scale2 <- 0.5/1500
@@ -10,7 +6,7 @@ create.test.tree <- function(tree, cnas, snvs, sample, ...) {
     pga.interval <-10
     extra.len <- 17
     
-    inputs <- prep.tree(tree.df = tree, cnas=cnas,snvs=snvs,pga=samp_pga,pga.percent=TRUE, normal.included = FALSE)
+    inputs <- prep.tree(tree.df = tree, cnas=cnas,snvs=snvs)
     
     scale.x.real <- 1/20
     
