@@ -1,9 +1,9 @@
 prep.tree <- function(
-    tree.df = NULL,
-    cnas = NULL,
-    snvs = NULL,
+    tree.df,
+    cnas,
+    snvs,
     bells = TRUE,
-    axis.type = 'both',
+    axis.type = 'left',
     w.padding = NULL,
     colour.scheme = colours) {
     
@@ -76,7 +76,7 @@ prep.tree <- function(
     if (is.null(w.padding)) {
         w.padding <- 1.05;
     
-        if(axis.type =="none") {
+        if (axis.type == "none") {
             w.padding <- 0.85;
             }
         }
