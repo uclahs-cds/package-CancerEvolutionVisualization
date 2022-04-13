@@ -1,6 +1,7 @@
 test_that(
 'Linear Example', {
     load('data/linear.data.Rda');
+    sample <- 'WHO003';
     
     expect_true(!is.null(
         create.test.tree(
