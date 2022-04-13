@@ -1,6 +1,7 @@
 SRCGrob <- function(
-    ccf_df,
-    tree_df,
+    tree = NULL,
+    cnas = NULL,
+    snvs = NULL,
     filename = "SRC_tree.pdf",
     scale1 = 0.05443424,
     scale2 = 0.5 / 362,
@@ -15,9 +16,9 @@ SRCGrob <- function(
     sig_curve = 3,
     spread = 1,
     fixed_angle = NULL,
-    genes_df = NULL,
     genes = "default",
     gene_line_dist = 0.1,
+    colour.scheme = colours,
     gene.cex = 0.85,
     add_genes = FALSE,
     genes_on_nodes = FALSE,
@@ -33,6 +34,7 @@ SRCGrob <- function(
     xaxis_space_left = 0,
     xaxis_space_right = 0,
     min_width = NULL,
+    w.padding = NULL,
     nodes = "circle",
     rad = 0.1,
     label_nodes = TRUE,
@@ -47,11 +49,20 @@ SRCGrob <- function(
     title.y.units = "npc",
     ...
     ) {
-
+    inputs <- prep.tree(
+        tree,
+        cnas,
+        snvs,
+        add_polygons,
+        yaxis_position,
+        w.padding,
+        colour.scheme
+        );
+    
     clone.out <- make.clone.tree.grobs(
-        ccf_df = ccf_df,
-        tree = tree_df,
-        genes_df = genes_df,
+        ccf_df = inputs$in.tree.df,
+        tree = inputs$tree,
+        genes_df = inputs$genes.df,
         rad = rad,
         scale1 = scale1,
         scale2 = scale2,
