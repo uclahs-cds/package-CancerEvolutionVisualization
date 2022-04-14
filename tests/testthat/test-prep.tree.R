@@ -3,17 +3,46 @@ test_that(
     invalid.parent.tree <- data.frame();
     
     expect_error(
-        prep.tree(tree.df = invalid.parent.tree),
+        prep.tree(
+            tree.df = invalid.parent.tree,
+            cnas = NULL,
+            snvs = NULL
+            ),
         regexp = 'parent'
         );
     });
 
 test_that(
     'prep.tree handles invalid CP column', {
-    invalid.CP.tree <- data.frame(parent = c(NA));
+    invalid.CP.tree <- data.frame(
+        parent = c(NA),
+        CP = c('NA')
+        );
     
-    expect_error(
-        prep.tree(tree.df = invalid.CP.tree),
+    result.cp <- suppressWarnings(
+        prep.tree(
+            tree.df = invalid.CP.tree,
+            cnas = NULL,
+            snvs = NULL
+            )$in.tree.df$ccf
+        );
+    
+    expect_true((!is.null(result.cp)) && all(is.na(result.cp)));
+    });
+
+test_that(
+    'prep.tree warns on invalid CP column', {
+    invalid.CP.tree <- data.frame(
+        parent = c(NA),
+        CP = c('invalid')
+        );
+    
+    expect_warning(
+        prep.tree(
+            tree.df = invalid.CP.tree,
+            cnas = NULL,
+            snvs = NULL
+            ),
         regexp = 'CP'
         );
     });

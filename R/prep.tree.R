@@ -10,10 +10,6 @@ prep.tree <- function(
     if (!('parent' %in% colnames(tree.df))) {
         stop('No parent column provided');
         }
-    
-    if (!('CP' %in% colnames(tree.df))) {
-        stop('No CP column provided');
-        }
 
     tree.df$parent <- prep.tree.parent(tree.df$parent);
     
@@ -21,17 +17,26 @@ prep.tree <- function(
         stop('Parent column references invalid node');
         }
     
-    tree.df$CP <- as.numeric(tree.df$CP);
+    if (!is.null(tree.df$CP)) {
+        tree.df$CP <- suppressWarnings(as.numeric(tree.df$CP));
 
-    if (all(!is.na(tree.df$CP))) {
-        tree.df <- reset.node.names(reorder.nodes(tree.df));
+        if (all(!is.na(tree.df$CP))) {
+            tree.df <- reset.node.names(reorder.nodes(tree.df));
+        } else {
+            warning(paste(
+                'Non-numeric values found in CP column.',
+                'Cellular prevalence will not be used.'
+                ));
+
+            tree.df$CP <- NULL;
+            }
         }
 
     tree.df$child <- rownames(tree.df);
 
     out.df <- data.frame(
         lab = c(-1, tree.df$child),
-        ccf = as.numeric(c(1, tree.df$CP)),
+        ccf = if (is.null(tree.df$CP)) { NA } else { c(1, tree.df$CP) },
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
