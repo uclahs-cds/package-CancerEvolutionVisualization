@@ -9,7 +9,11 @@ add_node_ellipse <- function(
     ){
 
     if (!('plot.lab' %in% colnames(clone.out$v))) {
-		clone.out$v$plot.lab <- clone.out$v$lab;
+		clone.out$v$plot.lab <- if (!is.null(clone.out$v$label.text)) {
+		    clone.out$v$label.text;
+		} else {
+		    clone.out$v$lab;
+		    };
 	    }
 
     clone.out$v$plot.lab <- as.character(clone.out$v$plot.lab);
@@ -23,51 +27,30 @@ add_node_ellipse <- function(
     nodes_grob <- list();
 	node.grob.name <- 'node.polygons';
 
-	if (any(clone.out$v$circle == TRUE)) {		
-		#more precise than circleGrob
-		circle_grobs <- ellipseGrob(
-		    name = node.grob.name,
-		    x = unit(clone.out$v$x[clone.out$v$circle == TRUE], "native"),
-		    y = unit(clone.out$v$y[clone.out$v$circle == TRUE], "native"),
-		    size = rad,
-		    ar = 1,
-		    gp = gpar(fill = clone.out$v$colour, col = clone.out$v$colour),
-		    angle = pi / 2,
-		    position.units = "native",
-		    size.units = "inches",
-		    ...
-		    );
+	#more precise than circleGrob
+	circle_grobs <- ellipseGrob(
+	    name = node.grob.name,
+	    x = unit(clone.out$v$x, "native"),
+	    y = unit(clone.out$v$y, "native"),
+	    size = ifelse(clone.out$v$circle, rad, rad * 1.2),
+	    ar = ifelse(clone.out$v$circle, 1, 3 / 5),
+	    gp = gpar(fill = clone.out$v$colour, col = clone.out$v$colour),
+	    angle = pi / 2,
+	    position.units = "native",
+	    size.units = "inches",
+	    ...
+	    );
 
-		clone.out$grobs <- c(clone.out$grobs, list(circle_grobs))				
-	}
-
-    if (any(clone.out$v$circle != TRUE)) {
-		ellipse_grobs <- ellipseGrob(
-		    name = node.grob.name,
-		    x = unit(clone.out$v$x[clone.out$v$circle != TRUE], "native"),
-		    y = unit(clone.out$v$y[clone.out$v$circle != TRUE], "native"),
-		    size = rad * 1.2,
-		    ar = 3 / 5,
-		    gp = gpar(fill = clone.out$v$colour, col = clone.out$v$colour),
-		    angle = pi / 2,
-		    position.units = "native",
-		    size.units = "inches",
-		    ...
-		    );
-
-    	clone.out$grobs <- c(clone.out$grobs, list(ellipse_grobs));
-    	}
+	clone.out$grobs <- c(clone.out$grobs, list(circle_grobs));
 
 	if (!is.null(label_nodes) && label_nodes == TRUE) {
 		if(is.na(label_cex)){
 			label_cex <- rad * 2 / (get.gpar("fontsize")$fontsize / 72);
 		    }
-		
-	    lab <- if ("plot.lab" %in% colnames(clone.out$v)) { clone.out$v$plot.lab } else { clone.out$v$lab };
 
   		node_label_grob <- textGrob(
   		    name = 'node.labels',
-  		    lab,
+  		    clone.out$v$plot.lab,
   		    x = unit(clone.out$v$x, "native"),
   		    y = unit(clone.out$v$y, "native"),
   		    just = c("center", "center"),
