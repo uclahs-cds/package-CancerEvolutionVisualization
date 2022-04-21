@@ -12,7 +12,7 @@ add_node_ellipse <- function(
 		clone.out$v$plot.lab <- if (!is.null(clone.out$v$label.text)) {
 		    clone.out$v$label.text;
 		} else {
-		    clone.out$v$lab;
+		    clone.out$v$id;
 		    };
 	    }
 
@@ -105,9 +105,9 @@ add_normal <- function(clone.out, rad, label_cex, normal_cex = 1) {
 
 add_pie_nodes <- function(clone.out, rad, cluster_list) {
 	pie_grobs <- list();
-	clone.out$v <- clone.out$v[order(clone.out$v$lab), ];
+	clone.out$v <- clone.out$v[order(clone.out$v$id), ];
 
-	for(i in seq_along(clone.out$v$lab)) {
+	for(i in seq_along(clone.out$v$id)) {
 		pie_grobs[[i]] <- pieGrob(
 		    x = clone.out$v[i,]$x,
 		    y = clone.out$v[i,]$y,
@@ -153,7 +153,7 @@ pieGrob <- function(x, y, rad=.1, prop_list, col_df, xy.units="native"){
 		    unit(xc, "native"),
 		    unit(yc, "native"),
 		    gp = gpar(
-		        fill = col_df[col_df$lab == names(prop_list)[i], ]$colour,
+		        fill = col_df[col_df$id == names(prop_list)[i], ]$colour,
 		        col='transparent'
 		        )
 		    );

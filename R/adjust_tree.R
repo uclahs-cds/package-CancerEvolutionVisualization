@@ -7,11 +7,11 @@ adjust_lengths <- function(x, cols, node_df) {
 
             #  Max
             if (x[1, column] == x[1, cols[length(cols)]]) {
-                length_adj <- length_adj + node_df$rad[node_df$lab == x$tip];
+                length_adj <- length_adj + node_df$rad[node_df$id == x$tip];
                 }
 
             if (x$parent != -1) {
-                length_adj <- length_adj + node_df$rad[node_df$lab == x$parent];
+                length_adj <- length_adj + node_df$rad[node_df$id == x$parent];
                 }
 
         } else {
@@ -32,7 +32,7 @@ adjust_branch_lengths <- function(node_df, tree, rad, scale1) {
         node_df$rad <- rep(rad, nrow(node_df));
         }
 
-    node_df$rad[node_df$lab == -1] <- 0;
+    node_df$rad[node_df$id == -1] <- 0;
     length_cols <- grep("length", colnames(tree));
 
     tree.adj <- adply(
@@ -54,7 +54,7 @@ adjust_tree <- function(in.tree.rad, tree.in, rad, scale.x.real) {
         in.tree.rad$rad <- rep(rad, nrow(in.tree.rad));
         }
 
-    in.tree.rad$rad[in.tree.rad$lab == -1] <- 0;
+    in.tree.rad$rad[in.tree.rad$id == -1] <- 0;
     length_cols <- grep("length", colnames(tree.in));
     tree.adj <- adply(
         tree.in,

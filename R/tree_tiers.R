@@ -5,11 +5,11 @@ get_num_tiers <- function(tree) {
 
 	get_tiers <- function(node = 1) {
 		tree = get("tier_tree", envir = tier_env);
-		children = tree$lab[tree$parent == node];
+		children = tree$id[tree$parent == node];
 
 		for (child in children) {
 			tree = get("tier_tree", envir = tier_env);
-			tree$tier[tree$lab == child] = tree$tier[tree$lab == node] + 1;
+			tree$tier[tree$lab == child] = tree$tier[tree$id == node] + 1;
 			assign("tier_tree",tree,envir = tier_env);
 			get_tiers(child);
 		    }

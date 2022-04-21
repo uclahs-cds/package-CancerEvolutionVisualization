@@ -96,14 +96,14 @@ position_polygons <- function(
 			    x2 = max(v$x2)
 			    );
 		} else {
-			par <- v[v$lab == vi$parent,]; # Parent clone
+			par <- v[v$id == vi$parent,]; # Parent clone
 		    }
 
 	    x_mid <- vi$x.mid;
 		x1 <- vi$x1;
 		x2 <- vi$x2;
 
-		siblings <- v[which(v$parent == par$lab), ];
+		siblings <- v[which(v$parent == par$id), ];
 
 		if (nrow(siblings) == 1) {
 			dist <- par$x.mid-par$x;
@@ -140,13 +140,13 @@ position_polygons <- function(
 				parent_angle <- atan(dist / par$len);
 			    }
 		} else {
-			if(v$lab == siblings$lab[which.min(siblings$x.mid)]){ #align leftmost child with the left outer clone border
+			if(v$id == siblings$id[which.min(siblings$x.mid)]){ #align leftmost child with the left outer clone border
 				parent_angle <- ifelse(
 				    is.null(fixed_angle),
 				    yes = atan(-(abs(par$x1) / par$len)),
 				    no = -(fixed_angle)
 				    );
-			} else if(v$lab == siblings$lab[which.max(siblings$x.mid)]){ #align rightmost child with the right outer clone border
+			} else if(v$id == siblings$id[which.max(siblings$x.mid)]){ #align rightmost child with the right outer clone border
 				parent_angle <- ifelse(
 				    is.null(fixed_angle),
 				    yes = atan(abs(par$x1)/par$len),
@@ -161,22 +161,22 @@ position_polygons <- function(
 			    }
 		    }
 
-		r <- tree$length[which(tree$parent == par$lab & tree$tip == vi$lab)];
+		r <- tree$length[which(tree$parent == par$id & tree$tip == vi$id)];
 		x.shift <- r * sin(parent_angle);
 		x0 <- par$x + x.shift;
 		y.shift <- r * cos(parent_angle);
 		y0 <- par$y + y.shift;
 		len0 <- par$len - y.shift;
 
-		if (par$lab != -1 & len0 >= 0) {
+		if (par$id != -1 & len0 >= 0) {
 			#make sure the node isn't outside of the parent clone
 			par.coords <- data.frame(
-			    x = clones[[as.integer(which(v$lab == par$lab))]][["x"]],
-			    y = clones[[as.integer(which(v$lab == par$lab))]][["y"]]
+			    x = clones[[as.integer(which(v$id == par$id))]][["x"]],
+			    y = clones[[as.integer(which(v$id == par$id))]][["y"]]
 			    );
 
-			par$x1 <- clones[[as.integer(which(v$lab == par$lab))]][["x1"]];
-			par$x2 <- clones[[as.integer(which(v$lab == par$lab))]][["x2"]];
+			par$x1 <- clones[[as.integer(which(v$id == par$id))]][["x1"]];
+			par$x2 <- clones[[as.integer(which(v$id == par$id))]][["x2"]];
 			par.coords.pos <- par.coords[1:match(par$x1,par.coords$x), ];
 			par.coords.neg <- par.coords[match(par$x2,par.coords$x):length(par.coords$x), ];
 
@@ -199,7 +199,7 @@ position_polygons <- function(
 		    }
 	
 		len0 <- par$len - y.shift;
-		tree$angle[which(tree$parent == par$lab & tree$tip == vi$lab)] <- parent_angle;
+		tree$angle[which(tree$parent == par$id & tree$tip == vi$id)] <- parent_angle;
 	    }
 
 	v[i,]$len <- len0;

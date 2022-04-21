@@ -1,14 +1,14 @@
 add_vaf <- function(v) {
     v <- v[order(v$parent), ];
 
-    for (i in seq_along(v$lab)) {
+    for (i in seq_along(v$id)) {
         if (v$parent[i] == -1) {
-            parent <- data.frame(lab = -1, vaf = 1);
+            parent <- data.frame(id = -1, vaf = 1);
         } else {
-            parent <- v[which(v$lab == v$parent[i]), ];
+            parent <- v[which(v$id == v$parent[i]), ];
             }
 
-        v$vaf[i] <- parent$vaf/nrow(v[v$parent == parent$lab,]);
+        v$vaf[i] <- parent$vaf / nrow(v[v$parent == parent$id, ]);
         }
 
     return(v);
@@ -23,22 +23,22 @@ position_clones <- function(v,tree,wid) {
 
     for (p in unique(v$parent)) {
         children <- v[which(v$parent == p), ];
-        parent <- v[which(v$lab == p), ];
+        parent <- v[which(v$id == p), ];
 
         #if there is only one child center them with the parent
         if (nrow(children) == 1) {
             if (p == -1) {
-                v$x.mid[v$lab == children$lab] <- 0;
-                v$x1[v$lab == children$lab] <- -(wid / 2);
-                v$x2[v$lab == children$lab] <- wid / 2;
+                v$x.mid[v$id == children$id] <- 0;
+                v$x1[v$id == children$id] <- -(wid / 2);
+                v$x2[v$id == children$id] <- wid / 2;
             } else {
-                v$x.mid[v$lab == children$lab] <- v$x.mid[v$lab==p]
-                v$x1[v$lab == children$lab] <- v$x.mid[v$lab == children$lab] - v$vaf[v$lab == children$lab] * wid / 2;
-                v$x2[v$lab == children$lab] <- v$x.mid[v$lab == children$lab] + v$vaf[v$lab == children$lab] * wid / 2;
+                v$x.mid[v$id == children$id] <- v$x.mid[v$id==p]
+                v$x1[v$id == children$id] <- v$x.mid[v$id == children$id] - v$vaf[v$id == children$id] * wid / 2;
+                v$x2[v$id == children$id] <- v$x.mid[v$id == children$id] + v$vaf[v$id == children$id] * wid / 2;
                 }
         } else {
             if (nrow(children) > 2) {
-                children$length <- sapply(children$lab, function(x) tree$length[tree$tip == x])
+                children$length <- sapply(children$id, function(x) tree$length[tree$tip == x])
                 children_ascending <- children[order(children$length),]
         
                 child_order <- unlist(lapply(
@@ -60,19 +60,19 @@ position_clones <- function(v,tree,wid) {
             per_gap <- total_space / (nrow(children) - 1); #if there are more than two subclones split the gap
             position <- parent$x.mid-wid / 2 * parent$vaf; #parent's lower bound
     
-            for (c in seq_along(children$lab)) {
+            for (c in seq_along(children$id)) {
                 child <- children[c, ];
     
-                v$x.mid[v$lab == child$lab[1]] <- position + child$vaf[1] * wid / 2;
+                v$x.mid[v$id == child$id[1]] <- position + child$vaf[1] * wid / 2;
                 position <- position + child$vaf[1] * wid;
     
                 if (c != 1) {
-                    v$x.mid[v$lab == child$lab[1]] <- v$x.mid[v$lab == child$lab[1]] + per_gap;
+                    v$x.mid[v$id == child$id[1]] <- v$x.mid[v$id == child$id[1]] + per_gap;
                     position <- position + per_gap;
                     }
     
-                v$x1[v$lab==child$lab[1]] <- v$x.mid[v$lab==child$lab[1]]-child$vaf[1]*wid/2
-                v$x2[v$lab==child$lab[1]] <- v$x.mid[v$lab==child$lab[1]]+child$vaf[1]*wid/2
+                v$x1[v$id == child$id[1]] <- v$x.mid[v$id == child$id[1]] - child$vaf[1] * wid / 2;
+                v$x2[v$id == child$id[1]] <- v$x.mid[v$id == child$id[1]] + child$vaf[1] * wid / 2;
                 }
             }
         }
@@ -81,7 +81,7 @@ position_clones <- function(v,tree,wid) {
     }
 
 position_nodes_fixed <- function(v, tree, fixed_angle, len) {
-    for (i in seq_along(v$lab)) {
+    for (i in seq_along(v$id)) {
         vi <- v[i, ];
 
         if (!is.na(vi$parent) && vi$parent == -1) {
@@ -91,10 +91,10 @@ position_nodes_fixed <- function(v, tree, fixed_angle, len) {
             len0 <- len + y0;
         } else { 
             # Parent not root -- not trunk clone
-            par <- v[v$lab == vi$parent, ];
+            par <- v[v$id == vi$parent, ];
 
             #get parent clone
-            siblings <- v[which(v$parent == par$lab),]
+            siblings <- v[which(v$parent == par$id),]
 
             if (nrow(siblings) == 1) {
                 parent_angle <- 0
@@ -114,14 +114,14 @@ position_nodes_fixed <- function(v, tree, fixed_angle, len) {
                     }
                 } 
 
-            r <- tree$length[which(tree$parent == par$lab & tree$tip == vi$lab)];
+            r <- tree$length[which(tree$parent == par$id & tree$tip == vi$id)];
             x.shift <- r * sin(parent_angle);
             x0 <- par$x + x.shift;
             y.shift <- r * cos(parent_angle);
             y0 <- par$y + y.shift;
             len0 <- par$len + y.shift;
 
-            tree$angle[which(tree$parent == par$lab & tree$tip == vi$lab)] <- parent_angle;
+            tree$angle[which(tree$parent == par$id & tree$tip == vi$id)] <- parent_angle;
             }
 
       v[i,]$len <- len0;
@@ -141,28 +141,28 @@ position_clones_no_vaf <- function(v, wid, spread = TRUE) {
 
     for (p in sort(unique(v$parent))) {
         children <- v[which(v$parent == p), ];
-        parent <- v[which(v$lab == p), ];
+        parent <- v[which(v$id == p), ];
 
         # if there is only one child center them with the parent
         if (nrow(children) == 1) {
             if (p == -1) { 
                 #trunk clone
-                v$vaf[v$lab == children$lab] <- 1;
-                v$y.mid[v$lab == children$lab] <- 0;
-                v$y1[v$lab == children$lab] <- -wid / 2;
-                v$y2[v$lab == children$lab] <- wid / 2;
+                v$vaf[v$id == children$id] <- 1;
+                v$y.mid[v$id == children$id] <- 0;
+                v$y1[v$id == children$id] <- -wid / 2;
+                v$y2[v$id == children$id] <- wid / 2;
             } else { 
                 # only children are centered on their parent clones midline
-                v$y.mid[v$lab == children$lab] <- v$y.mid[v$lab == p];
+                v$y.mid[v$id == children$id] <- v$y.mid[v$id == p];
 
                 if (spread==TRUE) {
-                    v$vaf[v$lab == children$lab] <- v$vaf[v$lab == p];
-                    v$y1[v$lab == children$lab] <- -(wid / 2);
-                    v$y2[v$lab == children$lab] <- wid / 2;
+                    v$vaf[v$id == children$id] <- v$vaf[v$id == p];
+                    v$y1[v$id == children$id] <- -(wid / 2);
+                    v$y2[v$id == children$id] <- wid / 2;
                 } else {
-                    v$vaf[v$lab == children$lab] <- v$vaf[v$lab == p];
-                    v$y1[v$lab == children$lab] <- v$y.mid[v$lab == children$lab] - v$vaf[v$lab == children$lab] * wid / 2;
-                    v$y2[v$lab == children$lab] <- v$y.mid[v$lab == children$lab] + v$vaf[v$lab == children$lab] * wid / 2; 
+                    v$vaf[v$id == children$id] <- v$vaf[v$id == p];
+                    v$y1[v$id == children$id] <- v$y.mid[v$id == children$id] - v$vaf[v$id == children$id] * wid / 2;
+                    v$y2[v$id == children$id] <- v$y.mid[v$id == children$id] + v$vaf[v$id == children$id] * wid / 2; 
                     }
                 }
         } else {
@@ -180,11 +180,11 @@ position_clones_no_vaf <- function(v, wid, spread = TRUE) {
                 child_width <- (bounds[2] - bounds[1])/nrow(children);
                 last_bound <- 0;
 
-                for (i in seq_along(children$lab)) {
+                for (i in seq_along(children$id)) {
                     child <- children[i,]
-                    v$y1[v$lab==child$lab[1]] <- bounds[1] + child_width * last_bound;
-                    v$y2[v$lab==child$lab[1]] <- v$y1[v$lab == child$lab[1]] + child_width; 
-                    v$y.mid[v$lab==child$lab[1]] <- v$y1[v$lab == child$lab[1]] + 0.5 * child_width;
+                    v$y1[v$id==child$id[1]] <- bounds[1] + child_width * last_bound;
+                    v$y2[v$id==child$id[1]] <- v$y1[v$id == child$id[1]] + child_width; 
+                    v$y.mid[v$id==child$id[1]] <- v$y1[v$id == child$id[1]] + 0.5 * child_width;
                     last_bound <- last_bound + 1;
                     }
             } else {
@@ -193,11 +193,11 @@ position_clones_no_vaf <- function(v, wid, spread = TRUE) {
                 v$vaf[which(v$parent == p)] <- child_vaf;
                 children <- v[which(v$parent == p), ];
 
-                for (c in seq_along(children$lab)) {
+                for (c in seq_along(children$id)) {
                     child <- children[c,]
-                    v$y.mid[v$lab==child$lab[1]] <- position + child$vaf[1] * wid / 2;
-                    v$y1[v$lab==child$lab[1]] <- v$y.mid[v$lab == child$lab[1]]-child$vaf[1] * wid / 2;
-                    v$y2[v$lab==child$lab[1]] <- v$y.mid[v$lab == child$lab[1]] + child$vaf[1] * wid / 2;
+                    v$y.mid[v$id==child$id[1]] <- position + child$vaf[1] * wid / 2;
+                    v$y1[v$id==child$id[1]] <- v$y.mid[v$id == child$id[1]]-child$vaf[1] * wid / 2;
+                    v$y2[v$id==child$id[1]] <- v$y.mid[v$id == child$id[1]] + child$vaf[1] * wid / 2;
                     position <- position + child$vaf[1] * wid;
                     }
                 }

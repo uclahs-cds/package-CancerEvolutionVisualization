@@ -39,7 +39,7 @@ prep.tree <- function(
         );
 
     out.df <- data.frame(
-        lab = c(-1, tree.df$child),
+        id = c(-1, tree.df$child),
         label.text = c('', tree.df$label),
         ccf = if (is.null(tree.df$CP)) { NA } else { c(1, tree.df$CP) },
         color = colour.scheme[1:(nrow(tree.df) + 1)],

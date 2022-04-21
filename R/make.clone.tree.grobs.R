@@ -55,7 +55,7 @@ make.clone.tree.grobs <- function(
 		v$excluded <- FALSE;
 	    }
 
-	v <- v[order(v$lab), ];
+	v <- v[order(v$id), ];
 	no_ccf <- FALSE;
 
 	if (!('ccf' %in% colnames(ccf_df)) | all(is.na(ccf_df$ccf)) | add_polygons == FALSE) {
@@ -63,7 +63,7 @@ make.clone.tree.grobs <- function(
 	    v$vaf[v$parent == -1] <- 1;
 	    no_ccf <- TRUE;
 	} else {
-	    v <- v[order(v$lab),]
+	    v <- v[order(v$id),]
 	    v$vaf[!v$excluded] <- v$ccf[!v$excluded]/max(v$ccf[!v$excluded])
 	    }
 

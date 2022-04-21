@@ -537,12 +537,12 @@ add_text2 <- function(
                 basex <- 0;
                 basey <- 0;
             } else {
-                basex <- v$x[v$lab == x$parent]; 
-                basey <- v$y[v$lab == x$parent]; 
+                basex <- v$x[v$id == x$parent]; 
+                basey <- v$y[v$id == x$parent]; 
                 }
 
-            tipx <- v$x[v$lab == x$tip];
-            tipy <- v$y[v$lab == x$tip]; 
+            tipx <- v$x[v$id == x$tip];
+            tipy <- v$y[v$id == x$tip]; 
 
             return(data.frame(basex, basey, tipx, tipy));
             }
