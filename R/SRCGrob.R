@@ -49,7 +49,6 @@ SRCGrob <- function(
     title.y.units = "npc",
     ...
     ) {
-    
     inputs <- prep.tree(
         tree,
         cnas,
@@ -60,7 +59,7 @@ SRCGrob <- function(
         colour.scheme
         );
     
-    clone.out <- make_clone_tree_grobs(
+    clone.out <- make.clone.tree.grobs(
         ccf_df = inputs$in.tree.df,
         tree = inputs$tree,
         genes_df = inputs$genes.df,
