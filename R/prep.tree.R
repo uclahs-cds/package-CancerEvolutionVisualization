@@ -20,7 +20,7 @@ prep.tree <- function(
     if (!is.null(tree.df$CP)) {
         tree.df$CP <- suppressWarnings(as.numeric(tree.df$CP));
 
-        if (all(!is.na(tree.df$CP)) && is.null(tree.df$label)) {
+        if (all(!is.na(tree.df$CP))) {
             tree.df <- reset.node.names(reorder.nodes(tree.df));
         } else {
             warning(paste(
