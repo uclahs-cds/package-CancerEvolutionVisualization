@@ -1,7 +1,6 @@
 prep.tree <- function(
     tree.df,
-    cnas,
-    snvs,
+    genes.df,
     bells = TRUE,
     axis.type = 'left',
     w.padding = NULL,
@@ -56,32 +55,12 @@ prep.tree <- function(
         prep.branch.lengths(tree.df)
         );
 
-    genes.df <-  NULL
-
-    if (!is.null(cnas) | !is.null(snvs)) {
-        if (!is.null(cnas)) {
-            cnas.df <- cnas[, c(2:4)];
-            cnas.df <- cnas.df[which(!is.na(cnas.df$node)), ];
-            }
-    
-        if (!is.null(snvs)) {
-            snvs.df <- snvs[, c(2:3)];
-            snvs.df$cn <- NA;
-            snvs.df <- snvs.df[which(!is.na(snvs.df$node)), ];
-            }
-
-        if (!is.null(cnas) & !is.null(snvs)) {
-            genes.df <- rbind(cnas.df, snvs.df);
-        } else if (!is.null(snvs)) {
-            genes.df <- snvs.df;
-        } else if (!is.null(cnas)) {
-            genes.df <- cnas.df;
-            }
-
+    if (!is.null(genes.df)) {
+        # TODO Remove genes with NULL node or node not present in tree
         genes.df <- genes.df[order(genes.df$node,genes.df$cn), ];
         }
 
-    add.genes <- ifelse((is.null(genes.df) || nrow(genes.df) == 0 ), FALSE, TRUE);
+    add.genes <- !is.null(genes.df) && nrow(genes.df) > 0;
 
     if (is.null(w.padding)) {
         w.padding <- 1.05;
