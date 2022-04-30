@@ -1,7 +1,7 @@
 
 add_segs3 <- function(tree,v,offset=0,rad=0,scale.x.real=NULL){
   #calculate offset based on the line width
-  offset <- offset*1/scale.x.real
+  offset <- offset / scale.x.real
   offset <- offset/2
 
   tree_segs_adjusted <- tree_segs <- adply(tree, 1, function(x) {
@@ -9,8 +9,8 @@ add_segs3 <- function(tree,v,offset=0,rad=0,scale.x.real=NULL){
       basey = 0;
       basex = 0
     } else{
-      basey <- v$y[v$lab == x$parent]; 
-      basex <- v$x[v$lab == x$parent]; 
+      basey <- v$y[v$id == x$parent]; 
+      basex <- v$x[v$id == x$parent]; 
     }
       
     tipy <- basey+x$length1*cos(x$angle)
@@ -74,8 +74,8 @@ get_seg_coords <- function(tree,v,offset=0,rad=0,scale1=NULL){
       basey = 0;
       basex = 0;
     } else{
-      basey <- v$y[v$lab == x$parent]; 
-      basex <- v$x[v$lab == x$parent]; 
+      basey <- v$y[v$id == x$parent]; 
+      basex <- v$x[v$id == x$parent]; 
     }
       
     tipy <- basey+x$length1*cos(x$angle)

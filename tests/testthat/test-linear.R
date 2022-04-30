@@ -5,7 +5,7 @@ test_that(
 
         expect_true(compare.trees(
             linear.example,
-            create.test.tree(
+            linear.example <- create.test.tree(
                 linear.test.data$tree,
                 linear.test.data$cnas,
                 linear.test.data$snvs,

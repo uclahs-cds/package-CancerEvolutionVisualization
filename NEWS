@@ -1,3 +1,13 @@
+CancerEvolutionVisualization 0.3.0 2022-04-29 (Dan Knight)
+
+UPDATE
+* Allow node labels to be specified separately
+
+BUG
+* Fixed issue when creating ellipse nodes for longer labels
+
+
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 0.2.1 2022-04-14 (Dan Knight)
 
 UPDATE

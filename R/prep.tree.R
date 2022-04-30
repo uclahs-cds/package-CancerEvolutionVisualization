@@ -33,9 +33,14 @@ prep.tree <- function(
         }
 
     tree.df$child <- rownames(tree.df);
+    
+    tree.df$label <- as.character(
+        if (is.null(tree.df$label)) { tree.df$child } else { tree.df$label }
+        );
 
     out.df <- data.frame(
-        lab = c(-1, tree.df$child),
+        id = c(-1, tree.df$child),
+        label.text = c('', tree.df$label),
         ccf = if (is.null(tree.df$CP)) { NA } else { c(1, tree.df$CP) },
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         parent = as.numeric(c(NA,tree.df$parent)),
