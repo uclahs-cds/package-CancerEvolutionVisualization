@@ -14,6 +14,7 @@ create.test.tree <- function(tree, cnas, snvs, sample, ...) {
                    line.lwd=4, xaxis_space_left=0.1, xaxis_space_right=0.1, yaxis1_interval=10, min_width=1,
                    yaxis1_label="PGA",yaxis2_label="SNV", yaxis2_interval=1000,
                    spread=1.1, xaxis_label="CP" ,title = sample, title.cex=1.55, title.y=0.3, title.y.units="inches",
+                   label_cex = 0.6,
                    ...
                    );
     
