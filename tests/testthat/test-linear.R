@@ -7,8 +7,7 @@ test_that(
             linear.example,
             linear.example <- create.test.tree(
                 linear.test.data$tree,
-                linear.test.data$cnas,
-                linear.test.data$snvs,
+                linear.test.data$genes,
                 'WHO003',
                 add_normal = TRUE,
                 add_genes = TRUE,

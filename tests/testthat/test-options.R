@@ -5,9 +5,8 @@ test_that(
     
     expect_true(!is.null(
         create.test.tree(
-            tree = linear.test.data$tree,
-            cnas = linear.test.data$cnas,
-            snvs = linear.test.data$snvs,
+            linear.test.data$tree,
+            linear.test.data$genes,
             sample = sample,
             add_normal = TRUE,
             add_genes = TRUE,
@@ -17,9 +16,8 @@ test_that(
 
     expect_true(!is.null(
         create.test.tree(
-            tree = linear.test.data$tree,
-            cnas = linear.test.data$cnas,
-            snvs = linear.test.data$snvs,
+            linear.test.data$tree,
+            linear.test.data$genes,
             sample = sample,
             label_nodes = FALSE,
             add_polygons = FALSE,
@@ -29,9 +27,8 @@ test_that(
 
     expect_true(!is.null(
         create.test.tree(
-            tree = linear.test.data$tree,
-            cnas = linear.test.data$cnas,
-            snvs = linear.test.data$snvs,
+            linear.test.data$tree,
+            linear.test.data$genes,
             sample = sample,
             yaxis_position = 'left'
             )
