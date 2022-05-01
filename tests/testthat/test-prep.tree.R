@@ -5,8 +5,7 @@ test_that(
     expect_error(
         prep.tree(
             tree.df = invalid.parent.tree,
-            cnas = NULL,
-            snvs = NULL
+            genes.df = NULL
             ),
         regexp = 'parent'
         );
@@ -22,8 +21,7 @@ test_that(
     result.cp <- suppressWarnings(
         prep.tree(
             tree.df = invalid.CP.tree,
-            cnas = NULL,
-            snvs = NULL
+            genes.df = NULL
             )$in.tree.df$ccf
         );
     
@@ -40,8 +38,7 @@ test_that(
     expect_warning(
         prep.tree(
             tree.df = invalid.CP.tree,
-            cnas = NULL,
-            snvs = NULL
+            genes.df = NULL
             ),
         regexp = 'CP'
         );
@@ -171,4 +168,102 @@ test_that(
         parents <- c(-1, 1:5, 4, 1);
 
         expect_true(check.parent.values(node.names, parents));
+    });
+
+test_that(
+    'filter.null.genes removes genes with no node', {
+        num.valid.genes <- 4;
+        num.invalid.genes <- 2;
+
+        genes <- data.frame(
+            node = c(
+                rep(1, num.valid.genes),
+                rep(NA, num.invalid.genes)
+                ),
+            gene = rep('gene', num.valid.genes + num.invalid.genes)
+            );
+
+        filtered.genes <- suppressWarnings(filter.null.genes(genes));
+
+        expect_equal(nrow(filtered.genes), num.valid.genes);
+    });
+
+test_that(
+    'filter.null.genes warns on invalid genes', {
+        genes <- data.frame(
+            node = c(NA)
+            );
+
+        expect_warning(filter.null.genes(genes));
+    });
+
+test_that(
+    'filter.null.genes handles valid genes', {
+        num.genes <- 3;
+        
+        genes <- data.frame(
+            node = 1:num.genes,
+            gene = rep('gene', num.genes)
+            );
+
+        filtered.genes <- filter.null.genes(genes);
+
+        expect_equal(nrow(genes), nrow(filtered.genes));
+    });
+
+test_that(
+    'filter.invalid.gene.nodes removes invalid node IDs', {
+        tree <- data.frame(
+            parent = c(NA, 1, 1)
+            );
+
+        valid.node.id <- rownames(tree)[[1]];
+        invalid.node.id <- -1;
+
+        num.valid.genes <- 3;
+        num.invalid.genes <- 2;
+
+        genes <- data.frame(
+            node = c(
+                rep(valid.node.id, num.valid.genes),
+                rep(invalid.node.id, num.invalid.genes)
+                ),
+            gene = rep('gene', num.valid.genes + num.invalid.genes)
+            );
+
+        filtered.genes <- suppressWarnings(filter.invalid.gene.nodes(
+            genes,
+            rownames(tree)
+            ));
+
+        expect_equal(nrow(filtered.genes), num.valid.genes);
+    });
+
+test_that(
+    'filter.invalid.gene.nodes warns on invalid node IDs', {
+        tree <- data.frame(
+            parent = 1:2
+            );
+
+        genes <- data.frame(
+            node = c(-1)
+            );
+
+        expect_warning(filter.invalid.gene.nodes(genes, rownames(tree)));
+    });
+
+test_that(
+    'filter.invalid.gene.nodes handles valid node IDs', {
+        tree <- data.frame(
+            parent = c(1:3)
+            );
+
+        genes <- data.frame(
+            node = rownames(tree),
+            gene = rep('gene', nrow(tree))
+            );
+
+        filtered.genes <- filter.invalid.gene.nodes(genes, rownames(tree));
+
+        expect_equal(nrow(filtered.genes), nrow(genes));
     });
