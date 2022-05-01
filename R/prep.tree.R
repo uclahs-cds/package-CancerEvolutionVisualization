@@ -11,7 +11,7 @@ prep.tree <- function(
         }
 
     tree.df$parent <- prep.tree.parent(tree.df$parent);
-    
+
     if (!check.parent.values(rownames(tree.df), tree.df$parent)) {
         stop('Parent column references invalid node');
         }
@@ -28,7 +28,7 @@ prep.tree <- function(
         }
 
     add.genes <- !is.null(genes.df) && nrow(genes.df) > 0;
-    
+
     if (!is.null(tree.df$CP)) {
         tree.df$CP <- suppressWarnings(as.numeric(tree.df$CP));
 
@@ -170,7 +170,28 @@ reorder_clones <- function(in.df) {
     }
 
 reorder.nodes <- function(tree.df) {
-    return(tree.df[order(tree.df$CP, decreasing = TRUE), ]);
+    if (any(!is.na(tree.df$CP))) {
+        tree.df <- reorder.nodes.by.CP(tree.df);
+        }
+
+    return(reorder.trunk.node(tree.df));
+    }
+
+reorder.nodes.by.CP <- function(tree.df) {
+    return(tree.df[order(-(tree.df$CP), tree.df$parent), ]);
+    }
+
+reorder.trunk.node <- function(tree.df) {
+    is.trunk <- is.na(tree.df$parent);
+    
+    return(
+        # Skip reindexing data.frame if trunk node is already first
+        if (!is.trunk[[1]]) {
+            tree.df[c(which(is.trunk), which(!is.trunk)), ];
+        } else {
+            tree.df;
+            }
+        );
     }
 
 reset.node.names <- function(tree.df) {
