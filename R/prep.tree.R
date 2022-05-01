@@ -27,8 +27,6 @@ prep.tree <- function(
         genes.df <- genes.df[order(genes.df$node,genes.df$cn), ];
         }
 
-    add.genes <- !is.null(genes.df) && nrow(genes.df) > 0;
-
     if (!is.null(tree.df$CP)) {
         tree.df$CP <- suppressWarnings(as.numeric(tree.df$CP));
 
@@ -83,8 +81,7 @@ prep.tree <- function(
         tree = out.tree,
         genes.df = genes.df,
         w.padding = w.padding,
-        branching = branching,
-        add.genes = add.genes
+        branching = branching
         ));
     }
 
@@ -153,22 +150,6 @@ process_2A <- function(truth=NULL, pred=NULL){
   return(origins)
 }
 
-reorder_clones <- function(in.df) {
-    new.df <- in.df;
-
-    new.df$new.lab <- order(-as.numeric(new.df$CP));
-    new.df$new.par <- sapply(new.df$parent, function(x) {
-        new.df$new.lab[new.df$child == x];
-        }
-    );
-
-    in.df$child <- new.df$new.lab;
-    in.df$parent <- new.df$new.par;
-    in.df$parent[in.df$child == 1] <- -1;
-
-    return(in.df);
-    }
-
 reorder.nodes <- function(tree.df) {
     if (any(!is.na(tree.df$CP))) {
         tree.df <- reorder.nodes.by.CP(tree.df);
@@ -183,15 +164,13 @@ reorder.nodes.by.CP <- function(tree.df) {
 
 reorder.trunk.node <- function(tree.df) {
     is.trunk <- is.na(tree.df$parent);
-    
-    return(
-        # Skip reindexing data.frame if trunk node is already first
-        if (!is.trunk[[1]]) {
-            tree.df[c(which(is.trunk), which(!is.trunk)), ];
-        } else {
-            tree.df;
-            }
-        );
+
+    # Skip reindexing data.frame if trunk node is already first
+    if (!is.trunk[[1]]) {
+        tree.df[c(which(is.trunk), which(!is.trunk)), ];
+    } else {
+        tree.df;
+        }
     }
 
 reset.node.names <- function(tree.df) {

@@ -76,42 +76,6 @@ test_that(
     });
 
 test_that(
-    'reorder.clones output is correct', {
-        parent <- c(0, 1);
-        child <- c(1, 2);
-        CP <- c(0.52, 0.43);
-
-        tree <- data.frame(
-             parent = parent,
-             child = child,
-             CP = CP
-             );
-        
-        reordered <- reorder_clones(tree);
-
-        expected.output <- data.frame(
-            parent = c(-1, parent[2:length(parent)]),
-            child = child,
-            CP = CP
-            );
-
-        expect_equal(
-            as.numeric(reordered$parent),
-            expected.output$parent
-            );
-
-        expect_equal(
-            as.numeric(reordered$child),
-            expected.output$child
-            );
-
-        expect_equal(
-            as.numeric(reordered$CP),
-            expected.output$CP
-            );
-    });
-
-test_that(
     'reorder.nodes.by.CP result sorts by CP', {
         tree.in.order <- data.frame(
             CP = c(1, 0.65, 0.32),
