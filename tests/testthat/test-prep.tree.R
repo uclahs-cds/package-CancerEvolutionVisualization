@@ -112,19 +112,85 @@ test_that(
     });
 
 test_that(
-    'reorder.nodes result is in the correct order', {
+    'reorder.nodes.by.CP result sorts by CP', {
         tree.in.order <- data.frame(
             CP = c(1, 0.65, 0.32),
             parent = c(NA, 1, 1)
             );
 
-        reordered <- reorder.nodes(tree.in.order[c(3, 1, 2), ]);
+        reordered <- reorder.nodes.by.CP(tree.in.order[c(3, 1, 2), ]);
 
         expected.order <- rownames(tree.in.order);
 
         expect_equal(
             rownames(reordered),
             expected.order
+            );
+    });
+
+test_that(
+    'reorder.nodes.by.CP handles nodes with equal CP', {
+        tree.in.order <- data.frame(
+            CP = c(0.3, 0.3),
+            parent = c(1, 2)
+            );
+
+        reordered <- reorder.nodes.by.CP(tree.in.order[c(2, 1), ]);
+
+        expected.order <- rownames(tree.in.order);
+
+        expect_equal(
+            rownames(reordered),
+            expected.order
+            );
+    });
+
+test_that(
+    'reorder.nodes.by.CP handles nodes with NA CP', {
+        tree.in.order <- data.frame(
+            CP = c(NA, NA),
+            parent = c(1, 2)
+            );
+
+        reordered <- reorder.nodes.by.CP(tree.in.order[c(2, 1), ]);
+
+        expected.order <- rownames(tree.in.order);
+
+        expect_equal(
+            rownames(reordered),
+            expected.order
+            );
+    });
+
+test_that(
+    'reorder.trunk.node handles incorrect trunk placement', {
+        trunk.index <- 3;
+
+        tree <- data.frame(
+            parent = c(rep(trunk.index, trunk.index - 1), NA),
+            CP = c(0.6, 0.4, 1)
+            );
+
+        reordered.tree <- reorder.trunk.node(tree);
+
+        expect_equal(
+            rownames(reordered.tree)[[1]],
+            as.character(trunk.index)
+            );
+    });
+
+test_that(
+    'reorder.trunk.node handles valid trunk placement', {
+        tree <- data.frame(
+            parent = c(NA, 1),
+            CP = c(1, 0.5)
+            );
+
+        reordered.tree <- reorder.trunk.node(tree);
+
+        expect_equal(
+            rownames(reordered.tree),
+            rownames(tree)
             );
     });
 
