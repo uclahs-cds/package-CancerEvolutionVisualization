@@ -16,6 +16,19 @@ prep.tree <- function(
         stop('Parent column references invalid node');
         }
     
+        if (!is.null(genes.df)) {
+        genes.df <- filter.null.genes(genes.df);
+
+        genes.df <- filter.invalid.gene.nodes(
+            genes.df,
+            rownames(tree.df)
+            );
+
+        genes.df <- genes.df[order(genes.df$node,genes.df$cn), ];
+        }
+
+    add.genes <- !is.null(genes.df) && nrow(genes.df) > 0;
+    
     if (!is.null(tree.df$CP)) {
         tree.df$CP <- suppressWarnings(as.numeric(tree.df$CP));
 
@@ -55,13 +68,6 @@ prep.tree <- function(
         prep.branch.lengths(tree.df)
         );
 
-    if (!is.null(genes.df)) {
-        # TODO Remove genes with NULL node or node not present in tree
-        genes.df <- genes.df[order(genes.df$node,genes.df$cn), ];
-        }
-
-    add.genes <- !is.null(genes.df) && nrow(genes.df) > 0;
-
     if (is.null(w.padding)) {
         w.padding <- 1.05;
     
@@ -85,6 +91,38 @@ prep.tree <- function(
 prep.tree.parent <- function(parent.column) {
     parent.column[parent.column %in% c(0, NA)] <- -1;
     return(parent.column);
+    }
+
+filter.null.genes <- function(gene.df) {
+    null.genes <- which(is.na(gene.df$node));
+
+    if (length(null.genes) > 0) {
+        warning('Genes with no node will not be used');
+
+        return(gene.df[-(null.genes), ]);
+    } else {
+        return(gene.df);
+        }
+    }
+
+filter.invalid.gene.nodes <- function(gene.df, node.ids) {
+    invalid.genes <- which(as.logical(sapply(
+        gene.df$node,
+        FUN = function(node) {
+            !(node %in% node.ids);
+            }
+        )));
+
+    if (length(invalid.genes) > 0) {
+        warning(paste(
+            'Gene nodes provided that do not match a tree node ID.',
+            'Invalid genes will not be used.'
+            ));
+
+        return(gene.df[-(invalid.genes), ]);
+    } else {
+        return(gene.df);
+        }
     }
 
 process_1C <- function(out_1C){
