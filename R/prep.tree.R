@@ -174,8 +174,10 @@ reorder.trunk.node <- function(tree.df) {
     }
 
 reset.node.names <- function(tree.df) {
-    new.names <- as.list(1:nrow(tree.df));
-    names(new.names) <- rownames(tree.df);
+    new.names <- get.value.index(
+        old.values = rownames(tree.df),
+        new.values = 1:nrow(tree.df)
+        );
 
     rownames(tree.df) <- new.names;
 
