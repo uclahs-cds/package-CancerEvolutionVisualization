@@ -1,7 +1,7 @@
 test_that(
     'prep.tree handles invalid parent column', {
     invalid.parent.tree <- data.frame();
-    
+
     expect_error(
         prep.tree(
             tree.df = invalid.parent.tree,
@@ -17,14 +17,14 @@ test_that(
         parent = c(NA),
         CP = c('NA')
         );
-    
+
     result.cp <- suppressWarnings(
         prep.tree(
             tree.df = invalid.CP.tree,
             genes.df = NULL
             )$in.tree.df$ccf
         );
-    
+
     expect_true((!is.null(result.cp)) && all(is.na(result.cp)));
     });
 
@@ -34,7 +34,7 @@ test_that(
         parent = c(NA),
         CP = c('invalid')
         );
-    
+
     expect_warning(
         prep.tree(
             tree.df = invalid.CP.tree,
@@ -47,7 +47,7 @@ test_that(
 test_that(
     'prep.tree.parent handles values of 0', {
         parent <- c(0:5);
-        
+
         expect_equal(
             CancerEvolutionVisualization:::prep.tree.parent(parent)[1],
             -1
@@ -57,7 +57,7 @@ test_that(
 test_that(
     'prep.tree.parent handles values of NA', {
         parent <- c(NA, 1:5);
-        
+
         expect_equal(
             CancerEvolutionVisualization:::prep.tree.parent(parent)[1],
             -1
@@ -68,7 +68,7 @@ test_that(
     'prep.tree.parent has correct output length', {
         parent <- c(0, NA, 1, 3, 2);
         expected.length <- length(parent);
-        
+
         expect_length(
             CancerEvolutionVisualization:::prep.tree.parent(parent),
             expected.length
@@ -159,14 +159,17 @@ test_that(
     });
 
 test_that(
-    'reset.node.names handles new row names', {
+    'reset.tree.node.ids handles new row names', {
         tree <- data.frame(
             parent = c(-1, 'one', 'two', 'two'),
             CP = c(0.96, 0.76, 0.28, 0.31),
             row.names = c('one', 'two', 'three', 'four')
             );
 
-        tree.new.names <- reset.node.names(tree);
+        value.index <- as.list(c(-1, 1:nrow(tree)));
+        names(value.index) <- c(-1, rownames(tree));
+
+        tree.new.names <- reset.tree.node.ids(tree, value.index);
 
         expected.row.names <- as.character(1:length(rownames(tree)));
 
@@ -230,7 +233,7 @@ test_that(
 test_that(
     'filter.null.genes handles valid genes', {
         num.genes <- 3;
-        
+
         genes <- data.frame(
             node = 1:num.genes,
             gene = rep('gene', num.genes)
