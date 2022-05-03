@@ -30,9 +30,7 @@ prep.tree <- function(
     if (!is.null(tree.df$CP)) {
         tree.df$CP <- suppressWarnings(as.numeric(tree.df$CP));
 
-        if (all(!is.na(tree.df$CP))) {
-            tree.df <- reorder.nodes(tree.df);
-        } else {
+        if (any(is.na(tree.df$CP))) {
             warning(paste(
                 'Non-numeric values found in CP column.',
                 'Cellular prevalence will not be used.'
@@ -41,6 +39,8 @@ prep.tree <- function(
             tree.df$CP <- NULL;
             }
         }
+
+    tree.df <- reorder.nodes(tree.df);
 
     # Include -1 value for root node.
     # This may be temporary, as NULL/NA will likely replace -1
@@ -173,7 +173,7 @@ reorder.nodes.by.CP <- function(tree.df) {
     }
 
 reorder.trunk.node <- function(tree.df) {
-    is.trunk <- is.na(tree.df$parent);
+    is.trunk <- is.na(tree.df$parent) | tree.df$parent == -1;
 
     # Skip reindexing data.frame if trunk node is already first
     if (!is.trunk[[1]]) {
