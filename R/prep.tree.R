@@ -31,7 +31,7 @@ prep.tree <- function(
         tree.df$CP <- suppressWarnings(as.numeric(tree.df$CP));
 
         if (all(!is.na(tree.df$CP))) {
-            tree.df <- reset.node.names(reorder.nodes(tree.df));
+            tree.df <- reorder.nodes(tree.df);
         } else {
             warning(paste(
                 'Non-numeric values found in CP column.',
@@ -42,8 +42,18 @@ prep.tree <- function(
             }
         }
 
+    # Include -1 value for root node.
+    # This may be temporary, as NULL/NA will likely replace -1
+    node.id.index <- get.value.index(
+        old.values = c(-1, rownames(tree.df)),
+        new.values = c(-1, 1:nrow(tree.df))
+        );
+
+    tree.df <- reset.tree.node.ids(tree.df, node.id.index);
     tree.df$child <- rownames(tree.df);
-    
+
+    genes.df$node <- reindex.column(genes.df$node, node.id.index);
+
     tree.df$label <- as.character(
         if (is.null(tree.df$label)) { tree.df$child } else { tree.df$label }
         );
@@ -74,7 +84,7 @@ prep.tree <- function(
             }
         }
 
-    branching <- ifelse(any(duplicated(out.tree$parent) == TRUE), TRUE, FALSE);
+    branching <- any(duplicated(out.tree$parent));
 
     return(list(
         in.tree.df = out.df,
@@ -173,23 +183,16 @@ reorder.trunk.node <- function(tree.df) {
         }
     }
 
-reset.node.names <- function(tree.df) {
-    new.names <- get.value.index(
-        old.values = rownames(tree.df),
-        new.values = 1:nrow(tree.df)
-        );
-
-    rownames(tree.df) <- new.names;
-
-    # Include -1 value for root node.
-    # This may be temporary, as NULL/NA will likely replace -1
-    new.names['-1'] <- -1;
+reset.tree.node.ids <- function(tree.df, value.index) {
+    rownames(tree.df) <- 1:nrow(tree.df);
 
     # Convert parent values to character to safely index names list
-    tree.df$parent <- as.numeric(unlist(new.names[as.character(tree.df$parent)]));
+    tree.df$parent <- reindex.column(tree.df$parent, value.index);
 
     return(tree.df);
     }
+
+
 
 check.parent.values <- function(node.names, parent.col) {
     unique.node.names <- as.list(setNames(
