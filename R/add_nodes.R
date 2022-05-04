@@ -8,6 +8,10 @@ add_node_ellipse <- function(
     ...
     ){
 
+    if (is.na(label_cex)) {
+        label_cex <- 0.85;
+        }
+    
     if (!('plot.lab' %in% colnames(clone.out$v))) {
 		clone.out$v$plot.lab <- if (!is.null(clone.out$v$label.text)) {
 		    clone.out$v$label.text;
@@ -32,8 +36,8 @@ add_node_ellipse <- function(
 	    name = node.grob.name,
 	    x = unit(clone.out$v$x, "native"),
 	    y = unit(clone.out$v$y, "native"),
-	    size = ifelse(clone.out$v$circle, rad, rad * 1.2),
-	    ar = ifelse(clone.out$v$circle, 1, 3 / 5),
+	    size = rad * (1 + 0.2 * nchar(clone.out$v$plot.lab)),
+	    ar = 1 - log2(nchar(clone.out$v$plot.lab)) / 10,
 	    gp = gpar(fill = clone.out$v$colour, col = clone.out$v$colour),
 	    angle = pi / 2,
 	    position.units = "native",
@@ -54,7 +58,7 @@ add_node_ellipse <- function(
   		    x = unit(clone.out$v$x, "native"),
   		    y = unit(clone.out$v$y, "native"),
   		    just = c("center", "center"),
-  		    gp = gpar(col = '#FFFFFF', cex = label_cex)
+  		    gp = gpar(col = '#FFFFFF', cex = label_cex - log2(nchar(clone.out$v$plot.lab)) / 10)
   		    );
 
 	    clone.out$grobs <- c(clone.out$grobs, list(node_label_grob));
