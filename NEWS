@@ -1,3 +1,11 @@
+CancerEvolutionVisualization 0.3.1 2022-05-05 (Dan Knight)
+
+UPDATE
+* Automatically adjusts node size, shape, and text size based on the
+  length of the label text
+
+
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 0.3.0 2022-04-29 (Dan Knight)
 
 UPDATE
