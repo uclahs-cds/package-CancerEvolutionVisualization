@@ -1,4 +1,4 @@
-create.test.tree <- function(tree, cnas, snvs, sample, ...) {
+create.test.tree <- function(tree, genes, sample, ...) {
     title_dist <- 0.905
     scale.x.real <- 1/30
     scale2 <- 0.5/1500
@@ -8,7 +8,7 @@ create.test.tree <- function(tree, cnas, snvs, sample, ...) {
     
     scale.x.real <- 1/20
     
-    out <- SRCGrob(tree, cnas, snvs,filename = NULL,scale2=scale2,wid=2, extra_len=.1,
+    out <- SRCGrob(tree, genes, filename = NULL,scale2=scale2,wid=2, extra_len=.1,
                    scale1 = scale.x.real, h_padding=1, rad=0.1, gene.cex=0.85, fixed_angle=pi/6,
                    seg1.col='navy', seg2.col='gold',  node_col="grey40", sig_curve=3, 
                    line.lwd=4, xaxis_space_left=0.1, xaxis_space_right=0.1, yaxis1_interval=10, min_width=1,

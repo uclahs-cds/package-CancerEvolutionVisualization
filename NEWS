@@ -1,3 +1,13 @@
+CancerEvolutionVisualization 0.4.0 2022-05-03 (Dan Knight)
+
+UPDATE
+* Combined gene input dataframes into one
+
+BUG
+* Fixed issue when trunk node is not positioned first in the input tree
+
+
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 0.3.0 2022-04-29 (Dan Knight)
 
 UPDATE

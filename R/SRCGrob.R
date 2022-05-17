@@ -1,7 +1,6 @@
 SRCGrob <- function(
     tree = NULL,
-    cnas = NULL,
-    snvs = NULL,
+    genes = NULL,
     filename = "SRC_tree.pdf",
     scale1 = 0.05443424,
     scale2 = 0.5 / 362,
@@ -16,7 +15,6 @@ SRCGrob <- function(
     sig_curve = 3,
     spread = 1,
     fixed_angle = NULL,
-    genes = "default",
     gene_line_dist = 0.1,
     colour.scheme = colours,
     gene.cex = 0.85,
@@ -51,8 +49,7 @@ SRCGrob <- function(
     ) {
     inputs <- prep.tree(
         tree,
-        cnas,
-        snvs,
+        genes,
         add_polygons,
         yaxis_position,
         w.padding,

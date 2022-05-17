@@ -1,7 +1,6 @@
 prep.tree <- function(
     tree.df,
-    cnas,
-    snvs,
+    genes.df,
     bells = TRUE,
     axis.type = 'left',
     w.padding = NULL,
@@ -12,17 +11,26 @@ prep.tree <- function(
         }
 
     tree.df$parent <- prep.tree.parent(tree.df$parent);
-    
+
     if (!check.parent.values(rownames(tree.df), tree.df$parent)) {
         stop('Parent column references invalid node');
         }
     
+        if (!is.null(genes.df)) {
+        genes.df <- filter.null.genes(genes.df);
+
+        genes.df <- filter.invalid.gene.nodes(
+            genes.df,
+            rownames(tree.df)
+            );
+
+        genes.df <- genes.df[order(genes.df$node,genes.df$cn), ];
+        }
+
     if (!is.null(tree.df$CP)) {
         tree.df$CP <- suppressWarnings(as.numeric(tree.df$CP));
 
-        if (all(!is.na(tree.df$CP))) {
-            tree.df <- reset.node.names(reorder.nodes(tree.df));
-        } else {
+        if (any(is.na(tree.df$CP))) {
             warning(paste(
                 'Non-numeric values found in CP column.',
                 'Cellular prevalence will not be used.'
@@ -32,8 +40,20 @@ prep.tree <- function(
             }
         }
 
+    tree.df <- reorder.nodes(tree.df);
+
+    # Include -1 value for root node.
+    # This may be temporary, as NULL/NA will likely replace -1
+    node.id.index <- get.value.index(
+        old.values = c(-1, rownames(tree.df)),
+        new.values = c(-1, 1:nrow(tree.df))
+        );
+
+    tree.df <- reset.tree.node.ids(tree.df, node.id.index);
     tree.df$child <- rownames(tree.df);
-    
+
+    genes.df$node <- reindex.column(genes.df$node, node.id.index);
+
     tree.df$label <- as.character(
         if (is.null(tree.df$label)) { tree.df$child } else { tree.df$label }
         );
@@ -56,33 +76,6 @@ prep.tree <- function(
         prep.branch.lengths(tree.df)
         );
 
-    genes.df <-  NULL
-
-    if (!is.null(cnas) | !is.null(snvs)) {
-        if (!is.null(cnas)) {
-            cnas.df <- cnas[, c(2:4)];
-            cnas.df <- cnas.df[which(!is.na(cnas.df$node)), ];
-            }
-    
-        if (!is.null(snvs)) {
-            snvs.df <- snvs[, c(2:3)];
-            snvs.df$cn <- NA;
-            snvs.df <- snvs.df[which(!is.na(snvs.df$node)), ];
-            }
-
-        if (!is.null(cnas) & !is.null(snvs)) {
-            genes.df <- rbind(cnas.df, snvs.df);
-        } else if (!is.null(snvs)) {
-            genes.df <- snvs.df;
-        } else if (!is.null(cnas)) {
-            genes.df <- cnas.df;
-            }
-
-        genes.df <- genes.df[order(genes.df$node,genes.df$cn), ];
-        }
-
-    add.genes <- ifelse((is.null(genes.df) || nrow(genes.df) == 0 ), FALSE, TRUE);
-
     if (is.null(w.padding)) {
         w.padding <- 1.05;
     
@@ -91,21 +84,52 @@ prep.tree <- function(
             }
         }
 
-    branching <- ifelse(any(duplicated(out.tree$parent) == TRUE), TRUE, FALSE);
+    branching <- any(duplicated(out.tree$parent));
 
     return(list(
         in.tree.df = out.df,
         tree = out.tree,
         genes.df = genes.df,
         w.padding = w.padding,
-        branching = branching,
-        add.genes = add.genes
+        branching = branching
         ));
     }
 
 prep.tree.parent <- function(parent.column) {
     parent.column[parent.column %in% c(0, NA)] <- -1;
     return(parent.column);
+    }
+
+filter.null.genes <- function(gene.df) {
+    null.genes <- which(is.na(gene.df$node));
+
+    if (length(null.genes) > 0) {
+        warning('Genes with no node will not be used');
+
+        return(gene.df[-(null.genes), ]);
+    } else {
+        return(gene.df);
+        }
+    }
+
+filter.invalid.gene.nodes <- function(gene.df, node.ids) {
+    invalid.genes <- which(as.logical(sapply(
+        gene.df$node,
+        FUN = function(node) {
+            !(node %in% node.ids);
+            }
+        )));
+
+    if (length(invalid.genes) > 0) {
+        warning(paste(
+            'Gene nodes provided that do not match a tree node ID.',
+            'Invalid genes will not be used.'
+            ));
+
+        return(gene.df[-(invalid.genes), ]);
+    } else {
+        return(gene.df);
+        }
     }
 
 process_1C <- function(out_1C){
@@ -136,41 +160,39 @@ process_2A <- function(truth=NULL, pred=NULL){
   return(origins)
 }
 
-reorder_clones <- function(in.df) {
-    new.df <- in.df;
-
-    new.df$new.lab <- order(-as.numeric(new.df$CP));
-    new.df$new.par <- sapply(new.df$parent, function(x) {
-        new.df$new.lab[new.df$child == x];
-        }
-    );
-
-    in.df$child <- new.df$new.lab;
-    in.df$parent <- new.df$new.par;
-    in.df$parent[in.df$child == 1] <- -1;
-
-    return(in.df);
-    }
-
 reorder.nodes <- function(tree.df) {
-    return(tree.df[order(tree.df$CP, decreasing = TRUE), ]);
+    if (any(!is.na(tree.df$CP))) {
+        tree.df <- reorder.nodes.by.CP(tree.df);
+        }
+
+    return(reorder.trunk.node(tree.df));
     }
 
-reset.node.names <- function(tree.df) {
-    new.names <- as.list(1:nrow(tree.df));
-    names(new.names) <- rownames(tree.df);
+reorder.nodes.by.CP <- function(tree.df) {
+    return(tree.df[order(-(tree.df$CP), tree.df$parent), ]);
+    }
 
-    rownames(tree.df) <- new.names;
+reorder.trunk.node <- function(tree.df) {
+    is.trunk <- is.na(tree.df$parent) | tree.df$parent == -1;
 
-    # Include -1 value for root node.
-    # This may be temporary, as NULL/NA will likely replace -1
-    new.names['-1'] <- -1;
+    # Skip reindexing data.frame if trunk node is already first
+    if (!is.trunk[[1]]) {
+        tree.df[c(which(is.trunk), which(!is.trunk)), ];
+    } else {
+        tree.df;
+        }
+    }
+
+reset.tree.node.ids <- function(tree.df, value.index) {
+    rownames(tree.df) <- 1:nrow(tree.df);
 
     # Convert parent values to character to safely index names list
-    tree.df$parent <- as.numeric(unlist(new.names[as.character(tree.df$parent)]));
+    tree.df$parent <- reindex.column(tree.df$parent, value.index);
 
     return(tree.df);
     }
+
+
 
 check.parent.values <- function(node.names, parent.col) {
     unique.node.names <- as.list(setNames(
