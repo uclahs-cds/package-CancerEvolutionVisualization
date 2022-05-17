@@ -1,8 +1,18 @@
-CancerEvolutionVisualization 0.3.1 2022-05-05 (Dan Knight)
+CancerEvolutionVisualization 0.4.1 2022-05-05 (Dan Knight)
 
 UPDATE
 * Automatically adjusts node size, shape, and text size based on the
   length of the label text
+
+
+--------------------------------------------------------------------------
+CancerEvolutionVisualization 0.4.0 2022-05-03 (Dan Knight)
+
+UPDATE
+* Combined gene input dataframes into one
+
+BUG
+* Fixed issue when trunk node is not positioned first in the input tree
 
 
 --------------------------------------------------------------------------
