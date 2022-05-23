@@ -10,7 +10,6 @@ create.test.tree <- function(tree, genes, sample, ...) {
         h_padding = 1,
         rad = 0.1,
         gene.cex = 0.85,
-        fixed_angle = pi / 6,
         seg1.col = 'navy',
         seg2.col = 'gold',
         node_col = "grey40",
