@@ -14,7 +14,6 @@ SRCGrob <- function(
     sig_shape = 3,
     sig_curve = 3,
     spread = 1,
-    fixed_angle = NULL,
     gene_line_dist = 0.1,
     colour.scheme = colours,
     gene.cex = 0.85,
@@ -55,7 +54,9 @@ SRCGrob <- function(
         w.padding,
         colour.scheme
         );
-    
+
+    fixed_angle = pi / 6;
+
     clone.out <- make.clone.tree.grobs(
         ccf_df = inputs$in.tree.df,
         tree = inputs$tree,
