@@ -10,6 +10,13 @@ prep.tree <- function(
         stop('No parent column provided');
         }
 
+    if ('angle' %in% colnames(tree.df)) {
+        message(paste(
+            'Overriding branch angles will be supported in a future version.',
+            'The angle column will not be used.'
+            ));
+        }
+    
     tree.df$parent <- prep.tree.parent(tree.df$parent);
 
     if (!check.parent.values(rownames(tree.df), tree.df$parent)) {
