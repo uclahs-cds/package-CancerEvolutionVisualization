@@ -8,8 +8,8 @@ test_that(
             linear.test.data$tree,
             linear.test.data$genes,
             sample = sample,
-            add_normal = TRUE,
-            add_genes = TRUE,
+            add.normal = TRUE,
+            add.genes = TRUE,
             yaxis_position = 'both'
             )
         ));
@@ -19,8 +19,8 @@ test_that(
             linear.test.data$tree,
             linear.test.data$genes,
             sample = sample,
-            label_nodes = FALSE,
-            add_polygons = FALSE,
+            label.nodes = FALSE,
+            add.polygons = FALSE,
             yaxis_position = 'both'
             )
         ));

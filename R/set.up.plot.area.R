@@ -1,21 +1,21 @@
-calculate_main_plot_size <- function(clone.out, scale1, wid, min_width, xaxis_space_left, xaxis_space_right, rad){
+calculate_main_plot_size <- function(clone.out, scale1, wid, min.width, xaxis.space.left, xaxis.space.right, rad){
 	ymax <- max(clone.out$v$len) + clone.out$v$y[1]
 	height <- (ymax)*scale1
 	
-	if(is.null(min_width)){
+	if(is.null(min.width)){
 	  xmax <- wid
-	  width <- wid*scale1+xaxis_space_left + xaxis_space_right + 4*rad
-	  xlims <- c(-xmax/2-(xaxis_space_left*1/scale1 +2*rad/scale1), xmax/2+(xaxis_space_right*(1/scale1) +2*rad/scale1))
+	  width <- wid*scale1+xaxis.space.left + xaxis.space.right + 4*rad
+	  xlims <- c(-xmax/2-(xaxis.space.left*1/scale1 +2*rad/scale1), xmax/2+(xaxis.space.right*(1/scale1) +2*rad/scale1))
 	 } else{	  
 	  xmin <- min(c(clone.out$v$x))
 	  xmax <- max(c(clone.out$v$x))
-	  xlims <- c(xmin-(xaxis_space_left*1/scale1),xmax+xaxis_space_right*(1/scale1))
+	  xlims <- c(xmin-(xaxis.space.left*1/scale1),xmax+xaxis.space.right*(1/scale1))
 	  width <- (max(xlims)-min(xlims))*scale1
-	  diff <- min_width - width
+	  diff <- min.width - width
 	  if(diff > 0){
 	    xmin <- xmin-0.5*diff*1/scale1
 	    xmax <- xmax+0.5*diff*1/scale1
-	    xlims <- c(xmin-(xaxis_space_left*1/scale1 +2*rad/scale1),xmax+xaxis_space_right*(1/scale1)+2*rad/scale1)
+	    xlims <- c(xmin-(xaxis.space.left*1/scale1 +2*rad/scale1),xmax+xaxis.space.right*(1/scale1)+2*rad/scale1)
 	    width <- (max(xlims)-min(xlims))*scale1
 	  }
 	}
@@ -38,7 +38,7 @@ extend_axis <- function(axisGrob, limits, type){
 	return(axisGrob)
 }
 
-add_axis_label <- function(axisGrob, axis_label, axis_position, axis_label_cex, vp){	
+add_axis_label <- function(axisGrob, axis_label, axis_position, axis.label.cex, vp){	
 	if(axis_position == "bottom"){
 		d <- "y"
 		just <- c("centre","top")
@@ -65,29 +65,29 @@ add_axis_label <- function(axisGrob, axis_label, axis_position, axis_label_cex, 
 		popViewport()
 	}
 
-	axis_lab <- textGrob(name = 'axis.label', axis_label, gp=gpar(cex=axis_label_cex), vjust=0, x=x, rot=rot, y=y)
+	axis_lab <- textGrob(name = 'axis.label', axis_label, gp=gpar(cex=axis.label.cex), vjust=0, x=x, rot=rot, y=y)
 	axis_gtree <- gTree(name = paste0('axis.', axis_position), children=gList(axis_lab, axisGrob), vp=vp)
 	return(axis_gtree)
 }
 
-add_axes <- function(clone.out,  scale1, scale2=NULL, yaxis_position="left", xaxis_label="CCF", yaxis1_label="PGA", yaxis2_label=NULL, yaxis1_interval=10, yaxis2_interval=NA, no_ccf=FALSE, axis_label_cex=list(x=1.55,y=1.55), axis_cex=list(x=1,y=1), ylabels1=NULL, ylabels2=NULL, ylimit=NULL){
+add_axes <- function(clone.out,  scale1, scale2=NULL, yaxis_position="left", xaxis.label="CCF", yaxis1.label="PGA", yaxis2.label=NULL, yaxis1.interval=10, yaxis2.interval=NA, no_ccf=FALSE, axis.label.cex=list(x=1.55,y=1.55), axis.cex=list(x=1,y=1), ylabels1=NULL, ylabels2=NULL, ylimit=NULL){
 	if(no_ccf == FALSE & 'ccf' %in% colnames(clone.out$v) & all(!is.na(clone.out$v$ccf))){		
-		add_xaxis(clone.out, scale1=scale1, axis_label=xaxis_label, no_ccf=no_ccf, axis_label_cex=axis_label_cex[['x']], axis_cex=axis_cex[['x']])
+		add_xaxis(clone.out, scale1=scale1, axis_label=xaxis.label, no_ccf=no_ccf, axis.label.cex=axis.label.cex[['x']], axis.cex=axis.cex[['x']])
 	}
 	if( yaxis_position == "both" ){
-		if(is.null(yaxis2_label)){
+		if(is.null(yaxis2.label)){
 			warning("Missing second y-axis label")
-			yaxis2_label <- ""
+			yaxis2.label <- ""
 		}
 		conversion_factor <- scale1/scale2
-		ymax1 <- add_yaxis(clone.out, yaxis_position="left", axis1_label=yaxis1_label, yaxis1_interval=yaxis1_interval, no_ccf=no_ccf, axis_label_cex=axis_label_cex[['y']], axis_cex=axis_cex[['y']],ylabels=ylabels1, ylimit=ylimit)
-		add_yaxis(clone.out, yaxis_position="right", conversion_factor=conversion_factor, axis1_label=yaxis2_label, yaxis1_interval=yaxis2_interval, no_ccf=no_ccf, axis_label_cex=axis_label_cex[['y']], axis_cex=axis_cex[['y']],ylabels=ylabels2, ylimit=ymax1)
+		ymax1 <- add_yaxis(clone.out, yaxis_position="left", axis1_label=yaxis1.label, yaxis1.interval=yaxis1.interval, no_ccf=no_ccf, axis.label.cex=axis.label.cex[['y']], axis.cex=axis.cex[['y']],ylabels=ylabels1, ylimit=ylimit)
+		add_yaxis(clone.out, yaxis_position="right", conversion_factor=conversion_factor, axis1_label=yaxis2.label, yaxis1.interval=yaxis2.interval, no_ccf=no_ccf, axis.label.cex=axis.label.cex[['y']], axis.cex=axis.cex[['y']],ylabels=ylabels2, ylimit=ymax1)
 	}else{
-		add_yaxis(clone.out, yaxis_position=yaxis_position, axis1_label=yaxis1_label, yaxis1_interval=yaxis1_interval, no_ccf=no_ccf, axis_label_cex=axis_label_cex[['y']], axis_cex=axis_cex[['y']],ylabels=ylabels1, ylimit=ylimit)
+		add_yaxis(clone.out, yaxis_position=yaxis_position, axis1_label=yaxis1.label, yaxis1.interval=yaxis1.interval, no_ccf=no_ccf, axis.label.cex=axis.label.cex[['y']], axis.cex=axis.cex[['y']],ylabels=ylabels1, ylimit=ylimit)
 	}
 }
 
-add_yaxis <- function(clone.out, yaxis_position="left", conversion_factor=1, axis1_label="PGA", yaxis2_label=NULL, yaxis1_interval=NA, no_ccf=FALSE, ylimit=NULL, axis_label_cex=list(x=1.55,y=1.55), axis_cex=list(x=1,y=1), ylabels=NULL){
+add_yaxis <- function(clone.out, yaxis_position="left", conversion_factor=1, axis1_label="PGA", yaxis2.label=NULL, yaxis1.interval=NA, no_ccf=FALSE, ylimit=NULL, axis.label.cex=list(x=1.55,y=1.55), axis.cex=list(x=1,y=1), ylabels=NULL){
     #necessary to get the right positioning
     vp_unclipped <- make_plot_viewport(clone.out, clip="off") 
 
@@ -100,10 +100,10 @@ add_yaxis <- function(clone.out, yaxis_position="left", conversion_factor=1, axi
 	}
 	#set up tick labels
 	if(is.null(ylabels)){
-		if(!is.na(yaxis1_interval)){
-			ylabels <- seq(0, ymax*conversion_factor, by=yaxis1_interval)
+		if(!is.na(yaxis1.interval)){
+			ylabels <- seq(0, ymax*conversion_factor, by=yaxis1.interval)
 			if(no_ccf == TRUE & max(ylabels) < ymax){
-				ylabels <- c(ylabels, max(ylabels) + yaxis1_interval)
+				ylabels <- c(ylabels, max(ylabels) + yaxis1.interval)
 			}
 		} else{
 			ylabels <- pretty(seq(0, ymax*conversion_factor))
@@ -111,18 +111,18 @@ add_yaxis <- function(clone.out, yaxis_position="left", conversion_factor=1, axi
 	}
 
 	yat <- ylabels/conversion_factor
-	yaxis1 <- yaxisGrob(name = 'axis.content', at=yat, label=ylabels, gp=gpar(cex=axis_cex), main=ifelse(yaxis_position=="left",TRUE,FALSE))
+	yaxis1 <- yaxisGrob(name = 'axis.content', at=yat, label=ylabels, gp=gpar(cex=axis.cex), main=ifelse(yaxis_position=="left",TRUE,FALSE))
 	
 	if(max(yat)/conversion_factor != ymax & no_ccf == FALSE){ #extending the axis line beyond the last tick 
 		yaxis1 <- extend_axis(yaxis1, limits=unit(c(0,ymax),"native"), type="y")
 	}		
 
-	yaxis_gtree <- add_axis_label(yaxis1, axis1_label, axis_position=yaxis_position, axis_label_cex, vp=vp_unclipped)
+	yaxis_gtree <- add_axis_label(yaxis1, axis1_label, axis_position=yaxis_position, axis.label.cex, vp=vp_unclipped)
 	clone.out$grobs <- c(clone.out$grobs, list(yaxis_gtree))
 	return(ymax)
 }
 
-add_xaxis <- function(clone.out, scale1, axis_label="CCF", no_ccf=FALSE, axis_label_cex=1.55, axis_cex=1){
+add_xaxis <- function(clone.out, scale1, axis_label="CCF", no_ccf=FALSE, axis.label.cex=1.55, axis.cex=1){
 	vp_unclipped <- make_plot_viewport(clone.out, clip="off") #necessary to get the right positioning
 
 	#set up tick labels
@@ -130,18 +130,18 @@ add_xaxis <- function(clone.out, scale1, axis_label="CCF", no_ccf=FALSE, axis_la
 	xat <- c(min(clone_widths), max(clone_widths))
 	xlabels <- c(0,paste0(round(max(clone.out$v$ccf)*100,0),'%'))
 	
-	xaxis <- xaxisGrob(name = 'axis.content', at=xat, label=xlabels, gp=gpar(cex=axis_label_cex), main=TRUE)
+	xaxis <- xaxisGrob(name = 'axis.content', at=xat, label=xlabels, gp=gpar(cex=axis.label.cex), main=TRUE)
 	
 	#move the labels up a little 
-	xaxis_labels <- editGrob(getGrob(xaxis, "labels"), y= unit(-.09, "npc"), vjust=1)
-	xaxis <- setGrob(xaxis, "labels", xaxis_labels)
+	xaxis.labels <- editGrob(getGrob(xaxis, "labels"), y= unit(-.09, "npc"), vjust=1)
+	xaxis <- setGrob(xaxis, "labels", xaxis.labels)
 	
 	if(diff(xat)/scale1 != clone.out$width){ #extending the axis line beyond the clone limits
 		xaxis <- extend_axis(xaxis, limits=unit(clone.out$xlims,"native"), type="x")#extendsetGrob(xaxis, "major", editGrob(getGrob(xaxis, "major"), x =unit(clone.out$xlims,"native")))
 	}
 
 	#add in the axis label
-	xaxis_gtree <- add_axis_label(xaxis, axis_label, axis_position="bottom", axis_label_cex, vp=vp_unclipped)
+	xaxis_gtree <- add_axis_label(xaxis, axis_label, axis_position="bottom", axis.label.cex, vp=vp_unclipped)
 	clone.out$grobs <- c(clone.out$grobs, list(xaxis_gtree))
 }
 

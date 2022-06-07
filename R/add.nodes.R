@@ -1,15 +1,15 @@
 add_node_ellipse <- function(
     clone.out,
     rad,
-    label_nodes = NULL,
-    label_cex = NA,
-    add_normal = FALSE,
+    label.nodes = NULL,
+    labe.cex = NA,
+    add.normal = FALSE,
     scale1,
     ...
     ){
 
-    if (is.na(label_cex)) {
-        label_cex <- 0.85;
+    if (is.na(labe.cex)) {
+        labe.cex <- 0.85;
         }
     
     if (!('plot.lab' %in% colnames(clone.out$v))) {
@@ -47,9 +47,9 @@ add_node_ellipse <- function(
 
 	clone.out$grobs <- c(clone.out$grobs, list(circle_grobs));
 
-	if (!is.null(label_nodes) && label_nodes == TRUE) {
-		if(is.na(label_cex)){
-			label_cex <- rad * 2 / (get.gpar("fontsize")$fontsize / 72);
+	if (!is.null(label.nodes) && label.nodes == TRUE) {
+		if(is.na(labe.cex)){
+			labe.cex <- rad * 2 / (get.gpar("fontsize")$fontsize / 72);
 		    }
 
   		node_label_grob <- textGrob(
@@ -58,20 +58,20 @@ add_node_ellipse <- function(
   		    x = unit(clone.out$v$x, "native"),
   		    y = unit(clone.out$v$y, "native"),
   		    just = c("center", "center"),
-  		    gp = gpar(col = '#FFFFFF', cex = label_cex - log2(nchar(clone.out$v$plot.lab)) / 10)
+  		    gp = gpar(col = '#FFFFFF', cex = labe.cex - log2(nchar(clone.out$v$plot.lab)) / 10)
   		    );
 
 	    clone.out$grobs <- c(clone.out$grobs, list(node_label_grob));
 	    }
     }
 
-add_normal <- function(clone.out, rad, label_cex, normal_cex = 1) {
+add.normal <- function(clone.out, rad, labe.cex, normal.cex = 1) {
     normal_box <- rectGrob(
         x = unit(0.5, "npc"),
         y = unit(0.5, "npc"),
         name = "normal.box",
-        width = unit(2 * rad * normal_cex,"inches"),
-        height = unit(2 * rad * normal_cex, "inches"),
+        width = unit(2 * rad * normal.cex,"inches"),
+        height = unit(2 * rad * normal.cex, "inches"),
         just = c("center", "center"),
         gp = gpar(col = "black", fill = "transparent", lwd = 1.5, lty = "31")
         );

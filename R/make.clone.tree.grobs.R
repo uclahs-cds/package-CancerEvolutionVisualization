@@ -1,45 +1,45 @@
 
 make.clone.tree.grobs <- function(
-    ccf_df,
+    ccf.df,
     tree,
     scale1,
     scale2,
     wid, 
     line.lwd,
-    length_from_node_edge,
+    length.from.node.edge,
     seg1.col,
     seg2.col,
-    cluster_list,
-    add_polygons,
-    extra_len,
+    cluster.list,
+    add.polygons,
+    extra.len,
     sig_shape,
     sig_curve,
     spread,
     fixed_angle,
-    add_genes,
+    add.genes,
     genes_df,
     gene_line_dist,
     gene.cex,
     genes_on_nodes,
     yaxis_position,
-    yaxis1_label,
-    yaxis2_label,
-    axis_label_cex,
-    axis_cex,
-    yaxis1_interval,
-    yaxis2_interval, 
+    yaxis1.label,
+    yaxis2.label,
+    axis.label.cex,
+    axis.cex,
+    yaxis1.interval,
+    yaxis2.interval, 
     ylimit,
-    xaxis_label,
-    xaxis_space_left,
-    xaxis_space_right,
-    min_width,
+    xaxis.label,
+    xaxis.space.left,
+    xaxis.space.right,
+    min.width,
     nodes,
     rad,
-    label_nodes,
-    node_col,
-    label_cex,
-    add_normal,
-    normal_cex,
+    label.nodes,
+    node.col,
+    labe.cex,
+    add.normal,
+    normal.cex,
     title,
     title.cex,
     title.y,
@@ -48,17 +48,17 @@ make.clone.tree.grobs <- function(
     ) {
 
 	#initializing dataframe for subclones
-	if ('excluded' %in% colnames(ccf_df)) {
-		v <- ccf_df[!ccf_df$excluded,];
+	if ('excluded' %in% colnames(ccf.df)) {
+		v <- ccf.df[!ccf.df$excluded,];
 	} else {
-		v <- ccf_df;
+		v <- ccf.df;
 		v$excluded <- FALSE;
 	    }
 
 	v <- v[order(v$id), ];
 	no_ccf <- FALSE;
 
-	if (!('ccf' %in% colnames(ccf_df)) | all(is.na(ccf_df$ccf)) | add_polygons == FALSE) {
+	if (!('ccf' %in% colnames(ccf.df)) | all(is.na(ccf.df$ccf)) | add.polygons == FALSE) {
 	    v$vaf <- NULL;
 	    v$vaf[v$parent == -1] <- 1;
 	    no_ccf <- TRUE;
@@ -67,8 +67,8 @@ make.clone.tree.grobs <- function(
 	    v$vaf[!v$excluded] <- v$ccf[!v$excluded]/max(v$ccf[!v$excluded])
 	    }
 
-	if (all(is.null(ccf_df$colour))) {
-	    v$colour <- node_col
+	if (all(is.null(ccf.df$colour))) {
+	    v$colour <- node.col
 	    }
 	
 	v$x <- v$y <- v$len <- v$x.mid <- numeric(length(nrow(v)));
@@ -95,11 +95,11 @@ make.clone.tree.grobs <- function(
 
 	raw_tree <- tree;
 
-	if (nodes != "none" && length_from_node_edge == TRUE) {
+	if (nodes != "none" && length.from.node.edge == TRUE) {
 	    tree <- adjust_branch_lengths(v,tree,rad, scale1);
     	}
 
-	extra_len <- extra_len * (1 / scale1);
+	extra.len <- extra.len * (1 / scale1);
 	
 	clone.out <- make_clone_polygons(
 	    v,
@@ -107,13 +107,13 @@ make.clone.tree.grobs <- function(
 	    wid,
 	    scale1,
 	    scale2,
-	    extra_len,
-	    node_col,
+	    extra.len,
+	    node.col,
 	    spread = spread,
 	    sig_shape = sig_shape,
 	    fixed_angle = fixed_angle,
 	    beta_in = sig_curve,
-	    add_polygons = add_polygons,
+	    add.polygons = add.polygons,
 	    no_ccf = no_ccf
 	    );
 
@@ -122,9 +122,9 @@ make.clone.tree.grobs <- function(
 	    clone.out,
 	    scale1,
 	    wid,
-	    min_width,
-	    xaxis_space_left,
-	    xaxis_space_right,
+	    min.width,
+	    xaxis.space.left,
+	    xaxis.space.right,
 	    rad
 	    );
 
@@ -134,14 +134,14 @@ make.clone.tree.grobs <- function(
 
 	add_tree_segs(clone.out, rad, line.lwd, scale1, seg1.col, seg2.col);
 
-	if (!is.null(cluster_list)) {
-		add_pie_nodes(clone.out, rad, cluster_list)
+	if (!is.null(cluster.list)) {
+		add_pie_nodes(clone.out, rad, cluster.list)
 	} else {
-		add_node_ellipse(clone.out,rad, label_nodes, label_cex, scale1)
+		add_node_ellipse(clone.out,rad, label.nodes, labe.cex, scale1)
 	    }
 
-	if (add_normal == TRUE) {
-		add_normal(clone.out,rad,label_cex, normal_cex)
+	if (add.normal == TRUE) {
+		add.normal(clone.out,rad,labe.cex, normal.cex)
 	    }
 
 	if (yaxis_position != "none" ) {
@@ -150,23 +150,23 @@ make.clone.tree.grobs <- function(
 		    yaxis_position,
 		    scale1 = scale1,
 		    scale2 = scale2,
-		    axis_label_cex = axis_label_cex,
-		    axis_cex = axis_cex,
+		    axis.label.cex = axis.label.cex,
+		    axis.cex = axis.cex,
 		    no_ccf = no_ccf,
-		    xaxis_label = xaxis_label,
-		    yaxis1_label = yaxis1_label,
-		    yaxis2_label = yaxis2_label,
-		    yaxis1_interval = yaxis1_interval,
-		    yaxis2_interval = yaxis2_interval,
+		    xaxis.label = xaxis.label,
+		    yaxis1.label = yaxis1.label,
+		    yaxis2.label = yaxis2.label,
+		    yaxis1.interval = yaxis1.interval,
+		    yaxis2.interval = yaxis2.interval,
 		    ylimit = ylimit
 		    );
 	    }
 
-	if (add_genes == TRUE & !is.null(genes_df)) {			
+	if (add.genes == TRUE & !is.null(genes_df)) {			
 	    gene_grobs <- add_text2(
 	        clone.out$tree,
 	        genes_df,
-	        label_nodes = genes_on_nodes,
+	        label.nodes = genes_on_nodes,
 	        line.dist = gene_line_dist,
 	        title.y = clone.out$height,
 	        panel_height = clone.out$height,

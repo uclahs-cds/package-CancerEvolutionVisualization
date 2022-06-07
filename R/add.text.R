@@ -112,7 +112,7 @@ position_genes <- function(
     rad = rad,
     alternating = FALSE,
     split = FALSE,
-    label_nodes = FALSE,
+    label.nodes = FALSE,
     adjust_axis_overlap = TRUE,
     cex = cex
     ){
@@ -138,7 +138,7 @@ position_genes <- function(
             while (
                 str.heightsum == 0 |
                 (label.bottom + str.heightsum) > (title.y+panel_height) |
-                (label_nodes == FALSE &
+                (label.nodes == FALSE &
                 (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + rad * 0.5))
             ) {
                 if ((label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + rad * 0.5) & length(gene.list[[s]]) > 1) {
@@ -161,7 +161,7 @@ position_genes <- function(
                     str.heightsum <- max(c(str.heightsum_left, str.heightsum_right));
                     }
 
-                if (!label_nodes) {
+                if (!label.nodes) {
                     if (length(gene.list[[s]]) == 1) { 
                         # Centered when there is just one gene row
                         # Otherwise position relative to the bottom of the textGrob 
@@ -181,7 +181,7 @@ position_genes <- function(
 
                 if (
                     (label.bottom + str.heightsum) > (title.y+panel_height) |
-                    (label_nodes == FALSE & (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s]+rad*0.5))
+                    (label.nodes == FALSE & (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s]+rad*0.5))
                 ) {
                     cex <- cex - 0.05;
                     }
@@ -195,7 +195,7 @@ position_genes <- function(
                     no = sum(str.heights[c(1:(g - 1))])
                     );
 
-                if (label_nodes) {
+                if (label.nodes) {
                     ypos <- tree.max.adjusted$y[s];
                     xpos <- tree.max.adjusted$x[s];
                     xline.dist <- line.dist + rad;
@@ -296,7 +296,7 @@ position_genes <- function(
                                 rad = rad,
                                 alternating = alternating,
                                 split = split,
-                                label_nodes = label_nodes
+                                label.nodes = label.nodes
                                 );
 
                             return(text_grob_list);
@@ -312,7 +312,7 @@ position_genes <- function(
     
                     hjust <- ifelse(xline.dist > 0,"left","right")  
     
-                    if (label_nodes) {
+                    if (label.nodes) {
                         node <- tree.max.adjusted[which(tree.max.adjusted$tip == tree.max.adjusted$tip[s]), ];
                         parent <- tree.max.adjusted[which(tree.max.adjusted$tip == tree.max.adjusted$parent[s]), ];
                         children <- tree.max.adjusted[which(tree.max.adjusted$parent == tree.max.adjusted$tip[s]), ];
@@ -362,7 +362,7 @@ position_genes <- function(
                         }
     
                     if (
-                        label_nodes &&
+                        label.nodes &&
                         tree.max.adjusted$parent[s] %in% tree.max.adjusted$tip &&
                         ((tree.max.adjusted[which(tree.max.adjusted$tip == tree.max.adjusted$parent[s]), ]$y - tree.max.adjusted$y[s]) < rad)
                     ) {
@@ -438,7 +438,7 @@ position_genes <- function(
                                     rad = rad,
                                     alternating = alternating,
                                     split = split,
-                                    label_nodes = label_nodes
+                                    label.nodes = label.nodes
                                     );
     
                                 return(text_grob_list);
@@ -465,7 +465,7 @@ position_genes <- function(
 
 add_text2 <- function(
     tree,genes,
-    label_nodes = FALSE,
+    label.nodes = FALSE,
     cex = 1,
     line.dist = 0.5,
     v = NULL,
@@ -615,7 +615,7 @@ add_text2 <- function(
         rad = rad,
         alternating = alternating,
         split = split,
-        label_nodes = label_nodes
+        label.nodes = label.nodes
         );
 
     text_grob_glist <- do.call(gList, text_grob_list);

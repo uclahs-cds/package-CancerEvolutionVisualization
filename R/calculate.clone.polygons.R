@@ -309,7 +309,7 @@ compute_clones <- function(
     x = 1,
     y = 0,
     wid = 1.2,
-    extra_len = 1,
+    extra.len = 1,
     tree = NULL,
     fixed_angle = NULL,
     sig_shape = 3,
@@ -326,7 +326,7 @@ compute_clones <- function(
 
 	if (no_ccf && (is.null(fixed_angle) && nrow(v) > 6) || any(table(v$parent) > 2)) {
 		v <- count_leaves_per_node(v);
-		tmp <-  position_nodes_radial(v, tree, extra_len, spread);
+		tmp <-  position_nodes_radial(v, tree, extra.len, spread);
 		clone_env <-  new.env(parent = emptyenv());
 		clone_env$v <- tmp$v;
 		clone_env$tree <- tmp$tree;
@@ -337,7 +337,7 @@ compute_clones <- function(
 		    v,
 		    tree,
 		    fixed_angle = fixed_angle,
-		    len = extra_len
+		    len = extra.len
 		    );
 
 		return(clone_env)
@@ -346,7 +346,7 @@ compute_clones <- function(
     	}
 
 	v$x <- v$y <- v$len <- 0;
-	len <- extra_len;
+	len <- extra.len;
 
 	clone_env <- new.env(parent = emptyenv());
 	clone_env$v <- v;
@@ -366,8 +366,8 @@ compute_clones <- function(
 	    );
 
 	#if the end of the polygon is shorter than the last clone polygon or the desired length make the polygon longer and recompute
-	while (max(clone_env$coords.df$y0) > (clone_env$coords.df$len[1] + y) | (min(clone_env$coords.df$len) < extra_len )) {
-        len <- len + (extra_len-min(clone_env$coords.df$len)) + 0.0001;
+	while (max(clone_env$coords.df$y0) > (clone_env$coords.df$len[1] + y) | (min(clone_env$coords.df$len) < extra.len )) {
+        len <- len + (extra.len-min(clone_env$coords.df$len)) + 0.0001;
     
         get_clones(
              x = x,
