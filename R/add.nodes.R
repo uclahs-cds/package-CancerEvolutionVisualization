@@ -1,4 +1,4 @@
-add_node_ellipse <- function(
+add.node.ellipse <- function(
     clone.out,
     rad,
     label.nodes = NULL,
@@ -28,11 +28,10 @@ add_node_ellipse <- function(
 	        }
 	    );
 
-    nodes_grob <- list();
 	node.grob.name <- 'node.polygons';
 
 	#more precise than circleGrob
-	circle_grobs <- ellipseGrob(
+	circle.grobs <- ellipseGrob(
 	    name = node.grob.name,
 	    x = unit(clone.out$v$x, "native"),
 	    y = unit(clone.out$v$y, "native"),
@@ -45,14 +44,14 @@ add_node_ellipse <- function(
 	    ...
 	    );
 
-	clone.out$grobs <- c(clone.out$grobs, list(circle_grobs));
+	clone.out$grobs <- c(clone.out$grobs, list(circle.grobs));
 
 	if (!is.null(label.nodes) && label.nodes == TRUE) {
 		if(is.na(labe.cex)){
 			labe.cex <- rad * 2 / (get.gpar("fontsize")$fontsize / 72);
 		    }
 
-  		node_label_grob <- textGrob(
+  		node.label.grob <- textGrob(
   		    name = 'node.labels',
   		    clone.out$v$plot.lab,
   		    x = unit(clone.out$v$x, "native"),
@@ -61,12 +60,12 @@ add_node_ellipse <- function(
   		    gp = gpar(col = '#FFFFFF', cex = labe.cex - log2(nchar(clone.out$v$plot.lab)) / 10)
   		    );
 
-	    clone.out$grobs <- c(clone.out$grobs, list(node_label_grob));
+	    clone.out$grobs <- c(clone.out$grobs, list(node.label.grob));
 	    }
     }
 
 add.normal <- function(clone.out, rad, labe.cex, normal.cex = 1) {
-    normal_box <- rectGrob(
+    normal.box <- rectGrob(
         x = unit(0.5, "npc"),
         y = unit(0.5, "npc"),
         name = "normal.box",
@@ -76,7 +75,7 @@ add.normal <- function(clone.out, rad, labe.cex, normal.cex = 1) {
         gp = gpar(col = "black", fill = "transparent", lwd = 1.5, lty = "31")
         );
 
-    normal_label <- textGrob(
+    normal.label <- textGrob(
         "N",
         x = unit(0.5, "npc"),
         y = unit(0.5, "npc"),
@@ -84,89 +83,97 @@ add.normal <- function(clone.out, rad, labe.cex, normal.cex = 1) {
         just = "center",
         gp = gpar(
             col = 'black',
-            cex = convertY(grobHeight(normal_box), "inches", valueOnly = TRUE) * 1.05 * 72 / 12
+            cex = convertY(grobHeight(normal.box), "inches", valueOnly = TRUE) * 1.05 * 72 / 12
             )
         );
 
-    normal_grob <- gTree(
-        children = gList(normal_box, normal_label),
+    normal.grob <- gTree(
+        children = gList(normal.box, normal.label),
         name = "normal.gtree",
-        cl = "normal_node",
+        cl = "normal.node",
         vp = vpStack(
-            make_plot_viewport(clone.out, clip = "off"),
+            make.plot.viewport(clone.out, clip = "off"),
             viewport(
                 y = unit(1, "npc"),
                 x = unit(0, "native"),
-                height = grobHeight(normal_box),
-                width = grobWidth(normal_box),
+                height = grobHeight(normal.box),
+                width = grobWidth(normal.box),
                 just = c("centre", "bottom")
                 )
             )
         );
 
-    clone.out$grobs <- c(clone.out$grobs, list(normal_grob));
+    clone.out$grobs <- c(clone.out$grobs, list(normal.grob));
     }
 
-add_pie_nodes <- function(clone.out, rad, cluster_list) {
-	pie_grobs <- list();
+add.pie.nodes <- function(clone.out, rad, cluster.list) {
+	pie.grobs <- list();
 	clone.out$v <- clone.out$v[order(clone.out$v$id), ];
 
 	for(i in seq_along(clone.out$v$id)) {
-		pie_grobs[[i]] <- pieGrob(
+		pie.grobs[[i]] <- pieGrob(
 		    x = clone.out$v[i,]$x,
 		    y = clone.out$v[i,]$y,
 		    rad = rad,
-		    prop_list = cluster_list[[i]],
-		    col_df = cluster_list$col
+		    prop.list = cluster.list[[i]],
+		    col.df = cluster.list$col
 		    );
     	}
 
-	clone.out$grobs <- c(clone.out$grobs, pie_grobs);
+	clone.out$grobs <- c(clone.out$grobs, pie.grobs);
     }
 
-pieGrob <- function(x, y, rad=.1, prop_list, col_df, xy.units="native"){
+pieGrob <- function(
+    x,
+    y,
+    rad = 0.1,
+    prop.list,
+    col.df,
+    xy.units = "native"
+    ) {
+
 	r <-1;
 	x0 <- y0 <- 0;
 
-	slice_list <- list();
+	slice.list <- list();
 
-	for (i in seq_along(prop_list)) {
-		angle <- 2 * pi * sum(prop_list[1:i]); 
-		x0 <- if (i == 1) { 0 } else { r * sin(2 * pi * sum(prop_list[1:(i - 1)])) };
+	for (i in seq_along(prop.list)) {
+		angle <- 2 * pi * sum(prop.list[1:i]); 
+		x0 <- if (i == 1) { 0 } else { r * sin(2 * pi * sum(prop.list[1:(i - 1)])) };
 		x1 <- r * sin(angle);
-		y0 <- if (i ==1 ) { 0 } else { r * cos(2 * pi * sum(prop_list[1:(i - 1)])) };
+		y0 <- if (i ==1 ) { 0 } else { r * cos(2 * pi * sum(prop.list[1:(i - 1)])) };
 		y1 <- r * cos(angle);
-		x_edge1 <- c(0, x0);
-		x_edge2 <- c(x1, 0);
-		x_arc <- sapply(
-		    seq(if(i == 1) { 0 } else { 2 * pi * sum(prop_list[1:(i - 1)]) }, angle, length = 1000),
+		x.edge1 <- c(0, x0);
+		x.edge2 <- c(x1, 0);
+		x.arc <- sapply(
+		    seq(if(i == 1) { 0 } else { 2 * pi * sum(prop.list[1:(i - 1)]) }, angle, length = 1000),
 		    FUN = function(deg) { r * sin(deg) }
 		    );
 
-		xc <- c(x_edge1, x_arc, x_edge2);
+		xc <- c(x.edge1, x.arc, x.edge2);
 
-		y_arc <- sapply(
-		    seq(if (i == 1) { 0 } else { 2 * pi * sum(prop_list[1:(i - 1)]) }, angle, length = 1000),
+		y.arc <- sapply(
+		    seq(if (i == 1) { 0 } else { 2 * pi * sum(prop.list[1:(i - 1)]) }, angle, length = 1000),
 		    FUN = function(deg) { r * cos(deg) }
 		    );
 
-		y_edge1 <- c(0, y0);
-		y_edge2 <- c(y1, 0);		
-		yc <- c(y_edge1, y_arc, y_edge2);
-		slice_list[[i]] <- polygonGrob(
+		y.edge1 <- c(0, y0);
+		y.edge2 <- c(y1, 0);		
+		yc <- c(y.edge1, y.arc, y.edge2);
+		slice.list[[i]] <- polygonGrob(
 		    unit(xc, "native"),
 		    unit(yc, "native"),
 		    gp = gpar(
-		        fill = col_df[col_df$id == names(prop_list)[i], ]$colour,
+		        fill = col.df[col.df$id == names(prop.list)[i], ]$colour,
 		        col='transparent'
 		        )
 		    );
 		}
 
-	pie_glist <- do.call(gList, slice_list);
+	pie.gList <- do.call(gList, slice.list);
 
-	pie_tree <- gTree(
-	    children = pie_glist,
+	pie.tree <- gTree(
+	    children = pie.gList,
 	    vp = viewport(
 	        x = unit(x, xy.units),
 	        y = unit(y, xy.units),
@@ -178,7 +185,7 @@ pieGrob <- function(x, y, rad=.1, prop_list, col_df, xy.units="native"){
 	        )
 	    );
 
-	return(pie_tree);
+	return(pie.tree);
     }
 
 gridPie <- function(

@@ -10,7 +10,7 @@ test_that(
             sample = sample,
             add.normal = TRUE,
             add.genes = TRUE,
-            yaxis_position = 'both'
+            yaxis.position = 'both'
             )
         ));
 
@@ -21,7 +21,7 @@ test_that(
             sample = sample,
             label.nodes = FALSE,
             add.polygons = FALSE,
-            yaxis_position = 'both'
+            yaxis.position = 'both'
             )
         ));
 
@@ -30,7 +30,7 @@ test_that(
             linear.test.data$tree,
             linear.test.data$genes,
             sample = sample,
-            yaxis_position = 'left'
+            yaxis.position = 'left'
             )
         ));
     });

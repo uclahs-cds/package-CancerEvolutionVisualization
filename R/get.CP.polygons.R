@@ -1,8 +1,8 @@
 get.CP.polygons <- function(clone.out, ...) {
-    polygon_list <- list();
+    polygon.list <- list();
 
     for (j in 1:length(clone.out$clones)) {
-        polygon_list[[j]] <- polygonGrob(
+        polygon.list[[j]] <- polygonGrob(
             name = paste0('clone.polygon.', j),
             x = clone.out$clones[[j]]$x,
             y = clone.out$clones[[j]]$y,
@@ -15,5 +15,5 @@ get.CP.polygons <- function(clone.out, ...) {
             );
         }
 
-    clone.out$grobs <- c(clone.out$grobs, polygon_list);
+    clone.out$grobs <- c(clone.out$grobs, polygon.list);
     }

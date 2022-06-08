@@ -12,7 +12,7 @@ create.test.tree <- function(tree, genes, sample, ...) {
         seg1.col = 'navy',
         seg2.col = 'gold',
         node.col = "grey40",
-        sig_curve = 3,
+        sig.curve = 3,
         line.lwd = 4,
         xaxis.space.left = 0.1,
         xaxis.space.right = 0.1,

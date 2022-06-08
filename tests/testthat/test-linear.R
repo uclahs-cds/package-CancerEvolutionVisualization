@@ -11,7 +11,7 @@ test_that(
                 'WHO003',
                 add.normal = TRUE,
                 add.genes = TRUE,
-                yaxis_position = 'both'
+                yaxis.position = 'both'
                 )
             ));
         }

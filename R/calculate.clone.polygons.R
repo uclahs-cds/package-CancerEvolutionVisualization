@@ -1,6 +1,6 @@
 f0 <- function() {
-	in_env <- new.env(parent = emptyenv());
-	in_env$x <- 0;
+	in.env <- new.env(parent = emptyenv());
+	in.env$x <- 0;
 
 	f1 <- function(env) {
 		y <- env$x;
@@ -8,7 +8,7 @@ f0 <- function() {
 		assign("x" , y, envir = env);
 	    }
 
-	f1(in_env);
+	f1(in.env);
     }
 
 sigmoid <- function(params, g) {
@@ -19,7 +19,7 @@ sigmoid.up <- function(params, g) {
     exp(params[1] + params[2]*g) / (1 + exp(params[1] + (g * params[2])))
     }
 
-make_polygon <- function(
+make.polygon <- function(
     x0,
     y0,
     x1,
@@ -27,17 +27,17 @@ make_polygon <- function(
     wid = 1,
     len = 1,
     col = 'gray',
-    sig_shape = 4,
-    beta_in = 3
+    sig.shape = 4,
+    beta.in = 3
     ) {
 
     vaf <- wid;
 
-	beta <- len / beta_in;
+	beta <- len / beta.in;
 	y1 <- max(y0 + beta, y0 + 1);
 	yy <- seq(y0, y1, length.out = 100);
 
-    params.d  <- c(-0.7310133, sig_shape);
+    params.d  <- c(-0.7310133, sig.shape);
 	y.ex <- seq(-1, 1.5, length.out = length(yy));
 	xu.2 <- sigmoid(params.d, y.ex);
 
@@ -55,23 +55,23 @@ make_polygon <- function(
 	    ));  
     }
 
-position_polygons <- function(
-    clone_env,
+position.polygons <- function(
+    clone.env,
     i,
     wid,
     x,
     y,
     len,
-    sig_shape = 4,
-    beta_in = 3,
+    sig.shape = 4,
+    beta.in = 3,
     branching = TRUE,
-    fixed_angle = NULL,
-    no_ccf = FALSE
-    ){
+    fixed.angle = NULL,
+    no.ccf = FALSE
+    ) {
 
-    v <- clone_env$v;
-	tree <- clone_env$tree;
-	clones <- clone_env$clones;
+    v <- clone.env$v;
+	tree <- clone.env$tree;
+	clones <- clone.env$clones;
 
 	# get the row of v that corresponds to the clone
 	vi <- v[i,];
@@ -99,7 +99,7 @@ position_polygons <- function(
 			par <- v[v$id == vi$parent,]; # Parent clone
 		    }
 
-	    x_mid <- vi$x.mid;
+	    x.mid <- vi$x.mid;
 		x1 <- vi$x1;
 		x2 <- vi$x2;
 
@@ -107,53 +107,53 @@ position_polygons <- function(
 
 		if (nrow(siblings) == 1) {
 			dist <- par$x.mid-par$x;
-			parent_angle <- ifelse(
-			    is.null(fixed_angle) & no_ccf == FALSE,
+			parent.angle <- ifelse(
+			    is.null(fixed.angle) & no.ccf == FALSE,
 			    yes = atan(dist / par$len),
 			    no = 0
 			    );
 		} else if (nrow(siblings) == 2) {
-			sibling_coords <- c(siblings$x1, siblings$x2);
-			x1_max <- sibling_coords[which.max(abs(sibling_coords))];
-			x2_max <- sibling_coords[which.max(abs(sibling_coords - x1_max))];
+			sibling.coords <- c(siblings$x1, siblings$x2);
+			x1.max <- sibling.coords[which.max(abs(sibling.coords))];
+			x2.max <- sibling.coords[which.max(abs(sibling.coords - x1.max))];
 
-			dist <- abs(x1_max - x2_max) / 2;
+			dist <- abs(x1.max - x2.max) / 2;
 
-			if (x_mid > par$x.mid) {
-				parent_angle <- ifelse(
-				    is.null(fixed_angle),
+			if (x.mid > par$x.mid) {
+				parent.angle <- ifelse(
+				    is.null(fixed.angle),
 				    yes = atan(dist / par$len),
-				    no = fixed_angle
+				    no = fixed.angle
 				    );
 
-				parent_angle <- min(parent_angle, 40 / 180 * pi);
-			} else if (x_mid < par$x.mid) {
-				parent_angle <- ifelse(
-				    is.null(fixed_angle),
+				parent.angle <- min(parent.angle, 40 / 180 * pi);
+			} else if (x.mid < par$x.mid) {
+				parent.angle <- ifelse(
+				    is.null(fixed.angle),
 				    yes = atan(-(dist / par$len)),
-				    no = -(fixed_angle)
+				    no = -(fixed.angle)
 				    );
 
-				parent_angle <- max(parent_angle, -40 / 180 * pi)
+				parent.angle <- max(parent.angle, -40 / 180 * pi)
 			} else {
 				dist <- par$x.mid - par$x;
-				parent_angle <- atan(dist / par$len);
+				parent.angle <- atan(dist / par$len);
 			    }
 		} else {
 			if(v$id == siblings$id[which.min(siblings$x.mid)]){ #align leftmost child with the left outer clone border
-				parent_angle <- ifelse(
-				    is.null(fixed_angle),
+				parent.angle <- ifelse(
+				    is.null(fixed.angle),
 				    yes = atan(-(abs(par$x1) / par$len)),
-				    no = -(fixed_angle)
+				    no = -(fixed.angle)
 				    );
 			} else if(v$id == siblings$id[which.max(siblings$x.mid)]){ #align rightmost child with the right outer clone border
-				parent_angle <- ifelse(
-				    is.null(fixed_angle),
+				parent.angle <- ifelse(
+				    is.null(fixed.angle),
 				    yes = atan(abs(par$x1)/par$len),
-				    no = fixed_angle
+				    no = fixed.angle
 				    );     
 			} else{
-				parent_angle <- if (par$len > 0) {
+				parent.angle <- if (par$len > 0) {
 				    atan((vi$x.mid - par$x.mid) / par$len)
 			    } else {
 			        0
@@ -162,9 +162,9 @@ position_polygons <- function(
 		    }
 
 		r <- tree$length[which(tree$parent == par$id & tree$tip == vi$id)];
-		x.shift <- r * sin(parent_angle);
+		x.shift <- r * sin(parent.angle);
 		x0 <- par$x + x.shift;
-		y.shift <- r * cos(parent_angle);
+		y.shift <- r * cos(parent.angle);
 		y0 <- par$y + y.shift;
 		len0 <- par$len - y.shift;
 
@@ -189,9 +189,9 @@ position_polygons <- function(
 				x0 <- closer + 0.15 * (further - closer);
 				x.shift <- x0 - par$x;
 				x0 <- par$x + x.shift;
-				parent_angle <- asin(x.shift / r);
-				angle_x <- par$x + r * sin(parent_angle);
-				y.shift <- r * cos(parent_angle);
+				parent.angle <- asin(x.shift / r);
+				angle.x <- par$x + r * sin(parent.angle);
+				y.shift <- r * cos(parent.angle);
 				y0 <- par$y + y.shift
 				match.x.pos  <- par.coords.pos$x[which.min(abs(par.coords.pos$y - y0))];
 				match.x.neg  <- par.coords.neg$x[which.min(abs(par.coords.neg$y - y0))];
@@ -199,16 +199,16 @@ position_polygons <- function(
 		    }
 	
 		len0 <- par$len - y.shift;
-		tree$angle[which(tree$parent == par$id & tree$tip == vi$id)] <- parent_angle;
+		tree$angle[which(tree$parent == par$id & tree$tip == vi$id)] <- parent.angle;
 	    }
 
 	v[i,]$len <- len0;
 	v[i,]$y <- y0;
 	v[i,]$x <- x0;
-	clone_env$v <- v;
-	clone_env$tree <- tree;
+	clone.env$v <- v;
+	clone.env$tree <- tree;
 
-	clone_points <- make_polygon(
+	clone.points <- make.polygon(
 	    x0 = x0,
 	    y0 = y0,
 	    x1 = x1,
@@ -216,12 +216,12 @@ position_polygons <- function(
 	    wid = wid * vi$vaf,
 	    len = len0,
 	    col = vi$color,
-	    sig_shape = sig_shape,
-	    beta_in = beta_in
+	    sig.shape = sig.shape,
+	    beta.in = beta.in
 	    );
 
  	return(c(
- 	    clone_points,
+ 	    clone.points,
  	    x0 = x0,
  	    y0 = y0,
  	    len = len0,
@@ -231,173 +231,173 @@ position_polygons <- function(
  	    ));
     }
 
-get_clones <- function(
+get.clones <- function(
     x = 0,
     y = 0,
     wid = 1.2,
     len = len,
-    sig_shape = 3,
-    beta_in = 3,
+    sig.shape = 3,
+    beta.in = 3,
     branching = FALSE,
-    no_ccf = FALSE,
-    fixed_angle = NULL,
+    no.ccf = FALSE,
+    fixed.angle = NULL,
     spread = 1,
-    clone_env = NULL,
-    adjust_beta = FALSE
-    ){
+    clone.env = NULL,
+    adjust.beta = FALSE
+    ) {
 
-    clone_env$clones <- list();
+    clone.env$clones <- list();
     
-	clone_env$coords.df <- data.frame(
-	    x0 = numeric(length = nrow(clone_env$v)),
-	    y0 = numeric(length = nrow(clone_env$v)),
-	    len = numeric(length = nrow(clone_env$v)),
-	    x1 = numeric(length=(nrow(clone_env$v))),
-	    x2 = numeric(length = nrow(clone_env$v))
+	clone.env$coords.df <- data.frame(
+	    x0 = numeric(length = nrow(clone.env$v)),
+	    y0 = numeric(length = nrow(clone.env$v)),
+	    len = numeric(length = nrow(clone.env$v)),
+	    x1 = numeric(length=(nrow(clone.env$v))),
+	    x2 = numeric(length = nrow(clone.env$v))
 	    );	   
 
-	for (j in 1:(nrow(clone_env$v))) {
-        clone_env$clones[[j]] <- position_polygons(
-            clone_env,
+	for (j in 1:(nrow(clone.env$v))) {
+        clone.env$clones[[j]] <- position.polygons(
+            clone.env,
             j,
             wid = wid,
             x = x,
             y = y,
             len = len,
-            sig_shape = sig_shape,
-            beta_in = beta_in,
+            sig.shape = sig.shape,
+            beta.in = beta.in,
             branching = branching,
-            no_ccf = no_ccf,
-            fixed_angle = fixed_angle
+            no.ccf = no.ccf,
+            fixed.angle = fixed.angle
             );
 
 		beta.add <- 0.5;
 
-		if (adjust_beta & !no_ccf) {
+		if (adjust.beta & !no.ccf) {
 			#if the polygon gets cut off before it can occupy the full width adjust the beta value to make it curve more sharply
-			while(all(clone_env$clones[[j]]$y[which(abs(clone_env$clones[[j]]$x) == max(abs(clone_env$clones[[j]]$x)))] > (clone_env$coords.df$len[1]+y))) {
-	            clone_env$clones[[j]] <- position_polygons(
-	                clone_env,
+			while(all(clone.env$clones[[j]]$y[which(abs(clone.env$clones[[j]]$x) == max(abs(clone.env$clones[[j]]$x)))] > (clone.env$coords.df$len[1]+y))) {
+	            clone.env$clones[[j]] <- position.polygons(
+	                clone.env,
 	                j,
 	                wid = wid,
 	                x = x,
 	                y = y,
 	                len = len,
-	                sig_shape = sig_shape,
-	                beta_in = beta_in + beta.add,
+	                sig.shape = sig.shape,
+	                beta.in = beta.in + beta.add,
 	                branching = branching,
-	                no_ccf = no_ccf,
-	                fixed_angle = fixed_angle
+	                no.ccf = no.ccf,
+	                fixed.angle = fixed.angle
 	                );
 
-	            for (var in colnames(clone_env$coords.df)) {
-		  		    clone_env$coords.df[j,var] <- clone_env$clones[[j]][var];
+	            for (var in colnames(clone.env$coords.df)) {
+		  		    clone.env$coords.df[j,var] <- clone.env$clones[[j]][var];
 			        }		
 
 	            beta.add <- beta.add + 0.5;
 			    }
 		    }
 
-		for (var in colnames(clone_env$coords.df)) {
-	   		clone_env$coords.df[j, var] <- clone_env$clones[[j]][var];
+		for (var in colnames(clone.env$coords.df)) {
+	   		clone.env$coords.df[j, var] <- clone.env$clones[[j]][var];
     	    }		
     	}
     }
 
-compute_clones <- function(
+compute.clones <- function(
     v,
     x = 1,
     y = 0,
     wid = 1.2,
     extra.len = 1,
     tree = NULL,
-    fixed_angle = NULL,
-    sig_shape = 3,
-    beta_in = 3,
+    fixed.angle = NULL,
+    sig.shape = 3,
+    beta.in = 3,
     branching = TRUE,
-    no_ccf = FALSE,
+    no.ccf = FALSE,
     spread = 1
-    ){  
+    ) {  
 
 	#make sure the root is properly defined 
 	root = v[!is.na(v$parent) & v$parent == -1, ];
 	v <- v[is.na(v$parent) | v$parent != -1, ];
 	v <- rbind(root, v);
 
-	if (no_ccf && (is.null(fixed_angle) && nrow(v) > 6) || any(table(v$parent) > 2)) {
-		v <- count_leaves_per_node(v);
-		tmp <-  position_nodes_radial(v, tree, extra.len, spread);
-		clone_env <-  new.env(parent = emptyenv());
-		clone_env$v <- tmp$v;
-		clone_env$tree <- tmp$tree;
-		return(clone_env);
-	} else if (no_ccf && !is.null(fixed_angle)) {
+	if (no.ccf && (is.null(fixed.angle) && nrow(v) > 6) || any(table(v$parent) > 2)) {
+		v <- count.leaves.per.node(v);
+		tmp <-  position.nodes.radial(v, tree, extra.len, spread);
+		clone.env <-  new.env(parent = emptyenv());
+		clone.env$v <- tmp$v;
+		clone.env$tree <- tmp$tree;
+		return(clone.env);
+	} else if (no.ccf && !is.null(fixed.angle)) {
 		#position nodes fixed angle
-		clone_env <- position_nodes_fixed(
+		clone.env <- position.nodes.fixed(
 		    v,
 		    tree,
-		    fixed_angle = fixed_angle,
+		    fixed.angle = fixed.angle,
 		    len = extra.len
 		    );
 
-		return(clone_env)
+		return(clone.env)
 	} else{
-		v <- position_clones(v, tree, wid);
+		v <- position.clones(v, tree, wid);
     	}
 
 	v$x <- v$y <- v$len <- 0;
 	len <- extra.len;
 
-	clone_env <- new.env(parent = emptyenv());
-	clone_env$v <- v;
-	clone_env$tree <- tree;
+	clone.env <- new.env(parent = emptyenv());
+	clone.env$v <- v;
+	clone.env$tree <- tree;
 
-	get_clones(
+	get.clones(
 	    x = x,
 	    y = y,
 	    len = len,
-	    sig_shape = sig_shape,
-	    beta_in = beta_in,
+	    sig.shape = sig.shape,
+	    beta.in = beta.in,
 	    branching = branching,
-	    no_ccf = no_ccf,
-	    fixed_angle = fixed_angle,
+	    no.ccf = no.ccf,
+	    fixed.angle = fixed.angle,
 	    spread = spread,
-	    clone_env = clone_env
+	    clone.env = clone.env
 	    );
 
 	#if the end of the polygon is shorter than the last clone polygon or the desired length make the polygon longer and recompute
-	while (max(clone_env$coords.df$y0) > (clone_env$coords.df$len[1] + y) | (min(clone_env$coords.df$len) < extra.len )) {
-        len <- len + (extra.len-min(clone_env$coords.df$len)) + 0.0001;
+	while (max(clone.env$coords.df$y0) > (clone.env$coords.df$len[1] + y) | (min(clone.env$coords.df$len) < extra.len )) {
+        len <- len + (extra.len-min(clone.env$coords.df$len)) + 0.0001;
     
-        get_clones(
+        get.clones(
              x = x,
              y = y,
              wid = wid,
              len = len,
-             sig_shape = sig_shape,
-             beta_in = beta_in,
+             sig.shape = sig.shape,
+             beta.in = beta.in,
              branching = branching,
-             no_ccf = no_ccf,
-             fixed_angle = fixed_angle,
+             no.ccf = no.ccf,
+             fixed.angle = fixed.angle,
              spread = spread,
-             clone_env = clone_env
+             clone.env = clone.env
              );
         }
 
 	#if the polygon gets cut off before it can occupy the full width adjust the beta value to make it curve more sharply
-	get_clones(
+	get.clones(
 	    x = x,
 	    y = y,
 	    len = len,
-	    sig_shape = sig_shape,
-	    beta_in = beta_in,
+	    sig.shape = sig.shape,
+	    beta.in = beta.in,
 	    branching = branching,
-	    no_ccf = no_ccf,
-	    fixed_angle = fixed_angle,
+	    no.ccf = no.ccf,
+	    fixed.angle = fixed.angle,
 	    spread=spread,
-	    clone_env = clone_env,
-	    adjust_beta = TRUE
+	    clone.env = clone.env,
+	    adjust.beta = TRUE
 	    );
 
-	return(clone_env);
+	return(clone.env);
     }

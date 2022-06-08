@@ -11,15 +11,15 @@ SRCGrob <- function(
     seg2.col = "green",
     add.polygons = TRUE,
     extra.len = 10,
-    sig_shape = 3,
-    sig_curve = 3,
+    sig.shape = 3,
+    sig.curve = 3,
     spread = 1,
-    gene_line_dist = 0.1,
+    gene.line.dist = 0.1,
     colour.scheme = colours,
     gene.cex = 0.85,
     add.genes = FALSE,
-    genes_on_nodes = FALSE,
-    yaxis_position = "left",
+    genes.on.nodes = FALSE,
+    yaxis.position = "left",
     yaxis1.label = "SNVs",
     yaxis2.label = NULL,
     axis.label.cex = list(x = 1.55, y = 1.55),
@@ -50,17 +50,17 @@ SRCGrob <- function(
         tree,
         genes,
         add.polygons,
-        yaxis_position,
+        yaxis.position,
         w.padding,
         colour.scheme
         );
 
-    fixed_angle = pi / 6;
+    fixed.angle = pi / 6;
 
     clone.out <- make.clone.tree.grobs(
         ccf.df = inputs$in.tree.df,
         tree = inputs$tree,
-        genes_df = inputs$genes.df,
+        genes.df = inputs$genes.df,
         rad = rad,
         scale1 = scale1,
         scale2 = scale2,
@@ -71,15 +71,15 @@ SRCGrob <- function(
         seg2.col = seg2.col,
         add.polygons = add.polygons,
         extra.len = extra.len,
-        sig_shape = sig_shape,
-        sig_curve = sig_curve,
+        sig.shape = sig.shape,
+        sig.curve = sig.curve,
         spread = spread,
-        fixed_angle = fixed_angle,
+        fixed.angle = fixed.angle,
         add.genes = add.genes,
-        genes_on_nodes = genes_on_nodes,
-        gene_line_dist = gene_line_dist,
+        genes.on.nodes = genes.on.nodes,
+        gene.line.dist = gene.line.dist,
         gene.cex = gene.cex,
-        yaxis_position = yaxis_position,
+        yaxis.position = yaxis.position,
         yaxis1.label = yaxis1.label,
         yaxis2.label = yaxis2.label,
         axis.label.cex = axis.label.cex,
@@ -105,11 +105,11 @@ SRCGrob <- function(
         ...
         );			
 
-    out_tree <- gTree(
-        children = package_clone_grobs(clone.out),
+    out.tree <- gTree(
+        children = package.clone.grobs(clone.out),
         vp = clone.out$vp,
         cl = "SRCGrob"
         );
     
-    return(list(out_tree, clone.out));
+    return(list(out.tree, clone.out));
     }
