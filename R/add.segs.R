@@ -31,7 +31,7 @@ add.segs3 <- function(
     tree.out <- list();
 
     second.tree.segs.adjusted <- NULL;
-    if (length(grep("length", colnames(tree))) == 4) {  
+    if (length(grep('length', colnames(tree))) == 4) {  
         tree.segs.adjusted <- adply(
             tree.segs,
             .margins = 1,
@@ -143,7 +143,7 @@ get.seg.coords <- function(
 
     tree.segs.adjusted <- tree.segs.adjusted[which(tree.segs.adjusted$basey !=tree.segs.adjusted$tipy), ];
 
-    if (length(grep("length",colnames(tree))) == 4) {
+    if (length(grep('length',colnames(tree))) == 4) {
         second.tree.segs <- tree.segs;
         second.tree.segs$tipy <- second.tree.segs$basey + second.tree.segs$length2.c * cos(second.tree.segs$angle);
         second.tree.segs$tipx <- second.tree.segs$basex + second.tree.segs$length2.c * sin(second.tree.segs$angle);
@@ -210,7 +210,7 @@ add.tree.segs <- function(
         y0 = tree.segs1$basey,
         x1 = tree.segs1$tipx,
         y1 = tree.segs1$tipy,
-        default.units = "native",
+        default.units = 'native',
         gp = gpar(
             col = seg1.col,
             lwd = line.lwd
@@ -227,7 +227,7 @@ add.tree.segs <- function(
                 y0 = tree.segs2$basey,
                 x1 = tree.segs2$tipx,
                 y1 = tree.segs2$tipy,
-                default.units = "native",
+                default.units = 'native',
                 gp = gpar(
                     col = seg2.col,
                     lwd = line.lwd

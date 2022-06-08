@@ -1,14 +1,14 @@
 SRCGrob <- function(
     tree = NULL,
     genes = NULL,
-    filename = "SRC_tree.pdf",
+    filename = 'SRC_tree.pdf',
     scale1 = 0.05443424,
     scale2 = 0.5 / 362,
     wid = 1.2,
     line.lwd = 3,
     length.from.node.edge = TRUE,
-    seg1.col = "black",
-    seg2.col = "green",
+    seg1.col = 'black',
+    seg2.col = 'green',
     add.polygons = TRUE,
     extra.len = 10,
     sig.shape = 3,
@@ -19,8 +19,8 @@ SRCGrob <- function(
     gene.cex = 0.85,
     add.genes = FALSE,
     genes.on.nodes = FALSE,
-    yaxis.position = "left",
-    yaxis1.label = "SNVs",
+    yaxis.position = 'left',
+    yaxis1.label = 'SNVs',
     yaxis2.label = NULL,
     axis.label.cex = list(x = 1.55, y = 1.55),
     axis.cex = list(x = 1.45, y = 1.45),
@@ -32,10 +32,10 @@ SRCGrob <- function(
     xaxis.space.right = 0,
     min.width = NULL,
     w.padding = NULL,
-    nodes = "circle",
+    nodes = 'circle',
     rad = 0.1,
     label.nodes = TRUE,
-    node.col = "grey29",
+    node.col = 'grey29',
     labe.cex = NA,
     cluster.list = NULL,
     add.normal = FALSE,
@@ -43,7 +43,7 @@ SRCGrob <- function(
     title = NULL,
     title.cex = 1.7,
     title.y = NULL,
-    title.y.units = "npc",
+    title.y.units = 'npc',
     ...
     ) {
     inputs <- prep.tree(
@@ -108,7 +108,7 @@ SRCGrob <- function(
     out.tree <- gTree(
         children = package.clone.grobs(clone.out),
         vp = clone.out$vp,
-        cl = "SRCGrob"
+        cl = 'SRCGrob'
         );
     
     return(list(out.tree, clone.out));

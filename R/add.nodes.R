@@ -33,14 +33,14 @@ add.node.ellipse <- function(
 	#more precise than circleGrob
 	circle.grobs <- ellipseGrob(
 	    name = node.grob.name,
-	    x = unit(clone.out$v$x, "native"),
-	    y = unit(clone.out$v$y, "native"),
+	    x = unit(clone.out$v$x, 'native'),
+	    y = unit(clone.out$v$y, 'native'),
 	    size = rad * (1 + 0.2 * nchar(clone.out$v$plot.lab)),
 	    ar = 1 - log2(nchar(clone.out$v$plot.lab)) / 10,
 	    gp = gpar(fill = clone.out$v$colour, col = clone.out$v$colour),
 	    angle = pi / 2,
-	    position.units = "native",
-	    size.units = "inches",
+	    position.units = 'native',
+	    size.units = 'inches',
 	    ...
 	    );
 
@@ -48,15 +48,15 @@ add.node.ellipse <- function(
 
 	if (!is.null(label.nodes) && label.nodes == TRUE) {
 		if(is.na(labe.cex)){
-			labe.cex <- rad * 2 / (get.gpar("fontsize")$fontsize / 72);
+			labe.cex <- rad * 2 / (get.gpar('fontsize')$fontsize / 72);
 		    }
 
   		node.label.grob <- textGrob(
   		    name = 'node.labels',
   		    clone.out$v$plot.lab,
-  		    x = unit(clone.out$v$x, "native"),
-  		    y = unit(clone.out$v$y, "native"),
-  		    just = c("center", "center"),
+  		    x = unit(clone.out$v$x, 'native'),
+  		    y = unit(clone.out$v$y, 'native'),
+  		    just = c('center', 'center'),
   		    gp = gpar(col = '#FFFFFF', cex = labe.cex - log2(nchar(clone.out$v$plot.lab)) / 10)
   		    );
 
@@ -66,39 +66,39 @@ add.node.ellipse <- function(
 
 add.normal <- function(clone.out, rad, labe.cex, normal.cex = 1) {
     normal.box <- rectGrob(
-        x = unit(0.5, "npc"),
-        y = unit(0.5, "npc"),
-        name = "normal.box",
-        width = unit(2 * rad * normal.cex,"inches"),
-        height = unit(2 * rad * normal.cex, "inches"),
-        just = c("center", "center"),
-        gp = gpar(col = "black", fill = "transparent", lwd = 1.5, lty = "31")
+        x = unit(0.5, 'npc'),
+        y = unit(0.5, 'npc'),
+        name = 'normal.box',
+        width = unit(2 * rad * normal.cex,'inches'),
+        height = unit(2 * rad * normal.cex, 'inches'),
+        just = c('center', 'center'),
+        gp = gpar(col = 'black', fill = 'transparent', lwd = 1.5, lty = '31')
         );
 
     normal.label <- textGrob(
-        "N",
-        x = unit(0.5, "npc"),
-        y = unit(0.5, "npc"),
-        name = "ormal.label",
-        just = "center",
+        'N',
+        x = unit(0.5, 'npc'),
+        y = unit(0.5, 'npc'),
+        name = 'ormal.label',
+        just = 'center',
         gp = gpar(
             col = 'black',
-            cex = convertY(grobHeight(normal.box), "inches", valueOnly = TRUE) * 1.05 * 72 / 12
+            cex = convertY(grobHeight(normal.box), 'inches', valueOnly = TRUE) * 1.05 * 72 / 12
             )
         );
 
     normal.grob <- gTree(
         children = gList(normal.box, normal.label),
-        name = "normal.gtree",
-        cl = "normal.node",
+        name = 'normal.gtree',
+        cl = 'normal.node',
         vp = vpStack(
-            make.plot.viewport(clone.out, clip = "off"),
+            make.plot.viewport(clone.out, clip = 'off'),
             viewport(
-                y = unit(1, "npc"),
-                x = unit(0, "native"),
+                y = unit(1, 'npc'),
+                x = unit(0, 'native'),
                 height = grobHeight(normal.box),
                 width = grobWidth(normal.box),
-                just = c("centre", "bottom")
+                just = c('centre', 'bottom')
                 )
             )
         );
@@ -129,7 +129,7 @@ pieGrob <- function(
     rad = 0.1,
     prop.list,
     col.df,
-    xy.units = "native"
+    xy.units = 'native'
     ) {
 
 	r <-1;
@@ -161,8 +161,8 @@ pieGrob <- function(
 		y.edge2 <- c(y1, 0);		
 		yc <- c(y.edge1, y.arc, y.edge2);
 		slice.list[[i]] <- polygonGrob(
-		    unit(xc, "native"),
-		    unit(yc, "native"),
+		    unit(xc, 'native'),
+		    unit(yc, 'native'),
 		    gp = gpar(
 		        fill = col.df[col.df$id == names(prop.list)[i], ]$colour,
 		        col='transparent'
@@ -177,8 +177,8 @@ pieGrob <- function(
 	    vp = viewport(
 	        x = unit(x, xy.units),
 	        y = unit(y, xy.units),
-	        width = unit(2 * rad, "inches"),
-	        height = unit(2 * rad, "inches"),
+	        width = unit(2 * rad, 'inches'),
+	        height = unit(2 * rad, 'inches'),
 	        xscale = c(-1, 1),
 	        yscale = c(-1, 1),
 	        angle = if (i == 2) { 90 } else { 0 }
@@ -197,13 +197,13 @@ gridPie <- function(
     col = NULL, 
     startpos = 0,
     shadow = FALSE,
-    shadow.col = c("#ffffff", "#cccccc"), 
+    shadow.col = c('#ffffff', '#cccccc'), 
     explode = 0,
     ...
     ) {
 
     if (!is.numeric(x)) { 
-            stop("floating.pie: x values must be numeric.")
+            stop('floating.pie: x values must be numeric.')
             }
 
     if (is.null(dev.list)) {
@@ -211,10 +211,10 @@ gridPie <- function(
             0,
             xlim = c(-1.5, 1.5) * radius + xpos,
             ylim = c(-1.5, 1.5) * radius + ypos,
-            type = "n",
+            type = 'n',
             axes = FALSE,
-            xlab = "", 
-            ylab = ""
+            xlab = '', 
+            ylab = ''
             );
         }
     
@@ -231,8 +231,8 @@ gridPie <- function(
         col <- rep(col, ceiling(nx / length(col)));
         }
 
-    xylim <- par("usr");
-    plotdim <- par("pin");
+    xylim <- par('usr');
+    plotdim <- par('pin');
     yradius <- radius * (xylim[4] - xylim[3])/(xylim[2] - xylim[1]) * plotdim[1] / plotdim[2];
     bc <- 2 * pi * (x[1:nx] + dx / 2) + startpos;
 

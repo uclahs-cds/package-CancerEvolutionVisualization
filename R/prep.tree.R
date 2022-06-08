@@ -86,7 +86,7 @@ prep.tree <- function(
     if (is.null(w.padding)) {
         w.padding <- 1.05;
     
-        if (axis.type == "none") {
+        if (axis.type == 'none') {
             w.padding <- 0.85;
             }
         }
@@ -141,9 +141,9 @@ filter.invalid.gene.nodes <- function(gene.df, node.ids) {
 
 process.1C <- function(out.1C){
   in.df <- read.table(out.1C, header=FALSE)
-  colnames(in.df)[1:2] <- c("tip","length1")
+  colnames(in.df)[1:2] <- c('tip','length1')
   if(ncol(in.df) == 3){
-    colnames(in.df)[3] <- "ccf"
+    colnames(in.df)[3] <- 'ccf'
   }
   return(in.df)
 }
@@ -159,11 +159,11 @@ process.3A <- function(out.3A){
 }
 
 process.2A <- function(truth=NULL, pred=NULL){
-  pred <- scan(pred, what="numeric")
-  true <- scan(truth, what="numeric")
+  pred <- scan(pred, what='numeric')
+  true <- scan(truth, what='numeric')
   out2A <- data.frame(ssm=seq.along(pred), truth=true, pred=pred)
   origins <- dlply(out2A, .(pred), function(x) {props=table(x$truth)/nrow(x); props[props!=0]})
-  names(origins) <- paste0("N", names(origins))
+  names(origins) <- paste0('N', names(origins))
   return(origins)
 }
 

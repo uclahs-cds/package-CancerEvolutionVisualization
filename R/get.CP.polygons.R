@@ -6,7 +6,7 @@ get.CP.polygons <- function(clone.out, ...) {
             name = paste0('clone.polygon.', j),
             x = clone.out$clones[[j]]$x,
             y = clone.out$clones[[j]]$y,
-            default.units="native", 
+            default.units='native', 
             gp = gpar(
                 fill = clone.out$clones[[j]]$col,
                 col = 'transparent',

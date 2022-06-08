@@ -10,16 +10,16 @@ axis.overlap <- function(
     # function checks if the gene label will cross over the axis
     gene.xrange <- sort(c(
         xpos + line.dist,
-        xpos + line.dist + strwidth(gene,units = "inches", cex = cex) * line.dist / abs(line.dist)
+        xpos + line.dist + strwidth(gene,units = 'inches', cex = cex) * line.dist / abs(line.dist)
         ));
 
     overlaps <- NULL;
 
-    if (axis.type == "PGA" | axis.type == "SNV single" | axis.type == "left" && any(gene.xrange < 0)) {
+    if (axis.type == 'PGA' | axis.type == 'SNV single' | axis.type == 'left' && any(gene.xrange < 0)) {
         overlaps <- TRUE;
-    } else if (axis.type == "SNV" && any(gene.xrange) > panel.width) {
+    } else if (axis.type == 'SNV' && any(gene.xrange) > panel.width) {
         overlaps <- TRUE;
-    } else if(axis.type == "both" && any(gene.xrange > panel.width) | any(gene.xrange < 0)) {
+    } else if(axis.type == 'both' && any(gene.xrange > panel.width) | any(gene.xrange < 0)) {
         overlaps <- TRUE
         } 
 
@@ -40,15 +40,15 @@ axis.overlap <- function(
 
 check.overlap <- function(xpos, ypos, gene, tree.max.adjusted, hjust,rad) {
     # function checks if the gene label will cross over any of the branch lines
-    if (hjust == "centre") {
-        left <- xpos - as.numeric(convertX(stringWidth(gene), "in")) / 2;
-        right <- xpos + as.numeric(convertX(stringWidth(gene), "in")) / 2;
-    } else if (hjust == "left") {
+    if (hjust == 'centre') {
+        left <- xpos - as.numeric(convertX(stringWidth(gene), 'in')) / 2;
+        right <- xpos + as.numeric(convertX(stringWidth(gene), 'in')) / 2;
+    } else if (hjust == 'left') {
         left <- xpos;
-        right <- xpos + as.numeric(convertX(stringWidth(gene), "in"));
-    } else if (hjust == "right") {
+        right <- xpos + as.numeric(convertX(stringWidth(gene), 'in'));
+    } else if (hjust == 'right') {
         right <- xpos;
-        left <- xpos - as.numeric(convertX(stringWidth(gene), "in"));
+        left <- xpos - as.numeric(convertX(stringWidth(gene), 'in'));
         }
 
     gene.xrange <- c(left, right);
@@ -117,7 +117,7 @@ position.genes <- function(
     cex = cex
     ) {
 
-    text.grob.list <- vector("list", length(unlist(gene.list)));
+    text.grob.list <- vector('list', length(unlist(gene.list)));
     orig.cex <- cex;
     idx <- 1;
 
@@ -147,7 +147,7 @@ position.genes <- function(
 
                 str.heights <- sapply(
                     gene.list[[s]],
-                    FUN = function(x) { strheight(x,units="inches",cex=cex) }
+                    FUN = function(x) { strheight(x,units='inches',cex=cex) }
                     );
 
                 spacing <- 0.33 * mean(str.heights);
@@ -166,10 +166,10 @@ position.genes <- function(
                         # Centered when there is just one gene row
                         # Otherwise position relative to the bottom of the textGrob 
                         label.bottom  <- tree.max.adjusted$y1[s] + y.height / 2;
-                        vjust <- "center";
+                        vjust <- 'center';
                     } else {
                         label.bottom  <- y.height / 2 - str.heightsum / 2 + tree.max.adjusted$y1[s];
-                        vjust <- "bottom";
+                        vjust <- 'bottom';
                         }
 
                     if (s == 1 & ((str.heightsum - y.height) > rad) & !is.null(rad) & !is.null(scale)) {
@@ -199,7 +199,7 @@ position.genes <- function(
                     ypos <- tree.max.adjusted$y[s];
                     xpos <- tree.max.adjusted$x[s];
                     xline.dist <- line.dist + rad;
-                    vjust <- "center";
+                    vjust <- 'center';
                 } else {
                     ypos <- label.bottom + (g - 1) * spacing + heights - spacing;
 
@@ -231,9 +231,9 @@ position.genes <- function(
                         ypos <- label.bottom + (g - 1) * spacing + heights - spacing;
                         text.grob.list[[idx]] <- textGrob(
                             gene.list[[s]][g],
-                            x = unit(xpos-xline.dist,"inches"),
-                            y = unit(ypos,"inches"),
-                            just = c("right", "bottom"),
+                            x = unit(xpos-xline.dist,'inches'),
+                            y = unit(ypos,'inches'),
+                            just = c('right', 'bottom'),
                             gp = gpar(col = gene.col[[s]][g], cex = cex)
                             );
                     } else {
@@ -248,9 +248,9 @@ position.genes <- function(
                         
                         text.grob.list[[idx]] <- textGrob(
                             gene.list[[s]][g],
-                            x = unit(xpos + xline.dist, "inches"),
-                            y = unit(ypos, "inches"),
-                            just = c("left", "bottom"),
+                            x = unit(xpos + xline.dist, 'inches'),
+                            y = unit(ypos, 'inches'),
+                            just = c('left', 'bottom'),
                             gp = gpar(col = gene.col[[s]][g], cex = cex)
                             );
                         }
@@ -258,16 +258,16 @@ position.genes <- function(
                     # Alternate between placing the genes to the left and to the right of the node
                     if (s %% 2 > 0) {
                         xline.dist.adj <- -(xline.dist);
-                        just <- c("right", "bottom");
+                        just <- c('right', 'bottom');
                     } else {
-                        just <- c("left", "bottom");
+                        just <- c('left', 'bottom');
                         xline.dist.adj <- xline.dist;
                         }
 
                     text.grob.list[[idx]] <- textGrob(
                         gene.list[[s]][g],
-                        x = unit(xpos + xline.dist.adj, "inches"),
-                        y = unit(ypos, "inches"),
+                        x = unit(xpos + xline.dist.adj, 'inches'),
+                        y = unit(ypos, 'inches'),
                         just = just,
                         gp = gpar(col = gene.col[[s]][g], cex = cex)
                         );
@@ -304,13 +304,13 @@ position.genes <- function(
                         }
                 } else {
                     # not sure why this was here idx = ifelse(s==1,g, length(gene.list[[(s-1)]])+g)  
-                    if (slope > 0 | (is.infinite((slope)) & axis.type=="SNV" )) {
+                    if (slope > 0 | (is.infinite((slope)) & axis.type=='SNV' )) {
                         xline.dist <- -(abs(xline.dist));
                     } else {
                         xline.dist <- abs(xline.dist);
                         }
     
-                    hjust <- ifelse(xline.dist > 0,"left","right")  
+                    hjust <- ifelse(xline.dist > 0,'left','right')  
     
                     if (label.nodes) {
                         node <- tree.max.adjusted[which(tree.max.adjusted$tip == tree.max.adjusted$tip[s]), ];
@@ -328,7 +328,7 @@ position.genes <- function(
                                 ypos <- ypos + rad;
                                 }
         
-                            hjust <- ifelse(xline.dist > 0, "left", "right");
+                            hjust <- ifelse(xline.dist > 0, 'left', 'right');
                         } else {
                             leaves <- tree.max.adjusted[!(tree.max.adjusted$tip %in% tree.max.adjusted$parent), ];
                             leaves <- leaves[order(leaves$x), ];
@@ -343,7 +343,7 @@ position.genes <- function(
                                         gene.list[[s]][g],
                                         gp = gpar(cex=cex)
                                         )),
-                                    "in"
+                                    'in'
                                     ));
                 
                                 text.width <- as.numeric(convertX(
@@ -351,7 +351,7 @@ position.genes <- function(
                                         gene.list[[s]][g],
                                         gp = gpar(cex = cex)
                                         )),
-                                    "in"
+                                    'in'
                                     ));
     
                                 ypos <- node$y - (text.height * 0.8 + rad) * cos(node$angle);
@@ -369,7 +369,7 @@ position.genes <- function(
                         if (tree.max.adjusted$tip[s] %in% tree.max.adjusted$parent) {
                             ypos <- tree.max.adjusted$y[s] + 1 * rad + abs(xline.dist);
                             xline.dist <- 0;
-                            hjust <- "centre";
+                            hjust <- 'centre';
                             cex <- orig.cex;
                         } else {
                             ypos <- tree.max.adjusted$y[s];
@@ -377,9 +377,9 @@ position.genes <- function(
     
                             if (tree.max.adjusted$x[s] > parent$x) {
                                 xline.dist <- abs(xline.dist);
-                                hjust <- "left";
+                                hjust <- 'left';
                             } else {
-                                hjust <- "right";
+                                hjust <- 'right';
                                 xline.dist <- -(abs(xline.dist));
                                 }
                             }
@@ -409,7 +409,7 @@ position.genes <- function(
                                 }
         
                             if (xline.dist != 0) {
-                                hjust <- ifelse(xline.dist > 0, "left", "right");
+                                hjust <- ifelse(xline.dist > 0, 'left', 'right');
                                 }
                             }
     
@@ -448,8 +448,8 @@ position.genes <- function(
                     
                     text.grob.list[[idx]] <- textGrob(
                         gene.list[[s]][g],
-                        x = unit(xpos + xline.dist, "inches"),
-                        y = unit(ypos, "inches"),
+                        x = unit(xpos + xline.dist, 'inches'),
+                        y = unit(ypos, 'inches'),
                         just = c(hjust, vjust),
                         gp = gpar(col = gene.col[[s]][g], cex = cex)
                         );
@@ -504,11 +504,11 @@ add.text2 <- function(
             pos <- which(tree$tip == gene.row$node);
             gene <- gene.row$gene;
 
-            if (length(grep("_", gene)) > 0) {
-                gene.split <- strsplit(gene,split = "_")[[1]];
+            if (length(grep('_', gene)) > 0) {
+                gene.split <- strsplit(gene,split = '_')[[1]];
                 gene.name <- gene.split[1];
                 amp <- gene.split[2];
-                call <- paste0(gene.name, "^\"A", amp, "\"");
+                call <- paste0(gene.name, '^\'A', amp, '\'');
                 gene <- parse(text = call);
                 }
 
@@ -518,7 +518,7 @@ add.text2 <- function(
                 if (!is.na(gene.row$cn)) {
                     gene.col[[pos]] <<- c(
                         gene.col[[pos]],
-                        ifelse(gene.row$cn=="loss" | gene.row$cn < 2, "blue", "red")
+                        ifelse(gene.row$cn=='loss' | gene.row$cn < 2, 'blue', 'red')
                         );
                 } else {
                     gene.col[[pos]] <<- c(gene.col[[pos]], 'black');
@@ -583,21 +583,21 @@ add.text2 <- function(
         pushViewport(clone.out$vp);
     } else {
         pushViewport(viewport(
-            height = unit(panel.height, "inches"),
-            name = "ref",
-            width = unit(panel.width,"inches"),
+            height = unit(panel.height, 'inches'),
+            name = 'ref',
+            width = unit(panel.width,'inches'),
             xscale = xlims,
             yscale = c(ymax, -2)
             ));
         }
 
-    tree.max.adjusted$x0 <- convertX(unit(tree.max.adjusted$basex, "native"), "inches", valueOnly = TRUE);
-    tree.max.adjusted$x1 <- convertX(unit(tree.max.adjusted$tipx, "native"), "inches", valueOnly = TRUE);
-    tree.max.adjusted$y0 <- convertY(unit(tree.max.adjusted$basey, "native"), "inches", valueOnly = TRUE);
-    tree.max.adjusted$y1 <- convertY(unit(tree.max.adjusted$tipy, "native"), "inches", valueOnly = TRUE);
+    tree.max.adjusted$x0 <- convertX(unit(tree.max.adjusted$basex, 'native'), 'inches', valueOnly = TRUE);
+    tree.max.adjusted$x1 <- convertX(unit(tree.max.adjusted$tipx, 'native'), 'inches', valueOnly = TRUE);
+    tree.max.adjusted$y0 <- convertY(unit(tree.max.adjusted$basey, 'native'), 'inches', valueOnly = TRUE);
+    tree.max.adjusted$y1 <- convertY(unit(tree.max.adjusted$tipy, 'native'), 'inches', valueOnly = TRUE);
 
-    tree.max.adjusted$y <- convertY(unit(tree.max$tipy, "native"), "inches", valueOnly = TRUE); # Actual node positions
-    tree.max.adjusted$x <- convertX(unit(tree.max$tipx, "native"), "inches", valueOnly = TRUE);
+    tree.max.adjusted$y <- convertY(unit(tree.max$tipy, 'native'), 'inches', valueOnly = TRUE); # Actual node positions
+    tree.max.adjusted$x <- convertX(unit(tree.max$tipx, 'native'), 'inches', valueOnly = TRUE);
 
     tree.max.adjusted$slope <- (tree.max.adjusted$y1 - tree.max.adjusted$y0) / (tree.max.adjusted$x1 - tree.max.adjusted$x0);          
     tree.max.adjusted$intercept <- tree.max.adjusted$y1 - tree.max.adjusted$slope * tree.max.adjusted$x1;
@@ -627,7 +627,7 @@ add.text2 <- function(
         text.tree <- gTree(
             name = grob.name,
             children = text.grob.gList,
-            vp = make.plot.viewport(clone.out, clip="off")
+            vp = make.plot.viewport(clone.out, clip='off')
             );
 
         return(text.tree);
@@ -637,9 +637,9 @@ add.text2 <- function(
         name = grob.name,
         children = text.grob.gList,
         childrenvp = viewport(
-            height = unit(panel.height, "inches"),
-            name = "ref",
-            width = unit(panel.width, "inches"),
+            height = unit(panel.height, 'inches'),
+            name = 'ref',
+            width = unit(panel.width, 'inches'),
             xscale = xlims,
             yscale = c(ymax, -2),
             clip = 'off'

@@ -93,7 +93,7 @@ make.clone.tree.grobs <- function(
 	    tree$length <- tree$length1;
 	    }
 
-	if (nodes != "none" && length.from.node.edge == TRUE) {
+	if (nodes != 'none' && length.from.node.edge == TRUE) {
 	    tree <- adjust.branch.lengths(v,tree,rad, scale1);
     	}
 
@@ -142,7 +142,7 @@ make.clone.tree.grobs <- function(
 		add.normal(clone.out,rad,labe.cex, normal.cex)
 	    }
 
-	if (yaxis.position != "none" ) {
+	if (yaxis.position != 'none' ) {
 		add.axes(
 		    clone.out,
 		    yaxis.position,

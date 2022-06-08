@@ -5,7 +5,7 @@ f0 <- function() {
 	f1 <- function(env) {
 		y <- env$x;
 		y <- y + 1;
-		assign("x" , y, envir = env);
+		assign('x' , y, envir = env);
 	    }
 
 	f1(in.env);
@@ -171,12 +171,12 @@ position.polygons <- function(
 		if (par$id != -1 & len0 >= 0) {
 			#make sure the node isn't outside of the parent clone
 			par.coords <- data.frame(
-			    x = clones[[as.integer(which(v$id == par$id))]][["x"]],
-			    y = clones[[as.integer(which(v$id == par$id))]][["y"]]
+			    x = clones[[as.integer(which(v$id == par$id))]][['x']],
+			    y = clones[[as.integer(which(v$id == par$id))]][['y']]
 			    );
 
-			par$x1 <- clones[[as.integer(which(v$id == par$id))]][["x1"]];
-			par$x2 <- clones[[as.integer(which(v$id == par$id))]][["x2"]];
+			par$x1 <- clones[[as.integer(which(v$id == par$id))]][['x1']];
+			par$x2 <- clones[[as.integer(which(v$id == par$id))]][['x2']];
 			par.coords.pos <- par.coords[1:match(par$x1,par.coords$x), ];
 			par.coords.neg <- par.coords[match(par$x2,par.coords$x):length(par.coords$x), ];
 

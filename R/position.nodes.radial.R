@@ -5,17 +5,17 @@ count.leaves.per.node <- function(v) {
 	leaf.nodes <- v$id[!(v$id %in% v$parent)];
 	v$leaves[v$id %in% leaf.nodes] <- 1;
 
-	assign("leaves.v", v, envir = count.env);
+	assign('leaves.v', v, envir = count.env);
 
 	count.leaves <- function(node = 1) {
-		v <- get("leaves.v", envir = count.env);
+		v <- get('leaves.v', envir = count.env);
 		par <- v$parent[v$id == node];
 
 		if (par != -1) {
-			v <- get("leaves.v", envir = count.env);
+			v <- get('leaves.v', envir = count.env);
 
 			v$leaves[v$id == par] <- v$leaves[v$id == par] + 1;
-			assign("leaves.v", v, envir = count.env);
+			assign('leaves.v', v, envir = count.env);
 			count.leaves(par);
 		    }
 	    }
@@ -24,7 +24,7 @@ count.leaves.per.node <- function(v) {
 		count.leaves(node);
 	    }
 
-	v <- get("leaves.v", envir = count.env);
+	v <- get('leaves.v', envir = count.env);
 	return(v);
 	}
 

@@ -33,7 +33,7 @@ adjust.branch.lengths <- function(node.df, tree, rad, scale1) {
         }
 
     node.df$rad[node.df$id == -1] <- 0;
-    length.cols <- grep("length", colnames(tree));
+    length.cols <- grep('length', colnames(tree));
 
     tree.adj <- adply(
         tree,
@@ -55,7 +55,7 @@ adjust.tree <- function(in.tree.rad, tree.in, rad, scale.x.real) {
         }
 
     in.tree.rad$rad[in.tree.rad$id == -1] <- 0;
-    length.cols <- grep("length", colnames(tree.in));
+    length.cols <- grep('length', colnames(tree.in));
     tree.adj <- adply(
         tree.in,
         .margins = 1,
