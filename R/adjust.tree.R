@@ -37,8 +37,10 @@ adjust.branch.lengths <- function(node.df, tree, rad, scale1) {
 
     tree.adj <- adply(
         tree,
-        .margins = 1, 
-        .fun = function(x) { adjust.lengths(x, length.cols, node.df) }
+        .margins = 1,
+        .fun = function(x) {
+            adjust.lengths(x, length.cols, node.df);
+            }
         );
 
     tree$length <- tree.adj$length.adj;
@@ -59,7 +61,9 @@ adjust.tree <- function(in.tree.rad, tree.in, rad, scale.x.real) {
     tree.adj <- adply(
         tree.in,
         .margins = 1,
-        .fun = function(x) { adjust.lengths(x,length.cols,in.tree.rad) }
+        .fun = function(x) {
+            adjust.lengths(x, length.cols, in.tree.rad);
+            }
         );
 
     tree.in$length <- tree.adj$length.adj;

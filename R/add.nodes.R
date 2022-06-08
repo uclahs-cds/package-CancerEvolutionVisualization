@@ -6,12 +6,12 @@ add.node.ellipse <- function(
     add.normal = FALSE,
     scale1,
     ...
-    ){
+    ) {
 
     if (is.na(labe.cex)) {
         labe.cex <- 0.85;
         }
-    
+
     if (!('plot.lab' %in% colnames(clone.out$v))) {
 		clone.out$v$plot.lab <- if (!is.null(clone.out$v$label.text)) {
 		    clone.out$v$label.text;
@@ -22,7 +22,7 @@ add.node.ellipse <- function(
 
     clone.out$v$plot.lab <- as.character(clone.out$v$plot.lab);
 	clone.out$v$circle <- sapply(
-	    clone.out$v$plot.lab, 
+	    clone.out$v$plot.lab,
 	    FUN = function(x) {
 	        return(nchar(x) < 3);
 	        }
@@ -47,7 +47,7 @@ add.node.ellipse <- function(
 	clone.out$grobs <- c(clone.out$grobs, list(circle.grobs));
 
 	if (!is.null(label.nodes) && label.nodes == TRUE) {
-		if(is.na(labe.cex)){
+		if (is.na(labe.cex)) {
 			labe.cex <- rad * 2 / (get.gpar('fontsize')$fontsize / 72);
 		    }
 
@@ -110,7 +110,7 @@ add.pie.nodes <- function(clone.out, rad, cluster.list) {
 	pie.grobs <- list();
 	clone.out$v <- clone.out$v[order(clone.out$v$id), ];
 
-	for(i in seq_along(clone.out$v$id)) {
+	for (i in seq_along(clone.out$v$id)) {
 		pie.grobs[[i]] <- pieGrob(
 		    x = clone.out$v[i,]$x,
 		    y = clone.out$v[i,]$y,
@@ -132,40 +132,55 @@ pieGrob <- function(
     xy.units = 'native'
     ) {
 
-	r <-1;
+	r <- 1;
 	x0 <- y0 <- 0;
 
 	slice.list <- list();
 
 	for (i in seq_along(prop.list)) {
-		angle <- 2 * pi * sum(prop.list[1:i]); 
-		x0 <- if (i == 1) { 0 } else { r * sin(2 * pi * sum(prop.list[1:(i - 1)])) };
+		angle <- 2 * pi * sum(prop.list[1:i]);
+
+		x0 <- if (i == 1) 0 else r * sin(2 * pi * sum(prop.list[1:(i - 1)]));
 		x1 <- r * sin(angle);
-		y0 <- if (i ==1 ) { 0 } else { r * cos(2 * pi * sum(prop.list[1:(i - 1)])) };
+
+		y0 <- if (i == 1 ) 0 else r * cos(2 * pi * sum(prop.list[1:(i - 1)]));
 		y1 <- r * cos(angle);
+
 		x.edge1 <- c(0, x0);
 		x.edge2 <- c(x1, 0);
 		x.arc <- sapply(
-		    seq(if(i == 1) { 0 } else { 2 * pi * sum(prop.list[1:(i - 1)]) }, angle, length = 1000),
-		    FUN = function(deg) { r * sin(deg) }
+		    seq(
+		        if (i == 1) 0 else 2 * pi * sum(prop.list[1:(i - 1)]),
+		        angle,
+		        length = 1000
+		        ),
+		    FUN = function(deg) {
+		        r * sin(deg);
+		        }
 		    );
 
 		xc <- c(x.edge1, x.arc, x.edge2);
 
 		y.arc <- sapply(
-		    seq(if (i == 1) { 0 } else { 2 * pi * sum(prop.list[1:(i - 1)]) }, angle, length = 1000),
-		    FUN = function(deg) { r * cos(deg) }
+		    seq(
+		        if (i == 1) 0 else 2 * pi * sum(prop.list[1:(i - 1)]),
+		        angle,
+		        length = 1000
+		        ),
+		    FUN = function(deg) {
+		        r * cos(deg);
+		        }
 		    );
 
 		y.edge1 <- c(0, y0);
-		y.edge2 <- c(y1, 0);		
+		y.edge2 <- c(y1, 0);
 		yc <- c(y.edge1, y.arc, y.edge2);
 		slice.list[[i]] <- polygonGrob(
 		    unit(xc, 'native'),
 		    unit(yc, 'native'),
 		    gp = gpar(
 		        fill = col.df[col.df$id == names(prop.list)[i], ]$colour,
-		        col='transparent'
+		        col = 'transparent'
 		        )
 		    );
 		}
@@ -181,7 +196,7 @@ pieGrob <- function(
 	        height = unit(2 * rad, 'inches'),
 	        xscale = c(-1, 1),
 	        yscale = c(-1, 1),
-	        angle = if (i == 2) { 90 } else { 0 }
+	        angle = if (i == 2) 90 else 0
 	        )
 	    );
 
@@ -194,15 +209,15 @@ gridPie <- function(
     x,
     edges = 200,
     radius = 1,
-    col = NULL, 
+    col = NULL,
     startpos = 0,
     shadow = FALSE,
-    shadow.col = c('#ffffff', '#cccccc'), 
+    shadow.col = c('#ffffff', '#cccccc'),
     explode = 0,
     ...
     ) {
 
-    if (!is.numeric(x)) { 
+    if (!is.numeric(x)) {
             stop('floating.pie: x values must be numeric.')
             }
 
@@ -213,13 +228,13 @@ gridPie <- function(
             ylim = c(-1.5, 1.5) * radius + ypos,
             type = 'n',
             axes = FALSE,
-            xlab = '', 
+            xlab = '',
             ylab = ''
             );
         }
-    
+
     validx <- which(!is.na(x) & x > 0);
-    x <- c(0, cumsum(x[validx])/sum(x[validx]));
+    x <- c(0, cumsum(x[validx]) / sum(x[validx]));
     dx <- diff(x);
     nx <- length(dx);
 
@@ -233,7 +248,7 @@ gridPie <- function(
 
     xylim <- par('usr');
     plotdim <- par('pin');
-    yradius <- radius * (xylim[4] - xylim[3])/(xylim[2] - xylim[1]) * plotdim[1] / plotdim[2];
+    yradius <- radius * (xylim[4] - xylim[3]) / (xylim[2] - xylim[1]) * plotdim[1] / plotdim[2];
     bc <- 2 * pi * (x[1:nx] + dx / 2) + startpos;
 
     for (i in 1:nx) {
@@ -247,6 +262,6 @@ gridPie <- function(
         xc <- cos(t2p) * radius;
         yc <- sin(t2p) * radius;
         }
-    
+
     return(bc);
     }

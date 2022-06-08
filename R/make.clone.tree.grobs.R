@@ -4,7 +4,7 @@ make.clone.tree.grobs <- function(
     tree,
     scale1,
     scale2,
-    wid, 
+    wid,
     line.lwd,
     length.from.node.edge,
     seg1.col,
@@ -27,7 +27,7 @@ make.clone.tree.grobs <- function(
     axis.label.cex,
     axis.cex,
     yaxis1.interval,
-    yaxis2.interval, 
+    yaxis2.interval,
     ylimit,
     xaxis.label,
     xaxis.space.left,
@@ -44,7 +44,7 @@ make.clone.tree.grobs <- function(
     title.cex,
     title.y,
     title.y.units,
-    ... 
+    ...
     ) {
 
 	#initializing dataframe for subclones
@@ -58,19 +58,19 @@ make.clone.tree.grobs <- function(
 	v <- v[order(v$id), ];
 	no.ccf <- FALSE;
 
-	if (!('ccf' %in% colnames(ccf.df)) | all(is.na(ccf.df$ccf)) | add.polygons == FALSE) {
+	if (!('ccf' %in% colnames(ccf.df)) || all(is.na(ccf.df$ccf)) || add.polygons == FALSE) {
 	    v$vaf <- NULL;
 	    v$vaf[v$parent == -1] <- 1;
 	    no.ccf <- TRUE;
 	} else {
 	    v <- v[order(v$id),]
-	    v$vaf[!v$excluded] <- v$ccf[!v$excluded]/max(v$ccf[!v$excluded])
+	    v$vaf[!v$excluded] <- v$ccf[!v$excluded] / max(v$ccf[!v$excluded]);
 	    }
 
 	if (all(is.null(ccf.df$colour))) {
 	    v$colour <- node.col
 	    }
-	
+
 	v$x <- v$y <- v$len <- v$x.mid <- numeric(length(nrow(v)));
 
 	v <- get.num.tiers(v);
@@ -81,12 +81,12 @@ make.clone.tree.grobs <- function(
 	tree$angle[tree$parent == -1] <- 0;
 	if ('length2' %in% colnames(tree)) {
         tree$length2.c <- tree$length2 / scale1 * scale2;
-        
+
         tree$length <- apply(
             tree,
             MARGIN = 1,
-            FUN = function(x) { 
-                max(x[c(3, 6)])
+            FUN = function(x) {
+                max(x[c(3, 6)]);
                 }
             );
 	} else {
@@ -98,7 +98,7 @@ make.clone.tree.grobs <- function(
     	}
 
 	extra.len <- extra.len * (1 / scale1);
-	
+
 	clone.out <- make.clone.polygons(
 	    v,
 	    tree,
@@ -160,7 +160,7 @@ make.clone.tree.grobs <- function(
 		    );
 	    }
 
-	if (add.genes == TRUE & !is.null(genes.df)) {			
+	if (add.genes == TRUE & !is.null(genes.df)) {
 	    gene.grobs <- add.text2(
 	        clone.out$tree,
 	        genes.df,

@@ -17,11 +17,12 @@ axis.overlap <- function(
 
     if (axis.type == 'PGA' | axis.type == 'SNV single' | axis.type == 'left' && any(gene.xrange < 0)) {
         overlaps <- TRUE;
-    } else if (axis.type == 'SNV' && any(gene.xrange) > panel.width) {
+    } else if (
+        (axis.type == 'SNV' && any(gene.xrange) > panel.width) ||
+        axis.type == 'both' && any(gene.xrange > panel.width) | any(gene.xrange < 0)
+    ) {
         overlaps <- TRUE;
-    } else if(axis.type == 'both' && any(gene.xrange > panel.width) | any(gene.xrange < 0)) {
-        overlaps <- TRUE
-        } 
+        }
 
     # find a text size that prevents the axis overlap
     if (return.cex & !is.null(overlaps)) {
@@ -31,10 +32,10 @@ axis.overlap <- function(
             new.cex <- new.cex - 0.05;
             overlaps <- axis.overlap(xpos, gene, line.dist, axis.type, new.cex, panel.width);
             }
-   
+
         return(new.cex);
-        } 
-  
+        }
+
     return(overlaps);
     }
 
@@ -54,12 +55,12 @@ check.overlap <- function(xpos, ypos, gene, tree.max.adjusted, hjust,rad) {
     gene.xrange <- c(left, right);
 
     node.segs <- adply(
-        tree.max.adjusted[, c('tip','parent','x','y')], 
+        tree.max.adjusted[, c('tip', 'parent', 'x', 'y')],
         .margins = 1,
         .fun = function(w) {
             data.frame(
                 y0 = (w$y + rad),
-                y1 =(w$y - rad),
+                y1 = (w$y - rad),
                 x0 = (w$x - rad),
                 x1 = (w$x + rad)
                 );
@@ -70,13 +71,13 @@ check.overlap <- function(xpos, ypos, gene, tree.max.adjusted, hjust,rad) {
     node.intercept <- logical(length = nrow(tree.max.adjusted));
 
     for (i in seq_along(tree.max.adjusted[, 1])) {
-        if (is.infinite(tree.max.adjusted$slope[i])) { 
+        if (is.infinite(tree.max.adjusted$slope[i])) {
             #only overlaps with straight lines if the line's ypos is in the range
             line.intercept[i] <- (
                 (ypos < tree.max.adjusted$y0[i]) &
                 (ypos > tree.max.adjusted$y1[i]) &
-                (gene.xrange[1]<tree.max.adjusted$x0[i]) &
-                (gene.xrange[2]>tree.max.adjusted$x0[i])
+                (gene.xrange[1] < tree.max.adjusted$x0[i]) &
+                (gene.xrange[2] > tree.max.adjusted$x0[i])
                 );
         } else {
             line.intercept.x <- (ypos - tree.max.adjusted$intercept[i]) / tree.max.adjusted$slope[i];
@@ -85,12 +86,15 @@ check.overlap <- function(xpos, ypos, gene, tree.max.adjusted, hjust,rad) {
                 line.intercept.x < max(c(tree.max.adjusted$x0[i], tree.max.adjusted$x1[i])) &
                 line.intercept.x > min(c(tree.max.adjusted$x0[i], tree.max.adjusted$x1[i])) &
                 (line.intercept.x > gene.xrange[1]) & (line.intercept.x < gene.xrange[2])
-            ){
+            ) {
                 line.intercept[i] <- TRUE;
                 }
             }
 
-        node.intercept[i] <- ifelse(((ypos<node.segs$y0[i]) & (ypos>node.segs$y1[i]) & (gene.xrange[1]<node.segs$x0[i]) &  (gene.xrange[2]>node.segs$x0[i])),TRUE,FALSE)
+        node.intercept[i] <- (ypos < node.segs$y0[i]) &
+                             (ypos > node.segs$y1[i]) &
+                             (gene.xrange[1] < node.segs$x0[i]) &
+                             (gene.xrange[2] > node.segs$x0[i])
         }
 
     intercepts.lines <- tree.max.adjusted$tip[line.intercept];
@@ -130,24 +134,26 @@ position.genes <- function(
             slope <- tree.max.adjusted$slope[s];
             intercept <- tree.max.adjusted$intercept[s];
             y.height <- tree.max.adjusted$y0[s] - tree.max.adjusted$y1[s];
-            
-            label.bottom <-str.heightsum <- 0;
+
+            label.bottom <- str.heightsum <- 0;
             cex <- orig.cex;
 
             #centre the height of all the text relative to the line
             while (
                 str.heightsum == 0 |
-                (label.bottom + str.heightsum) > (title.y+panel.height) |
+                (label.bottom + str.heightsum) > (title.y + panel.height) |
                 (label.nodes == FALSE &
                 (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + rad * 0.5))
             ) {
                 if ((label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + rad * 0.5) & length(gene.list[[s]]) > 1) {
-                    split.genes <- TRUE; 
+                    split.genes <- TRUE;
                     }
 
                 str.heights <- sapply(
                     gene.list[[s]],
-                    FUN = function(x) { strheight(x,units='inches',cex=cex) }
+                    FUN = function(x) {
+                        strheight(x, units = 'inches', cex = cex);
+                        }
                     );
 
                 spacing <- 0.33 * mean(str.heights);
@@ -162,9 +168,9 @@ position.genes <- function(
                     }
 
                 if (!label.nodes) {
-                    if (length(gene.list[[s]]) == 1) { 
+                    if (length(gene.list[[s]]) == 1) {
                         # Centered when there is just one gene row
-                        # Otherwise position relative to the bottom of the textGrob 
+                        # Otherwise position relative to the bottom of the textGrob
                         label.bottom  <- tree.max.adjusted$y1[s] + y.height / 2;
                         vjust <- 'center';
                     } else {
@@ -180,8 +186,8 @@ position.genes <- function(
                     }
 
                 if (
-                    (label.bottom + str.heightsum) > (title.y+panel.height) |
-                    (label.nodes == FALSE & (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s]+rad*0.5))
+                    (label.bottom + str.heightsum) > (title.y + panel.height) ||
+                    (!label.nodes && (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + rad * 0.5))
                 ) {
                     cex <- cex - 0.05;
                     }
@@ -190,7 +196,7 @@ position.genes <- function(
             #iterate through the genes for a given node
             for (g in rev(seq_along(gene.list[[s]]))) {
                 heights <- ifelse(
-                    (g-1) == 0,
+                    (g - 1) == 0,
                     yes = 0,
                     no = sum(str.heights[c(1:(g - 1))])
                     );
@@ -204,7 +210,7 @@ position.genes <- function(
                     ypos <- label.bottom + (g - 1) * spacing + heights - spacing;
 
                     #back computing the x position based on the intercept and the slope
-                    xpos = ifelse(
+                    xpos <- ifelse(
                         is.infinite(slope),
                         yes = tree.max.adjusted$x0[s],
                         no = (ypos - intercept) / slope
@@ -223,7 +229,7 @@ position.genes <- function(
                     if (g <= ceiling(length(gene.col[[s]]) / 2)) {
                         # offset.left <- ceiling(length(gene.col[[s]])/2)
                         heights <- ifelse(
-                            (g-1) == 0,
+                            (g - 1) == 0,
                             yes = 0,
                             no = sum(str.heights.left[c(1:(g - 1))])
                             );
@@ -231,7 +237,7 @@ position.genes <- function(
                         ypos <- label.bottom + (g - 1) * spacing + heights - spacing;
                         text.grob.list[[idx]] <- textGrob(
                             gene.list[[s]][g],
-                            x = unit(xpos-xline.dist,'inches'),
+                            x = unit(xpos - xline.dist, 'inches'),
                             y = unit(ypos,'inches'),
                             just = c('right', 'bottom'),
                             gp = gpar(col = gene.col[[s]][g], cex = cex)
@@ -239,13 +245,13 @@ position.genes <- function(
                     } else {
                         offset.left <- ceiling(length(gene.col[[s]]) / 2);
                         heights <- ifelse((
-                            g - offset.left-1) == 0,
+                            g - offset.left - 1) == 0,
                             yes = 0,
-                            no = sum(str.heights.right[c(1:(g  -offset.left - 1))])
+                            no = sum(str.heights.right[c(1:(g - offset.left - 1))])
                             );
 
                         ypos <- label.bottom + (g - offset.left - 1) * spacing + heights - spacing;
-                        
+
                         text.grob.list[[idx]] <- textGrob(
                             gene.list[[s]][g],
                             x = unit(xpos + xline.dist, 'inches'),
@@ -303,49 +309,48 @@ position.genes <- function(
                             }
                         }
                 } else {
-                    # not sure why this was here idx = ifelse(s==1,g, length(gene.list[[(s-1)]])+g)  
-                    if (slope > 0 | (is.infinite((slope)) & axis.type=='SNV' )) {
+                    if (slope > 0 || (is.infinite((slope)) && axis.type == 'SNV' )) {
                         xline.dist <- -(abs(xline.dist));
                     } else {
                         xline.dist <- abs(xline.dist);
                         }
-    
-                    hjust <- ifelse(xline.dist > 0,'left','right')  
-    
+
+                    hjust <- ifelse(xline.dist > 0, 'left', 'right');
+
                     if (label.nodes) {
                         node <- tree.max.adjusted[which(tree.max.adjusted$tip == tree.max.adjusted$tip[s]), ];
                         parent <- tree.max.adjusted[which(tree.max.adjusted$tip == tree.max.adjusted$parent[s]), ];
                         children <- tree.max.adjusted[which(tree.max.adjusted$parent == tree.max.adjusted$tip[s]), ];
-    
+
                         if (nrow(children) > 1) {
-                            if(nrow(children[which(children$x > node$x), ]) > nrow(children[which(children$x < node$x), ])) {
+                            if (nrow(children[which(children$x > node$x), ]) > nrow(children[which(children$x < node$x), ])) {
                                 xline.dist <- -(abs(xline.dist));
                             } else if (nrow(children[which(children$x > node$x), ]) < nrow(children[which(children$x < node$x), ])) {
                                 xline.dist <- abs(xline.dist);
                                 }
-    
+
                             if ((max(children$y) + rad) > label.bottom) {
                                 ypos <- ypos + rad;
                                 }
-        
+
                             hjust <- ifelse(xline.dist > 0, 'left', 'right');
                         } else {
                             leaves <- tree.max.adjusted[!(tree.max.adjusted$tip %in% tree.max.adjusted$parent), ];
                             leaves <- leaves[order(leaves$x), ];
-    
+
                             if (
-                                (nrow(leaves) > 2 | 
-                                (nrow(tree.max.adjusted) == 3 & nrow(leaves) == 2)) && 
-                                node$angle !=0 & node$tip %in% leaves[c(2:(nrow(leaves)-1)),]$tip
+                                (nrow(leaves) > 2 ||
+                                (nrow(tree.max.adjusted) == 3 & nrow(leaves) == 2)) &&
+                                node$angle != 0 & node$tip %in% leaves[c(2:(nrow(leaves) - 1)), ]$tip
                             ) {
                                 text.height <- as.numeric(convertY(
                                     grobHeight(textGrob(
                                         gene.list[[s]][g],
-                                        gp = gpar(cex=cex)
+                                        gp = gpar(cex = cex)
                                         )),
                                     'in'
                                     ));
-                
+
                                 text.width <- as.numeric(convertX(
                                     grobWidth(textGrob(
                                         gene.list[[s]][g],
@@ -353,14 +358,14 @@ position.genes <- function(
                                         )),
                                     'in'
                                     ));
-    
+
                                 ypos <- node$y - (text.height * 0.8 + rad) * cos(node$angle);
                                 xpos <- node$x + (text.width * 0.25) * sin(node$angle);
                                 xline.dist <- 0;
                                 }
                             }
                         }
-    
+
                     if (
                         label.nodes &&
                         tree.max.adjusted$parent[s] %in% tree.max.adjusted$tip &&
@@ -374,7 +379,7 @@ position.genes <- function(
                         } else {
                             ypos <- tree.max.adjusted$y[s];
                             cex <- orig.cex;
-    
+
                             if (tree.max.adjusted$x[s] > parent$x) {
                                 xline.dist <- abs(xline.dist);
                                 hjust <- 'left';
@@ -392,7 +397,7 @@ position.genes <- function(
                             hjust,
                             rad
                             );
-    
+
                         if (length(unlist(overlap)) > 0) {
                             xline.dist <- -(xline.dist);
                             overlap <- check.overlap(
@@ -403,16 +408,16 @@ position.genes <- function(
                                 hjust,
                                 rad
                                 );
-    
+
                             if (length(unlist(overlap)) > 0) {
-                                xline.dist <- Z-(xline.dist);
+                                xline.dist <- Z - (xline.dist);
                                 }
-        
+
                             if (xline.dist != 0) {
                                 hjust <- ifelse(xline.dist > 0, 'left', 'right');
                                 }
                             }
-    
+
                         if (adjust.axis.overlap) {
                             overlaps.axis  <- axis.overlap(
                                 xpos,
@@ -422,7 +427,7 @@ position.genes <- function(
                                 panel.width,
                                 return.cex = TRUE
                                 );
-                            
+
                             # Shrink the gene labels if they overlap
                             if (!is.null(overlaps.axis)) {
                                 text.grob.list <- position.genes(
@@ -440,12 +445,12 @@ position.genes <- function(
                                     split = split,
                                     label.nodes = label.nodes
                                     );
-    
+
                                 return(text.grob.list);
                                 }
                             }
                         }
-                    
+
                     text.grob.list[[idx]] <- textGrob(
                         gene.list[[s]][g],
                         x = unit(xpos + xline.dist, 'inches'),
@@ -454,12 +459,12 @@ position.genes <- function(
                         gp = gpar(col = gene.col[[s]][g], cex = cex)
                         );
                     }
-         
+
                 idx <- idx + 1;
                 }
             }
         }
-    
+
     return(text.grob.list);
     }
 
@@ -480,13 +485,13 @@ add.text2 <- function(
     alternating = TRUE,
     split = TRUE,
     clone.out = NULL
-    ){
-  
+    ) {
+
     #radius in native units
     radn <- rad / scale;
     genes <- genes[genes$node %in% tree$tip, ];
     gene.list <- alply(
-        seq_len(nrow(tree)), 
+        seq_len(nrow(tree)),
         .margins = 1,
         .fun = function(x) {
             return(character())
@@ -518,7 +523,7 @@ add.text2 <- function(
                 if (!is.na(gene.row$cn)) {
                     gene.col[[pos]] <<- c(
                         gene.col[[pos]],
-                        ifelse(gene.row$cn=='loss' | gene.row$cn < 2, 'blue', 'red')
+                        ifelse(gene.row$cn == 'loss' | gene.row$cn < 2, 'blue', 'red')
                         );
                 } else {
                     gene.col[[pos]] <<- c(gene.col[[pos]], 'black');
@@ -537,12 +542,12 @@ add.text2 <- function(
                 basex <- 0;
                 basey <- 0;
             } else {
-                basex <- v$x[v$id == x$parent]; 
-                basey <- v$y[v$id == x$parent]; 
+                basex <- v$x[v$id == x$parent];
+                basey <- v$y[v$id == x$parent];
                 }
 
             tipx <- v$x[v$id == x$tip];
-            tipy <- v$y[v$id == x$tip]; 
+            tipy <- v$y[v$id == x$tip];
 
             return(data.frame(basex, basey, tipx, tipy));
             }
@@ -553,7 +558,7 @@ add.text2 <- function(
         tree.max,
         .margins = 1,
         .fun = function(x) {
-            if (x$tipx == x$basex){
+            if (x$tipx == x$basex) {
                 #straight line
                 basex <- x$basex;
                 tipx <- x$tipx;
@@ -572,9 +577,9 @@ add.text2 <- function(
                 }
             if (x$parent == -1) {
                 basex <- basey <- 0;
-                }                                            
-                
-            return(data.frame(basex,basey,tipx,tipy))
+                }
+
+            return(data.frame(basex,basey,tipx,tipy));
             }
         );
 
@@ -599,7 +604,7 @@ add.text2 <- function(
     tree.max.adjusted$y <- convertY(unit(tree.max$tipy, 'native'), 'inches', valueOnly = TRUE); # Actual node positions
     tree.max.adjusted$x <- convertX(unit(tree.max$tipx, 'native'), 'inches', valueOnly = TRUE);
 
-    tree.max.adjusted$slope <- (tree.max.adjusted$y1 - tree.max.adjusted$y0) / (tree.max.adjusted$x1 - tree.max.adjusted$x0);          
+    tree.max.adjusted$slope <- (tree.max.adjusted$y1 - tree.max.adjusted$y0) / (tree.max.adjusted$x1 - tree.max.adjusted$x0);
     tree.max.adjusted$intercept <- tree.max.adjusted$y1 - tree.max.adjusted$slope * tree.max.adjusted$x1;
 
     text.grob.list <- position.genes(
@@ -620,14 +625,14 @@ add.text2 <- function(
 
     text.grob.gList <- do.call(gList, text.grob.list);
 
-    grob.name = 'gene.text';
-  
+    grob.name <- 'gene.text';
+
     if (!is.null(clone.out)) {
         popViewport();
         text.tree <- gTree(
             name = grob.name,
             children = text.grob.gList,
-            vp = make.plot.viewport(clone.out, clip='off')
+            vp = make.plot.viewport(clone.out, clip = 'off')
             );
 
         return(text.tree);

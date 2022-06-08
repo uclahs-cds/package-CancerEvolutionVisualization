@@ -55,7 +55,7 @@ SRCGrob <- function(
         colour.scheme
         );
 
-    fixed.angle = pi / 6;
+    fixed.angle <- pi / 6;
 
     clone.out <- make.clone.tree.grobs(
         ccf.df = inputs$in.tree.df,
@@ -103,13 +103,13 @@ SRCGrob <- function(
         title.y = title.y,
         title.y.units = title.y.units,
         ...
-        );			
+        );
 
     out.tree <- gTree(
         children = package.clone.grobs(clone.out),
         vp = clone.out$vp,
         cl = 'SRCGrob'
         );
-    
+
     return(list(out.tree, clone.out));
     }

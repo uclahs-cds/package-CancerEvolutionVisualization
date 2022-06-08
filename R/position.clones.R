@@ -15,7 +15,7 @@ add.vaf <- function(v) {
     }
 
 position.clones <- function(v, tree, wid) {
-    if (!('vaf' %in% colnames(v)) | all(is.na(v[v$parent != -1,]$vaf))) {
+    if (!('vaf' %in% colnames(v)) || all(is.na(v[v$parent != -1,]$vaf))) {
         v <- add.vaf(v);
         }
 
@@ -32,7 +32,7 @@ position.clones <- function(v, tree, wid) {
                 v$x1[v$id == children$id] <- -(wid / 2);
                 v$x2[v$id == children$id] <- wid / 2;
             } else {
-                v$x.mid[v$id == children$id] <- v$x.mid[v$id==p]
+                v$x.mid[v$id == children$id] <- v$x.mid[v$id == p];
                 v$x1[v$id == children$id] <- v$x.mid[v$id == children$id] - v$vaf[v$id == children$id] * wid / 2;
                 v$x2[v$id == children$id] <- v$x.mid[v$id == children$id] + v$vaf[v$id == children$id] * wid / 2;
                 }
@@ -40,37 +40,37 @@ position.clones <- function(v, tree, wid) {
             if (nrow(children) > 2) {
                 children$length <- sapply(children$id, function(x) tree$length[tree$tip == x])
                 children.ascending <- children[order(children$length),]
-        
+
                 child.order <- unlist(lapply(
-                    c(1:(ceiling(nrow(children) / 2))), 
+                    c(1:(ceiling(nrow(children) / 2))),
                     FUN = function(x) {
-                        if (x < (nrow(children) - x + 1)) { c(x, (nrow(children) - x + 1)) } else { x };
+                        if (x < (nrow(children) - x + 1)) c(x, (nrow(children) - x + 1)) else x;
                         }
                     ));
-    
+
                 children <- children.ascending[child.order,-ncol(children.ascending)];
                 }
-    
+
             if (p == -1) {
                 parent <- data.frame(vaf = 1, x.mid = 0);
                 }
-    
+
             child.vaf.sum <- sum(children$vaf * wid);
-            total.space <- parent$vaf*wid - child.vaf.sum; # the gap between subclones
+            total.space <- parent$vaf * wid - child.vaf.sum; # the gap between subclones
             per.gap <- total.space / (nrow(children) - 1); #if there are more than two subclones split the gap
-            position <- parent$x.mid-wid / 2 * parent$vaf; #parent's lower bound
-    
+            position <- parent$x.mid - wid / 2 * parent$vaf; #parent's lower bound
+
             for (c in seq_along(children$id)) {
                 child <- children[c, ];
-    
+
                 v$x.mid[v$id == child$id[1]] <- position + child$vaf[1] * wid / 2;
                 position <- position + child$vaf[1] * wid;
-    
+
                 if (c != 1) {
                     v$x.mid[v$id == child$id[1]] <- v$x.mid[v$id == child$id[1]] + per.gap;
                     position <- position + per.gap;
                     }
-    
+
                 v$x1[v$id == child$id[1]] <- v$x.mid[v$id == child$id[1]] - child$vaf[1] * wid / 2;
                 v$x2[v$id == child$id[1]] <- v$x.mid[v$id == child$id[1]] + child$vaf[1] * wid / 2;
                 }
@@ -89,7 +89,7 @@ position.nodes.fixed <- function(v, tree, fixed.angle, len) {
             x0 <- 0;
             y0 <- tree$length[tree$parent == -1];
             len0 <- len + y0;
-        } else { 
+        } else {
             # Parent not root -- not trunk clone
             par <- v[v$id == vi$parent, ];
 
@@ -97,14 +97,14 @@ position.nodes.fixed <- function(v, tree, fixed.angle, len) {
             siblings <- v[which(v$parent == par$id),]
 
             if (nrow(siblings) == 1) {
-                parent.angle <- 0
-            } else if (nrow(siblings) == 2) {           
+                parent.angle <- 0;
+            } else if (nrow(siblings) == 2) {
                 if (any(siblings$x > par$x)) {
                     parent.angle <- -(fixed.angle);
                 } else {
                     parent.angle <- fixed.angle;
                 }
-            } else if (nrow(siblings) == 3) {                
+            } else if (nrow(siblings) == 3) {
                 if (any(siblings$x > par$x)) {
                     parent.angle <- -(fixed.angle);
                 } else if (any(siblings$x < par$x)) {
@@ -112,7 +112,7 @@ position.nodes.fixed <- function(v, tree, fixed.angle, len) {
                 } else {
                     parent.angle <- 0;
                     }
-                } 
+                }
 
             r <- tree$length[which(tree$parent == par$id & tree$tip == vi$id)];
             x.shift <- r * sin(parent.angle);
@@ -128,7 +128,7 @@ position.nodes.fixed <- function(v, tree, fixed.angle, len) {
       v[i,]$y <- y0;
       v[i,]$x <- x0;
       }
-  
+
     clone.env <-  new.env(parent = emptyenv());
     clone.env$v <- v;
     clone.env$tree <- tree;
@@ -145,24 +145,24 @@ position.clones.no.vaf <- function(v, wid, spread = TRUE) {
 
         # if there is only one child center them with the parent
         if (nrow(children) == 1) {
-            if (p == -1) { 
+            if (p == -1) {
                 #trunk clone
                 v$vaf[v$id == children$id] <- 1;
                 v$y.mid[v$id == children$id] <- 0;
-                v$y1[v$id == children$id] <- -wid / 2;
+                v$y1[v$id == children$id] <- -(wid) / 2;
                 v$y2[v$id == children$id] <- wid / 2;
-            } else { 
+            } else {
                 # only children are centered on their parent clones midline
                 v$y.mid[v$id == children$id] <- v$y.mid[v$id == p];
 
-                if (spread==TRUE) {
+                if (spread) {
                     v$vaf[v$id == children$id] <- v$vaf[v$id == p];
                     v$y1[v$id == children$id] <- -(wid / 2);
                     v$y2[v$id == children$id] <- wid / 2;
                 } else {
                     v$vaf[v$id == children$id] <- v$vaf[v$id == p];
                     v$y1[v$id == children$id] <- v$y.mid[v$id == children$id] - v$vaf[v$id == children$id] * wid / 2;
-                    v$y2[v$id == children$id] <- v$y.mid[v$id == children$id] + v$vaf[v$id == children$id] * wid / 2; 
+                    v$y2[v$id == children$id] <- v$y.mid[v$id == children$id] + v$vaf[v$id == children$id] * wid / 2;
                     }
                 }
         } else {
@@ -182,22 +182,22 @@ position.clones.no.vaf <- function(v, wid, spread = TRUE) {
 
                 for (i in seq_along(children$id)) {
                     child <- children[i,]
-                    v$y1[v$id==child$id[1]] <- bounds[1] + child.width * last.bound;
-                    v$y2[v$id==child$id[1]] <- v$y1[v$id == child$id[1]] + child.width; 
-                    v$y.mid[v$id==child$id[1]] <- v$y1[v$id == child$id[1]] + 0.5 * child.width;
+                    v$y1[v$id == child$id[1]] <- bounds[1] + child.width * last.bound;
+                    v$y2[v$id == child$id[1]] <- v$y1[v$id == child$id[1]] + child.width;
+                    v$y.mid[v$id == child$id[1]] <- v$y1[v$id == child$id[1]] + 0.5 * child.width;
                     last.bound <- last.bound + 1;
                     }
             } else {
                 child.vaf <- parent$vaf / nrow(children);
-                position <- parent$y.mid-wid / 2 * parent$vaf;
+                position <- parent$y.mid - wid / 2 * parent$vaf;
                 v$vaf[which(v$parent == p)] <- child.vaf;
                 children <- v[which(v$parent == p), ];
 
                 for (c in seq_along(children$id)) {
-                    child <- children[c,]
-                    v$y.mid[v$id==child$id[1]] <- position + child$vaf[1] * wid / 2;
-                    v$y1[v$id==child$id[1]] <- v$y.mid[v$id == child$id[1]]-child$vaf[1] * wid / 2;
-                    v$y2[v$id==child$id[1]] <- v$y.mid[v$id == child$id[1]] + child$vaf[1] * wid / 2;
+                    child <- children[c,];
+                    v$y.mid[v$id == child$id[1]] <- position + child$vaf[1] * wid / 2;
+                    v$y1[v$id == child$id[1]] <- v$y.mid[v$id == child$id[1]] - child$vaf[1] * wid / 2;
+                    v$y2[v$id == child$id[1]] <- v$y.mid[v$id == child$id[1]] + child$vaf[1] * wid / 2;
                     position <- position + child$vaf[1] * wid;
                     }
                 }

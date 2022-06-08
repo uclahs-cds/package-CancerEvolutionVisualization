@@ -5,7 +5,7 @@ prep.tree <- function(
     axis.type = 'left',
     w.padding = NULL,
     colour.scheme = colours) {
-    
+
     if (!('parent' %in% colnames(tree.df))) {
         stop('No parent column provided');
         }
@@ -16,13 +16,13 @@ prep.tree <- function(
             'The angle column will not be used.'
             ));
         }
-    
+
     tree.df$parent <- prep.tree.parent(tree.df$parent);
 
     if (!check.parent.values(rownames(tree.df), tree.df$parent)) {
         stop('Parent column references invalid node');
         }
-    
+
         if (!is.null(genes.df)) {
         genes.df <- filter.null.genes(genes.df);
 
@@ -62,13 +62,13 @@ prep.tree <- function(
     genes.df$node <- reindex.column(genes.df$node, node.id.index);
 
     tree.df$label <- as.character(
-        if (is.null(tree.df$label)) { tree.df$child } else { tree.df$label }
+        if (is.null(tree.df$label)) tree.df$child else tree.df$label
         );
 
     out.df <- data.frame(
         id = c(-1, tree.df$child),
         label.text = c('', tree.df$label),
-        ccf = if (is.null(tree.df$CP)) { NA } else { c(1, tree.df$CP) },
+        ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
@@ -85,7 +85,7 @@ prep.tree <- function(
 
     if (is.null(w.padding)) {
         w.padding <- 1.05;
-    
+
         if (axis.type == 'none') {
             w.padding <- 0.85;
             }

@@ -54,7 +54,7 @@ position.nodes.radial <- function(v, tree, extra.len, spread = 1) {
 		if (vi$parent != -1) {
 			v$x[v$id == vi$id] <<- v$x[v$id == vi$parent] + d * sin(tau + w / 2);
 			v$y[v$id == vi$id] <<- v$y[v$id == vi$parent] + d * cos(tau + w / 2);
-			tree$angle[tree$tip==vi$id & tree$parent == vi$parent] <<- tau + w / 2;
+			tree$angle[tree$tip == vi$id & tree$parent == vi$parent] <<- tau + w / 2;
 		} else {
 			v$x[v$id == vi$id] <<- 0;
 			v$y[v$id == vi$id] <<- d;
@@ -90,7 +90,9 @@ position.nodes.radial <- function(v, tree, extra.len, spread = 1) {
 
 	v$len <- sapply(
 	    v$y,
-	    FUN = function(x) { max(v$y) + extra.len - x }
+	    FUN = function(x) {
+	        max(v$y) + extra.len - x;
+	        }
 	    );
 
 	return(list(v = v, tree = tree));
