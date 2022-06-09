@@ -139,34 +139,6 @@ filter.invalid.gene.nodes <- function(gene.df, node.ids) {
         }
     }
 
-process.1C <- function(out.1C){
-  in.df <- read.table(out.1C, header=FALSE)
-  colnames(in.df)[1:2] <- c('tip','length1')
-  if(ncol(in.df) == 3){
-    colnames(in.df)[3] <- 'ccf'
-  }
-  return(in.df)
-}
-
-process.3A <- function(out.3A){
-  in.df <- read.table(out.3A, header=FALSE)
-  out.df <- data.frame(parent = in.df$V2, tip = in.df$V1)
-  out.df$parent[out.df$parent==0] <- -1
-  if(ncol(in.df)==3){
-    out.df$plot.lab <- in.df$V3
-  }
-  return(out.df[order(out.df$tip),])
-}
-
-process.2A <- function(truth=NULL, pred=NULL){
-  pred <- scan(pred, what='numeric')
-  true <- scan(truth, what='numeric')
-  out2A <- data.frame(ssm=seq.along(pred), truth=true, pred=pred)
-  origins <- dlply(out2A, .(pred), function(x) {props=table(x$truth)/nrow(x); props[props!=0]})
-  names(origins) <- paste0('N', names(origins))
-  return(origins)
-}
-
 reorder.nodes <- function(tree.df) {
     if (any(!is.na(tree.df$CP))) {
         tree.df <- reorder.nodes.by.CP(tree.df);
