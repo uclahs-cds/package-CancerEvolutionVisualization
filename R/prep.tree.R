@@ -5,7 +5,7 @@ prep.tree <- function(
     axis.type = 'left',
     w.padding = NULL,
     colour.scheme = colours) {
-    
+
     if (!('parent' %in% colnames(tree.df))) {
         stop('No parent column provided');
         }
@@ -16,13 +16,13 @@ prep.tree <- function(
             'The angle column will not be used.'
             ));
         }
-    
+
     tree.df$parent <- prep.tree.parent(tree.df$parent);
 
     if (!check.parent.values(rownames(tree.df), tree.df$parent)) {
         stop('Parent column references invalid node');
         }
-    
+
         if (!is.null(genes.df)) {
         genes.df <- filter.null.genes(genes.df);
 
@@ -62,13 +62,13 @@ prep.tree <- function(
     genes.df$node <- reindex.column(genes.df$node, node.id.index);
 
     tree.df$label <- as.character(
-        if (is.null(tree.df$label)) { tree.df$child } else { tree.df$label }
+        if (is.null(tree.df$label)) tree.df$child else tree.df$label
         );
 
     out.df <- data.frame(
         id = c(-1, tree.df$child),
         label.text = c('', tree.df$label),
-        ccf = if (is.null(tree.df$CP)) { NA } else { c(1, tree.df$CP) },
+        ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
@@ -85,8 +85,8 @@ prep.tree <- function(
 
     if (is.null(w.padding)) {
         w.padding <- 1.05;
-    
-        if (axis.type == "none") {
+
+        if (axis.type == 'none') {
             w.padding <- 0.85;
             }
         }
@@ -138,34 +138,6 @@ filter.invalid.gene.nodes <- function(gene.df, node.ids) {
         return(gene.df);
         }
     }
-
-process_1C <- function(out_1C){
-  in.df <- read.table(out_1C, header=FALSE)
-  colnames(in.df)[1:2] <- c("tip","length1")
-  if(ncol(in.df) == 3){
-    colnames(in.df)[3] <- "ccf"
-  }
-  return(in.df)
-}
-
-process_3A <- function(out_3A){
-  in.df <- read.table(out_3A, header=FALSE)
-  out.df <- data.frame(parent = in.df$V2, tip = in.df$V1)
-  out.df$parent[out.df$parent==0] <- -1
-  if(ncol(in.df)==3){
-    out.df$plot.lab <- in.df$V3
-  }
-  return(out.df[order(out.df$tip),])
-}
-
-process_2A <- function(truth=NULL, pred=NULL){
-  pred <- scan(pred, what="numeric")
-  true <- scan(truth, what="numeric")
-  out2A <- data.frame(ssm=seq_along(pred), truth=true, pred=pred)
-  origins <- dlply(out2A, .(pred), function(x) {props=table(x$truth)/nrow(x); props[props!=0]})
-  names(origins) <- paste0("N", names(origins))
-  return(origins)
-}
 
 reorder.nodes <- function(tree.df) {
     if (any(!is.na(tree.df$CP))) {

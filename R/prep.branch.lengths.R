@@ -1,13 +1,13 @@
 get.branch.length.colnames <- function(num.columns) {
         if (num.columns > 0) {
             sapply(
-                1:num.columns, 
+                1:num.columns,
                 FUN = function(i) {
                     paste0('length', i);
                     }
             );
-        } else { 
-            vector(); 
+        } else {
+            vector();
             }
     }
 
@@ -23,17 +23,18 @@ validate.branch.colname <- function(column.name) {
     }
 
 validate.branch.length.values <- function(length.column) {
-    return(tryCatch(
-        {
-            numeric.values <- as.numeric(length.column);
-            
-            return(
-                # Catches dropped NULL values
-                length(numeric.values) == length(length.column) &&
-                all(!is.na(numeric.values))
-                );
-            },
-        warning = function(cond) { return(FALSE); }
+    return(tryCatch({
+        numeric.values <- as.numeric(length.column);
+
+        return(
+            # Catches dropped NULL values
+            length(numeric.values) == length(length.column) &&
+            all(!is.na(numeric.values))
+            );
+        },
+        warning = function(cond) {
+            return(FALSE);
+            }
         ));
     }
 
@@ -45,7 +46,7 @@ limit.branch.length.columns <- function(column.names, max.cols = 2) {
                 'More branch lengths will be supported in a future version.'
             ));
         }
-    
+
     return(head(column.names, max.cols));
     }
 
@@ -55,10 +56,10 @@ prep.branch.lengths <- function(tree.df) {
             function(column.name) {
                 col.name.is.valid <- validate.branch.colname(column.name);
                 values.are.valid <- NULL;
-                
-                if (col.name.is.valid) { 
+
+                if (col.name.is.valid) {
                     values.are.valid <- validate.branch.length.values(tree.df[, column.name]);
-                    
+
                     if (!values.are.valid) {
                         warning(paste(
                             'Branch length column', column.name, 'contains non-numeric values.',

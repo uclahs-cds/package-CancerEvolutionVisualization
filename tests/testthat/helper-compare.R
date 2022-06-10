@@ -8,14 +8,14 @@ compare.trees <- function(example, test) {
                 );
             }
         length(x) == length(y) &
-            all(unitType(x) == unitType(y)) &
+            all(unitType(x) == unitType(y)) &&
             all(get.differences() <= threshold)
         }
 
     get.axis.keys <- function(x) {
         stringr::str_subset(x$childrenOrder, 'axis');
         }
-    
+
     # Grob comparisons
     test.segment.grobs <- function(example, test) {
         get.segment.grobs <- function(x) {
@@ -30,30 +30,30 @@ compare.trees <- function(example, test) {
                     )
                 );
             }
-        
+
         example.grobs <- get.segment.grobs(example);
         test.grobs <- get.segment.grobs(test);
-        
+
         compare.segments <- function(x, y) {
             coords.equal <- sapply(
-                    c('x0', 'x1', 'y0', 'y1'), 
+                    c('x0', 'x1', 'y0', 'y1'),
                     FUN = function(k) {
                         units.are.equal(x[[k]], y[[k]]);
                         }
                     );
-            
+
             gp.equal <- identical(x$gp, y$gp);
             arrow.equal <- identical(x$arrow, y$arrow);
-            
+
             return(all(
                 coords.equal,
                 gp.equal,
                 arrow.equal
                 ));
             }
-        
+
         all(sapply(
-            1:(length(example.grobs)), 
+            1:(length(example.grobs)),
             FUN = function(i) {
                 compare.segments(
                     example.grobs[[i]],
@@ -62,7 +62,7 @@ compare.trees <- function(example, test) {
                 }
             ));
         }
-    
+
     test.line.grobs <- function(example, test) {
         get.line.grobs <- function(x) {
             sapply(
@@ -71,9 +71,8 @@ compare.trees <- function(example, test) {
                     list(getGrob(ax, gPath('axis.content', 'major')));
                     }
                 );
-                
             }
-        
+
         compare.lines <- function(x, y) {
             coords.equal <- all(sapply(
                 c('x', 'y'),
@@ -81,15 +80,15 @@ compare.trees <- function(example, test) {
                     units.are.equal(x[[k]], y[[k]])
                     }
                 ));
-            
+
             arrow.equal <- identical(x$arrow, y$arrow);
-            
+
             all(coords.equal, arrow.equal);
             }
-        
+
         example.grobs <- get.line.grobs(example);
         test.grobs <- get.line.grobs(test);
-        
+
         all(sapply(
             1:(length(example.grobs)),
             FUN = function(i) {
@@ -100,27 +99,27 @@ compare.trees <- function(example, test) {
                 }
             ));
         }
-    
+
     test.text.grobs <- function(example, test) {
         compare.text <- function(x, y) {
             labels.equal <- identical(x$label, y$label);
-            
+
             just.equal <- (
-                x$just == y$just 
-                & identical(x$hjust, y$hjust) 
-                & identical(x$vjust, y$vjust)
+                x$just == y$just
+                && identical(x$hjust, y$hjust)
+                && identical(x$vjust, y$vjust)
                 );
-            
+
             rot.equal <- x$rot == y$rot;
             gp.equal <- identical(x$gp, y$gp);
-            
+
             coords.equal <- all(sapply(
                 c('x', 'y'),
                 FUN = function(coord) {
                     units.are.equal(x[[coord]], y[[coord]], 10);
                     }
                 ));
-            
+
             all(
                 labels.equal,
                 coords.equal,
@@ -129,7 +128,7 @@ compare.trees <- function(example, test) {
                 gp.equal
                 );
             }
-        
+
         get.text.grobs <- function(x) {
             c(
                 getGrob(x, 'gene.text')$children,
@@ -146,10 +145,10 @@ compare.trees <- function(example, test) {
                     )
                 );
             }
-        
+
         example.grobs <- get.text.grobs(example);
         test.grobs <- get.text.grobs(test);
-    
+
         all(sapply(
             1:(length(example.grobs)),
             FUN = function(i) {
@@ -160,12 +159,12 @@ compare.trees <- function(example, test) {
                 }
             ));
         }
-    
+
     test.polygon.grobs <- function(example, test) {
         get.polygon.keys <- function(x) {
             stringr::str_subset(x$childrenOrder, 'polygon')
             }
-        
+
         compare.polygons <- function(x, y) {
             coords.equal <- all(sapply(
                 c('x', 'y'),
@@ -173,15 +172,15 @@ compare.trees <- function(example, test) {
                     units.are.equal(x[[coord]], y[[coord]]);
                     }
                 ));
-            
+
             gp.equal <- identical(x$gp, y$gp);
-            
+
             all(coords.equal, gp.equal);
             }
-        
+
         example.keys <- get.polygon.keys(example);
         test.keys <- get.polygon.keys(test);
-        
+
         all(sapply(
             1:(length(example.keys)),
             FUN = function(i) {

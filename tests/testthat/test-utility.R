@@ -1,9 +1,9 @@
 test_that('get.value.index creates a valid list', {
     expected.length <- 6;
-    
+
     old.values <- sample.int(expected.length, expected.length);
     new.values <- old.values + 1;
-    
+
     expect_false(is.null(get.value.index(old.values, new.values)));
     });
 

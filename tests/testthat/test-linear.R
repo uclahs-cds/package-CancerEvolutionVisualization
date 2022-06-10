@@ -9,9 +9,9 @@ test_that(
                 linear.test.data$tree,
                 linear.test.data$genes,
                 'WHO003',
-                add_normal = TRUE,
-                add_genes = TRUE,
-                yaxis_position = 'both'
+                add.normal = TRUE,
+                add.genes = TRUE,
+                yaxis.position = 'both'
                 )
             ));
         }

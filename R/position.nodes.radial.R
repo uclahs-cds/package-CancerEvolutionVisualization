@@ -1,45 +1,45 @@
-count_leaves_per_node <- function(v) {
-	count_env <- new.env();
+count.leaves.per.node <- function(v) {
+	count.env <- new.env();
 
 	v$leaves <- 0;
-	leaf_nodes <- v$id[!(v$id %in% v$parent)];
-	v$leaves[v$id %in% leaf_nodes] <- 1;
+	leaf.nodes <- v$id[!(v$id %in% v$parent)];
+	v$leaves[v$id %in% leaf.nodes] <- 1;
 
-	assign("leaves_v", v, envir = count_env);
+	assign('leaves.v', v, envir = count.env);
 
-	count_leaves <- function(node = 1) {
-		v <- get("leaves_v", envir = count_env);
+	count.leaves <- function(node = 1) {
+		v <- get('leaves.v', envir = count.env);
 		par <- v$parent[v$id == node];
 
 		if (par != -1) {
-			v <- get("leaves_v", envir = count_env);
+			v <- get('leaves.v', envir = count.env);
 
 			v$leaves[v$id == par] <- v$leaves[v$id == par] + 1;
-			assign("leaves_v", v, envir = count_env);
-			count_leaves(par);
+			assign('leaves.v', v, envir = count.env);
+			count.leaves(par);
 		    }
 	    }
 
-	for (node in leaf_nodes) {
-		count_leaves(node);
+	for (node in leaf.nodes) {
+		count.leaves(node);
 	    }
 
-	v <- get("leaves_v", envir = count_env);
+	v <- get('leaves.v', envir = count.env);
 	return(v);
 	}
 
-assign_weight <- function(node,v, extra_len, spread) {
-	node_weight <- v$leaves[v$id == node] / v$leaves[v$parent == -1];
-	return(node_weight);
+assign.weight <- function(node,v, extra.len, spread) {
+	node.weight <- v$leaves[v$id == node] / v$leaves[v$parent == -1];
+	return(node.weight);
     }
 
-position_nodes_radial <- function(v, tree, extra_len, spread = 1) {
+position.nodes.radial <- function(v, tree, extra.len, spread = 1) {
 	w <- spread * pi;
 	xpos <- ypos <- 0;
 	tau <- -(pi / 2.5);
 	vi <- v[v$parent == -1, ];
 
-	preorder_traversal <- function(
+	preorder.traversal <- function(
 	    node = NULL,
 	    tree = NULL,
 	    w = NULL,
@@ -54,7 +54,7 @@ position_nodes_radial <- function(v, tree, extra_len, spread = 1) {
 		if (vi$parent != -1) {
 			v$x[v$id == vi$id] <<- v$x[v$id == vi$parent] + d * sin(tau + w / 2);
 			v$y[v$id == vi$id] <<- v$y[v$id == vi$parent] + d * cos(tau + w / 2);
-			tree$angle[tree$tip==vi$id & tree$parent == vi$parent] <<- tau + w / 2;
+			tree$angle[tree$tip == vi$id & tree$parent == vi$parent] <<- tau + w / 2;
 		} else {
 			v$x[v$id == vi$id] <<- 0;
 			v$y[v$id == vi$id] <<- d;
@@ -64,12 +64,12 @@ position_nodes_radial <- function(v, tree, extra_len, spread = 1) {
 		eta <- tau;
 
 		for (child in v$id[v$parent == vi$id]) {
-			child_weight <- assign_weight(child, v);
-			w <- child_weight * spread * pi;
+			child.weight <- assign.weight(child, v);
+			w <- child.weight * spread * pi;
 			tau <- eta;
 			eta <- eta + w;
 
-			preorder_traversal(
+			preorder.traversal(
 			    node = child,
 			    tree = tree,
 			    w = w,
@@ -80,7 +80,7 @@ position_nodes_radial <- function(v, tree, extra_len, spread = 1) {
 		    }
 	     }
 
-	preorder_traversal(
+	preorder.traversal(
 	    node = 1,
 	    tree = tree,
 	    w = w,
@@ -90,7 +90,9 @@ position_nodes_radial <- function(v, tree, extra_len, spread = 1) {
 
 	v$len <- sapply(
 	    v$y,
-	    FUN = function(x) { max(v$y) + extra_len - x }
+	    FUN = function(x) {
+	        max(v$y) + extra.len - x;
+	        }
 	    );
 
 	return(list(v = v, tree = tree));
