@@ -30,8 +30,7 @@ SRCGrob <- function(
     xaxis.label = NULL,
     xaxis.space.left = 0,
     xaxis.space.right = 0,
-    min.width = NULL,
-    w.padding = NULL,
+    horizontal.padding = 0.1,
     nodes = 'circle',
     rad = 0.1,
     label.nodes = TRUE,
@@ -56,6 +55,7 @@ SRCGrob <- function(
         );
 
     fixed.angle <- pi / 6;
+    min.width <- 3 + (horizontal.padding * 2);
 
     clone.out <- make.clone.tree.grobs(
         ccf.df = inputs$in.tree.df,
