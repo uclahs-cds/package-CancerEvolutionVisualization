@@ -17,7 +17,6 @@ create.test.tree <- function(tree, genes, sample, ...) {
         xaxis.space.left = 0.1,
         xaxis.space.right = 0.1,
         yaxis1.interval = 10,
-        min.width = 1,
         yaxis1.label = 'PGA',
         yaxis2.label = 'SNV',
         yaxis2.interval = 1000,
