@@ -42,15 +42,13 @@ SRCGrob <- function(
     title = NULL,
     title.cex = 1.7,
     title.y = NULL,
-    title.y.units = 'npc',
-    ...
+    title.y.units = 'npc'
     ) {
     inputs <- prep.tree(
         tree,
         genes,
         add.polygons,
         yaxis.position,
-        w.padding,
         colour.scheme
         );
 
@@ -101,8 +99,7 @@ SRCGrob <- function(
         title = title,
         title.cex = title.cex,
         title.y = title.y,
-        title.y.units = title.y.units,
-        ...
+        title.y.units = title.y.units
         );
 
     out.tree <- gTree(

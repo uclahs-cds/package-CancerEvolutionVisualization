@@ -3,7 +3,6 @@ prep.tree <- function(
     genes.df,
     bells = TRUE,
     axis.type = 'left',
-    w.padding = NULL,
     colour.scheme = colours) {
 
     if (!('parent' %in% colnames(tree.df))) {
@@ -83,21 +82,12 @@ prep.tree <- function(
         prep.branch.lengths(tree.df)
         );
 
-    if (is.null(w.padding)) {
-        w.padding <- 1.05;
-
-        if (axis.type == 'none') {
-            w.padding <- 0.85;
-            }
-        }
-
     branching <- any(duplicated(out.tree$parent));
 
     return(list(
         in.tree.df = out.df,
         tree = out.tree,
         genes.df = genes.df,
-        w.padding = w.padding,
         branching = branching
         ));
     }
