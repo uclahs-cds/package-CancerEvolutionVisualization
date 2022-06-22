@@ -1,3 +1,12 @@
+get.plot.width <- function(horizontal.padding) {
+    # TODO Calculate base.size based on the plot
+    # This value is just a reasonable value used as a temporary fixed default
+    base.size <- 3;
+
+    # Padding is applied to both sides
+    return(base.size + (horizontal.padding * 2))
+    }
+
 calculate.main.plot.size <- function(
     clone.out,
     scale1,

@@ -53,7 +53,7 @@ SRCGrob <- function(
         );
 
     fixed.angle <- pi / 6;
-    min.width <- 3 + (horizontal.padding * 2);
+    min.width <- get.plot.width(horizontal.padding);
 
     clone.out <- make.clone.tree.grobs(
         ccf.df = inputs$in.tree.df,
