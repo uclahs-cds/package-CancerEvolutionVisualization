@@ -7,11 +7,11 @@ adjust.lengths <- function(x, cols, node.df) {
 
             #  Max
             if (x[1, column] == x[1, cols[length(cols)]]) {
-                length.adj <- length.adj + node.df$rad[node.df$id == x$tip];
+                length.adj <- length.adj + node.df$node.radius[node.df$id == x$tip];
                 }
 
             if (x$parent != -1) {
-                length.adj <- length.adj + node.df$rad[node.df$id == x$parent];
+                length.adj <- length.adj + node.df$node.radius[node.df$id == x$parent];
                 }
 
         } else {
@@ -26,13 +26,13 @@ adjust.lengths <- function(x, cols, node.df) {
     return(out.df);
     }
 
-adjust.branch.lengths <- function(node.df, tree, rad, scale1) {
-    if (is.null(node.df$rad)) {
-        rad <- rad / scale1;
-        node.df$rad <- rep(rad, nrow(node.df));
+adjust.branch.lengths <- function(node.df, tree, node.radius, scale1) {
+    if (is.null(node.df$node.radius)) {
+        node.radius <- node.radius / scale1;
+        node.df$node.radius <- rep(node.radius, nrow(node.df));
         }
 
-    node.df$rad[node.df$id == -1] <- 0;
+    node.df$node.radius[node.df$id == -1] <- 0;
     length.cols <- grep('length', colnames(tree));
 
     tree.adj <- adply(
@@ -50,19 +50,19 @@ adjust.branch.lengths <- function(node.df, tree, rad, scale1) {
     return(tree);
     }
 
-adjust.tree <- function(in.tree.rad, tree.in, rad, scale.x.real) {
-    if (is.null(in.tree.rad$rad)) {
-        rad <- rad / scale.x.real;
-        in.tree.rad$rad <- rep(rad, nrow(in.tree.rad));
+adjust.tree <- function(in.tree.node.radius, tree.in, node.radius, scale.x.real) {
+    if (is.null(in.tree.node.radius$node.radius)) {
+        node.radius <- node.radius / scale.x.real;
+        in.tree.node.radius$node.radius <- rep(node.radius, nrow(in.tree.node.radius));
         }
 
-    in.tree.rad$rad[in.tree.rad$id == -1] <- 0;
+    in.tree.node.radius$node.radius[in.tree.node.radius$id == -1] <- 0;
     length.cols <- grep('length', colnames(tree.in));
     tree.adj <- adply(
         tree.in,
         .margins = 1,
         .fun = function(x) {
-            adjust.lengths(x, length.cols, in.tree.rad);
+            adjust.lengths(x, length.cols, in.tree.node.radius);
             }
         );
 

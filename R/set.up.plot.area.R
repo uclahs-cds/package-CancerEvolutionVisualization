@@ -14,7 +14,7 @@ calculate.main.plot.size <- function(
     min.width,
     xaxis.space.left,
     xaxis.space.right,
-    rad
+    node.radius
     ) {
 
 	ymax <- max(clone.out$v$len) + clone.out$v$y[1];
@@ -22,10 +22,10 @@ calculate.main.plot.size <- function(
 
     if (is.null(min.width)) {
         xmax <- wid;
-        width <- wid * scale1 + xaxis.space.left + xaxis.space.right + 4 * rad;
+        width <- wid * scale1 + xaxis.space.left + xaxis.space.right + 4 * node.radius;
         xlims <- c(
-            -(xmax / 2) - (xaxis.space.left / scale1 + 2 * rad / scale1),
-            xmax / 2 + xaxis.space.right / scale1 + 2 * rad / scale1
+            -(xmax / 2) - (xaxis.space.left / scale1 + 2 * node.radius / scale1),
+            xmax / 2 + xaxis.space.right / scale1 + 2 * node.radius / scale1
             );
     } else {
         xmin <- min(c(clone.out$v$x));
@@ -42,8 +42,8 @@ calculate.main.plot.size <- function(
             xmin <- xmin - 0.5 * diff / scale1
             xmax <- xmax + 0.5 * diff / scale1;
             xlims <- c(
-                xmin - (xaxis.space.left / scale1 + 2 * rad / scale1),
-                xmax + xaxis.space.right / scale1 + 2 * rad / scale1
+                xmin - (xaxis.space.left / scale1 + 2 * node.radius / scale1),
+                xmax + xaxis.space.right / scale1 + 2 * node.radius / scale1
                 );
 
             width <- (max(xlims) - min(xlims)) * scale1;

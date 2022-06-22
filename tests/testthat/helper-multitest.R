@@ -7,7 +7,7 @@ create.test.tree <- function(tree, genes, sample, ...) {
         wid = 2,
         extra.len = 0.1,
         scale1 = 1 / 20,
-        rad = 0.1,
+        node.radius = 0.1,
         gene.cex = 0.85,
         seg1.col = 'navy',
         seg2.col = 'gold',

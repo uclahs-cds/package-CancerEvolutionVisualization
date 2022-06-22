@@ -34,7 +34,7 @@ make.clone.tree.grobs <- function(
     xaxis.space.right,
     min.width,
     nodes,
-    rad,
+    node.radius,
     label.nodes,
     node.col,
     labe.cex,
@@ -94,7 +94,7 @@ make.clone.tree.grobs <- function(
 	    }
 
 	if (nodes != 'none' && length.from.node.edge == TRUE) {
-	    tree <- adjust.branch.lengths(v,tree,rad, scale1);
+	    tree <- adjust.branch.lengths(v,tree,node.radius, scale1);
     	}
 
 	extra.len <- extra.len * (1 / scale1);
@@ -123,14 +123,14 @@ make.clone.tree.grobs <- function(
 	    min.width,
 	    xaxis.space.left,
 	    xaxis.space.right,
-	    rad
+	    node.radius
 	    );
 
 	if (!no.ccf) {
 		get.CP.polygons(clone.out);
 	}
 
-	add.tree.segs(clone.out, rad, line.lwd, scale1, seg1.col, seg2.col);
+	add.tree.segs(clone.out, node.radius, line.lwd, scale1, seg1.col, seg2.col);
 
 	if (!is.null(cluster.list)) {
 	    message(paste(
@@ -138,13 +138,13 @@ make.clone.tree.grobs <- function(
 	        'Plain nodes will be used.'
 	        ));
 	    # TODO Implement pie nodes
-		# add.pie.nodes(clone.out, rad, cluster.list);
+		# add.pie.nodes(clone.out, node.radius, cluster.list);
     	}
 
-	add.node.ellipse(clone.out,rad, label.nodes, labe.cex, scale1);
+	add.node.ellipse(clone.out,node.radius, label.nodes, labe.cex, scale1);
 
 	if (add.normal == TRUE) {
-		add.normal(clone.out,rad,labe.cex, normal.cex)
+		add.normal(clone.out,node.radius,labe.cex, normal.cex)
 	    }
 
 	if (yaxis.position != 'none' ) {
@@ -179,7 +179,7 @@ make.clone.tree.grobs <- function(
 	        cex = gene.cex,
 	        v = clone.out$v,
 	        axis.type = yaxis.position,
-	        rad = rad,
+	        node.radius = node.radius,
 	        scale = scale1,
 	        clone.out = clone.out,
 	        alternating = FALSE
