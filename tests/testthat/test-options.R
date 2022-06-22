@@ -20,7 +20,7 @@ test_that(
                 linear.test.data$genes,
                 sample = sample,
                 label.nodes = FALSE,
-                add.polygons = FALSE,
+                disable.polygons = TRUE,
                 yaxis.position = 'both'
                 )
             ));

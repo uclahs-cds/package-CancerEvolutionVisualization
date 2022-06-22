@@ -9,7 +9,6 @@ SRCGrob <- function(
     length.from.node.edge = TRUE,
     seg1.col = 'black',
     seg2.col = 'green',
-    add.polygons = TRUE,
     extra.len = 10,
     sig.shape = 3,
     sig.curve = 3,
@@ -37,6 +36,7 @@ SRCGrob <- function(
     node.col = 'grey29',
     labe.cex = NA,
     cluster.list = NULL,
+    disable.polygons = FALSE,
     add.normal = FALSE,
     normal.cex = 1,
     title = NULL,
@@ -44,10 +44,12 @@ SRCGrob <- function(
     title.y = NULL,
     title.y.units = 'npc'
     ) {
+    
+    add.polygons <- !is.null(tree$CP) && !disable.polygons;
+    
     inputs <- prep.tree(
         tree,
         genes,
-        add.polygons,
         yaxis.position,
         colour.scheme
         );

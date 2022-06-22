@@ -3,7 +3,8 @@ prep.tree <- function(
     genes.df,
     bells = TRUE,
     axis.type = 'left',
-    colour.scheme = colours) {
+    colour.scheme = colours
+    ) {
 
     if (!('parent' %in% colnames(tree.df))) {
         stop('No parent column provided');
