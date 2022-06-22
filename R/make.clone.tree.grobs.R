@@ -133,10 +133,15 @@ make.clone.tree.grobs <- function(
 	add.tree.segs(clone.out, rad, line.lwd, scale1, seg1.col, seg2.col);
 
 	if (!is.null(cluster.list)) {
-		add.pie.nodes(clone.out, rad, cluster.list)
-	} else {
-		add.node.ellipse(clone.out,rad, label.nodes, labe.cex, scale1)
-	    }
+	    message(paste(
+	        'Clustered pie nodes will be supported in a future version.',
+	        'Plain nodes will be used.'
+	        ));
+	    # TODO Implement pie nodes
+		# add.pie.nodes(clone.out, rad, cluster.list);
+    	}
+
+	add.node.ellipse(clone.out,rad, label.nodes, labe.cex, scale1);
 
 	if (add.normal == TRUE) {
 		add.normal(clone.out,rad,labe.cex, normal.cex)
