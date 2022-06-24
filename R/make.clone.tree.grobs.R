@@ -30,8 +30,6 @@ make.clone.tree.grobs <- function(
     yaxis2.interval,
     ylimit,
     xaxis.label,
-    xaxis.space.left,
-    xaxis.space.right,
     min.width,
     nodes,
     node.radius,
@@ -121,8 +119,6 @@ make.clone.tree.grobs <- function(
 	    scale1,
 	    wid,
 	    min.width,
-	    xaxis.space.left,
-	    xaxis.space.right,
 	    node.radius
 	    );
 
