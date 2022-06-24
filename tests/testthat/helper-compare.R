@@ -133,7 +133,7 @@ compare.trees <- function(example, test) {
             c(
                 getGrob(x, 'gene.text')$children,
                 list(getGrob(x, 'node.labels')),
-                getGrob(x, 'title.text')$children,
+                getGrob(x, 'main.text')$children,
                 sapply(
                     x$children[get.axis.keys(x)],
                     FUN = function(ax) {

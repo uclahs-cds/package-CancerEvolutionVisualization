@@ -22,10 +22,10 @@ create.test.tree <- function(tree, genes, sample, ...) {
         yaxis2.interval = 1000,
         spread = 1.1,
         xaxis.label = 'CP',
-        title = sample,
-        title.cex = 1.55,
-        title.y = 0.3,
-        title.y.units = 'inches',
+        main = sample,
+        main.cex = 1.55,
+        main.y = 0.3,
+        main.y.units = 'inches',
         ...
         );
 

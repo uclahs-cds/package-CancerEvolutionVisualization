@@ -40,10 +40,10 @@ make.clone.tree.grobs <- function(
     labe.cex,
     add.normal,
     normal.cex,
-    title,
-    title.cex,
-    title.y,
-    title.y.units,
+    main,
+    main.cex,
+    main.y,
+    main.y.units,
     ...
     ) {
 
@@ -171,7 +171,7 @@ make.clone.tree.grobs <- function(
 	        genes.df,
 	        label.nodes = genes.on.nodes,
 	        line.dist = gene.line.dist,
-	        title.y = clone.out$height,
+	        main.y = clone.out$height,
 	        panel.height = clone.out$height,
 	        panel.width = clone.out$width,
 	        xlims = clone.out$xlims,
@@ -188,8 +188,8 @@ make.clone.tree.grobs <- function(
 	    clone.out$grobs <- c(clone.out$grobs, list(gene.grobs));
 	    }
 
-	if (!is.null(title)) {
-		add.title(clone.out, title, title.cex, title.y, title.y.units);
+	if (!is.null(main)) {
+		add.main(clone.out, main, main.cex, main.y, main.y.units);
     	}
 
 	return(clone.out);

@@ -39,10 +39,10 @@ SRCGrob <- function(
     disable.polygons = FALSE,
     add.normal = FALSE,
     normal.cex = 1,
-    title = NULL,
-    title.cex = 1.7,
-    title.y = NULL,
-    title.y.units = 'npc'
+    main = NULL,
+    main.y = NULL,
+    main.cex = 1.7,
+    main.y.units = 'npc'
     ) {
     
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
@@ -98,10 +98,10 @@ SRCGrob <- function(
         cluster.list = cluster.list,
         add.normal = add.normal,
         normal.cex = normal.cex,
-        title = title,
-        title.cex = title.cex,
-        title.y = title.y,
-        title.y.units = title.y.units
+        main = main,
+        main.cex = main.cex,
+        main.y = main.y,
+        main.y.units = main.y.units
         );
 
     out.tree <- gTree(

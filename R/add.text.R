@@ -110,7 +110,7 @@ position.genes <- function(
     axis.type = axis.type,
     panel.height = NULL,
     panel.width = NULL,
-    title.y = NULL,
+    main.y = NULL,
     line.dist = line.dist,
     hjust = NULL,
     node.radius = node.radius,
@@ -141,7 +141,7 @@ position.genes <- function(
             #centre the height of all the text relative to the line
             while (
                 str.heightsum == 0 |
-                (label.bottom + str.heightsum) > (title.y + panel.height) |
+                (label.bottom + str.heightsum) > (main.y + panel.height) |
                 (label.nodes == FALSE &
                 (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + node.radius * 0.5))
             ) {
@@ -186,7 +186,7 @@ position.genes <- function(
                     }
 
                 if (
-                    (label.bottom + str.heightsum) > (title.y + panel.height) ||
+                    (label.bottom + str.heightsum) > (main.y + panel.height) ||
                     (!label.nodes && (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + node.radius * 0.5))
                 ) {
                     cex <- cex - 0.05;
@@ -296,7 +296,7 @@ position.genes <- function(
                                 axis.type = axis.type,
                                 panel.height = panel.height,
                                 panel.width = panel.width,
-                                title.y = title.y,
+                                main.y = main.y,
                                 line.dist = line.dist,
                                 cex = overlaps.axis,
                                 node.radius = node.radius,
@@ -437,7 +437,7 @@ position.genes <- function(
                                     axis.type = axis.type,
                                     panel.height = panel.height,
                                     panel.width = panel.width,
-                                    title.y = title.y,
+                                    main.y = main.y,
                                     line.dist = line.dist,
                                     cex = overlaps.axis,
                                     node.radius = node.radius,
@@ -474,7 +474,7 @@ add.text2 <- function(
     cex = 1,
     line.dist = 0.5,
     v = NULL,
-    title.y = NULL,
+    main.y = NULL,
     panel.height = NULL,
     panel.width = NULL,
     xlims = NULL,
@@ -614,7 +614,7 @@ add.text2 <- function(
         axis.type = axis.type,
         panel.height = panel.height,
         panel.width = panel.width,
-        title.y = title.y,
+        main.y = main.y,
         line.dist = line.dist,
         cex = cex,
         node.radius = node.radius,
