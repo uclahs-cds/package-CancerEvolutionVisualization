@@ -119,5 +119,5 @@ SRCGrob <- function(
         cl = 'SRCGrob'
         );
 
-    return(list(out.tree, clone.out));
+    return(out.tree);
     }

@@ -26,5 +26,5 @@ create.test.tree <- function(tree, genes, sample, ...) {
         ...
         );
 
-    return(out[[1]]);
+    return(out);
     }
