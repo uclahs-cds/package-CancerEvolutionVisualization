@@ -37,13 +37,13 @@ SRCGrob <- function(
     sig.shape = 3,
     label.nodes = TRUE,
     disable.polygons = FALSE,
-    genes.on.nodes = FALSE,
     length.from.node.edge = TRUE,
     size.units = 'npc'
     ) {
 
     add.genes <- !is.null(genes);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
+    genes.on.nodes <- FALSE;
 
     yaxis.position <- if (is.null(yaxis2.label)) 'left' else {
         if (!is.null(yaxis1.label)) 'both' else 'right';
