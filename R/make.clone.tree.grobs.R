@@ -40,7 +40,7 @@ make.clone.tree.grobs <- function(
     main,
     main.cex,
     main.y,
-    main.y.units,
+    size.units,
     ...
     ) {
 
@@ -183,7 +183,7 @@ make.clone.tree.grobs <- function(
 	    }
 
 	if (!is.null(main)) {
-		add.main(clone.out, main, main.cex, main.y, main.y.units);
+		add.main(clone.out, main, main.cex, main.y, size.units);
     	}
 
 	return(clone.out);

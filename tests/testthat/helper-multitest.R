@@ -22,7 +22,7 @@ create.test.tree <- function(tree, genes, sample, ...) {
         main = sample,
         main.cex = 1.55,
         main.y = 0.3,
-        main.y.units = 'inches',
+        size.units = 'inches',
         ...
         );
 

@@ -360,14 +360,14 @@ add.main <- function(
     main,
     main.cex,
     main.y = NULL,
-    main.y.units = 'npc'
+    size.units = 'npc'
     ) {
 
 	y.pos <- unit(1.08,'npc');
 
 	if (!is.null(main.y)) {
 		pushViewport(clone.out$vp);
-		plot.top <- convertY(unit(1,'npc'), main.y.units, valueOnly = TRUE);
+		plot.top <- convertY(unit(1,'npc'), size.units, valueOnly = TRUE);
 		popViewport();
 		y.pos <- plot.top + main.y;
 		}
@@ -391,7 +391,7 @@ add.main <- function(
 	            just = c('centre', 'centre')
 	            ),
 	        viewport(
-	            y = unit(y.pos, main.y.units),
+	            y = unit(y.pos, size.units),
 	            x = unit(0, 'native'),
 	            height = grobHeight(main.label),
 	            width = grobWidth(main.label),

@@ -40,7 +40,7 @@ SRCGrob <- function(
     main = NULL,
     main.y = NULL,
     main.cex = 1.7,
-    main.y.units = 'npc'
+    size.units = 'npc'
     ) {
 
     add.genes <- !is.null(genes);
@@ -107,7 +107,7 @@ SRCGrob <- function(
         main = main,
         main.cex = main.cex,
         main.y = main.y,
-        main.y.units = main.y.units
+        size.units = size.units
         );
 
     out.tree <- gTree(
