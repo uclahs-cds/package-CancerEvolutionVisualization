@@ -21,8 +21,10 @@ SRCGrob <- function(
     yaxis.position = 'left',
     yaxis1.label = 'SNVs',
     yaxis2.label = NULL,
-    axis.label.cex = list(x = 1.55, y = 1.55),
-    axis.cex = list(x = 1.45, y = 1.45),
+    xlab.cex = 1.55,
+    ylab.cex = 1.55,
+    xaxis.cex = 1.45,
+    yaxis.cex = 1.45,
     yaxis1.interval = NA,
     yaxis2.interval = NA,
     ylimit = NULL,
@@ -56,6 +58,16 @@ SRCGrob <- function(
 
     fixed.angle <- pi / 6;
     min.width <- get.plot.width(horizontal.padding);
+
+    axis.cex = list(
+        x = xaxis.cex,
+        y = yaxis.cex
+        );
+
+    axis.label.cex = list(
+        x = xlab.cex,
+        y = ylab.cex
+        );
 
     clone.out <- make.clone.tree.grobs(
         ccf.df = inputs$in.tree.df,
