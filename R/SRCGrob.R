@@ -59,12 +59,12 @@ SRCGrob <- function(
     fixed.angle <- pi / 6;
     min.width <- get.plot.width(horizontal.padding);
 
-    axis.cex = list(
+    axis.cex <- list(
         x = xaxis.cex,
         y = yaxis.cex
         );
 
-    axis.label.cex = list(
+    axis.label.cex <- list(
         x = xlab.cex,
         y = ylab.cex
         );
