@@ -14,7 +14,6 @@ SRCGrob <- function(
     yaxis.cex = 1.45,
     yaxis1.interval = NA,
     yaxis2.interval = NA,
-    yaxis.position = 'left',
     ylimit = NULL,
     xaxis.label = NULL,
     label.cex = NA,
@@ -45,6 +44,10 @@ SRCGrob <- function(
 
     add.genes <- !is.null(genes);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
+
+    yaxis.position <- if (is.null(yaxis2.label)) 'left' else {
+        if (!is.null(yaxis1.label)) 'both' else 'right';
+        };
 
     inputs <- prep.tree(
         tree,
