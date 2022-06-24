@@ -9,7 +9,6 @@ test_that(
                 linear.test.data$genes,
                 sample = sample,
                 add.normal = TRUE,
-                add.genes = TRUE,
                 yaxis.position = 'both'
                 )
             ));

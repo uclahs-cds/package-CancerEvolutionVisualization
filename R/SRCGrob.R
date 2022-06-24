@@ -15,7 +15,6 @@ SRCGrob <- function(
     gene.line.dist = 0.1,
     colour.scheme = colours,
     gene.cex = 0.85,
-    add.genes = FALSE,
     genes.on.nodes = FALSE,
     yaxis.position = 'left',
     yaxis1.label = 'SNVs',
@@ -43,9 +42,10 @@ SRCGrob <- function(
     main.cex = 1.7,
     main.y.units = 'npc'
     ) {
-    
+
+    add.genes <- !is.null(genes);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
-    
+
     inputs <- prep.tree(
         tree,
         genes,
