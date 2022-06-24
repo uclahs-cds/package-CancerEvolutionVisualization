@@ -30,8 +30,7 @@ SRCGrob <- function(
     xaxis.label = NULL,
     xaxis.space.left = 0,
     xaxis.space.right = 0,
-    min.width = NULL,
-    w.padding = NULL,
+    horizontal.padding = 0.1,
     nodes = 'circle',
     rad = 0.1,
     label.nodes = TRUE,
@@ -43,19 +42,18 @@ SRCGrob <- function(
     title = NULL,
     title.cex = 1.7,
     title.y = NULL,
-    title.y.units = 'npc',
-    ...
+    title.y.units = 'npc'
     ) {
     inputs <- prep.tree(
         tree,
         genes,
         add.polygons,
         yaxis.position,
-        w.padding,
         colour.scheme
         );
 
     fixed.angle <- pi / 6;
+    min.width <- get.plot.width(horizontal.padding);
 
     clone.out <- make.clone.tree.grobs(
         ccf.df = inputs$in.tree.df,
@@ -101,8 +99,7 @@ SRCGrob <- function(
         title = title,
         title.cex = title.cex,
         title.y = title.y,
-        title.y.units = title.y.units,
-        ...
+        title.y.units = title.y.units
         );
 
     out.tree <- gTree(
