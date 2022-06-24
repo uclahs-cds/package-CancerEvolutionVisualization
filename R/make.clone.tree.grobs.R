@@ -37,7 +37,7 @@ make.clone.tree.grobs <- function(
     node.radius,
     label.nodes,
     node.col,
-    labe.cex,
+    label.cex,
     add.normal,
     normal.cex,
     main,
@@ -141,10 +141,10 @@ make.clone.tree.grobs <- function(
 		# add.pie.nodes(clone.out, node.radius, cluster.list);
     	}
 
-	add.node.ellipse(clone.out,node.radius, label.nodes, labe.cex, scale1);
+	add.node.ellipse(clone.out,node.radius, label.nodes, label.cex, scale1);
 
 	if (add.normal == TRUE) {
-		add.normal(clone.out,node.radius,labe.cex, normal.cex)
+		add.normal(clone.out,node.radius,label.cex, normal.cex)
 	    }
 
 	if (yaxis.position != 'none' ) {
