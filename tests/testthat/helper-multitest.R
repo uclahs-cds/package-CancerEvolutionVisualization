@@ -12,7 +12,6 @@ create.test.tree <- function(tree, genes, sample, ...) {
         seg1.col = 'navy',
         seg2.col = 'gold',
         node.col = 'grey40',
-        sig.curve = 3,
         line.lwd = 4,
         yaxis1.interval = 10,
         yaxis1.label = 'PGA',

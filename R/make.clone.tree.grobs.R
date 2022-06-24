@@ -13,7 +13,6 @@ make.clone.tree.grobs <- function(
     add.polygons,
     extra.len,
     sig.shape,
-    sig.curve,
     spread,
     fixed.angle,
     add.genes,
@@ -108,7 +107,6 @@ make.clone.tree.grobs <- function(
 	    spread = spread,
 	    sig.shape = sig.shape,
 	    fixed.angle = fixed.angle,
-	    beta.in = sig.curve,
 	    add.polygons = add.polygons,
 	    no.ccf = no.ccf
 	    );
