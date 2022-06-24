@@ -1,9 +1,25 @@
-CancerEvolutionVisualization 0.5.0 2022-05-23 (Dan Knight)
+CancerEvolutionVisualization 0.5.0 2022-06-24 (Dan Knight)
 
 UPDATE
 * Automatically sets the branch angle to pi / 6
-* Removes the fixed_angle argument (to be replaced by an angle column
+* Infers whether to draw polygons based on existence and changed
+  parameter to optionally disable polygons
+* Infers whether to add gene text based on presence of gene dataframe
+* Changed "title" parameter names to "main"
+* Separated axis parameters by X/Y axis instead of accepting a list
+* Renamed "rad" parameter to "node.radius"
+* Made tree input required
+* Changed title unit type to a generic "unit.type" parameter to apply
+  to any other position parameters that might be added
+* Infers Y axis position based on the labels that are provided
+
+REMOVED
+* Removed the fixed_angle argument (to be replaced by an angle column
   in the tree input data.frame)
+* Removed add.genes parameter
+* Removed unused sig.curve parameter
+* Disconnected pie node functionality
+* Removed y.axis.position parameter
 
 
 --------------------------------------------------------------------------
