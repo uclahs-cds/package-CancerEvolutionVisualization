@@ -30,7 +30,7 @@ make.clone.tree.grobs <- function(
     ylimit,
     xaxis.label,
     min.width,
-    nodes,
+    draw.nodes,
     node.radius,
     label.nodes,
     node.col,
@@ -90,8 +90,8 @@ make.clone.tree.grobs <- function(
 	    tree$length <- tree$length1;
 	    }
 
-	if (nodes != 'none' && length.from.node.edge == TRUE) {
-	    tree <- adjust.branch.lengths(v,tree,node.radius, scale1);
+	if (draw.nodes != 'none' && length.from.node.edge == TRUE) {
+	    tree <- adjust.branch.lengths(v, tree, node.radius, scale1);
     	}
 
 	extra.len <- extra.len * (1 / scale1);
@@ -134,14 +134,16 @@ make.clone.tree.grobs <- function(
 	    # TODO Implement pie nodes
 		# add.pie.nodes(clone.out, node.radius, cluster.list);
     	}
-
-	add.node.ellipse(clone.out,node.radius, label.nodes, label.cex, scale1);
+    
+	if (draw.nodes) {
+	    add.node.ellipse(clone.out,node.radius, label.nodes, label.cex, scale1);
+	    }
 
 	if (add.normal == TRUE) {
 		add.normal(clone.out,node.radius,label.cex, normal.cex)
 	    }
 
-	if (yaxis.position != 'none' ) {
+	if (yaxis.position != 'none') {
 		add.axes(
 		    clone.out,
 		    yaxis.position,
