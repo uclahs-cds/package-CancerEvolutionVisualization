@@ -12,6 +12,8 @@ UPDATE
 * Changed title unit type to a generic "unit.type" parameter to apply
   to any other position parameters that might be added
 * Infers Y axis position based on the labels that are provided
+* Changed "nodes" parameter to boolean "draw.nodes" to enable/disable
+  node circles
 
 REMOVED
 * Removed the fixed_angle argument (to be replaced by an angle column
