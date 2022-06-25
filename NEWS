@@ -20,6 +20,7 @@ REMOVED
 * Removed unused sig.curve parameter
 * Disconnected pie node functionality
 * Removed y.axis.position parameter
+* Disabled genes.on.nodes mode
 
 
 --------------------------------------------------------------------------
