@@ -1,53 +1,57 @@
 SRCGrob <- function(
-    tree = NULL,
+    tree,
     genes = NULL,
     filename = 'SRC_tree.pdf',
+    main = NULL,
+    horizontal.padding = 0.1,
     scale1 = 0.05443424,
     scale2 = 0.5 / 362,
-    wid = 1.2,
-    line.lwd = 3,
-    length.from.node.edge = TRUE,
-    seg1.col = 'black',
-    seg2.col = 'green',
-    add.polygons = TRUE,
-    extra.len = 10,
-    sig.shape = 3,
-    sig.curve = 3,
-    spread = 1,
-    gene.line.dist = 0.1,
-    colour.scheme = colours,
-    gene.cex = 0.85,
-    add.genes = FALSE,
-    genes.on.nodes = FALSE,
-    yaxis.position = 'left',
     yaxis1.label = 'SNVs',
     yaxis2.label = NULL,
-    axis.label.cex = list(x = 1.55, y = 1.55),
-    axis.cex = list(x = 1.45, y = 1.45),
+    xlab.cex = 1.55,
+    ylab.cex = 1.55,
+    xaxis.cex = 1.45,
+    yaxis.cex = 1.45,
     yaxis1.interval = NA,
     yaxis2.interval = NA,
     ylimit = NULL,
     xaxis.label = NULL,
-    xaxis.space.left = 0,
-    xaxis.space.right = 0,
-    horizontal.padding = 0.1,
+    label.cex = NA,
+    gene.cex = 0.85,
+    main.y = NULL,
+    main.cex = 1.7,
     nodes = 'circle',
-    rad = 0.1,
-    label.nodes = TRUE,
+    node.radius = 0.1,
     node.col = 'grey29',
-    labe.cex = NA,
+    seg1.col = 'black',
+    seg2.col = 'green',
+    wid = 1.2,
+    line.lwd = 3,
+    extra.len = 10,
+    spread = 1,
+    gene.line.dist = 0.1,
+    colour.scheme = colours,
     cluster.list = NULL,
     add.normal = FALSE,
     normal.cex = 1,
-    title = NULL,
-    title.cex = 1.7,
-    title.y = NULL,
-    title.y.units = 'npc'
+    sig.shape = 3,
+    label.nodes = TRUE,
+    disable.polygons = FALSE,
+    genes.on.nodes = FALSE,
+    length.from.node.edge = TRUE,
+    size.units = 'npc'
     ) {
+
+    add.genes <- !is.null(genes);
+    add.polygons <- !is.null(tree$CP) && !disable.polygons;
+
+    yaxis.position <- if (is.null(yaxis2.label)) 'left' else {
+        if (!is.null(yaxis1.label)) 'both' else 'right';
+        };
+
     inputs <- prep.tree(
         tree,
         genes,
-        add.polygons,
         yaxis.position,
         colour.scheme
         );
@@ -55,11 +59,21 @@ SRCGrob <- function(
     fixed.angle <- pi / 6;
     min.width <- get.plot.width(horizontal.padding);
 
+    axis.cex <- list(
+        x = xaxis.cex,
+        y = yaxis.cex
+        );
+
+    axis.label.cex <- list(
+        x = xlab.cex,
+        y = ylab.cex
+        );
+
     clone.out <- make.clone.tree.grobs(
         ccf.df = inputs$in.tree.df,
         tree = inputs$tree,
         genes.df = inputs$genes.df,
-        rad = rad,
+        node.radius = node.radius,
         scale1 = scale1,
         scale2 = scale2,
         wid = wid,
@@ -70,7 +84,6 @@ SRCGrob <- function(
         add.polygons = add.polygons,
         extra.len = extra.len,
         sig.shape = sig.shape,
-        sig.curve = sig.curve,
         spread = spread,
         fixed.angle = fixed.angle,
         add.genes = add.genes,
@@ -86,20 +99,18 @@ SRCGrob <- function(
         yaxis2.interval = yaxis2.interval,
         ylimit = ylimit,
         xaxis.label = xaxis.label,
-        xaxis.space.left = xaxis.space.left,
-        xaxis.space.right = xaxis.space.right,
         min.width = min.width,
         nodes = nodes,
         label.nodes = label.nodes,
         node.col = node.col,
-        labe.cex = labe.cex,
+        label.cex = label.cex,
         cluster.list = cluster.list,
         add.normal = add.normal,
         normal.cex = normal.cex,
-        title = title,
-        title.cex = title.cex,
-        title.y = title.y,
-        title.y.units = title.y.units
+        main = main,
+        main.cex = main.cex,
+        main.y = main.y,
+        size.units = size.units
         );
 
     out.tree <- gTree(

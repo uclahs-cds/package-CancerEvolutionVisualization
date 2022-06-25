@@ -39,7 +39,7 @@ axis.overlap <- function(
     return(overlaps);
     }
 
-check.overlap <- function(xpos, ypos, gene, tree.max.adjusted, hjust,rad) {
+check.overlap <- function(xpos, ypos, gene, tree.max.adjusted, hjust,node.radius) {
     # function checks if the gene label will cross over any of the branch lines
     if (hjust == 'centre') {
         left <- xpos - as.numeric(convertX(stringWidth(gene), 'in')) / 2;
@@ -59,10 +59,10 @@ check.overlap <- function(xpos, ypos, gene, tree.max.adjusted, hjust,rad) {
         .margins = 1,
         .fun = function(w) {
             data.frame(
-                y0 = (w$y + rad),
-                y1 = (w$y - rad),
-                x0 = (w$x - rad),
-                x1 = (w$x + rad)
+                y0 = (w$y + node.radius),
+                y1 = (w$y - node.radius),
+                x0 = (w$x - node.radius),
+                x1 = (w$x + node.radius)
                 );
             }
         );
@@ -110,10 +110,10 @@ position.genes <- function(
     axis.type = axis.type,
     panel.height = NULL,
     panel.width = NULL,
-    title.y = NULL,
+    main.y = NULL,
     line.dist = line.dist,
     hjust = NULL,
-    rad = rad,
+    node.radius = node.radius,
     alternating = FALSE,
     split = FALSE,
     label.nodes = FALSE,
@@ -141,11 +141,11 @@ position.genes <- function(
             #centre the height of all the text relative to the line
             while (
                 str.heightsum == 0 |
-                (label.bottom + str.heightsum) > (title.y + panel.height) |
+                (label.bottom + str.heightsum) > (main.y + panel.height) |
                 (label.nodes == FALSE &
-                (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + rad * 0.5))
+                (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + node.radius * 0.5))
             ) {
-                if ((label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + rad * 0.5) & length(gene.list[[s]]) > 1) {
+                if ((label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + node.radius * 0.5) & length(gene.list[[s]]) > 1) {
                     split.genes <- TRUE;
                     }
 
@@ -178,16 +178,16 @@ position.genes <- function(
                         vjust <- 'bottom';
                         }
 
-                    if (s == 1 & ((str.heightsum - y.height) > rad) & !is.null(rad) & !is.null(scale)) {
-                        label.bottom <- tree.max.adjusted$y1[s] - rad;
+                    if (s == 1 & ((str.heightsum - y.height) > node.radius) & !is.null(node.radius) & !is.null(scale)) {
+                        label.bottom <- tree.max.adjusted$y1[s] - node.radius;
                         }
                 } else {
                     label.bottom <- tree.max.adjusted$y[s] - 0.5 * str.heightsum;
                     }
 
                 if (
-                    (label.bottom + str.heightsum) > (title.y + panel.height) ||
-                    (!label.nodes && (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + rad * 0.5))
+                    (label.bottom + str.heightsum) > (main.y + panel.height) ||
+                    (!label.nodes && (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + node.radius * 0.5))
                 ) {
                     cex <- cex - 0.05;
                     }
@@ -204,7 +204,7 @@ position.genes <- function(
                 if (label.nodes) {
                     ypos <- tree.max.adjusted$y[s];
                     xpos <- tree.max.adjusted$x[s];
-                    xline.dist <- line.dist + rad;
+                    xline.dist <- line.dist + node.radius;
                     vjust <- 'center';
                 } else {
                     ypos <- label.bottom + (g - 1) * spacing + heights - spacing;
@@ -296,10 +296,10 @@ position.genes <- function(
                                 axis.type = axis.type,
                                 panel.height = panel.height,
                                 panel.width = panel.width,
-                                title.y = title.y,
+                                main.y = main.y,
                                 line.dist = line.dist,
                                 cex = overlaps.axis,
-                                rad = rad,
+                                node.radius = node.radius,
                                 alternating = alternating,
                                 split = split,
                                 label.nodes = label.nodes
@@ -329,8 +329,8 @@ position.genes <- function(
                                 xline.dist <- abs(xline.dist);
                                 }
 
-                            if ((max(children$y) + rad) > label.bottom) {
-                                ypos <- ypos + rad;
+                            if ((max(children$y) + node.radius) > label.bottom) {
+                                ypos <- ypos + node.radius;
                                 }
 
                             hjust <- ifelse(xline.dist > 0, 'left', 'right');
@@ -359,7 +359,7 @@ position.genes <- function(
                                     'in'
                                     ));
 
-                                ypos <- node$y - (text.height * 0.8 + rad) * cos(node$angle);
+                                ypos <- node$y - (text.height * 0.8 + node.radius) * cos(node$angle);
                                 xpos <- node$x + (text.width * 0.25) * sin(node$angle);
                                 xline.dist <- 0;
                                 }
@@ -369,10 +369,10 @@ position.genes <- function(
                     if (
                         label.nodes &&
                         tree.max.adjusted$parent[s] %in% tree.max.adjusted$tip &&
-                        ((tree.max.adjusted[which(tree.max.adjusted$tip == tree.max.adjusted$parent[s]), ]$y - tree.max.adjusted$y[s]) < rad)
+                        ((tree.max.adjusted[which(tree.max.adjusted$tip == tree.max.adjusted$parent[s]), ]$y - tree.max.adjusted$y[s]) < node.radius)
                     ) {
                         if (tree.max.adjusted$tip[s] %in% tree.max.adjusted$parent) {
-                            ypos <- tree.max.adjusted$y[s] + 1 * rad + abs(xline.dist);
+                            ypos <- tree.max.adjusted$y[s] + 1 * node.radius + abs(xline.dist);
                             xline.dist <- 0;
                             hjust <- 'centre';
                             cex <- orig.cex;
@@ -395,7 +395,7 @@ position.genes <- function(
                             gene.list[[s]][g],
                             tree.max.adjusted,
                             hjust,
-                            rad
+                            node.radius
                             );
 
                         if (length(unlist(overlap)) > 0) {
@@ -406,7 +406,7 @@ position.genes <- function(
                                 gene.list[[s]][g],
                                 tree.max.adjusted,
                                 hjust,
-                                rad
+                                node.radius
                                 );
 
                             if (length(unlist(overlap)) > 0) {
@@ -437,10 +437,10 @@ position.genes <- function(
                                     axis.type = axis.type,
                                     panel.height = panel.height,
                                     panel.width = panel.width,
-                                    title.y = title.y,
+                                    main.y = main.y,
                                     line.dist = line.dist,
                                     cex = overlaps.axis,
-                                    rad = rad,
+                                    node.radius = node.radius,
                                     alternating = alternating,
                                     split = split,
                                     label.nodes = label.nodes
@@ -474,21 +474,21 @@ add.text2 <- function(
     cex = 1,
     line.dist = 0.5,
     v = NULL,
-    title.y = NULL,
+    main.y = NULL,
     panel.height = NULL,
     panel.width = NULL,
     xlims = NULL,
     ymax = ymax,
     axis.type = NULL,
     scale = NULL,
-    rad = NULL,
+    node.radius = NULL,
     alternating = TRUE,
     split = TRUE,
     clone.out = NULL
     ) {
 
-    #radius in native units
-    radn <- rad / scale;
+    #node.radiusius in native units
+    node.radiusn <- node.radius / scale;
     genes <- genes[genes$node %in% tree$tip, ];
     gene.list <- alply(
         seq_len(nrow(tree)),
@@ -562,18 +562,18 @@ add.text2 <- function(
                 #straight line
                 basex <- x$basex;
                 tipx <- x$tipx;
-                basey <- x$basey + radn;
-                tipy <- x$tipy - radn;
+                basey <- x$basey + node.radiusn;
+                tipy <- x$tipy - node.radiusn;
             } else if (x$tipx > x$basex) {
-                basey <- x$basey + radn * cos(x$angle);
-                tipy <- x$tipy - radn * cos(x$angle);
-                basex <- x$basex + radn * sin(x$angle);
-                tipx <- x$tipx - radn * sin(x$angle);
+                basey <- x$basey + node.radiusn * cos(x$angle);
+                tipy <- x$tipy - node.radiusn * cos(x$angle);
+                basex <- x$basex + node.radiusn * sin(x$angle);
+                tipx <- x$tipx - node.radiusn * sin(x$angle);
             } else if (x$tipx < x$basex) {
-                basey <- x$basey + radn * cos(x$angle);
-                tipy <- x$tipy - radn * cos(x$angle);
-                basex <- x$basex + radn * sin(x$angle);
-                tipx <- x$tipx - radn * sin(x$angle);
+                basey <- x$basey + node.radiusn * cos(x$angle);
+                tipy <- x$tipy - node.radiusn * cos(x$angle);
+                basex <- x$basex + node.radiusn * sin(x$angle);
+                tipx <- x$tipx - node.radiusn * sin(x$angle);
                 }
             if (x$parent == -1) {
                 basex <- basey <- 0;
@@ -614,10 +614,10 @@ add.text2 <- function(
         axis.type = axis.type,
         panel.height = panel.height,
         panel.width = panel.width,
-        title.y = title.y,
+        main.y = main.y,
         line.dist = line.dist,
         cex = cex,
-        rad = rad,
+        node.radius = node.radius,
         alternating = alternating,
         split = split,
         label.nodes = label.nodes

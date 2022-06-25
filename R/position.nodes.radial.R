@@ -33,7 +33,7 @@ assign.weight <- function(node,v, extra.len, spread) {
 	return(node.weight);
     }
 
-position.nodes.radial <- function(v, tree, extra.len, spread = 1) {
+position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 	w <- spread * pi;
 	xpos <- ypos <- 0;
 	tau <- -(pi / 2.5);

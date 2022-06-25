@@ -2,7 +2,7 @@ add.segs3 <- function(
     tree,
     v,
     offset = 0,
-    rad = 0,
+    node.radius = 0,
     scale.x.real = NULL
     ) {
 
@@ -98,7 +98,7 @@ get.seg.coords <- function(
     tree,
     v,
     offset = 0,
-    rad = 0,
+    node.radius = 0,
     scale1 = NULL
     ) {
 
@@ -193,7 +193,7 @@ get.seg.coords <- function(
 
 add.tree.segs <- function(
     clone.out,
-    rad,
+    node.radius,
     line.lwd,
     scale1,
     seg1.col,
@@ -206,7 +206,7 @@ add.tree.segs <- function(
         offset <- 0
         }
 
-    tree.out <- get.seg.coords(clone.out$tree, clone.out$v, offset, rad, scale1);
+    tree.out <- get.seg.coords(clone.out$tree, clone.out$v, offset, node.radius, scale1);
 
     tree.segs1 <- tree.out[[1]];
     tree.segs2 <- tree.out[[2]];

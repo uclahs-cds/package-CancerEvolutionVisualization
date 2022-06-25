@@ -333,7 +333,7 @@ compute.clones <- function(
 
 	if (no.ccf && (is.null(fixed.angle) && nrow(v) > 6) || any(table(v$parent) > 2)) {
 		v <- count.leaves.per.node(v);
-		tmp <-  position.nodes.radial(v, tree, extra.len, spread);
+		tmp <-  position.nodes.node.radiusial(v, tree, extra.len, spread);
 		clone.env <-  new.env(parent = emptyenv());
 		clone.env$v <- tmp$v;
 		clone.env$tree <- tmp$tree;

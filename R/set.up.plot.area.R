@@ -12,9 +12,7 @@ calculate.main.plot.size <- function(
     scale1,
     wid,
     min.width,
-    xaxis.space.left,
-    xaxis.space.right,
-    rad
+    node.radius
     ) {
 
 	ymax <- max(clone.out$v$len) + clone.out$v$y[1];
@@ -22,18 +20,15 @@ calculate.main.plot.size <- function(
 
     if (is.null(min.width)) {
         xmax <- wid;
-        width <- wid * scale1 + xaxis.space.left + xaxis.space.right + 4 * rad;
+        width <- wid * scale1 + 4 * node.radius;
         xlims <- c(
-            -(xmax / 2) - (xaxis.space.left / scale1 + 2 * rad / scale1),
-            xmax / 2 + xaxis.space.right / scale1 + 2 * rad / scale1
+            -(xmax / 2) - (2 * node.radius / scale1),
+            xmax / 2 + 2 * node.radius / scale1
             );
     } else {
         xmin <- min(c(clone.out$v$x));
         xmax <- max(c(clone.out$v$x));
-        xlims <- c(
-            xmin - xaxis.space.left / scale1,
-            xmax + xaxis.space.right / scale1
-            );
+        xlims <- c(xmin, xmax);
 
         width <- (max(xlims) - min(xlims)) * scale1;
         diff <- min.width - width;
@@ -42,8 +37,8 @@ calculate.main.plot.size <- function(
             xmin <- xmin - 0.5 * diff / scale1
             xmax <- xmax + 0.5 * diff / scale1;
             xlims <- c(
-                xmin - (xaxis.space.left / scale1 + 2 * rad / scale1),
-                xmax + xaxis.space.right / scale1 + 2 * rad / scale1
+                xmin - (2 * node.radius / scale1),
+                xmax + 2 * node.radius / scale1
                 );
 
             width <- (max(xlims) - min(xlims)) * scale1;
@@ -360,35 +355,35 @@ add.xaxis <- function(
 	clone.out$grobs <- c(clone.out$grobs, list(xaxis.gTree));
     }
 
-add.title <- function(
+add.main <- function(
     clone.out,
-    title,
-    title.cex,
-    title.y = NULL,
-    title.y.units = 'npc'
+    main,
+    main.cex,
+    main.y = NULL,
+    size.units = 'npc'
     ) {
 
 	y.pos <- unit(1.08,'npc');
 
-	if (!is.null(title.y)) {
+	if (!is.null(main.y)) {
 		pushViewport(clone.out$vp);
-		plot.top <- convertY(unit(1,'npc'), title.y.units, valueOnly = TRUE);
+		plot.top <- convertY(unit(1,'npc'), size.units, valueOnly = TRUE);
 		popViewport();
-		y.pos <- plot.top + title.y;
+		y.pos <- plot.top + main.y;
 		}
 
-	title.label <- textGrob(
-	    title,
+	main.label <- textGrob(
+	    main,
 	    just = 'center',
 	    gp = gpar(
 	        col = 'black',
-	        cex = title.cex
+	        cex = main.cex
 	        ));
 
-	title.grob <- gTree(
-	    children = gList(title.label),
-	    name = 'title.gtree',
-	    cl = 'title.label',
+	main.grob <- gTree(
+	    children = gList(main.label),
+	    name = 'main.gtree',
+	    cl = 'main.label',
 	    vp = vpStack(
 	        make.plot.viewport(
 	            clone.out,
@@ -396,14 +391,14 @@ add.title <- function(
 	            just = c('centre', 'centre')
 	            ),
 	        viewport(
-	            y = unit(y.pos, title.y.units),
+	            y = unit(y.pos, size.units),
 	            x = unit(0, 'native'),
-	            height = grobHeight(title.label),
-	            width = grobWidth(title.label),
+	            height = grobHeight(main.label),
+	            width = grobWidth(main.label),
 	            just = c('centre', 'bottom')
 	            )
 	        )
 	    );
 
-	clone.out$grobs <- c(clone.out$grobs, list(title.grob));
+	clone.out$grobs <- c(clone.out$grobs, list(main.grob));
     }
