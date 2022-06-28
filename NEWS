@@ -1,3 +1,10 @@
+CancerEvolutionVisualization 0.6.0 2022-06-24 (Dan Knight)
+
+UPDATE
+* Changed output format to only return the tree grob itself
+  (no longer including intermediate values)
+
+
 CancerEvolutionVisualization 0.5.0 2022-06-24 (Dan Knight)
 
 UPDATE
