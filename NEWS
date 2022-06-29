@@ -1,3 +1,13 @@
+CancerEvolutionVisualization 0.7.0 2022-06-28 (Dan Knight)
+
+UPDATE
+* Added yat parameter to allow specific Y axis tick values
+
+REMOVED
+* Removed yaxis.interval parameters (replaced with yat) 
+
+
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 0.6.0 2022-06-24 (Dan Knight)
 
 UPDATE
@@ -5,6 +15,7 @@ UPDATE
   (no longer including intermediate values)
 
 
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 0.5.0 2022-06-24 (Dan Knight)
 
 UPDATE
