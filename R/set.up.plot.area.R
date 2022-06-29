@@ -156,6 +156,7 @@ add.axes <- function(
     scale1,
     scale2 = NULL,
     yaxis.position = 'left',
+    yat,
     xaxis.label = 'CCF',
     yaxis1.label = 'PGA',
     yaxis2.label = NULL,
@@ -164,8 +165,6 @@ add.axes <- function(
     no.ccf = FALSE,
     axis.label.cex = list(x = 1.55, y = 1.55),
     axis.cex = list(x = 1, y = 1),
-    ylabels1 = NULL,
-    ylabels2 = NULL,
     ylimit = NULL
     ) {
 
@@ -180,6 +179,9 @@ add.axes <- function(
 		    );
 	    }
 
+    ylabels1 <- unlist(yat[1]);
+    ylabels2 <- unlist(yat[2]);
+    
     if (yaxis.position == 'both') {
 		if (is.null(yaxis2.label)) {
 			warning('Missing second y-axis label');

@@ -6,6 +6,7 @@ SRCGrob <- function(
     horizontal.padding = 0.1,
     scale1 = 0.05443424,
     scale2 = 0.5 / 362,
+    yat = NULL,
     yaxis1.label = 'SNVs',
     yaxis2.label = NULL,
     xlab.cex = 1.55,
@@ -44,6 +45,8 @@ SRCGrob <- function(
     add.genes <- !is.null(genes);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
     genes.on.nodes <- FALSE;
+    
+    yat <- prep.yat(yat);
 
     yaxis.position <- if (is.null(yaxis2.label)) 'left' else {
         if (!is.null(yaxis1.label)) 'both' else 'right';
@@ -76,6 +79,7 @@ SRCGrob <- function(
         node.radius = node.radius,
         scale1 = scale1,
         scale2 = scale2,
+        yat = yat,
         wid = wid,
         line.lwd = line.lwd,
         length.from.node.edge = length.from.node.edge,
