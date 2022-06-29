@@ -134,7 +134,7 @@ make.clone.tree.grobs <- function(
 	    # TODO Implement pie nodes
 		# add.pie.nodes(clone.out, node.radius, cluster.list);
     	}
-    
+
 	if (draw.nodes) {
 	    add.node.ellipse(clone.out,node.radius, label.nodes, label.cex, scale1);
 	    }
