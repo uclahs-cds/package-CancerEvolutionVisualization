@@ -253,28 +253,20 @@ add.yaxis <- function(
 
     # Set up tick labels
 	if (is.null(ylabels)) {
-		if (!is.na(yaxis1.interval)) {
-			ylabels <- seq(0, ymax * conversion.factor, by = yaxis1.interval);
+		ylabels <- get.default.yat(ymax, conversion.factor);
+	    }
 
-			if (no.ccf && max(ylabels) < ymax) {
-				ylabels <- c(ylabels, max(ylabels) + yaxis1.interval);
-			    }
-	    } else {
-		    ylabels <- pretty(seq(0, ymax * conversion.factor));
-	        }
-        }
-
-	yat <- ylabels / conversion.factor;
+	y.ticks.at <- ylabels / conversion.factor;
 
 	yaxis1 <- yaxisGrob(
 	    name = 'axis.content',
-	    at = yat,
+	    at = y.ticks.at,
 	    label = ylabels,
 	    gp = gpar(cex = axis.cex),
 	    main = yaxis.position == 'left'
 	    );
 
-    if (max(yat) / conversion.factor != ymax && !no.ccf) {
+    if (max(y.ticks.at) / conversion.factor != ymax && !no.ccf) {
         # Extend the axis line beyond the last tick
 	    yaxis1 <- extend.axis(
 	        yaxis1,
