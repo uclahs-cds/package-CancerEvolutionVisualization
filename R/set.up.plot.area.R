@@ -181,7 +181,7 @@ add.axes <- function(
 
     ylabels1 <- unlist(yat[1]);
     ylabels2 <- unlist(yat[2]);
-    
+
     if (yaxis.position == 'both') {
 		if (is.null(yaxis2.label)) {
 			warning('Missing second y-axis label');

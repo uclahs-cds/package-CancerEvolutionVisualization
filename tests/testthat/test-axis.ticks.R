@@ -8,7 +8,7 @@ test_that('prep.yat handles valid yat', {
 test_that('prep.yat handles NULL input', {
     result.yat <- prep.yat(NULL);
     expected.result <- list();
-    
+
     expect_equivalent(result.yat, expected.result);
     });
 

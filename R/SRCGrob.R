@@ -45,7 +45,7 @@ SRCGrob <- function(
     add.genes <- !is.null(genes);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
     genes.on.nodes <- FALSE;
-    
+
     yat <- prep.yat(yat);
 
     yaxis.position <- if (is.null(yaxis2.label)) 'left' else {
