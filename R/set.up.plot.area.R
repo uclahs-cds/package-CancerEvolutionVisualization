@@ -156,6 +156,7 @@ add.axes <- function(
     scale1,
     scale2 = NULL,
     yaxis.position = 'left',
+    yat,
     xaxis.label = 'CCF',
     yaxis1.label = 'PGA',
     yaxis2.label = NULL,
@@ -164,8 +165,6 @@ add.axes <- function(
     no.ccf = FALSE,
     axis.label.cex = list(x = 1.55, y = 1.55),
     axis.cex = list(x = 1, y = 1),
-    ylabels1 = NULL,
-    ylabels2 = NULL,
     ylimit = NULL
     ) {
 
@@ -179,6 +178,9 @@ add.axes <- function(
 		    axis.cex = axis.cex[['x']]
 		    );
 	    }
+
+    ylabels1 <- unlist(yat[1]);
+    ylabels2 <- unlist(yat[2]);
 
     if (yaxis.position == 'both') {
 		if (is.null(yaxis2.label)) {
@@ -253,28 +255,20 @@ add.yaxis <- function(
 
     # Set up tick labels
 	if (is.null(ylabels)) {
-		if (!is.na(yaxis1.interval)) {
-			ylabels <- seq(0, ymax * conversion.factor, by = yaxis1.interval);
+		ylabels <- get.default.yat(ymax, conversion.factor);
+	    }
 
-			if (no.ccf && max(ylabels) < ymax) {
-				ylabels <- c(ylabels, max(ylabels) + yaxis1.interval);
-			    }
-	    } else {
-		    ylabels <- pretty(seq(0, ymax * conversion.factor));
-	        }
-        }
-
-	yat <- ylabels / conversion.factor;
+	y.ticks.at <- ylabels / conversion.factor;
 
 	yaxis1 <- yaxisGrob(
 	    name = 'axis.content',
-	    at = yat,
+	    at = y.ticks.at,
 	    label = ylabels,
 	    gp = gpar(cex = axis.cex),
 	    main = yaxis.position == 'left'
 	    );
 
-    if (max(yat) / conversion.factor != ymax && !no.ccf) {
+    if (max(y.ticks.at) / conversion.factor != ymax && !no.ccf) {
         # Extend the axis line beyond the last tick
 	    yaxis1 <- extend.axis(
 	        yaxis1,

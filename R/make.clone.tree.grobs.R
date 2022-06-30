@@ -5,6 +5,7 @@ make.clone.tree.grobs <- function(
     scale1,
     scale2,
     wid,
+    yat,
     line.lwd,
     length.from.node.edge,
     seg1.col,
@@ -134,7 +135,7 @@ make.clone.tree.grobs <- function(
 	    # TODO Implement pie nodes
 		# add.pie.nodes(clone.out, node.radius, cluster.list);
     	}
-    
+
 	if (draw.nodes) {
 	    add.node.ellipse(clone.out,node.radius, label.nodes, label.cex, scale1);
 	    }
@@ -149,6 +150,7 @@ make.clone.tree.grobs <- function(
 		    yaxis.position,
 		    scale1 = scale1,
 		    scale2 = scale2,
+		    yat = yat,
 		    axis.label.cex = axis.label.cex,
 		    axis.cex = axis.cex,
 		    no.ccf = no.ccf,
