@@ -72,6 +72,15 @@ SRCGrob <- function(
         y = ylab.cex
         );
 
+    tree.depth <- max(inputs$in.tree.df$tier);
+    global.scale <- get.global.branch.length.scale(tree.depth);
+
+    scale1 <- get.branch.length.scale(inputs$tree$length1, global.scale);
+
+    if (!is.null(inputs$tree$length2)) {
+        scale2 <- get.branch.length.scale(inputs$tree$length2, global.scale);
+        }
+
     clone.out <- make.clone.tree.grobs(
         ccf.df = inputs$in.tree.df,
         tree = inputs$tree,
