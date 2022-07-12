@@ -76,6 +76,8 @@ prep.tree <- function(
         alpha = rep(0.5, (nrow(tree.df) + 1)),
         stringsAsFactors = FALSE
         );
+    
+    out.df$tier <- get.num.tiers(out.df)
 
     out.tree <- data.frame(
         parent = as.numeric(tree.df$parent),
