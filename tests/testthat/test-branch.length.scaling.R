@@ -5,7 +5,7 @@ test_that(
 
         shorter.branches <- rep(2, tree.depth);
         longer.branches <- rep(4, tree.depth);
-        
+
         short.scale <- get.branch.length.scale(shorter.branches, tree.depth, user.scale);
         long.scale <- get.branch.length.scale(longer.branches, tree.depth, user.scale);
 
@@ -34,7 +34,6 @@ test_that(
         tree.depth <- 3;
         branch.lengths <- rep(3, 2);
 
-        
         normal.scale <- get.branch.length.scale(branch.lengths, tree.depth, 1);
         scaled.down <- get.branch.length.scale(branch.lengths, tree.depth, 0.8);
 
