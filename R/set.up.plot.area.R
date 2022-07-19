@@ -164,8 +164,7 @@ add.axes <- function(
     yaxis2.interval = NA,
     no.ccf = FALSE,
     axis.label.cex = list(x = 1.55, y = 1.55),
-    axis.cex = list(x = 1, y = 1),
-    ylimit = NULL
+    axis.cex = list(x = 1, y = 1)
     ) {
 
 	if (!no.ccf && 'ccf' %in% colnames(clone.out$v) && all(!is.na(clone.out$v$ccf))) {
@@ -198,8 +197,7 @@ add.axes <- function(
 		    no.ccf = no.ccf,
 		    axis.label.cex = axis.label.cex[['y']],
 		    axis.cex = axis.cex[['y']],
-		    ylabels = ylabels1,
-		    ylimit = ylimit
+		    ylabels = ylabels1
 		    );
 
 		add.yaxis(
@@ -211,8 +209,7 @@ add.axes <- function(
 		    no.ccf = no.ccf,
 		    axis.label.cex = axis.label.cex[['y']],
 		    axis.cex = axis.cex[['y']],
-		    ylabels = ylabels2,
-		    ylimit = ymax1
+		    ylabels = ylabels2
 		    );
     } else {
 		add.yaxis(
@@ -223,8 +220,7 @@ add.axes <- function(
 		    no.ccf = no.ccf,
 		    axis.label.cex = axis.label.cex[['y']],
 		    axis.cex = axis.cex[['y']],
-		    ylabels = ylabels1,
-		    ylimit = ylimit
+		    ylabels = ylabels1
 		    );
 	    }
     }
@@ -237,7 +233,6 @@ add.yaxis <- function(
     yaxis2.label = NULL,
     yaxis1.interval = NA,
     no.ccf = FALSE,
-    ylimit = NULL,
     axis.label.cex = list(x = 1.55, y = 1.55),
     axis.cex = list(x = 1, y = 1),
     ylabels = NULL
@@ -245,12 +240,10 @@ add.yaxis <- function(
     # Necessary to get the right positioning
     vp.unclipped <- make.plot.viewport(clone.out, clip = 'off');
 
-	if (!is.null(ylimit) && ylimit == 'node' || (is.null(ylimit) && no.ccf)) {
+	if (no.ccf) {
 		ymax <- max(clone.out$v$y);
-	} else if (!is.null(ylimit) && ylimit == 'plot.length' || (is.null(ylimit) && !no.ccf)) {
+	} else {
 		ymax <- clone.out$ymax;
-	} else if (!is.null(ylimit)) {
-		ymax <- ylimit;
 	    }
 
     # Set up tick labels
