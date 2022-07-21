@@ -1,7 +1,6 @@
 SRCGrob <- function(
     tree,
     genes = NULL,
-    filename = 'SRC_tree.pdf',
     main = NULL,
     horizontal.padding = 0.1,
     scale1 = 1,
