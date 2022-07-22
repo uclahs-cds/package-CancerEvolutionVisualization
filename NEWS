@@ -1,3 +1,13 @@
+CancerEvolutionVisualization 0.8.0 2022-07-14 (Dan Knight)
+
+UPDATE
+* Added "smart" branch length scaling based on the branch lengths and
+  tree depth.
+* The user can still scale the lengths proportionally with the scale1
+  and scale2 arguments.
+
+
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 0.7.0 2022-06-28 (Dan Knight)
 
 UPDATE

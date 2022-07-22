@@ -77,6 +77,8 @@ prep.tree <- function(
         stringsAsFactors = FALSE
         );
 
+    out.df$tier <- get.num.tiers(out.df)
+
     out.tree <- data.frame(
         parent = as.numeric(tree.df$parent),
         tip = as.numeric(tree.df$child),

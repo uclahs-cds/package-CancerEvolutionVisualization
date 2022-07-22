@@ -1,26 +1,19 @@
 get.num.tiers <- function(tree) {
-    tier.env <- new.env();
-    tree$tier <- 1;
-    assign('tier.tree', tree, envir = tier.env);
+    tiers <- rep(0, nrow(tree));
 
-	get.tiers <- function(node = 1) {
-		tree <- get('tier.tree', envir = tier.env);
-		children <- tree$id[tree$parent == node];
+	get.tiers <- function(node.id) {
+	    # Need to exclude NA values because comparison is bypassed
+	    # NA values return NA instead, so children could be c(NA, -1)
+		children <- tree$id[tree$parent == node.id & !is.na(tree$parent)];
 
 		for (child in children) {
-			tree <- get('tier.tree', envir = tier.env);
-			tree$tier[tree$lab == child] <- tree$tier[tree$id == node] + 1;
-			assign('tier.tree',tree,envir <- tier.env);
+			tiers[tree$id == child] <<- tiers[tree$id == node.id] + 1;
 			get.tiers(child);
 		    }
-
-		return(tree);
 	    }
 
-	get.tiers();
-	tier.tree <- get('tier.tree', envir = tier.env);
+	root.node <- '-1';
+	get.tiers(root.node);
 
-	n.tiers <- max(tier.tree$tier);
-
-	return(tier.tree);
+	return(tiers);
     }

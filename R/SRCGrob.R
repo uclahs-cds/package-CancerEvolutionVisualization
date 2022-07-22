@@ -4,8 +4,8 @@ SRCGrob <- function(
     filename = 'SRC_tree.pdf',
     main = NULL,
     horizontal.padding = 0.1,
-    scale1 = 0.05443424,
-    scale2 = 0.5 / 362,
+    scale1 = 1,
+    scale2 = 1,
     yat = NULL,
     yaxis1.label = 'SNVs',
     yaxis2.label = NULL,
@@ -71,6 +71,14 @@ SRCGrob <- function(
         x = xlab.cex,
         y = ylab.cex
         );
+
+    tree.depth <- max(inputs$in.tree.df$tier);
+
+    scale1 <- get.branch.length.scale(inputs$tree$length1, tree.depth, scale1);
+
+    if (!is.null(inputs$tree$length2)) {
+        scale2 <- get.branch.length.scale(inputs$tree$length2, tree.depth, scale2);
+        }
 
     clone.out <- make.clone.tree.grobs(
         ccf.df = inputs$in.tree.df,

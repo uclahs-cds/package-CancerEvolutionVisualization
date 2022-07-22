@@ -70,8 +70,6 @@ make.clone.tree.grobs <- function(
 	    }
 
 	v$x <- v$y <- v$len <- v$x.mid <- numeric(length(nrow(v)));
-
-	v <- get.num.tiers(v);
 	v <- v[order(v$tier, v$parent), ];
 
 	#initializing line segment dataframe and adjusting lengths to accomodate the node circles
