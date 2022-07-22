@@ -1,3 +1,11 @@
+CancerEvolutionVisualization 0.9.0 2022-07-18 (Dan Knight)
+
+REMOVED
+* Removed ylimits and yaxis.interval parameters.
+  (yat can be used instead.)
+
+
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 0.8.0 2022-07-14 (Dan Knight)
 
 UPDATE

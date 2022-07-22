@@ -26,9 +26,6 @@ make.clone.tree.grobs <- function(
     yaxis2.label,
     axis.label.cex,
     axis.cex,
-    yaxis1.interval,
-    yaxis2.interval,
-    ylimit,
     xaxis.label,
     min.width,
     draw.nodes,
@@ -154,10 +151,7 @@ make.clone.tree.grobs <- function(
 		    no.ccf = no.ccf,
 		    xaxis.label = xaxis.label,
 		    yaxis1.label = yaxis1.label,
-		    yaxis2.label = yaxis2.label,
-		    yaxis1.interval = yaxis1.interval,
-		    yaxis2.interval = yaxis2.interval,
-		    ylimit = ylimit
+		    yaxis2.label = yaxis2.label
 		    );
 	    }
 
