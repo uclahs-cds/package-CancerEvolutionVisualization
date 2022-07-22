@@ -1,126 +1,181 @@
-prep.tree <- function(samp=NULL,trees=NULL,cnas = NULL, snvs = NULL, pga=NULL, CF_col = "cellular_prevalence",pga.percent=FALSE, bells=TRUE, normal.included=TRUE,axis.type='both',w.padding=NULL,colours=colours){
-  if(!(samp %in% trees[,1] )){stop("Sample not found in trees file")}
-  tree.df <- trees[trees[,1] == samp,]
-  
-  if(any(grepl("parent",tree.df[1,])==TRUE)){
-    colnames(tree.df) <- tree.df[1,]
-    colnames(tree.df)[1] <- "Sample"
-    tree.df <- tree.df[c(2:nrow(tree.df)),]
-  } else if(any(grepl("parent",colnames(trees))==TRUE)){
-    colnames(tree.df) <- colnames(trees)
-    colnames(tree.df)[1] <- "Sample"
-  }else{stop("No column names detected")}
-  
-  tree.df$parent[tree.df$parent == 0] <- -1
-  tree.df$cellular_prevalence <- as.numeric(tree.df[,CF_col])  
-  
-  if(all(!is.na(tree.df$cellular_prevalence))){
-    tree.df <- reorder_clones(tree.df)
-  }
-  
-  out.df <- data.frame(lab=c(-1,tree.df$child),  
-                           ccf=as.numeric(c(1,tree.df$cellular_prevalence)),
-                           color= colours[1:(nrow(tree.df)+1)],
-                           parent = as.numeric(c(NA,tree.df$parent)),
-                           excluded = c(TRUE,rep(FALSE,nrow(tree.df))), 
-                           bell = c(FALSE,rep(bells,nrow(tree.df))), 
-                           alpha =  rep(0.5,(nrow(tree.df)+1)),stringsAsFactors = FALSE)
-  
-  if("#FCF9BF" %in% out.df$color){
-    out.df$alpha[which(out.df$color == "#FCF9BF")] <- 0.8
-  }
-  
-  if(!(is.null(pga))){
-    if(!(samp %in% pga$Sample )){stop("Sample not found in PGA file")}
-    pga.df <- pga[pga$Sample==samp,]
-    names.pga <- colnames(pga)
-    if(!normal.included){
-      pga.df <- rbind(c(samp,0,0,0,'Normal',1),pga.df)
-    }
-    pga.df$Node <- as.numeric(pga.df$Node)
-    pga.df$PGA <- as.numeric(pga.df$PGA)
-    
-    if(pga.percent==TRUE){
-      pga.df$PGA <- pga.df$PGA/100
-    }
-    pga.df$CP <- as.numeric(pga.df$CP)
-    pga.df$Node[pga.df$Node == 0] <- -1 
+prep.tree <- function(
+    tree.df,
+    genes.df,
+    bells = TRUE,
+    axis.type = 'left',
+    colour.scheme = colours
+    ) {
 
-    pga.df$Node <- order(-pga.df$CP)    
-    out.tree <- data.frame(parent=as.numeric(tree.df$parent),tip = as.numeric(tree.df$child), length1=(pga.df$PGA[-1]*100), length2=as.numeric(tree.df$num_ssms),stringsAsFactors = FALSE)
-  } else{
-    out.tree <- data.frame(parent=as.numeric(tree.df$parent),tip = as.numeric(tree.df$child), length1=as.numeric(tree.df$num_ssms),stringsAsFactors = FALSE)
-  }
-  genes.df <-  NULL
+    if (!('parent' %in% colnames(tree.df))) {
+        stop('No parent column provided');
+        }
 
-  if ((!is.null(cnas) | !is.null(snvs)) & ((samp %in% cnas$Sample ) | (samp %in% snvs$Sample )) ){
-    if(!is.null(cnas)  & (samp %in% cnas$Sample ) ){
-      cnas.df <- cnas[cnas$Sample ==samp,c(2:4)]
-      cnas.df <- cnas.df[which(!is.na(cnas.df$node)),]
+    if ('angle' %in% colnames(tree.df)) {
+        message(paste(
+            'Overriding branch angles will be supported in a future version.',
+            'The angle column will not be used.'
+            ));
+        }
+
+    tree.df$parent <- prep.tree.parent(tree.df$parent);
+
+    if (!check.parent.values(rownames(tree.df), tree.df$parent)) {
+        stop('Parent column references invalid node');
+        }
+
+        if (!is.null(genes.df)) {
+        genes.df <- filter.null.genes(genes.df);
+
+        genes.df <- filter.invalid.gene.nodes(
+            genes.df,
+            rownames(tree.df)
+            );
+
+        genes.df <- genes.df[order(genes.df$node,genes.df$cn), ];
+        }
+
+    if (!is.null(tree.df$CP)) {
+        tree.df$CP <- suppressWarnings(as.numeric(tree.df$CP));
+
+        if (any(is.na(tree.df$CP))) {
+            warning(paste(
+                'Non-numeric values found in CP column.',
+                'Cellular prevalence will not be used.'
+                ));
+
+            tree.df$CP <- NULL;
+            }
+        }
+
+    tree.df <- reorder.nodes(tree.df);
+
+    # Include -1 value for root node.
+    # This may be temporary, as NULL/NA will likely replace -1
+    node.id.index <- get.value.index(
+        old.values = c(-1, rownames(tree.df)),
+        new.values = c(-1, 1:nrow(tree.df))
+        );
+
+    tree.df <- reset.tree.node.ids(tree.df, node.id.index);
+    tree.df$child <- rownames(tree.df);
+
+    genes.df$node <- reindex.column(genes.df$node, node.id.index);
+
+    tree.df$label <- as.character(
+        if (is.null(tree.df$label)) tree.df$child else tree.df$label
+        );
+
+    out.df <- data.frame(
+        id = c(-1, tree.df$child),
+        label.text = c('', tree.df$label),
+        ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
+        color = colour.scheme[1:(nrow(tree.df) + 1)],
+        parent = as.numeric(c(NA,tree.df$parent)),
+        excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
+        bell = c(FALSE, rep(bells, nrow(tree.df))),
+        alpha = rep(0.5, (nrow(tree.df) + 1)),
+        stringsAsFactors = FALSE
+        );
+
+    out.df$tier <- get.num.tiers(out.df)
+
+    out.tree <- data.frame(
+        parent = as.numeric(tree.df$parent),
+        tip = as.numeric(tree.df$child),
+        prep.branch.lengths(tree.df)
+        );
+
+    branching <- any(duplicated(out.tree$parent));
+
+    return(list(
+        in.tree.df = out.df,
+        tree = out.tree,
+        genes.df = genes.df,
+        branching = branching
+        ));
     }
-    if(!is.null(snvs) & (samp %in% snvs$Sample )){
-      snvs.df <- snvs[snvs$Sample ==samp,c(2:3)]
-      snvs.df$cn <- NA
-      snvs.df <- snvs.df[which(!is.na(snvs.df$node)),]
+
+prep.tree.parent <- function(parent.column) {
+    parent.column[parent.column %in% c(0, NA)] <- -1;
+    return(parent.column);
     }
-    if(!is.null(cnas) & !is.null(snvs) & (samp %in% cnas$Sample ) & (samp %in% snvs$Sample )){
-        genes.df <- rbind(cnas.df,snvs.df)
-      } else if(!is.null(snvs) & (samp %in% snvs$Sample )){
-        genes.df <- snvs.df
-      } else if (!is.null(cnas) & (samp %in% cnas$Sample )){
-      genes.df <- cnas.df
+
+filter.null.genes <- function(gene.df) {
+    null.genes <- which(is.na(gene.df$node));
+
+    if (length(null.genes) > 0) {
+        warning('Genes with no node will not be used');
+
+        return(gene.df[-(null.genes), ]);
+    } else {
+        return(gene.df);
+        }
     }
-  
-  genes.df <- genes.df[order(genes.df$node,genes.df$cn),]
-  }
-  out.name <- paste0("SR_",samp,"_",axis.type, ".pdf")
-  samp.name<- samp
-  add.genes <- ifelse((is.null(genes.df) || nrow(genes.df)==0 ),FALSE,TRUE)
-  if (is.null(w.padding)){
-    w.padding=1.05
-    if(axis.type =="none"){
-      w.padding = 0.85
+
+filter.invalid.gene.nodes <- function(gene.df, node.ids) {
+    invalid.genes <- which(as.logical(sapply(
+        gene.df$node,
+        FUN = function(node) {
+            !(node %in% node.ids);
+            }
+        )));
+
+    if (length(invalid.genes) > 0) {
+        warning(paste(
+            'Gene nodes provided that do not match a tree node ID.',
+            'Invalid genes will not be used.'
+            ));
+
+        return(gene.df[-(invalid.genes), ]);
+    } else {
+        return(gene.df);
+        }
     }
-  }
-  branching <- ifelse(any(duplicated(out.tree$parent)== TRUE),TRUE,FALSE)
-  
-  return(list(in.tree.df = out.df,tree = out.tree, genes.df = genes.df, out.name = out.name, w.padding=w.padding, samp.name = samp.name, branching=branching,add.genes=add.genes,axis.type=axis.type  ))
-}
 
-process_1C <- function(out_1C){
-  in.df <- read.table(out_1C, header=FALSE)
-  colnames(in.df)[1:2] <- c("tip","length1")
-  if(ncol(in.df) == 3){
-    colnames(in.df)[3] <- "ccf"
-  }
-  return(in.df)
-}
+reorder.nodes <- function(tree.df) {
+    if (any(!is.na(tree.df$CP))) {
+        tree.df <- reorder.nodes.by.CP(tree.df);
+        }
 
-process_3A <- function(out_3A){
-  in.df <- read.table(out_3A, header=FALSE)
-  out.df <- data.frame(parent = in.df$V2, tip = in.df$V1)
-  out.df$parent[out.df$parent==0] <- -1
-  if(ncol(in.df)==3){
-    out.df$plot.lab <- in.df$V3
-  }
-  return(out.df[order(out.df$tip),])
-}
+    return(reorder.trunk.node(tree.df));
+    }
 
-process_2A <- function(truth=NULL, pred=NULL){
-  pred <- scan(pred, what="numeric")
-  true <- scan(truth, what="numeric")
-  out2A <- data.frame(ssm=seq_along(pred), truth=true, pred=pred)
-  origins <- dlply(out2A, .(pred), function(x) {props=table(x$truth)/nrow(x); props[props!=0]})
-  names(origins) <- paste0("N", names(origins))
-  return(origins)
-}
+reorder.nodes.by.CP <- function(tree.df) {
+    return(tree.df[order(-(tree.df$CP), tree.df$parent), ]);
+    }
 
-reorder_clones <- function(in.df){
-  new.df <- in.df
-  new.df$new.lab <- order(-as.numeric(new.df$cellular_prevalence))
-  new.df$new.par <- sapply(new.df$parent, function(x){ return(new.df$new.lab[new.df$child==x])})
-  in.df$child <- new.df$new.lab
-  in.df$parent <- new.df$new.par
-  in.df$parent[in.df$child == 1] <- -1
-  return(in.df)
-}
+reorder.trunk.node <- function(tree.df) {
+    is.trunk <- is.na(tree.df$parent) | tree.df$parent == -1;
+
+    # Skip reindexing data.frame if trunk node is already first
+    if (!is.trunk[[1]]) {
+        tree.df[c(which(is.trunk), which(!is.trunk)), ];
+    } else {
+        tree.df;
+        }
+    }
+
+reset.tree.node.ids <- function(tree.df, value.index) {
+    rownames(tree.df) <- 1:nrow(tree.df);
+
+    # Convert parent values to character to safely index names list
+    tree.df$parent <- reindex.column(tree.df$parent, value.index);
+
+    return(tree.df);
+    }
+
+
+
+check.parent.values <- function(node.names, parent.col) {
+    unique.node.names <- as.list(setNames(
+        !vector(length = length(unique(node.names))),
+        unique(node.names)
+        ));
+
+    all(sapply(
+        parent.col,
+        FUN = function(parent) {
+            !is.null(unlist(unique.node.names[parent])) | parent == -1;
+            }
+        ));
+    }
