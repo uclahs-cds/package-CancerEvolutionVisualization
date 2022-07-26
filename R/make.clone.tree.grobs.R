@@ -12,7 +12,6 @@ make.clone.tree.grobs <- function(
     seg2.col,
     cluster.list,
     add.polygons,
-    extra.len,
     sig.shape,
     spread,
     fixed.angle,
@@ -65,6 +64,8 @@ make.clone.tree.grobs <- function(
 	if (all(is.null(ccf.df$colour))) {
 	    v$colour <- node.col
 	    }
+
+    extra.len <- if (no.ccf) node.radius else node.radius * 4;
 
 	v$x <- v$y <- v$len <- v$x.mid <- numeric(length(nrow(v)));
 	v <- v[order(v$tier, v$parent), ];
