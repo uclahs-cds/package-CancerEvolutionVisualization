@@ -235,11 +235,7 @@ add.yaxis <- function(
     # Necessary to get the right positioning
     vp.unclipped <- make.plot.viewport(clone.out, clip = 'off');
 
-	if (no.ccf) {
-		ymax <- max(clone.out$v$y);
-	} else {
-		ymax <- clone.out$ymax;
-	    }
+	ymax <- clone.out$ymax;
 
     # Set up tick labels
 	if (is.null(ylabels)) {
