@@ -520,10 +520,10 @@ add.text2 <- function(
             gene.list[[pos]] <<- c(gene.list[[pos]], gene);
 
             if (is.null(genes$col)) {
-                if (!is.na(gene.row$cn)) {
+                if (!is.na(gene.row$cn) && gene.row$cn != 0) {
                     gene.col[[pos]] <<- c(
                         gene.col[[pos]],
-                        ifelse(gene.row$cn == 'loss' | gene.row$cn < 2, 'blue', 'red')
+                        ifelse(gene.row$cn < 0, 'blue', 'red')
                         );
                 } else {
                     gene.col[[pos]] <<- c(gene.col[[pos]], 'black');
