@@ -3,7 +3,6 @@ create.test.tree <- function(tree, genes, sample, ...) {
         tree,
         genes,
         wid = 2,
-        extra.len = 0.1,
         node.radius = 0.1,
         gene.cex = 0.85,
         scale1 = 0.9,
