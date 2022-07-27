@@ -31,7 +31,7 @@ prep.tree <- function(
             rownames(tree.df)
             );
 
-        genes.df <- genes.df[order(genes.df$node,genes.df$cn), ];
+        genes.df <- genes.df[order(genes.df$node,genes.df$CNA), ];
         }
 
     if (!is.null(tree.df$CP)) {
