@@ -107,6 +107,7 @@ position.genes <- function(
     tree.max.adjusted = NULL,
     gene.list = NULL,
     gene.col = NULL,
+    gene.fontface = NULL,
     axis.type = axis.type,
     panel.height = NULL,
     panel.width = NULL,
@@ -293,6 +294,7 @@ position.genes <- function(
                                 tree.max.adjusted = tree.max.adjusted,
                                 gene.list = gene.list,
                                 gene.col = gene.col,
+                                gene.fontface = gene.fontface,
                                 axis.type = axis.type,
                                 panel.height = panel.height,
                                 panel.width = panel.width,
@@ -434,6 +436,7 @@ position.genes <- function(
                                     tree.max.adjusted = tree.max.adjusted,
                                     gene.list = gene.list,
                                     gene.col = gene.col,
+                                    gene.fontface = gene.fontface,
                                     axis.type = axis.type,
                                     panel.height = panel.height,
                                     panel.width = panel.width,
@@ -456,7 +459,11 @@ position.genes <- function(
                         x = unit(xpos + xline.dist, 'inches'),
                         y = unit(ypos, 'inches'),
                         just = c(hjust, vjust),
-                        gp = gpar(col = gene.col[[s]][g], cex = cex)
+                        gp = gpar(
+                            col = gene.col[[s]][g],
+                            fontface = gene.fontface[[s]][g],
+                            cex = cex
+                            )
                         );
                     }
 
@@ -498,7 +505,8 @@ add.text2 <- function(
             }
         );
 
-    gene.col <- gene.list
+    gene.col <- gene.list;
+    gene.fontface <- gene.list;
 
     a_ply(
         seq_len(
@@ -531,6 +539,11 @@ add.text2 <- function(
             } else {
                 gene.col[[pos]] <<- c(gene.col[[pos]], gene.row$col);
                 }
+
+            gene.fontface[[pos]] <<- c(
+                gene.fontface[[pos]],
+                if (gene.row$SNV) 'italic' else 'plain'
+                );
             }
         );
 
@@ -611,6 +624,7 @@ add.text2 <- function(
         tree.max.adjusted = tree.max.adjusted,
         gene.list = gene.list,
         gene.col = gene.col,
+        gene.fontface = gene.fontface,
         axis.type = axis.type,
         panel.height = panel.height,
         panel.width = panel.width,
