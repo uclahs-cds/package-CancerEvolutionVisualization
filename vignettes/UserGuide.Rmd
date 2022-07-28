@@ -127,10 +127,21 @@ Each row must include a node ID for the gene. Genes will be stacked next to the
 specified node.
 
 ```{r echo=F}
+simple.gene.data <- gene.input[, 1:2];
+
 knitr::kable(
-    gene.input[, 1:2],
+    simple.gene.data,
     col.names = colnames(gene.input)[1:2]
     );
+```
+
+
+```{r, fig.show='hide'}
+simple.gene.tree <- SRCGrob(parent.only, simple.gene.data);
+```
+
+```{r}
+grid.draw(simple.gene.tree);
 ```
 
 ### Ex. 6: CNAs and SNVs
@@ -146,9 +157,9 @@ knitr::kable(
 
 
 ```{r, fig.show='hide'}
-gene.tree <- SRCGrob(branch.lengths, gene.input);
+full.gene.tree <- SRCGrob(parent.only, gene.input);
 ```
 
 ```{r}
-grid.draw(gene.tree);
+grid.draw(full.gene.tree);
 ```
