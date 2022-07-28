@@ -515,7 +515,7 @@ add.text2 <- function(
         .fun = function(x) {
             gene.row <- genes[x, ];
             pos <- which(tree$tip == gene.row$node);
-            gene <- gene.row$gene;
+            gene <- gene.row$name;
 
             if (length(grep('_', gene)) > 0) {
                 gene.split <- strsplit(gene,split = '_')[[1]];
