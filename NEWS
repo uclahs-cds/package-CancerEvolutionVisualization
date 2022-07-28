@@ -3,6 +3,9 @@ CancerEvolutionVisualization 0.10.0 2022-07-26 (Dan Knight)
 ADDED
 * Optional SNV column in gene input data to italicize gene text
 
+UPDATE
+* Changed gene input "gene" column to more generic "name"
+
 REMOVED
 * Removed extra.len parameter to allow the value to be inferred by the
   presence/absence of CP values.
