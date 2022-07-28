@@ -143,3 +143,12 @@ knitr::kable(
     gene.input
     );
 ```
+
+
+```{r, fig.show='hide'}
+gene.tree <- SRCGrob(branch.lengths, gene.input);
+```
+
+```{r}
+grid.draw(gene.tree);
+```
