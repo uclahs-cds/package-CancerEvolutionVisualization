@@ -24,7 +24,10 @@ prep.tree <- function(
         }
 
     if (!is.null(genes.df)) {
-        
+        genes.df <- prep.genes(
+            genes.df,
+            tree.rownames = rownames(tree.df)
+            );
         }
 
     if (!is.null(tree.df$CP)) {
@@ -173,16 +176,16 @@ check.parent.values <- function(node.names, parent.col) {
         ));
     }
 
-prep.genes <- function(genes.df) {
+prep.genes <- function(genes.df, tree.rownames) {
     genes.df <- filter.null.genes(genes.df);
 
     genes.df <- filter.invalid.gene.nodes(
         genes.df,
-        rownames(tree.df)
+        tree.rownames
         );
 
     genes.df <- add.default.gene.columns(genes.df);
-    genes.df <- reorder.genes(genes.df);d
+    genes.df <- reorder.genes(genes.df);
 
     return(genes.df);
     }
@@ -201,5 +204,5 @@ add.default.gene.columns <- function(genes.df) {
     }
 
 reorder.genes <- function(genes.df) {
-    return(genes.df[order(genes.df$node,genes.df$CNA, decreasing = TRUE), ]);
+    return(genes.df[order(genes.df$node, genes.df$CNA, decreasing = TRUE), ]);
     }
