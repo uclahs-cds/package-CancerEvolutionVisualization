@@ -31,6 +31,15 @@ prep.tree <- function(
             rownames(tree.df)
             );
 
+        # Internal functions rely on all columns being present
+        if (is.null(genes.df$CNA)) {
+            genes.df$CNA <- NA;
+            }
+
+        if (is.null(genes.df$SNV)) {
+            genes.df$SNV <- FALSE;
+            }
+
         genes.df <- genes.df[order(genes.df$node,genes.df$CNA, decreasing = TRUE), ];
         }
 
