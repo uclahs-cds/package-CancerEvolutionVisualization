@@ -300,3 +300,81 @@ test_that(
 
         expect_equal(nrow(filtered.genes), nrow(genes));
     });
+
+test_that(
+    'add.default.gene.columns handles omitted CNA data' , {
+        genes <- data.frame(
+            name = c('EXAMPLE', 'GENE', 'DATA')
+            );
+
+        result <- add.default.gene.columns(genes);
+
+        expect_true(all(is.na(result$CN)));
+    });
+
+test_that(
+    'add.default.gene.columns handles omitted SNV data' , {
+        genes <- data.frame(
+            name = c('GENE', 'EXAMPLE')
+            );
+
+        result <- add.default.gene.columns(genes);
+
+        expect_true(all(!(result$SNV)));
+    });
+
+test_that(
+    'add.default.gene.columns does not modify existing CNA data' , {
+        expected.cna <- c(1, -1);
+
+        genes <- data.frame(
+            name = c('TEST', 'GENES'),
+            CNA = expected.cna
+            );
+
+        result <- add.default.gene.columns(genes);
+
+        expect_equal(result$CNA, expected.cna);
+    });
+
+test_that(
+    'add.default.gene.columns does not modify existing CNA data' , {
+        expected.snv <- c(TRUE, TRUE, FALSE);
+
+        genes <- data.frame(
+            name = c('GENES', 'FOR', 'TESTING'),
+            SNV = expected.snv
+            );
+
+        result <- add.default.gene.columns(genes);
+
+        expect_equal(result$SNV, expected.snv);
+    });
+
+test_that(
+    'reorder.genes sorts by gene ID', {
+        genes <- data.frame(
+            node = 4:1,
+            CNA = NA
+            );
+
+        out.of.order <- genes[c(4, 1, 3, 2), ];
+        reordered <- reorder.genes(out.of.order);
+
+        expect_equal(rownames(reordered), rownames(genes));
+        ;
+    });
+
+test_that(
+    'reorder.genes resolves node ID ties by CNA', {
+        genes <- data.frame(
+            node = c(1, 1),
+            CNA = c(-1, 1)
+            );
+
+        reordered <- reorder.genes(genes);
+        expected.rownames <- as.character(c(2, 1));
+
+        expect_equal(rownames(reordered), expected.rownames);
+        ;
+    });
