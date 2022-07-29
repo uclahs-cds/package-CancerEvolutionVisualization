@@ -23,15 +23,11 @@ prep.tree <- function(
         stop('Parent column references invalid node');
         }
 
-        if (!is.null(genes.df)) {
-        genes.df <- filter.null.genes(genes.df);
-
-        genes.df <- filter.invalid.gene.nodes(
+    if (!is.null(genes.df)) {
+        genes.df <- prep.genes(
             genes.df,
-            rownames(tree.df)
+            tree.rownames = rownames(tree.df)
             );
-
-        genes.df <- genes.df[order(genes.df$node,genes.df$CNA, decreasing = TRUE), ];
         }
 
     if (!is.null(tree.df$CP)) {
@@ -178,4 +174,35 @@ check.parent.values <- function(node.names, parent.col) {
             !is.null(unlist(unique.node.names[parent])) | parent == -1;
             }
         ));
+    }
+
+prep.genes <- function(genes.df, tree.rownames) {
+    genes.df <- filter.null.genes(genes.df);
+
+    genes.df <- filter.invalid.gene.nodes(
+        genes.df,
+        tree.rownames
+        );
+
+    genes.df <- add.default.gene.columns(genes.df);
+    genes.df <- reorder.genes(genes.df);
+
+    return(genes.df);
+    }
+
+add.default.gene.columns <- function(genes.df) {
+    # Internal functions rely on all columns being present
+    if (is.null(genes.df$CNA)) {
+        genes.df$CNA <- NA;
+        }
+
+    if (is.null(genes.df$SNV)) {
+        genes.df$SNV <- FALSE;
+        }
+
+    return(genes.df);
+    }
+
+reorder.genes <- function(genes.df) {
+    return(genes.df[order(genes.df$node, genes.df$CNA, decreasing = TRUE), ]);
     }
