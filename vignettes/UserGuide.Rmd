@@ -89,7 +89,7 @@ knitr::kable(
 branch.lengths.tree <- SRCGrob(branch.lengths);
 ```
 
-```{r}
+```{r, fig.dim=c(5, 3.5)}
 grid.draw(branch.lengths.tree);
 ```
 
@@ -163,3 +163,126 @@ full.gene.tree <- SRCGrob(parent.only, gene.input);
 ```{r}
 grid.draw(full.gene.tree);
 ```
+
+# Plot Parameters
+The default settings should produce a reasonable baseline plot, but many users will
+want more control over their plot. This section will highlight some of the most
+common parameters in `SRCGRob`.
+
+## Plot Size
+
+### Ex. 7: Plot Width with Horizontal Padding
+Some plots require more or less horizontal padding between the x-axes and the tree
+itself. The `horizontal.padding` parameter scales the default padding proportionally.
+For example, `horizontal.padding = -0.2` would reduce the padding by 20%.
+
+```{r, fig.show='hide'}
+padding.tree <- SRCGrob(
+    branch.lengths,
+    horizontal.padding = -0.8
+    );
+```
+
+```{r, fig.dim=c(3.5, 3.5)}
+grid.draw(padding.tree);
+```
+
+### Ex. 8: Branch Scaling
+Branches are scaled automatically, but users can further scale each branch with
+the `scale1` and `scale2` parameters. These values scale each branch proportionally,
+so `scale1 = 1.1` would make the first set of branch lengths 10% longer.
+
+```{r, fig.show='hide'}
+scaled.tree <- SRCGrob(
+    branch.lengths,
+    scale1 = 1.5,
+    scale2 = 0.5
+    );
+```
+
+```{r, fig.height=4}
+grid.draw(scaled.tree);
+```
+
+
+### Ex. 9: Plot Title
+The main title of the plot is referred to as `main` in plot parameters. `main` sets
+the title text, `main.cex` sets the font size, and `main.y` is used to move the main
+title up if more space is required for the plot.
+
+```{r, fig.show='hide'}
+title.tree <- SRCGrob(
+    parent.only,
+    main = 'Example Plot'
+    );
+```
+
+```{r, echo=F}
+title.tree$vp$y <- unit(0.8, 'npc');
+```
+
+```{r, fig.height=3.5}
+grid.draw(title.tree);
+```
+
+## X-Axes
+A y-axis will be added automatically for each branch length column (the 
+left-sided axis corresponding to the first branch length column, and the right
+with the second length column).
+
+### Ex. 10: Y-Axis
+Ticks are placed automatically based on the plot size and the branch lengths. 
+
+### Ex. 11: Axis Title
+Axis titles are specified with the `yaxis1.label` and `yaxis2.label` parameters.
+
+```{r, fig.show='hide'}
+axis.title.tree <- SRCGrob(
+    parent.only,
+    yaxis1.label = 'SNVs',
+    horizontal.padding = -0.6
+    );
+```
+
+```{r, echo=F}
+axis.title.tree$vp$x <- unit(0.75, 'npc');
+```
+
+```{r}
+grid.draw(axis.title.tree);
+```
+
+### Ex. 12: Axis Tick Placement
+The default axis tick positions can be overridden with the `yat` parameter. This
+expects a list of vectors, each corresponding to the ticks on an x-axis.
+
+```{r, fig.show='hide'}
+xaxis1.ticks <- c(10, 20, 30, 35, 40);
+xaxis2.ticks <- c(100, 250, 400);
+
+yat.tree <- SRCGrob(
+    branch.lengths,
+    yat = list(
+        xaxis1.ticks,
+        xaxis2.ticks
+        ),
+    horizontal.padding = -0.4
+    );
+```
+
+```{r, fig.width=5}
+grid.draw(yat.tree);
+```
+
+### Ex. 13: Normal
+```{r, fig.show='hide'}
+normal.tree <- SRCGrob(
+    parent.only,
+    add.normal = TRUE
+    );
+```
+
+```{r}
+grid.draw(normal.tree);
+```
+
