@@ -22,7 +22,6 @@ SRCGrob <- function(
     seg1.col = 'black',
     seg2.col = 'green',
     line.lwd = 3,
-    spread = 1,
     gene.line.dist = 0.1,
     colour.scheme = colours,
     cluster.list = NULL,
@@ -56,6 +55,7 @@ SRCGrob <- function(
     fixed.angle <- pi / 6;
     min.width <- get.plot.width(horizontal.padding);
     wid <- 1.2;
+    spread <- 1;
 
     axis.cex <- list(
         x = xaxis.cex,
