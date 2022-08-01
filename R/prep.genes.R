@@ -76,7 +76,7 @@ prep.gene.line.dist <- function(gene.line.dist) {
     if (clamped) {
         warning(paste(
             '"gene.line.dist" must be between 0 and 1.',
-            paste('A value of', gene.line.dist, 'will be used') 
+            paste('A value of', gene.line.dist, 'will be used')
             ));
         }
 
