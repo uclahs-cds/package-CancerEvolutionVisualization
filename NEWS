@@ -1,4 +1,4 @@
-CancerEvolutionVisualization 0.10.0 2022-07-29 (Dan Knight)
+CancerEvolutionVisualization 0.10.0 2022-08-01 (Dan Knight)
 
 ADDED
 * Optional SNV column in gene input data to italicize gene text
@@ -11,6 +11,7 @@ REMOVED
   presence/absence of CP values.
 * Removed spread parameter until radial nodes are supported.
 * Removed wid parameter, as it is no longer needed with horizontal.padding
+* Removed cluster.list parameter until (pie nodes are implemented)
 
 --------------------------------------------------------------------------
 CancerEvolutionVisualization 0.9.0 2022-07-20 (Dan Knight)
