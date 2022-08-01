@@ -24,7 +24,6 @@ SRCGrob <- function(
     line.lwd = 3,
     gene.line.dist = 0.1,
     colour.scheme = colours,
-    cluster.list = NULL,
     draw.nodes = TRUE,
     add.normal = FALSE,
     normal.cex = 1,
@@ -56,6 +55,7 @@ SRCGrob <- function(
     min.width <- get.plot.width(horizontal.padding);
     wid <- 1.2;
     spread <- 1;
+    cluster.list <- NULL;
 
     axis.cex <- list(
         x = xaxis.cex,
