@@ -61,3 +61,24 @@ add.default.gene.columns <- function(genes.df) {
 reorder.genes <- function(genes.df) {
     return(genes.df[order(genes.df$node, genes.df$CNA, decreasing = TRUE), ]);
     }
+
+prep.gene.line.dist <- function(gene.line.dist) {
+    clamped <- FALSE;
+
+    if (gene.line.dist < 0) {
+        gene.line.dist <- 0;
+        clamped <- TRUE;
+    } else if (gene.line.dist > 1) {
+        gene.line.dist <- 1;
+        clamped <- TRUE;
+        }
+
+    if (clamped) {
+        warning(paste(
+            '"gene.line.dist" must be between 0 and 1.',
+            paste('A value of', gene.line.dist, 'will be used') 
+            ));
+        }
+
+    return(gene.line.dist);
+    }
