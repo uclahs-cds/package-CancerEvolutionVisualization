@@ -6,7 +6,7 @@ SRCGrob <- function(
     scale1 = 1,
     scale2 = 1,
     yat = NULL,
-    yaxis1.label = 'SNVs',
+    yaxis1.label = NULL,
     yaxis2.label = NULL,
     xlab.cex = 1.55,
     ylab.cex = 1.55,
