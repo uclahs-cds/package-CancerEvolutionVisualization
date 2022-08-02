@@ -17,6 +17,8 @@ Imports:
     utils,
     stringr
 Suggests:
-    testthat
+    testthat,
+	knitr
+VignetteBuilder: knitr
 LazyLoad: yes
 LazyData: yes
