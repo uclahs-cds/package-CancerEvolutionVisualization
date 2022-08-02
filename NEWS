@@ -2,6 +2,7 @@ CancerEvolutionVisualization 0.10.0 2022-08-01 (Dan Knight)
 
 ADDED
 * Optional SNV column in gene input data to italicize gene text
+* Validates gene.line dist input value
 
 UPDATE
 * Changed gene input "gene" column to more generic "name"

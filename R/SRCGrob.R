@@ -37,6 +37,7 @@ SRCGrob <- function(
     add.genes <- !is.null(genes);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
     genes.on.nodes <- FALSE;
+    gene.line.dist <- prep.gene.line.dist(gene.line.dist);
 
     yat <- prep.yat(yat);
 
