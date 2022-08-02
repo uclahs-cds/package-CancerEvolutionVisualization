@@ -29,7 +29,6 @@ SRCGrob(
     node.col = "grey29",
     seg1.col = "black",
     seg2.col = "green",
-    wid = 1.2,
     line.lwd = 3,
     gene.line.dist = 0.1,
     colour.scheme = colours,
