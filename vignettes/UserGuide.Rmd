@@ -47,7 +47,7 @@ individual node. (A node will only have one parent.) The root node will not have
 a parent, so a value of `NA` is used.
 
 ```{r echo=F}
-parent.only <- data.frame(tree.input[, 'parent', drop=FALSE]);
+parent.only <- data.frame(tree.input[, 'parent', drop = FALSE]);
 
 knitr::kable(
     parent.only,
