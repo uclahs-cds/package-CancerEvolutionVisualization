@@ -31,7 +31,7 @@ SRCGrob(
     seg2.col = "green",
     line.lwd = 3,
     gene.line.dist = 0.1,
-    colour.scheme = colours,
+    colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
     add.normal = FALSE,
     normal.cex = 1,
@@ -75,7 +75,6 @@ SRCGrob(
   \item{node.col}{Node colour}
   \item{seg1.col}{Colour of the first set of tree branch segments}
   \item{seg2.col}{Colour of the second set of tree branch segments}
-  \item{wid}{Plot width}
   \item{line.lwd}{Branch segment thickness}
   \item{gene.line.dist}{
   Distance between gene text and tree branches (as a value between 0 and 1)
@@ -97,7 +96,6 @@ SRCGrob(
 }
 \value{A `grob` of class "SRCGrob"}
 \author{Dan Knight}
-\seealso{}
 \examples{
 # Simple Tree Plot
 simple.tree <- data.frame(

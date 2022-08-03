@@ -105,7 +105,7 @@ compare.trees <- function(example, test) {
             labels.equal <- identical(x$label, y$label);
 
             just.equal <- (
-                x$just == y$just
+                identical(x$just, y$just)
                 && identical(x$hjust, y$hjust)
                 && identical(x$vjust, y$vjust)
                 );

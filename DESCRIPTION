@@ -1,13 +1,17 @@
 Package: CancerEvolutionVisualization
-Title: What The Package Does (one line, title case required)
+Title: Function to Generate Publication Quality Phylogenetic Tree Plots
 Version: 0.10.0
 Date: 2022-08-01
-Authors@R: person("First", "Last", email = "first.last@example.com",
-                  role = c("aut", "cre"))
-Description: What the package does (one paragraph)
-License: What license is it under?
+Authors@R: c(
+	person("Paul Boutros", role = "cre", email = "PBoutros@mednet.ucla.edu"),
+	person("Adriana Salcedo", role = "aut"),
+	person("Dan Knight", role = "aut"),
+	person("Helena Winata", role = "ctb"))
+Description: Generates tree plots with precise branch lengths, gene annotations, and cellular prevalence. The package handles complex tree structures (angles, lengths, etc.) and can be further refined as needed by the user.
+License: GPL-2
 Depends:
-    graphics,
+	R (>= 3.5.0),
+    	graphics,
 	grid,
 	gridExtra,
 	gtable,
@@ -17,6 +21,8 @@ Imports:
     utils,
     stringr
 Suggests:
-    testthat
+    testthat,
+	knitr
+VignetteBuilder: knitr
 LazyLoad: yes
 LazyData: yes
