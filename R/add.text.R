@@ -411,9 +411,7 @@ position.genes <- function(
                                 node.radius
                                 );
 
-                            if (length(unlist(overlap)) > 0) {
-                                xline.dist <- Z - (xline.dist);
-                                }
+                            # May need to modify xline.dist if length(unlist(overlap)) > 0
 
                             if (xline.dist != 0) {
                                 hjust <- ifelse(xline.dist > 0, 'left', 'right');
