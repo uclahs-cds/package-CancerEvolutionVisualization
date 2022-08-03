@@ -1,5 +1,5 @@
 Package: CancerEvolutionVisualization
-Title: Function to generate publication quality phylogenetic tree plots
+Title: Function to Generate Publication Quality Phylogenetic Tree Plots
 Version: 0.10.0
 Date: 2022-08-01
 Authors@R: c(
