@@ -75,7 +75,6 @@ SRCGrob(
   \item{node.col}{Node colour}
   \item{seg1.col}{Colour of the first set of tree branch segments}
   \item{seg2.col}{Colour of the second set of tree branch segments}
-  \item{wid}{Plot width}
   \item{line.lwd}{Branch segment thickness}
   \item{gene.line.dist}{
   Distance between gene text and tree branches (as a value between 0 and 1)
