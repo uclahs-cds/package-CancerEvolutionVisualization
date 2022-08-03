@@ -5,7 +5,8 @@ import(plyr)
 
 importFrom("graphics", "par", "strheight", "strwidth")
 importFrom("grDevices", "dev.list", "rainbow")
-importFrom("utils", "read.table", "vi")
+importFrom("utils", "read.table", "vi", "head")
 importFrom("stringr", "str_replace_all")
+importFrom("stats", "setNames")
 
 export(SRCGrob)
