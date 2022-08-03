@@ -96,7 +96,6 @@ SRCGrob(
 }
 \value{A `grob` of class "SRCGrob"}
 \author{Dan Knight}
-\seealso{}
 \examples{
 # Simple Tree Plot
 simple.tree <- data.frame(
