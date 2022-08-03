@@ -31,7 +31,7 @@ SRCGrob(
     seg2.col = "green",
     line.lwd = 3,
     gene.line.dist = 0.1,
-    colour.scheme = colours,
+    colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
     add.normal = FALSE,
     normal.cex = 1,
