@@ -10,7 +10,8 @@ Authors@R: c(
 Description: Generates tree plots with precise branch lengths, gene annotations, and cellular prevalence. The package handles complex tree structures (angles, lengths, etc.) and can be further refined as needed by the user.
 License: GPL-2
 Depends:
-    graphics,
+	R (>= 3.5.0),
+    	graphics,
 	grid,
 	gridExtra,
 	gtable,
