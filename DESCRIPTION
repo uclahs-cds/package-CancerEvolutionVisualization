@@ -1,7 +1,7 @@
 Package: CancerEvolutionVisualization
 Title: Function to Generate Publication Quality Phylogenetic Tree Plots
-Version: 0.10.0
-Date: 2022-08-01
+Version: 1.0.0
+Date: 2022-08-03
 Authors@R: c(
 	person("Paul Boutros", role = "cre", email = "PBoutros@mednet.ucla.edu"),
 	person("Adriana Salcedo", role = "aut"),
