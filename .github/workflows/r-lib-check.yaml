@@ -8,4 +8,4 @@ jobs:
   R-CMD-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: uclahs/tool-R-CMD-check-action@stable
+      - uses: uclahs-cds/tool-R-CMD-check-action@stable
