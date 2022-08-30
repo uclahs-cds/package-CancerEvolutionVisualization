@@ -152,18 +152,26 @@ check.parent.values <- function(node.names, parent.col) {
     }
 
 check.circular.node.parents <- function(tree) {
-    all(sapply(
+    has.circular.ref <- all(sapply(
         row.names(tree),
         function(node.name) {
             !is.circular.node.parent(tree, node.name);
             }
         ));
+    
+    return(has.circular.ref)
     }
 
 is.circular.node.parent <- function(tree, node) {
     node.parent <- tree[node, 'parent'];
     parent.parent <- tree[node.parent, 'parent'];
     
-    is.circular <- !(is.na(node.parent)) && !is.na(parent.parent) && parent.parent == node;
+    is.root <- function(node.name) {
+        is.na(node.name) || node.name == '-1';
+        }
+    contains.root.node <- (is.root(node.parent)) || is.root(parent.parent);
+    
+    is.circular <- !contains.root.node && parent.parent == node;
+    
     return(is.circular)
     }
