@@ -2,7 +2,6 @@ prep.tree <- function(
     tree.df,
     genes.df,
     bells = TRUE,
-    axis.type = 'left',
     colour.scheme
     ) {
 
@@ -153,4 +152,3 @@ get.y.axis.position <- function(tree.colnames) {
 
     return(y.axis.position);
     }
-
