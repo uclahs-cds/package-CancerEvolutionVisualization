@@ -10,6 +10,9 @@ prep.tree <- function(
         stop('No parent column provided');
         }
 
+    # Error on invalid tree structure
+    get.root.node(tree.df);
+
     if ('angle' %in% colnames(tree.df)) {
         message(paste(
             'Overriding branch angles will be supported in a future version.',
