@@ -213,7 +213,7 @@ test_that(
 
         tree <- data.frame(parent = parent);
         root <- get.root.node(tree);
-        
+
         expect_equal(root, expected.root);
     });
 
@@ -224,7 +224,7 @@ test_that(
 
         tree <- data.frame(parent = parent);
         root <- get.root.node(tree);
-        
+
         expect_equal(root, expected.root);
     });
 
@@ -235,7 +235,7 @@ test_that(
 
         tree <- data.frame(parent = parent);
         root <- get.root.node(tree);
-        
+
         expect_equal(root, expected.root);
     });
 
