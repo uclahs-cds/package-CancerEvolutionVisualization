@@ -143,3 +143,16 @@ check.parent.values <- function(node.names, parent.col) {
             }
         ));
     }
+
+get.root.node <- function(tree) {
+    valid.values <- as.character(c(-1, 0));
+    candidates <- which(is.na(tree$parent) | tree$parent %in% valid.values);
+
+    if (length(candidates) > 1) {
+        stop('More than one root node detected.');
+    } else if (length(candidates) == 0) {
+        stop('No root node provided.');
+        }
+
+    return(candidates);
+    }
