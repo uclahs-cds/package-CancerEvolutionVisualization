@@ -5,7 +5,7 @@ test_that(
     expect_error(
         prep.tree(
             tree.df = invalid.parent.tree,
-            genes.df = NULL,
+            text.df = NULL,
             colour.scheme = colours
             ),
         regexp = 'parent'
@@ -22,7 +22,7 @@ test_that(
     result.cp <- suppressWarnings(
         prep.tree(
             tree.df = invalid.CP.tree,
-            genes.df = NULL,
+            text.df = NULL,
             colour.scheme = colours
             )$in.tree.df$ccf
         );
@@ -40,7 +40,7 @@ test_that(
     expect_warning(
         prep.tree(
             tree.df = invalid.CP.tree,
-            genes.df = NULL,
+            text.df = NULL,
             colour.scheme = colours
             ),
         regexp = 'CP'

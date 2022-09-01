@@ -1,6 +1,6 @@
 prep.tree <- function(
     tree.df,
-    genes.df,
+    text.df,
     bells = TRUE,
     axis.type = 'left',
     colour.scheme
@@ -23,9 +23,9 @@ prep.tree <- function(
         stop('Parent column references invalid node');
         }
 
-    if (!is.null(genes.df)) {
-        genes.df <- prep.genes(
-            genes.df,
+    if (!is.null(text.df)) {
+        text.df <- prep.text(
+            text.df,
             tree.rownames = rownames(tree.df)
             );
         }
@@ -55,7 +55,7 @@ prep.tree <- function(
     tree.df <- reset.tree.node.ids(tree.df, node.id.index);
     tree.df$child <- rownames(tree.df);
 
-    genes.df$node <- reindex.column(genes.df$node, node.id.index);
+    text.df$node <- reindex.column(text.df$node, node.id.index);
 
     tree.df$label <- as.character(
         if (is.null(tree.df$label)) tree.df$child else tree.df$label
@@ -86,7 +86,7 @@ prep.tree <- function(
     return(list(
         in.tree.df = out.df,
         tree = out.tree,
-        genes.df = genes.df,
+        text.df = text.df,
         branching = branching
         ));
     }

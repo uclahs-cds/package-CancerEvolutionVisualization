@@ -1,6 +1,6 @@
 
 test_that(
-    'filter.null.genes removes genes with no node', {
+    'filter.null.text removes genes with no node', {
         num.valid.genes <- 4;
         num.invalid.genes <- 2;
 
@@ -12,22 +12,22 @@ test_that(
             gene = rep('gene', num.valid.genes + num.invalid.genes)
             );
 
-        filtered.genes <- suppressWarnings(filter.null.genes(genes));
+        filtered.genes <- suppressWarnings(filter.null.text(genes));
 
         expect_equal(nrow(filtered.genes), num.valid.genes);
     });
 
 test_that(
-    'filter.null.genes warns on invalid genes', {
+    'filter.null.text warns on invalid genes', {
         genes <- data.frame(
             node = c(NA)
             );
 
-        expect_warning(filter.null.genes(genes));
+        expect_warning(filter.null.text(genes));
     });
 
 test_that(
-    'filter.null.genes handles valid genes', {
+    'filter.null.text handles valid genes', {
         num.genes <- 3;
 
         genes <- data.frame(
@@ -35,13 +35,13 @@ test_that(
             gene = rep('gene', num.genes)
             );
 
-        filtered.genes <- filter.null.genes(genes);
+        filtered.genes <- filter.null.text(genes);
 
         expect_equal(nrow(genes), nrow(filtered.genes));
     });
 
 test_that(
-    'filter.invalid.gene.nodes removes invalid node IDs', {
+    'filter.invalid.text.nodes removes invalid node IDs', {
         tree <- data.frame(
             parent = c(NA, 1, 1)
             );
@@ -60,7 +60,7 @@ test_that(
             gene = rep('gene', num.valid.genes + num.invalid.genes)
             );
 
-        filtered.genes <- suppressWarnings(filter.invalid.gene.nodes(
+        filtered.genes <- suppressWarnings(filter.invalid.text.nodes(
             genes,
             rownames(tree)
             ));
@@ -69,7 +69,7 @@ test_that(
     });
 
 test_that(
-    'filter.invalid.gene.nodes warns on invalid node IDs', {
+    'filter.invalid.text.nodes warns on invalid node IDs', {
         tree <- data.frame(
             parent = 1:2
             );
@@ -78,11 +78,11 @@ test_that(
             node = c(-1)
             );
 
-        expect_warning(filter.invalid.gene.nodes(genes, rownames(tree)));
+        expect_warning(filter.invalid.text.nodes(genes, rownames(tree)));
     });
 
 test_that(
-    'filter.invalid.gene.nodes handles valid node IDs', {
+    'filter.invalid.text.nodes handles valid node IDs', {
         tree <- data.frame(
             parent = c(1:3)
             );
@@ -92,35 +92,35 @@ test_that(
             gene = rep('gene', nrow(tree))
             );
 
-        filtered.genes <- filter.invalid.gene.nodes(genes, rownames(tree));
+        filtered.genes <- filter.invalid.text.nodes(genes, rownames(tree));
 
         expect_equal(nrow(filtered.genes), nrow(genes));
     });
 
 test_that(
-    'add.default.gene.columns handles omitted CNA data' , {
+    'add.default.text.columns handles omitted CNA data' , {
         genes <- data.frame(
             name = c('EXAMPLE', 'GENE', 'DATA')
             );
 
-        result <- add.default.gene.columns(genes);
+        result <- add.default.text.columns(genes);
 
         expect_true(all(is.na(result$CN)));
     });
 
 test_that(
-    'add.default.gene.columns handles omitted SNV data' , {
+    'add.default.text.columns handles omitted SNV data' , {
         genes <- data.frame(
             name = c('GENE', 'EXAMPLE')
             );
 
-        result <- add.default.gene.columns(genes);
+        result <- add.default.text.columns(genes);
 
         expect_true(all(!(result$SNV)));
     });
 
 test_that(
-    'add.default.gene.columns does not modify existing CNA data' , {
+    'add.default.text.columns does not modify existing CNA data' , {
         expected.cna <- c(1, -1);
 
         genes <- data.frame(
@@ -128,13 +128,13 @@ test_that(
             CNA = expected.cna
             );
 
-        result <- add.default.gene.columns(genes);
+        result <- add.default.text.columns(genes);
 
         expect_equal(result$CNA, expected.cna);
     });
 
 test_that(
-    'add.default.gene.columns does not modify existing CNA data' , {
+    'add.default.text.columns does not modify existing CNA data' , {
         expected.snv <- c(TRUE, TRUE, FALSE);
 
         genes <- data.frame(
@@ -142,33 +142,33 @@ test_that(
             SNV = expected.snv
             );
 
-        result <- add.default.gene.columns(genes);
+        result <- add.default.text.columns(genes);
 
         expect_equal(result$SNV, expected.snv);
     });
 
 test_that(
-    'reorder.genes sorts by gene ID', {
+    'reorder.text sorts by gene ID', {
         genes <- data.frame(
             node = 4:1,
             CNA = NA
             );
 
         out.of.order <- genes[c(4, 1, 3, 2), ];
-        reordered <- reorder.genes(out.of.order);
+        reordered <- reorder.text(out.of.order);
 
         expect_equal(rownames(reordered), rownames(genes));
         ;
     });
 
 test_that(
-    'reorder.genes resolves node ID ties by CNA', {
+    'reorder.text resolves node ID ties by CNA', {
         genes <- data.frame(
             node = c(1, 1),
             CNA = c(-1, 1)
             );
 
-        reordered <- reorder.genes(genes);
+        reordered <- reorder.text(genes);
         expected.rownames <- as.character(c(2, 1));
 
         expect_equal(rownames(reordered), expected.rownames);
@@ -176,32 +176,32 @@ test_that(
     });
 
 test_that(
-    'prep.gene.line.dist handles valid values', {
+    'prep.text.line.dist handles valid values', {
         valid <- 0.5;
-        result <- prep.gene.line.dist(valid);
+        result <- prep.text.line.dist(valid);
 
         expect_equal(result, valid);
     });
 
 test_that(
-    'prep.gene.line.dist changes invalid values less than 0', {
+    'prep.text.line.dist changes invalid values less than 0', {
         invalid <- -1;
-        result <- suppressWarnings(prep.gene.line.dist(invalid));
+        result <- suppressWarnings(prep.text.line.dist(invalid));
 
         expect_equal(result, 0);
     });
 
 test_that(
-    'prep.gene.line.dist changes invalid values greater than 1', {
+    'prep.text.line.dist changes invalid values greater than 1', {
         invalid <- 2.5;
-        result <- suppressWarnings(prep.gene.line.dist(invalid));
+        result <- suppressWarnings(prep.text.line.dist(invalid));
 
         expect_equal(result, 1);
     });
 
 test_that(
-    'prep.gene.line.dist warns on invalid values', {
+    'prep.text.line.dist warns on invalid values', {
         invalid <- 30;
 
-        expect_warning(prep.gene.line.dist(invalid));
+        expect_warning(prep.text.line.dist(invalid));
     });

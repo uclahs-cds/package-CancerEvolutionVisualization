@@ -22,7 +22,7 @@ SRCGrob <- function(
     seg1.col = 'black',
     seg2.col = 'green',
     line.lwd = 3,
-    gene.line.dist = 0.1,
+    text.line.dist = 0.1,
     colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
     add.normal = FALSE,
@@ -36,8 +36,8 @@ SRCGrob <- function(
 
     add.genes <- !is.null(genes);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
-    genes.on.nodes <- FALSE;
-    gene.line.dist <- prep.gene.line.dist(gene.line.dist);
+    text.on.nodes <- FALSE;
+    text.line.dist <- prep.text.line.dist(text.line.dist);
 
     yat <- prep.yat(yat);
 
@@ -79,7 +79,7 @@ SRCGrob <- function(
     clone.out <- make.clone.tree.grobs(
         ccf.df = inputs$in.tree.df,
         tree = inputs$tree,
-        genes.df = inputs$genes.df,
+        text.df = inputs$text.df,
         node.radius = node.radius,
         scale1 = scale1,
         scale2 = scale2,
@@ -94,8 +94,8 @@ SRCGrob <- function(
         spread = spread,
         fixed.angle = fixed.angle,
         add.genes = add.genes,
-        genes.on.nodes = genes.on.nodes,
-        gene.line.dist = gene.line.dist,
+        text.on.nodes = text.on.nodes,
+        text.line.dist = text.line.dist,
         gene.cex = gene.cex,
         yaxis.position = yaxis.position,
         yaxis1.label = yaxis1.label,
