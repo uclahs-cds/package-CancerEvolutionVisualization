@@ -221,7 +221,9 @@ test_that(
     'get.y.axis.position handles multiple valid branch length columns', {
         valid.colnames <- sapply(
             1:3,
-            FUN = function(x) { paste0('length', x); }
+            FUN = function(x) {
+                paste0('length', x);
+                }
             );
 
         cols <- c(
