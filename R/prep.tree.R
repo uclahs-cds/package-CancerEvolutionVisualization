@@ -23,13 +23,13 @@ prep.tree <- function(
         stop('Parent column references invalid node');
         }
 
-    if(!check.circular.node.parents(tree.df)) {
+    if (!check.circular.node.parents(tree.df)) {
         stop(paste(
             'Circular node reference.',
             'A node cannot be the parent of its own parent.'
             ));
         }
-    
+
     if (!is.null(genes.df)) {
         genes.df <- prep.genes(
             genes.df,
@@ -158,20 +158,20 @@ check.circular.node.parents <- function(tree) {
             !is.circular.node.parent(tree, node.name);
             }
         ));
-    
+
     return(has.circular.ref)
     }
 
 is.circular.node.parent <- function(tree, node) {
     node.parent <- tree[node, 'parent'];
     parent.parent <- tree[node.parent, 'parent'];
-    
+
     is.root <- function(node.name) {
         is.na(node.name) || node.name == '-1';
         }
     contains.root.node <- (is.root(node.parent)) || is.root(parent.parent);
-    
+
     is.circular <- !contains.root.node && parent.parent == node;
-    
+
     return(is.circular)
     }
