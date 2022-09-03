@@ -15,10 +15,10 @@ make.clone.tree.grobs <- function(
     sig.shape,
     spread,
     fixed.angle,
-    add.genes,
+    add.node.text,
     text.df,
     text.line.dist,
-    gene.cex,
+    node.text.cex,
     text.on.nodes,
     yaxis.position,
     yaxis1.label,
@@ -156,8 +156,8 @@ make.clone.tree.grobs <- function(
 		    );
 	    }
 
-	if (add.genes == TRUE & !is.null(text.df)) {
-	    gene.grobs <- add.text2(
+	if (add.node.text == TRUE & !is.null(text.df)) {
+	    node.text.grobs <- add.text2(
 	        clone.out$tree,
 	        text.df,
 	        label.nodes = text.on.nodes,
@@ -167,7 +167,7 @@ make.clone.tree.grobs <- function(
 	        panel.width = clone.out$width,
 	        xlims = clone.out$xlims,
 	        ymax = clone.out$ymax,
-	        cex = gene.cex,
+	        cex = node.text.cex,
 	        v = clone.out$v,
 	        axis.type = yaxis.position,
 	        node.radius = node.radius,
@@ -176,7 +176,7 @@ make.clone.tree.grobs <- function(
 	        alternating = FALSE
 	        );
 
-	    clone.out$grobs <- c(clone.out$grobs, list(gene.grobs));
+	    clone.out$grobs <- c(clone.out$grobs, list(node.text.grobs));
 	    }
 
 	if (!is.null(main)) {

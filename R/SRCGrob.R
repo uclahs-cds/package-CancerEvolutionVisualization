@@ -1,6 +1,6 @@
 SRCGrob <- function(
     tree,
-    genes = NULL,
+    node.text = NULL,
     main = NULL,
     horizontal.padding = 0.1,
     scale1 = 1,
@@ -14,7 +14,7 @@ SRCGrob <- function(
     yaxis.cex = 1.45,
     xaxis.label = 'CP',
     label.cex = NA,
-    gene.cex = 0.85,
+    node.text.cex = 0.85,
     main.y = NULL,
     main.cex = 1.7,
     node.radius = 0.1,
@@ -34,7 +34,7 @@ SRCGrob <- function(
     size.units = 'npc'
     ) {
 
-    add.genes <- !is.null(genes);
+    add.node.text <- !is.null(node.text);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
     text.on.nodes <- FALSE;
     text.line.dist <- prep.text.line.dist(text.line.dist);
@@ -47,7 +47,7 @@ SRCGrob <- function(
 
     inputs <- prep.tree(
         tree,
-        genes,
+        node.text,
         yaxis.position,
         colour.scheme = colour.scheme
         );
@@ -93,10 +93,10 @@ SRCGrob <- function(
         sig.shape = sig.shape,
         spread = spread,
         fixed.angle = fixed.angle,
-        add.genes = add.genes,
+        add.node.text = add.node.text,
         text.on.nodes = text.on.nodes,
         text.line.dist = text.line.dist,
-        gene.cex = gene.cex,
+        node.text.cex = node.text.cex,
         yaxis.position = yaxis.position,
         yaxis1.label = yaxis1.label,
         yaxis2.label = yaxis2.label,
