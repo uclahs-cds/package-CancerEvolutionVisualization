@@ -9,6 +9,9 @@ prep.tree <- function(
         stop('No parent column provided');
         }
 
+    # Error on invalid tree structure
+    get.root.node(tree.df);
+
     if ('angle' %in% colnames(tree.df)) {
         message(paste(
             'Overriding branch angles will be supported in a future version.',
@@ -141,6 +144,19 @@ check.parent.values <- function(node.names, parent.col) {
             !is.null(unlist(unique.node.names[parent])) | parent == -1;
             }
         ));
+    }
+
+get.root.node <- function(tree) {
+    valid.values <- as.character(c(-1, 0));
+    candidates <- which(is.na(tree$parent) | tree$parent %in% valid.values);
+
+    if (length(candidates) > 1) {
+        stop('More than one root node detected.');
+    } else if (length(candidates) == 0) {
+        stop('No root node provided.');
+        }
+
+    return(candidates);
     }
 
 get.y.axis.position <- function(tree.colnames) {

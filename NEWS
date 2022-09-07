@@ -2,6 +2,7 @@ CancerEvolutionVisualization 1.0.0 2022-09-01 (Dan Knight)
 
 ADDED
 * Documentation for default colour scheme
+* Checks for valid tree structure (root node)
 
 UPDATE
 * Fixed discrepancies between documentation and code

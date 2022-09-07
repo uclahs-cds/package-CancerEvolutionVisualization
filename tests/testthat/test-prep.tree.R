@@ -207,6 +207,54 @@ test_that(
     });
 
 test_that(
+    'get.root.node handles valid NA root', {
+        parent <- c(2, NA, 1);
+        expected.root <- which(is.na(parent));
+
+        tree <- data.frame(parent = parent);
+        root <- get.root.node(tree);
+
+        expect_equal(root, expected.root);
+    });
+
+test_that(
+    'get.root.node handles valid -1 root', {
+        parent <- c(2, -1, 1);
+        expected.root <- which(parent == -1);
+
+        tree <- data.frame(parent = parent);
+        root <- get.root.node(tree);
+
+        expect_equal(root, expected.root);
+    });
+
+test_that(
+    'get.root.node handles valid 0 root', {
+        parent <- c(2, 0, 1);
+        expected.root <- which(parent == 0);
+
+        tree <- data.frame(parent = parent);
+        root <- get.root.node(tree);
+
+        expect_equal(root, expected.root);
+    });
+
+test_that(
+    'get.root.node handles multiple root nodes', {
+        root.parent <- -1;
+        tree <- data.frame(parent = rep(root.parent, 2));
+
+        expect_error(get.root.node(tree), regexp = 'root')
+    });
+
+test_that(
+    'get.root.node handles a missing root node', {
+        tree <- data.frame(parent = 1:3);
+
+        expect_error(get.root.node(tree), regexp = 'root');
+    });
+
+test_that(
     'get.y.axis.position handles a single branch length column', {
         valid.colname <- 'length1';
         cols <- c(valid.colname, 'invalid');
