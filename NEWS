@@ -1,12 +1,15 @@
-CancerEvolutionVisualization 1.0.0 2022-08-03 (Dan Knight)
+CancerEvolutionVisualization 1.0.0 2022-09-07 (Dan Knight)
 
 ADDED
 * Documentation for default colour scheme
-* Check for circular node references
+* Checks for valid tree structure
+  - Valid root node
+  - Circular node references
 
 UPDATE
 * Fixed discrepancies between documentation and code
 * Fixed bug related to referencing an uninitialized variable
+* Fixed y-axis positioning bug
 * Updated packaging/development dependencies
 
 

@@ -2,13 +2,15 @@ prep.tree <- function(
     tree.df,
     genes.df,
     bells = TRUE,
-    axis.type = 'left',
     colour.scheme
     ) {
 
     if (!('parent' %in% colnames(tree.df))) {
         stop('No parent column provided');
         }
+
+    # Error on invalid tree structure
+    get.root.node(tree.df);
 
     if ('angle' %in% colnames(tree.df)) {
         message(paste(
@@ -174,4 +176,27 @@ is.circular.node.parent <- function(tree, node) {
     is.circular <- !contains.root.node && parent.parent == node;
 
     return(is.circular)
+    }
+
+get.root.node <- function(tree) {
+    valid.values <- as.character(c(-1, 0));
+    candidates <- which(is.na(tree$parent) | tree$parent %in% valid.values);
+
+    if (length(candidates) > 1) {
+        stop('More than one root node detected.');
+    } else if (length(candidates) == 0) {
+        stop('No root node provided.');
+        }
+
+    return(candidates);
+    }
+
+get.y.axis.position <- function(tree.colnames) {
+    num.branch.length.cols <- length(get.branch.length.colnames(tree.colnames));
+
+    y.axis.position <- if (num.branch.length.cols == 1) 'left' else {
+        if (num.branch.length.cols > 1) 'both' else 'none';
+        };
+
+    return(y.axis.position);
     }
