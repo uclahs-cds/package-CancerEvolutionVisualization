@@ -45,21 +45,21 @@ test_that(
     });
 
 test_that(
-    'get.branch.length.colnames returns the correct length', {
+    'get.default.branch.length.colnames returns the correct length', {
         expected.length <- 5;
 
         expect_length(
-            get.branch.length.colnames(expected.length),
+            get.default.branch.length.colnames(expected.length),
             expected.length
             );
     });
 
 test_that(
-    'get.branch.length.colnames handles length 0', {
+    'get.default.branch.length.colnames handles length 0', {
         expected.length <- 0;
 
         expect_length(
-            get.branch.length.colnames(expected.length),
+            get.default.branch.length.colnames(expected.length),
             expected.length
             );
     });

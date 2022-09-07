@@ -2,7 +2,6 @@ prep.tree <- function(
     tree.df,
     genes.df,
     bells = TRUE,
-    axis.type = 'left',
     colour.scheme
     ) {
 
@@ -158,4 +157,14 @@ get.root.node <- function(tree) {
         }
 
     return(candidates);
+    }
+
+get.y.axis.position <- function(tree.colnames) {
+    num.branch.length.cols <- length(get.branch.length.colnames(tree.colnames));
+
+    y.axis.position <- if (num.branch.length.cols == 1) 'left' else {
+        if (num.branch.length.cols > 1) 'both' else 'none';
+        };
+
+    return(y.axis.position);
     }
