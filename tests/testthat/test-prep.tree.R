@@ -207,6 +207,43 @@ test_that(
     });
 
 test_that(
+    'is.circular.node.parent handles a circular reference', {
+        parent <- c(NA, 3, 2);
+        node.names <- c(1, 2, 3);
+
+        tree <- data.frame(
+            parent,
+            row.names = node.names,
+            drop = FALSE
+            );
+
+        expect_true(is.circular.node.parent(tree, node = 2));
+    });
+
+test_that(
+    'is.circular.node.parent handles valid parent', {
+        parent <- c(NA, 1, 1);
+        node.names <- c(1, 2, 3);
+
+        tree <- data.frame(
+            parent,
+            row.names = node.names,
+            drop = FALSE
+            );
+
+        expect_false(is.circular.node.parent(tree, node = 3));
+    });
+
+test_that(
+    'is.circular.node.parent handles the root node', {
+        parent <- c(NA, 1, 1, 2);
+
+        tree <- data.frame(parent, drop = FALSE);
+
+        expect_false(is.circular.node.parent(tree, node = 1));
+    });
+
+test_that(
     'get.root.node handles valid NA root', {
         parent <- c(2, NA, 1);
         expected.root <- which(is.na(parent));

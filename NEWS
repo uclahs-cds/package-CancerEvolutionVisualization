@@ -1,8 +1,10 @@
-CancerEvolutionVisualization 1.0.0 2022-09-01 (Dan Knight)
+CancerEvolutionVisualization 1.0.0 2022-09-07 (Dan Knight)
 
 ADDED
 * Documentation for default colour scheme
-* Checks for valid tree structure (root node)
+* Checks for valid tree structure
+  - Valid root node
+  - Circular node references
 
 UPDATE
 * Fixed discrepancies between documentation and code
