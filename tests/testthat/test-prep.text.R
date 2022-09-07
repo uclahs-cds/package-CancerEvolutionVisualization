@@ -1,43 +1,42 @@
-
 test_that(
-    'filter.null.text removes genes with no node', {
-        num.valid.genes <- 4;
-        num.invalid.genes <- 2;
+    'filter.null.text removes rows with no node', {
+        num.valid.rows <- 4;
+        num.invalid.rows <- 2;
 
-        genes <- data.frame(
+        node.text <- data.frame(
             node = c(
-                rep(1, num.valid.genes),
-                rep(NA, num.invalid.genes)
+                rep(1, num.valid.rows),
+                rep(NA, num.invalid.rows)
                 ),
-            gene = rep('gene', num.valid.genes + num.invalid.genes)
+            gene = rep('gene', num.valid.rows + num.invalid.rows)
             );
 
-        filtered.genes <- suppressWarnings(filter.null.text(genes));
+        filtered.text <- suppressWarnings(filter.null.text(node.text));
 
-        expect_equal(nrow(filtered.genes), num.valid.genes);
+        expect_equal(nrow(filtered.text), num.valid.rows);
     });
 
 test_that(
-    'filter.null.text warns on invalid genes', {
-        genes <- data.frame(
+    'filter.null.text warns on invalid rows', {
+        node.text <- data.frame(
             node = c(NA)
             );
 
-        expect_warning(filter.null.text(genes));
+        expect_warning(filter.null.text(node.text));
     });
 
 test_that(
-    'filter.null.text handles valid genes', {
-        num.genes <- 3;
+    'filter.null.text handles valid text input', {
+        num.valid.rows <- 3;
 
-        genes <- data.frame(
-            node = 1:num.genes,
-            gene = rep('gene', num.genes)
+        node.text <- data.frame(
+            node = 1:num.valid.rows,
+            gene = rep('gene', num.valid.rows)
             );
 
-        filtered.genes <- filter.null.text(genes);
+        filtered.text <- filter.null.text(node.text);
 
-        expect_equal(nrow(genes), nrow(filtered.genes));
+        expect_equal(nrow(node.text), nrow(filtered.text));
     });
 
 test_that(
@@ -49,23 +48,23 @@ test_that(
         valid.node.id <- rownames(tree)[[1]];
         invalid.node.id <- -1;
 
-        num.valid.genes <- 3;
-        num.invalid.genes <- 2;
+        num.valid.rows <- 3;
+        num.invalid.rows <- 2;
 
-        genes <- data.frame(
+        node.text <- data.frame(
             node = c(
-                rep(valid.node.id, num.valid.genes),
-                rep(invalid.node.id, num.invalid.genes)
+                rep(valid.node.id, num.valid.rows),
+                rep(invalid.node.id, num.invalid.rows)
                 ),
-            gene = rep('gene', num.valid.genes + num.invalid.genes)
+            gene = rep('gene', num.valid.rows + num.invalid.rows)
             );
 
-        filtered.genes <- suppressWarnings(filter.invalid.text.nodes(
-            genes,
+        filtered.text <- suppressWarnings(filter.invalid.text.nodes(
+            node.text,
             rownames(tree)
             ));
 
-        expect_equal(nrow(filtered.genes), num.valid.genes);
+        expect_equal(nrow(filtered.text), num.valid.rows);
     });
 
 test_that(
@@ -74,11 +73,11 @@ test_that(
             parent = 1:2
             );
 
-        genes <- data.frame(
+        node.text <- data.frame(
             node = c(-1)
             );
 
-        expect_warning(filter.invalid.text.nodes(genes, rownames(tree)));
+        expect_warning(filter.invalid.text.nodes(node.text, rownames(tree)));
     });
 
 test_that(
@@ -87,92 +86,64 @@ test_that(
             parent = c(1:3)
             );
 
-        genes <- data.frame(
+        node.text <- data.frame(
             node = rownames(tree),
             gene = rep('gene', nrow(tree))
             );
 
-        filtered.genes <- filter.invalid.text.nodes(genes, rownames(tree));
+        filtered.text <- filter.invalid.text.nodes(node.text, rownames(tree));
 
-        expect_equal(nrow(filtered.genes), nrow(genes));
+        expect_equal(nrow(filtered.text), nrow(node.text));
     });
 
 test_that(
-    'add.default.text.columns handles omitted CNA data' , {
-        genes <- data.frame(
+    'add.default.text.columns handles omitted colour data', {
+        node.text <- data.frame(
             name = c('EXAMPLE', 'GENE', 'DATA')
             );
 
-        result <- add.default.text.columns(genes);
+        result <- add.default.text.columns(node.text);
 
-        expect_true(all(is.na(result$CN)));
+        expect_true(all(is.na(result$col)));
     });
 
 test_that(
-    'add.default.text.columns handles omitted SNV data' , {
-        genes <- data.frame(
+    'add.default.text.columns handles omitted style data' , {
+        node.text <- data.frame(
             name = c('GENE', 'EXAMPLE')
             );
 
-        result <- add.default.text.columns(genes);
+        result <- add.default.text.columns(node.text);
 
-        expect_true(all(!(result$SNV)));
+        expect_true(all(is.na(result$style)));
     });
 
 test_that(
-    'add.default.text.columns does not modify existing CNA data' , {
-        expected.cna <- c(1, -1);
+    'add.default.text.columns does not modify existing colour data' , {
+        expected.col <- c('red', NA, 'blue');
 
-        genes <- data.frame(
-            name = c('TEST', 'GENES'),
-            CNA = expected.cna
-            );
-
-        result <- add.default.text.columns(genes);
-
-        expect_equal(result$CNA, expected.cna);
-    });
-
-test_that(
-    'add.default.text.columns does not modify existing CNA data' , {
-        expected.snv <- c(TRUE, TRUE, FALSE);
-
-        genes <- data.frame(
+        node.text <- data.frame(
             name = c('GENES', 'FOR', 'TESTING'),
-            SNV = expected.snv
+            col = expected.col
             );
 
-        result <- add.default.text.columns(genes);
+        result <- add.default.text.columns(node.text);
 
-        expect_equal(result$SNV, expected.snv);
+        expect_equal(result$col, expected.col);
     });
 
 test_that(
-    'reorder.text sorts by gene ID', {
-        genes <- data.frame(
-            node = 4:1,
-            CNA = NA
+    'add.default.text.columns does not modify existing style data' , {
+        expected.style <- c(NA, 'plain', 'italic');
+
+        node.text <- data.frame(
+            name = c('GENES', 'FOR', 'TESTING'),
+            style = expected.style
             );
 
-        out.of.order <- genes[c(4, 1, 3, 2), ];
-        reordered <- reorder.text(out.of.order);
+        result <- add.default.text.columns(node.text);
 
-        expect_equal(rownames(reordered), rownames(genes));
-        ;
-    });
-
-test_that(
-    'reorder.text resolves node ID ties by CNA', {
-        genes <- data.frame(
-            node = c(1, 1),
-            CNA = c(-1, 1)
-            );
-
-        reordered <- reorder.text(genes);
-        expected.rownames <- as.character(c(2, 1));
-
-        expect_equal(rownames(reordered), expected.rownames);
-        ;
+        expect_equal(result$style, expected.style);
     });
 
 test_that(
