@@ -2,7 +2,7 @@ test_that(
     'Linear Example', {
         load('data/linear.data.Rda');
         sample <- 'WHO003';
-        
+
         text.df <- linear.test.data$node.text;
 
         expect_true(!is.null(
