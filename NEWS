@@ -1,4 +1,4 @@
-CancerEvolutionVisualization 1.0.0 2022-08-03 (Dan Knight)
+CancerEvolutionVisualization 1.0.0 2022-09-01 (Dan Knight)
 
 ADDED
 * Documentation for default colour scheme
@@ -6,6 +6,7 @@ ADDED
 UPDATE
 * Fixed discrepancies between documentation and code
 * Fixed bug related to referencing an uninitialized variable
+* Fixed y-axis positioning bug
 * Updated packaging/development dependencies
 
 

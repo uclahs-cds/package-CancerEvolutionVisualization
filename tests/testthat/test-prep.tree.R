@@ -205,3 +205,44 @@ test_that(
 
         expect_true(check.parent.values(node.names, parents));
     });
+
+test_that(
+    'get.y.axis.position handles a single branch length column', {
+        valid.colname <- 'length1';
+        cols <- c(valid.colname, 'invalid');
+
+        yaxis.position <- get.y.axis.position(cols);
+        expected.position <- 'left';
+
+        expect_equal(yaxis.position, expected.position);
+    });
+
+test_that(
+    'get.y.axis.position handles multiple valid branch length columns', {
+        valid.colnames <- sapply(
+            1:3,
+            FUN = function(x) {
+                paste0('length', x);
+                }
+            );
+
+        cols <- c(
+            valid.colnames,
+            'invalid.col'
+            );
+
+        yaxis.position <- get.y.axis.position(cols);
+        expected.position <- 'both';
+
+        expect_equal(yaxis.position, expected.position);
+    });
+
+test_that(
+    'get.y.axis.position handles no valid branch length columns', {
+        cols <- c('parent');
+
+        yaxis.position <- get.y.axis.position(cols);
+        expected.position <- 'none';
+
+        expect_equal(yaxis.position, expected.position);
+    });
