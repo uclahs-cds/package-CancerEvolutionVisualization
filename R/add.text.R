@@ -533,22 +533,14 @@ add.text2 <- function(
 
             node.list[[pos]] <<- c(node.list[[pos]], text.value);
 
-            if (is.null(node.text$col)) {
-                if (!is.na(text.row$CNA) && text.row$CNA != 0) {
-                    node.text.col[[pos]] <<- c(
-                        node.text.col[[pos]],
-                        ifelse(text.row$CNA < 0, 'blue', 'red')
-                        );
-                } else {
-                    node.text.col[[pos]] <<- c(node.text.col[[pos]], 'black');
-                    }
-            } else {
-                node.text.col[[pos]] <<- c(node.text.col[[pos]], text.row$col);
-                }
+            node.text.col[[pos]] <<- c(
+                node.text.col[[pos]],
+                if (!is.na(text.row$col)) text.row$col else 'black'
+                );
 
             node.text.fontface[[pos]] <<- c(
                 node.text.fontface[[pos]],
-                if (text.row$SNV) 'italic' else 'plain'
+                if (!is.na(text.row$style)) text.row$style else 'plain'
                 );
             }
         );

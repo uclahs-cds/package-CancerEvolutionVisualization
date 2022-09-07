@@ -39,26 +39,21 @@ prep.text <- function(text.df, tree.rownames) {
         );
 
     text.df <- add.default.text.columns(text.df);
-    text.df <- reorder.text(text.df);
 
     return(text.df);
     }
 
 add.default.text.columns <- function(text.df) {
     # Internal functions rely on all columns being present
-    if (is.null(text.df$CNA)) {
-        text.df$CNA <- NA;
+    if (is.null(text.df$col)) {
+        text.df$col <- NA;
         }
 
-    if (is.null(text.df$SNV)) {
-        text.df$SNV <- FALSE;
+    if (is.null(text.df$style)) {
+        text.df$style <- NA;
         }
 
     return(text.df);
-    }
-
-reorder.text <- function(text.df) {
-    return(text.df[order(text.df$node, text.df$CNA, decreasing = TRUE), ]);
     }
 
 prep.text.line.dist <- function(text.line.dist) {
