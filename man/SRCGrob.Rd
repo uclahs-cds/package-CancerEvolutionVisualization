@@ -3,12 +3,12 @@
 \title{Subclone Tree Plot}
 \description{
 Creates a phylogenetic tree using subclonal reconstruction data.
-An optional gene data.frame can be used to annotate notable genes alonside branches.
+An optional node text data.frame can be used to annotate notable genes alonside branches.
 }
 \usage{
 SRCGrob(
     tree,
-    genes = NULL,
+    node.text = NULL,
     main = NULL,
     horizontal.padding = 0.1,
     scale1 = 1,
@@ -22,7 +22,7 @@ SRCGrob(
     yaxis.cex = 1.45,
     xaxis.label = "CP",
     label.cex = NA,
-    gene.cex = 0.85,
+    node.text.cex = 0.85,
     main.y = NULL,
     main.cex = 1.7,
     node.radius = 0.1,
@@ -30,7 +30,7 @@ SRCGrob(
     seg1.col = "black",
     seg2.col = "green",
     line.lwd = 3,
-    gene.line.dist = 0.1,
+    node.text.line.dist = 0.1,
     colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
     add.normal = FALSE,
@@ -44,7 +44,7 @@ SRCGrob(
 }
 \arguments{
   \item{tree}{Tree structure data.frame}
-  \item{genes}{Gene text data.frame}
+  \item{node.text}{Dataframe for text labels to be displayed next to nodes}
   \item{main}{Main plot title}
   \item{horizontal.padding}{
   Increase/reduce the plot's horizontal padding proportionally.
@@ -68,7 +68,7 @@ SRCGrob(
   \item{yaxis.cex}{Font size for the y-axis tick labels}
   \item{xaxis.label}{Text label for the x-axis}
   \item{label.cex}{Font size for the node labels}
-  \item{gene.cex}{Font size for the gene text}
+  \item{node.text.cex}{Font size for the node text}
   \item{main.y}{Move the main plot title position up or down}
   \item{main.cex}{Font size for the main plot title}
   \item{node.radius}{Node size}
@@ -76,8 +76,8 @@ SRCGrob(
   \item{seg1.col}{Colour of the first set of tree branch segments}
   \item{seg2.col}{Colour of the second set of tree branch segments}
   \item{line.lwd}{Branch segment thickness}
-  \item{gene.line.dist}{
-  Distance between gene text and tree branches (as a value between 0 and 1)
+  \item{node.text.line.dist}{
+  Distance between node text and tree branches (as a value between 0 and 1)
   }
   \item{colour.scheme}{Vector of colour values to be used for CP polygons}
   \item{draw.nodes}{Enable or disable drawing tree nodes}
