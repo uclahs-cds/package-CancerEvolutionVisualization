@@ -2,13 +2,15 @@ prep.tree <- function(
     tree.df,
     text.df,
     bells = TRUE,
-    axis.type = 'left',
     colour.scheme
     ) {
 
     if (!('parent' %in% colnames(tree.df))) {
         stop('No parent column provided');
         }
+
+    # Error on invalid tree structure
+    get.root.node(tree.df);
 
     if ('angle' %in% colnames(tree.df)) {
         message(paste(
@@ -28,6 +30,13 @@ prep.tree <- function(
             text.df,
             tree.rownames = rownames(tree.df)
             );
+        }
+
+    if (!check.circular.node.parents(tree.df)) {
+        stop(paste(
+            'Circular node reference.',
+            'A node cannot be the parent of its own parent.'
+            ));
         }
 
     if (!is.null(tree.df$CP)) {
@@ -142,4 +151,52 @@ check.parent.values <- function(node.names, parent.col) {
             !is.null(unlist(unique.node.names[parent])) | parent == -1;
             }
         ));
+    }
+
+check.circular.node.parents <- function(tree) {
+    has.circular.ref <- all(sapply(
+        row.names(tree),
+        function(node.name) {
+            !is.circular.node.parent(tree, node.name);
+            }
+        ));
+
+    return(has.circular.ref)
+    }
+
+is.circular.node.parent <- function(tree, node) {
+    node.parent <- tree[node, 'parent'];
+    parent.parent <- tree[node.parent, 'parent'];
+
+    is.root <- function(node.name) {
+        is.na(node.name) || node.name == '-1';
+        }
+    contains.root.node <- (is.root(node.parent)) || is.root(parent.parent);
+
+    is.circular <- !contains.root.node && parent.parent == node;
+
+    return(is.circular)
+    }
+
+get.root.node <- function(tree) {
+    valid.values <- as.character(c(-1, 0));
+    candidates <- which(is.na(tree$parent) | tree$parent %in% valid.values);
+
+    if (length(candidates) > 1) {
+        stop('More than one root node detected.');
+    } else if (length(candidates) == 0) {
+        stop('No root node provided.');
+        }
+
+    return(candidates);
+    }
+
+get.y.axis.position <- function(tree.colnames) {
+    num.branch.length.cols <- length(get.branch.length.colnames(tree.colnames));
+
+    y.axis.position <- if (num.branch.length.cols == 1) 'left' else {
+        if (num.branch.length.cols > 1) 'both' else 'none';
+        };
+
+    return(y.axis.position);
     }

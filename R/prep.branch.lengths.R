@@ -1,4 +1,4 @@
-get.branch.length.colnames <- function(num.columns) {
+get.default.branch.length.colnames <- function(num.columns) {
         if (num.columns > 0) {
             sapply(
                 1:num.columns,
@@ -13,13 +13,17 @@ get.branch.length.colnames <- function(num.columns) {
 
 get.default.branch.lengths <- function(num.rows) {
     lengths <- data.frame(a = rep(1, times = num.rows));
-    colnames(lengths) <- get.branch.length.colnames(1);
+    colnames(lengths) <- get.default.branch.length.colnames(1);
 
     return(lengths);
     }
 
 validate.branch.colname <- function(column.name) {
     grepl('length', column.name);
+    }
+
+get.branch.length.colnames <- function(col.names) {
+    Filter(validate.branch.colname, col.names);
     }
 
 validate.branch.length.values <- function(length.column) {
@@ -76,7 +80,7 @@ prep.branch.lengths <- function(tree.df) {
 
     if (length(length.cols) > 0) {
         lengths.df <- data.frame(tree.df[, length.cols]);
-        colnames(lengths.df) <- get.branch.length.colnames(length(length.cols));
+        colnames(lengths.df) <- get.default.branch.length.colnames(length(length.cols));
 
         return(lengths.df);
     } else {

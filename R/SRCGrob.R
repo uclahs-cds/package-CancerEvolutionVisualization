@@ -40,15 +40,11 @@ SRCGrob <- function(
     text.line.dist <- prep.text.line.dist(text.line.dist);
 
     yat <- prep.yat(yat);
-
-    yaxis.position <- if (is.null(yaxis2.label)) 'left' else {
-        if (!is.null(yaxis1.label)) 'both' else 'right';
-        };
+    yaxis.position <- get.y.axis.position(colnames(tree));
 
     inputs <- prep.tree(
         tree,
         node.text,
-        yaxis.position,
         colour.scheme = colour.scheme
         );
 

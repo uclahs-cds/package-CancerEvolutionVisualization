@@ -205,3 +205,129 @@ test_that(
 
         expect_true(check.parent.values(node.names, parents));
     });
+
+test_that(
+    'is.circular.node.parent handles a circular reference', {
+        parent <- c(NA, 3, 2);
+        node.names <- c(1, 2, 3);
+
+        tree <- data.frame(
+            parent,
+            row.names = node.names,
+            drop = FALSE
+            );
+
+        expect_true(is.circular.node.parent(tree, node = 2));
+    });
+
+test_that(
+    'is.circular.node.parent handles valid parent', {
+        parent <- c(NA, 1, 1);
+        node.names <- c(1, 2, 3);
+
+        tree <- data.frame(
+            parent,
+            row.names = node.names,
+            drop = FALSE
+            );
+
+        expect_false(is.circular.node.parent(tree, node = 3));
+    });
+
+test_that(
+    'is.circular.node.parent handles the root node', {
+        parent <- c(NA, 1, 1, 2);
+
+        tree <- data.frame(parent, drop = FALSE);
+
+        expect_false(is.circular.node.parent(tree, node = 1));
+    });
+
+test_that(
+    'get.root.node handles valid NA root', {
+        parent <- c(2, NA, 1);
+        expected.root <- which(is.na(parent));
+
+        tree <- data.frame(parent = parent);
+        root <- get.root.node(tree);
+
+        expect_equal(root, expected.root);
+    });
+
+test_that(
+    'get.root.node handles valid -1 root', {
+        parent <- c(2, -1, 1);
+        expected.root <- which(parent == -1);
+
+        tree <- data.frame(parent = parent);
+        root <- get.root.node(tree);
+
+        expect_equal(root, expected.root);
+    });
+
+test_that(
+    'get.root.node handles valid 0 root', {
+        parent <- c(2, 0, 1);
+        expected.root <- which(parent == 0);
+
+        tree <- data.frame(parent = parent);
+        root <- get.root.node(tree);
+
+        expect_equal(root, expected.root);
+    });
+
+test_that(
+    'get.root.node handles multiple root nodes', {
+        root.parent <- -1;
+        tree <- data.frame(parent = rep(root.parent, 2));
+
+        expect_error(get.root.node(tree), regexp = 'root')
+    });
+
+test_that(
+    'get.root.node handles a missing root node', {
+        tree <- data.frame(parent = 1:3);
+
+        expect_error(get.root.node(tree), regexp = 'root');
+    });
+
+test_that(
+    'get.y.axis.position handles a single branch length column', {
+        valid.colname <- 'length1';
+        cols <- c(valid.colname, 'invalid');
+
+        yaxis.position <- get.y.axis.position(cols);
+        expected.position <- 'left';
+
+        expect_equal(yaxis.position, expected.position);
+    });
+
+test_that(
+    'get.y.axis.position handles multiple valid branch length columns', {
+        valid.colnames <- sapply(
+            1:3,
+            FUN = function(x) {
+                paste0('length', x);
+                }
+            );
+
+        cols <- c(
+            valid.colnames,
+            'invalid.col'
+            );
+
+        yaxis.position <- get.y.axis.position(cols);
+        expected.position <- 'both';
+
+        expect_equal(yaxis.position, expected.position);
+    });
+
+test_that(
+    'get.y.axis.position handles no valid branch length columns', {
+        cols <- c('parent');
+
+        yaxis.position <- get.y.axis.position(cols);
+        expected.position <- 'none';
+
+        expect_equal(yaxis.position, expected.position);
+    });
