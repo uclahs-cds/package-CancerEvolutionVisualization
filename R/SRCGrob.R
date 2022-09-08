@@ -22,7 +22,7 @@ SRCGrob <- function(
     seg1.col = 'black',
     seg2.col = 'green',
     line.lwd = 3,
-    text.line.dist = 0.1,
+    node.text.line.dist = 0.1,
     colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
     add.normal = FALSE,
@@ -37,7 +37,7 @@ SRCGrob <- function(
     add.node.text <- !is.null(node.text);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
     text.on.nodes <- FALSE;
-    text.line.dist <- prep.text.line.dist(text.line.dist);
+    node.text.line.dist <- prep.text.line.dist(node.text.line.dist);
 
     yat <- prep.yat(yat);
     yaxis.position <- get.y.axis.position(colnames(tree));
@@ -91,7 +91,7 @@ SRCGrob <- function(
         fixed.angle = fixed.angle,
         add.node.text = add.node.text,
         text.on.nodes = text.on.nodes,
-        text.line.dist = text.line.dist,
+        node.text.line.dist = node.text.line.dist,
         node.text.cex = node.text.cex,
         yaxis.position = yaxis.position,
         yaxis1.label = yaxis1.label,
