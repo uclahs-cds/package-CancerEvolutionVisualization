@@ -114,15 +114,11 @@ CP.tree <- SRCGrob(CP);
 grid.draw(CP.tree);
 ```
 
-### Ex. 4: Branch Angles
-
-CEV will automatically set branch angles, but the optional `angle` column will override this on a branch-by-branch basis. This can be helpful when trying to perfect a complex plot. A value of 0 will set the branch completely vertical. Positive values will rotate the branch clockwise (in degrees), and negative values will rotate counterclockwise. `NA` values will be ignored.
-
 ## Gene Dataframe
 This secondary dataframe can be used to add gene name labels corresponding to each 
 node. 
 
-### Ex. 5: Gene Labels
+### Ex. 4: Gene Labels
 Each row must include a node ID for the gene. Genes will be stacked next to the 
 specified node.
 
@@ -144,7 +140,7 @@ simple.gene.tree <- SRCGrob(parent.only, simple.gene.data);
 grid.draw(simple.gene.tree);
 ```
 
-### Ex. 6: CNAs and SNVs
+### Ex. 5: CNAs and SNVs
 - An optional `CNA` column can be included to colour the text depending on 
 the gene's CNA loss/gain (or neutrality).
 - A boolean column can also be added to italicise genes that contain SNVs.
@@ -171,7 +167,7 @@ common parameters in `SRCGRob`.
 
 ## Plot Size
 
-### Ex. 7: Plot Width with Horizontal Padding
+### Ex. 6: Plot Width with Horizontal Padding
 Some plots require more or less horizontal padding between the x-axes and the tree
 itself. The `horizontal.padding` parameter scales the default padding proportionally.
 For example, `horizontal.padding = -0.2` would reduce the padding by 20%.
@@ -187,7 +183,7 @@ padding.tree <- SRCGrob(
 grid.draw(padding.tree);
 ```
 
-### Ex. 8: Branch Scaling
+### Ex. 7: Branch Scaling
 Branches are scaled automatically, but users can further scale each branch with
 the `scale1` and `scale2` parameters. These values scale each branch proportionally,
 so `scale1 = 1.1` would make the first set of branch lengths 10% longer.
@@ -205,7 +201,7 @@ grid.draw(scaled.tree);
 ```
 
 
-### Ex. 9: Plot Title
+### Ex. 8: Plot Title
 The main title of the plot is referred to as `main` in plot parameters. `main` sets
 the title text, `main.cex` sets the font size, and `main.y` is used to move the main
 title up if more space is required for the plot.
@@ -230,10 +226,10 @@ A y-axis will be added automatically for each branch length column (the
 left-sided axis corresponding to the first branch length column, and the right
 with the second length column).
 
-### Ex. 10: Y-Axis
+### Ex. 9: Y-Axis
 Ticks are placed automatically based on the plot size and the branch lengths. 
 
-### Ex. 11: Axis Title
+### Ex. 10: Axis Title
 Axis titles are specified with the `yaxis1.label` and `yaxis2.label` parameters.
 
 ```{r, fig.show='hide'}
@@ -252,7 +248,7 @@ axis.title.tree$vp$x <- unit(0.75, 'npc');
 grid.draw(axis.title.tree);
 ```
 
-### Ex. 12: Axis Tick Placement
+### Ex. 11: Axis Tick Placement
 The default axis tick positions can be overridden with the `yat` parameter. This
 expects a list of vectors, each corresponding to the ticks on an x-axis.
 
@@ -274,7 +270,7 @@ yat.tree <- SRCGrob(
 grid.draw(yat.tree);
 ```
 
-### Ex. 13: Normal
+### Ex. 12: Normal
 ```{r, fig.show='hide'}
 normal.tree <- SRCGrob(
     parent.only,
