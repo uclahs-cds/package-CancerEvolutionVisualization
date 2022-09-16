@@ -67,8 +67,9 @@ grid.draw(parent.only.tree);
 ### Ex. 2: Branch Lengths
 
 It's common to associate branch lengths with a the values of a particular variable 
-(for example, PGA or SNVs). Up to twoIncluding a `length1` and/or `length2` column will
-enable this branch scaling behaviour, and automatically add y-axis ticks and labels.
+(for example, PGA or SNVs). Up to two branch lengths can be specified. Including a 
+`length1` and/or `length2` column will enable this branch scaling behaviour,
+and automatically add y-axis ticks and labels.
 
 Multiple length values can be used together. All columns whose names contain `length`
 will be used. (For example, `length1` and `snv.length` are both valid.) Multiple 
