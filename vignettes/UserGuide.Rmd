@@ -124,11 +124,11 @@ Each row must include a node ID for the text. Text will be stacked next to the
 specified node.
 
 ```{r echo=F}
-simple.text.data <- gene.input[, 1:2];
+simple.text.data <- text.input[, 1:2];
 
 knitr::kable(
     simple.text.data,
-    col.names = colnames(gene.input)[1:2]
+    col.names = colnames(text.input)[1:2]
     );
 ```
 
@@ -148,13 +148,12 @@ grid.draw(simple.text.tree);
 
 ```{r echo=F}
 knitr::kable(
-    gene.input
+    text.input
     );
 ```
 
-
 ```{r, fig.show='hide'}
-full.text.tree <- SRCGrob(parent.only, gene.input);
+full.text.tree <- SRCGrob(parent.only, text.input);
 ```
 
 ```{r}
