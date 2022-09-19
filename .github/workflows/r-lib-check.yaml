@@ -4,6 +4,9 @@ name: R-CMD-check (r-lib)
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
 jobs:
   R-CMD-check:
     runs-on: ubuntu-latest
