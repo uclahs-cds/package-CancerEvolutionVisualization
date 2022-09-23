@@ -143,7 +143,7 @@ grid.draw(simple.text.tree);
 
 ### Ex. 5: Specifying Colour and Style
 - An optional `col` column can be included to specify the colour of each text.
-- A `style` column can be included to bold, italicize, etc. These values correspond to the standard R `fontface` values.
+- A `fontface` column can be included to bold, italicize, etc. These values correspond to the standard R `fontface` values.
 - `NA` values in each column will default to `black` and `plain` respectively.
 
 ```{r echo=F}

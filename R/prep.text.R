@@ -49,8 +49,8 @@ add.default.text.columns <- function(text.df) {
         text.df$col <- NA;
         }
 
-    if (is.null(text.df$style)) {
-        text.df$style <- NA;
+    if (is.null(text.df$fontface)) {
+        text.df$fontface <- NA;
         }
 
     return(text.df);
