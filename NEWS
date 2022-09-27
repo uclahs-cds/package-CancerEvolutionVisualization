@@ -1,4 +1,4 @@
-CancerEvolutionVisualization 1.0.0 2022-09-07 (Dan Knight)
+CancerEvolutionVisualization 1.0.0 2022-09-15 (Dan Knight)
 
 ADDED
 * Documentation for default colour scheme
@@ -7,10 +7,14 @@ ADDED
   - Circular node references
 
 UPDATE
+* Changed gene input to a generic node text input, where
+  style and colour are specified directly (not through
+  SNV or CNA values).
 * Fixed discrepancies between documentation and code
 * Fixed bug related to referencing an uninitialized variable
 * Fixed y-axis positioning bug
 * Updated packaging/development dependencies
+* Update User Guide
 
 
 --------------------------------------------------------------------------

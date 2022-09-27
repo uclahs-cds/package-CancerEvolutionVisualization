@@ -1,9 +1,9 @@
-create.test.tree <- function(tree, genes, sample, ...) {
+create.test.tree <- function(tree, node.text, sample, ...) {
     out <- SRCGrob(
         tree,
-        genes,
+        node.text,
         node.radius = 0.1,
-        gene.cex = 0.85,
+        node.text.cex = 0.85,
         scale1 = 0.9,
         seg1.col = 'navy',
         seg2.col = 'gold',

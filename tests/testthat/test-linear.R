@@ -7,7 +7,7 @@ test_that(
             linear.example,
             create.test.tree(
                 linear.test.data$tree,
-                linear.test.data$genes,
+                linear.test.data$node.text,
                 'WHO003',
                 add.normal = TRUE,
                 horizontal.padding = -1

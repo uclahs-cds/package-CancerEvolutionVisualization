@@ -1,6 +1,6 @@
 SRCGrob <- function(
     tree,
-    genes = NULL,
+    node.text = NULL,
     main = NULL,
     horizontal.padding = 0.1,
     scale1 = 1,
@@ -14,7 +14,7 @@ SRCGrob <- function(
     yaxis.cex = 1.45,
     xaxis.label = 'CP',
     label.cex = NA,
-    gene.cex = 0.85,
+    node.text.cex = 0.85,
     main.y = NULL,
     main.cex = 1.7,
     node.radius = 0.1,
@@ -22,7 +22,7 @@ SRCGrob <- function(
     seg1.col = 'black',
     seg2.col = 'green',
     line.lwd = 3,
-    gene.line.dist = 0.1,
+    node.text.line.dist = 0.1,
     colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
     add.normal = FALSE,
@@ -34,17 +34,17 @@ SRCGrob <- function(
     size.units = 'npc'
     ) {
 
-    add.genes <- !is.null(genes);
+    add.node.text <- !is.null(node.text);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
-    genes.on.nodes <- FALSE;
-    gene.line.dist <- prep.gene.line.dist(gene.line.dist);
+    text.on.nodes <- FALSE;
+    node.text.line.dist <- prep.text.line.dist(node.text.line.dist);
 
     yat <- prep.yat(yat);
     yaxis.position <- get.y.axis.position(colnames(tree));
 
     inputs <- prep.tree(
         tree,
-        genes,
+        node.text,
         colour.scheme = colour.scheme
         );
 
@@ -75,7 +75,7 @@ SRCGrob <- function(
     clone.out <- make.clone.tree.grobs(
         ccf.df = inputs$in.tree.df,
         tree = inputs$tree,
-        genes.df = inputs$genes.df,
+        text.df = inputs$text.df,
         node.radius = node.radius,
         scale1 = scale1,
         scale2 = scale2,
@@ -89,10 +89,10 @@ SRCGrob <- function(
         sig.shape = sig.shape,
         spread = spread,
         fixed.angle = fixed.angle,
-        add.genes = add.genes,
-        genes.on.nodes = genes.on.nodes,
-        gene.line.dist = gene.line.dist,
-        gene.cex = gene.cex,
+        add.node.text = add.node.text,
+        text.on.nodes = text.on.nodes,
+        node.text.line.dist = node.text.line.dist,
+        node.text.cex = node.text.cex,
         yaxis.position = yaxis.position,
         yaxis1.label = yaxis1.label,
         yaxis2.label = yaxis2.label,
