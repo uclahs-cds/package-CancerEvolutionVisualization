@@ -2,4 +2,5 @@
 ^\.Rproj\.user$
 ^\.github
 ^LICENSE\.md$
+^README\.md$
 ^metadata\.yaml$
