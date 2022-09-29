@@ -540,7 +540,7 @@ add.text2 <- function(
 
             node.text.fontface[[pos]] <<- c(
                 node.text.fontface[[pos]],
-                if (!is.na(text.row$style)) text.row$style else 'plain'
+                if (!is.na(text.row$fontface)) text.row$fontface else 'plain'
                 );
             }
         );

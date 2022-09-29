@@ -108,14 +108,14 @@ test_that(
     });
 
 test_that(
-    'add.default.text.columns handles omitted style data' , {
+    'add.default.text.columns handles omitted fontface data' , {
         node.text <- data.frame(
             name = c('GENE', 'EXAMPLE')
             );
 
         result <- add.default.text.columns(node.text);
 
-        expect_true(all(is.na(result$style)));
+        expect_true(all(is.na(result$fontface)));
     });
 
 test_that(
@@ -133,17 +133,17 @@ test_that(
     });
 
 test_that(
-    'add.default.text.columns does not modify existing style data' , {
+    'add.default.text.columns does not modify existing fontface data' , {
         expected.style <- c(NA, 'plain', 'italic');
 
         node.text <- data.frame(
             name = c('GENES', 'FOR', 'TESTING'),
-            style = expected.style
+            fontface = expected.style
             );
 
         result <- add.default.text.columns(node.text);
 
-        expect_equal(result$style, expected.style);
+        expect_equal(result$fontface, expected.style);
     });
 
 test_that(
