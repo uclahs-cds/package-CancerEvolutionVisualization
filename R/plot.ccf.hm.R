@@ -8,7 +8,8 @@ plot.ccf.hm <- function(
     hm.cols = c('white', 'blue'),
     xaxis.lab = NULL,
     xlab.label = 'Mutations',
-    ...) {
+    ...
+    ) {
 
     if (!is.null(ccf.thres)) {
         hm.array[hm.array <= ccf.thres] <- 0;
@@ -38,7 +39,7 @@ plot.ccf.hm <- function(
         left.padding = 1,
         right.padding = 1,
         resolution = 3000,
-        width = 9, 
+        width = 9,
         height = 5,
         colourkey.labels.at = col.labels,
         ...

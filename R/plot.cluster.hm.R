@@ -9,7 +9,7 @@ plot.cluster.hm <- function(
     xaxis.col = NULL,
     ...
     ) {
-    
+
     if (is.null(levels(DF$ID))) {
         DF$ID <- factor(DF$ID, levels = sort(unique(DF$ID)));
         }
@@ -51,7 +51,7 @@ plot.cluster.hm <- function(
             legend = list(
                 title = 'CCF',
                 labels = c(min(arr), max(arr)),
-                colours = if (is.null(hm.cols)) { c('white', 'blue') } else { hm.cols },
+                colours = if (is.null(hm.cols)) c('white', 'blue') else hm.cols,
                 border = 'black',
                 continuous = TRUE,
                 size = 0.6
@@ -61,7 +61,7 @@ plot.cluster.hm <- function(
         title.cex = 0.75,
         label.cex = 0.6
         );
-    
+
     create.multiplot(
         filename = file.path(
             save.path,
@@ -75,7 +75,7 @@ plot.cluster.hm <- function(
         plot.objects = list(cov, hm),
         plot.layout = c(1, 2),
         panel.heights = c(1, 0.05),
-        xaxis.lab = if (!is.null(xaxis.col)) { xaxis.label} else { NULL },
+        xaxis.lab = if (!is.null(xaxis.col)) xaxis.label else NULL,
         xaxis.cex = 0.6,
         xaxis.rot = 90,
         xaxis.fontface = 1,
