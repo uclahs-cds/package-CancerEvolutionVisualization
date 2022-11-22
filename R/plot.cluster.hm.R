@@ -1,7 +1,5 @@
 plot.cluster.hm <- function(
     DF,
-    save.path = save.dir.path,
-    fname = 'cluster-hm',
     p = patient,
     plt.height = 6,
     plt.width = 11,
@@ -40,6 +38,7 @@ plot.cluster.hm <- function(
         print.colour.key = FALSE,
         resolution = 5000
         );
+
     legend.clone <- legend.grob(
         list(
             legend = list(
@@ -62,16 +61,8 @@ plot.cluster.hm <- function(
         label.cex = 0.6
         );
 
-    create.multiplot(
-        filename = file.path(
-            save.path,
-            generate.filename(
-                project.stem = p,
-                file.core = fname,
-                extension = 'png',
-                file.date = FALSE
-                )
-            ),
+    cls.hm <- create.multiplot(
+        filename = NULL,
         plot.objects = list(cov, hm),
         plot.layout = c(1, 2),
         panel.heights = c(1, 0.05),
@@ -93,4 +84,5 @@ plot.cluster.hm <- function(
         height = plt.height,
         width = plt.width
         );
+    return(cls.hm);
     }

@@ -2,8 +2,7 @@ plot.summary.ccf.hm <- function(
     DF,
     ccf.thres = 0,
     clone.order = NULL,
-    sample.order = NULL,
-    fname = 'summary-cluster-hm'
+    sample.order = NULL
     ) {
 
     arr <- convert.df2array(
@@ -83,8 +82,8 @@ plot.summary.ccf.hm <- function(
         label.cex = 0.6
         );
 
-    create.multiplot(
-        filename = fname,
+    summary.hm <- create.multiplot(
+        filename = NULL,
         plot.objects = list(hm, sample.bar, clone.bar),
         plot.layout = c(2, 2),
         layout.skip = c(FALSE, FALSE, FALSE, TRUE),
@@ -116,4 +115,5 @@ plot.summary.ccf.hm <- function(
         height = 6,
         width = 11
         );
+    return(summmary.hm);
     }

@@ -1,6 +1,5 @@
 plot.ccf.hm <- function(
     hm.array,
-    fname = NULL,
     ccf.thres = NULL,
     cls.dim = 'both',
     cls.method = 'complete',
@@ -17,7 +16,7 @@ plot.ccf.hm <- function(
     col.labels <- seq(0, 1, .2);
 
     hm <- create.heatmap(
-        filename = fname,
+        filename = NULL,
         x = hm.array,
         force.clustering = TRUE,
         cluster.dimensions = cls.dim,
