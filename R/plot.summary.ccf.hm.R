@@ -2,7 +2,8 @@ plot.summary.ccf.hm <- function(
     DF,
     ccf.thres = 0,
     clone.order = NULL,
-    sample.order = NULL
+    sample.order = NULL,
+    ...
     ) {
 
     arr <- convert.df2array(
@@ -107,13 +108,12 @@ plot.summary.ccf.hm <- function(
         y.spacing = c(- 1.5),
         left.padding = 10,
         bottom.padding = 3,
-        # merge.legends = FALSE,
         print.new.legend = TRUE,
         legend = list(right = list(
             fun = legend.ccf
         )),
         height = 6,
-        width = 11
+        width = 11,
+        ...
         );
-    return(summmary.hm);
     }

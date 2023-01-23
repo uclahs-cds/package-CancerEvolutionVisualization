@@ -4,7 +4,7 @@ plot.ccf.hm <- function(
     cls.dim = 'both',
     cls.method = 'complete',
     dist.method = 'euclidean',
-    hm.cols = c('white', 'blue'),
+    hm.col.scheme = NULL,
     xaxis.lab = NULL,
     xlab.label = 'Mutations',
     ...
@@ -12,6 +12,14 @@ plot.ccf.hm <- function(
 
     if (!is.null(ccf.thres)) {
         hm.array[hm.array <= ccf.thres] <- 0;
+        }
+    
+    if (!is.null(hm.col.scheme)) {
+        col.scheme <- hm.col.scheme;
+    } else if (any(hm.array < 0)) {
+        col.scheme <- c('red', 'white', 'blue');
+    } else {
+        col.scheme <- c('white', 'blue');
         }
     col.labels <- seq(0, 1, .2);
 
@@ -34,7 +42,7 @@ plot.ccf.hm <- function(
         yaxis.cex = 0.6,
         yaxis.fontface = 1,
         colourkey.cex = 0.6,
-        colour.scheme = hm.cols,
+        colour.scheme = col.scheme,
         left.padding = 1,
         right.padding = 1,
         resolution = 3000,
@@ -43,5 +51,4 @@ plot.ccf.hm <- function(
         colourkey.labels.at = col.labels,
         ...
         );
-    return(hm);
     }

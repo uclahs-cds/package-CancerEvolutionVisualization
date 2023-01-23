@@ -1,9 +1,8 @@
 plot.cluster.hm <- function(
     DF,
-    p = patient,
     plt.height = 6,
     plt.width = 11,
-    hm.cols = NULL,
+    hm.col.scheme = NULL,
     xaxis.col = NULL,
     ...
     ) {
@@ -15,18 +14,21 @@ plot.cluster.hm <- function(
     arr             <- convert.df2array(DF);
     snv.order       <- unique(DF[, c('snv.id', 'clone.id')]);
     cls.colours     <- get.colours(DF$clone.id, return.names = TRUE);
-    arr             <- arr[snv.order$snv.id, levels(DF$ID)];
+    arr             <- arr[snv.order$snv.id, levels(DF$ID), drop = FALSE];
 
     if (!is.null(xaxis.col)) {
         xaxis.label <- unique(DF[DF$snv.id %in% rownames(arr), xaxis.col]);
     }
 
+    if (ncol(arr) == 1) {
+        arr <- t(arr);
+        }
 
     hm <- plot.ccf.hm(
         hm.array = arr,
         fname = NULL,
         cls.dim = 'none',
-        hm.cols = hm.cols,
+        hm.col.scheme = hm.col.scheme,
         ...
         );
 
@@ -50,7 +52,7 @@ plot.cluster.hm <- function(
             legend = list(
                 title = 'CCF',
                 labels = c(min(arr), max(arr)),
-                colours = if (is.null(hm.cols)) c('white', 'blue') else hm.cols,
+                colours = if (is.null(hm.col.scheme)) c('white', 'blue') else hm.col.scheme,
                 border = 'black',
                 continuous = TRUE,
                 size = 0.6
@@ -71,7 +73,7 @@ plot.cluster.hm <- function(
         xaxis.rot = 90,
         xaxis.fontface = 1,
         xaxis.tck = 0,
-        yaxis.lab = list(NULL, colnames(arr)),
+        yaxis.lab = list(NULL, levels(DT$ID)),
         yaxis.cex = 0.6,
         yaxis.tck = 0,
         yaxis.fontface = 1,
@@ -84,5 +86,4 @@ plot.cluster.hm <- function(
         height = plt.height,
         width = plt.width
         );
-    return(cls.hm);
     }
