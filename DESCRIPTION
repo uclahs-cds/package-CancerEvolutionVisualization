@@ -19,7 +19,8 @@ Imports:
     plyr,
     grDevices,
     utils,
-    stringr
+    stringr,
+    rmarkdown
 Suggests:
     testthat,
 	knitr
