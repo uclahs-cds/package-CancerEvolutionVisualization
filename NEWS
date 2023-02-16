@@ -1,6 +1,7 @@
-CancerEvolutionVisualization 1.1.1 2022-11-18 (Helena Winata)
+CancerEvolutionVisualization 1.1.0 2023-02-15 (Dan Knight, Helena Winata)
 
 ADDED
+* CEV report template and public function
 * Generic functions to generate accompanying heatmaps
 
 
