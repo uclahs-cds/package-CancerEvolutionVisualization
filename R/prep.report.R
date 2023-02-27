@@ -1,3 +1,22 @@
+prep.report <- function(
+    phylogeny,
+    SNV.assignment,
+    SNV.counts,
+    CCF.values
+    ) {
+    phylogeny <- prep.phylogeny(phylogeny);
+    SNV.assignment <- prep.SNV.assignment(SNV.assignment);
+    SNV.counts <- prep.SNV.counts(SNV.counts);
+    CCF.values <- prep.CCF.values(CCF.values);
+    
+   return(list(
+        phylogeny = phylogeny,
+        SNV.assignment = SNV.assignment,
+        SNV.counts = CCF.values,
+        CCF.values = CCF.values
+        ));
+    }
+
 prep.phylogeny <- function(phylogeny) {
     phylogeny.data.name <- "Phylogeny";
 

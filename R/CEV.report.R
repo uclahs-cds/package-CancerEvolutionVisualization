@@ -8,10 +8,12 @@ CEV.report <- function(
     author,
     date = NULL
     ) {
-    phylogeny <- prep.phylogeny(phylogeny);
-    SNV.assignment <- prep.SNV.assignment(SNV.assignment);
-    SNV.counts <- prep.SNV.counts(SNV.counts);
-    CCF.values <- prep.CCF.values(CCF.values);
+    inputs <- prep.report(
+        phylogeny,
+        SNV.assignment,
+        SNV.counts,
+        CCF.values
+        );
     
     report.params <- list(
         title = title,
