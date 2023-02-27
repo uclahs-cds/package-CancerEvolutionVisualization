@@ -18,3 +18,23 @@ reindex.column <- function(column.values, new.value.index) {
         use.names = FALSE
         ));
     }
+
+check.column.exists <- function(
+    df,
+    column.name,
+    data.name = NULL
+    ) {
+
+    result <- column.name %in% colnames(df);
+    
+    if (!result) {
+        message <- paste(
+            'No column',
+            paste0('"', column.name, '"'),
+            "found in",
+            if (!is.null(data.name)) data.name else "data"
+            );
+
+        stop(message);
+        }
+    }
