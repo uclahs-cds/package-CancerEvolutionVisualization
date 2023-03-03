@@ -50,7 +50,7 @@ prep.SNV.counts <- function(SNV.counts) {
         }
 
     check.column.exists(SNV.counts, 'clone.id', SNV.count.data.name);
-    check.column.exists(SNV.counts, 'num.SNV', SNV.count.data.name);
+    check.column.exists(SNV.counts, 'num.snv', SNV.count.data.name);
     check.column.exists(SNV.counts, 'CP', SNV.count.data.name);
 
     return(SNV.counts);
@@ -64,7 +64,7 @@ prep.CCF.values <- function(CCF.values) {
         }
 
     check.column.exists(CCF.values, 'sample.id', CCF.value.data.name);
-    check.column.exists(CCF.values, 'SNV.id', CCF.value.data.name);
+    check.column.exists(CCF.values, 'snv.id', CCF.value.data.name);
     check.column.exists(CCF.values, 'CCF', CCF.value.data.name);
 
     return(CCF.values);
