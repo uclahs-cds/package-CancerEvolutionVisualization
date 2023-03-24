@@ -19,7 +19,8 @@ Imports:
     plyr,
     grDevices,
     utils,
-    stringr
+    stringr,
+    BoutrosLab.plotting.general
 Suggests:
     testthat,
 	knitr
