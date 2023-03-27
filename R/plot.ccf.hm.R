@@ -4,7 +4,7 @@ plot.ccf.hm <- function(
     cls.dim = 'both',
     cls.method = 'complete',
     dist.method = 'euclidean',
-    hm.cols = c('white', 'blue'),
+    hm.cols = NULL,
     xaxis.lab = NULL,
     xlab.label = 'Mutations',
     ...
@@ -14,6 +14,8 @@ plot.ccf.hm <- function(
         hm.array[hm.array <= ccf.thres] <- 0;
         }
     col.labels <- seq(0, 1, .2);
+    
+    heatmap.colours <- if (!is.null(hm.cols)) hm.cols else default.heatmap.colours();
 
     hm <- BoutrosLab.plotting.general::create.heatmap(
         filename = NULL,
@@ -34,7 +36,7 @@ plot.ccf.hm <- function(
         yaxis.cex = 0.6,
         yaxis.fontface = 1,
         colourkey.cex = 0.6,
-        colour.scheme = hm.cols,
+        colour.scheme = heatmap.colours,
         left.padding = 1,
         right.padding = 1,
         resolution = 3000,
@@ -43,5 +45,6 @@ plot.ccf.hm <- function(
         colourkey.labels.at = col.labels,
         ...
         );
+
     return(hm);
     }

@@ -15,6 +15,8 @@ plot.summary.ccf.hm <- function(
     clone.df <- unique(DF[, c('clone.id', 'total.snv')]);
     sample.df <- aggregate(CCF ~ ID, data = DF[DF$CCF > 0, ], FUN = length);
     names(sample.df)[2] <- 'nsnv';
+    
+    heatmap.colours <- default.heatmap.colours();
 
     if (!is.null(clone.order) & !is.null(sample.order)) {
         arr                 <- arr[clone.order, sample.order];
@@ -59,7 +61,7 @@ plot.summary.ccf.hm <- function(
         yaxis.cex = 0.6,
         yaxis.fontface = 1,
         print.colour.key = FALSE,
-        colour.scheme = c('white', 'blue'),
+        colour.scheme = heatmap.colours,
         left.padding = 1,
         right.padding = 1,
         width = 9,
@@ -71,7 +73,7 @@ plot.summary.ccf.hm <- function(
             legend = list(
                 title = 'CCF',
                 labels = c(min(arr), max(arr)),
-                colours = c('white', 'blue'),
+                colours = heatmap.colours,
                 border = 'black',
                 continuous = TRUE,
                 size = 0.6

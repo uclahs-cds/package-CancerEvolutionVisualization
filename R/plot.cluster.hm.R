@@ -15,16 +15,17 @@ plot.cluster.hm <- function(
     snv.order       <- unique(DF[, c('snv.id', 'clone.id')]);
     cls.colours     <- get.colours(DF$clone.id, return.names = TRUE);
     arr             <- arr[snv.order$snv.id, levels(DF$ID)];
-
+    
+    heatmap.colours <- if (!is.null(hm.cols)) hm.cols else default.heatmap.colours();
+    
     if (!is.null(xaxis.col)) {
         xaxis.label <- unique(DF[DF$snv.id %in% rownames(arr), xaxis.col]);
         }
 
     hm <- plot.ccf.hm(
         hm.array = arr,
-        fname = NULL,
         cls.dim = 'none',
-        hm.cols = hm.cols,
+        hm.cols = heatmap.colours,
         ...
         );
 
@@ -48,7 +49,7 @@ plot.cluster.hm <- function(
             legend = list(
                 title = 'CCF',
                 labels = c(min(arr), max(arr)),
-                colours = if (is.null(hm.cols)) c('white', 'blue') else hm.cols,
+                colours = heatmap.colours,
                 border = 'black',
                 continuous = TRUE,
                 size = 0.6
