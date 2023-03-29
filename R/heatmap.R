@@ -138,45 +138,60 @@ plot.cluster.hm <- function(
 
 plot.summary.ccf.hm <- function(
     DF,
-    ccf.thres = 0,
-    clone.order = NULL,
-    sample.order = NULL
+    ccf.thres = 0
     ) {
+    
+    median.ccf <- aggregate(
+        DF$CCF,
+        by = list(DF$ID, DF$clone.id),
+        FUN = median
+        );
+    
+    colnames(median.ccf) <- c('ID', 'clone.id', 'median.CCF');
 
     arr <- data.frame.to.array(
-        DF = DF,
-        value = 'median.ccf.per.sample',
-        x.axis = 'clone.id'
+        DF = median.ccf,
+        value = 'median.CCF',
+        x.axis = 'clone.id',
+        y.axis = 'ID'
         );
     arr[arr <= ccf.thres] <- 0;
 
-    clone.df <- unique(DF[, c('clone.id', 'total.snv')]);
-    sample.df <- aggregate(CCF ~ ID, data = DF[DF$CCF > 0, ], FUN = length);
-    names(sample.df)[2] <- 'nsnv';
+    filtered.CCFs <- DF$CCF > 0;
+    SNV.per.clone <- aggregate(snv.id ~ clone.id, DF[filtered.CCFs, ], FUN = length);
+    colnames(SNV.per.clone) <- c('clone.id', 'num.SNV');
+
+    SNV.per.sample <- aggregate(snv.id ~ ID, DF[filtered.CCFs, ], FUN = length);
+    colnames(SNV.per.sample) <- c('ID', 'num.SNV');
     
     heatmap.colours <- default.heatmap.colours();
+    barplot.padding.percentage <- 0.05;
 
-    if (!is.null(clone.order) & !is.null(sample.order)) {
-        arr                 <- arr[clone.order, sample.order];
-        clone.df$clone.id   <- factor(clone.df$clone.id, levels = clone.order);
-        sample.df$ID        <- factor(sample.df$ID, levels = sample.order);
-        }
+    max.clone.SNV <- max(SNV.per.clone$num.SNV);
 
     clone.bar <- BoutrosLab.plotting.general::create.barplot(
-        formula = total.snv ~ clone.id,
-        data = clone.df,
+        formula = num.SNV ~ clone.id,
+        data = SNV.per.clone,
         yaxis.cex = 0,
         xaxis.lab = rep('', nrow(arr)),
         xaxis.cex = 0,
-        ylimits = c( - max(clone.df$total.snv) * 0.05, max(clone.df$total.snv) * 1.05),
+        ylimits = c(
+            -(max.clone.SNV * barplot.padding.percentage),
+            max.clone.SNV * (1 + barplot.padding.percentage)
+            ),
         resolution = 50
         );
 
+    max.sample.SNV <- max(SNV.per.sample$num.SNV);
+
     sample.bar <- BoutrosLab.plotting.general::create.barplot(
-        formula = ID ~ nsnv,
-        data = sample.df,
+        formula = ID ~ num.SNV,
+        data = SNV.per.sample,
         xlab.label = 'SNV per sample',
-        xlimits = c( - max(sample.df$nsnv) * 0.05, max(sample.df$nsnv) * 1.05),
+        xlimits = c(
+            -(max.sample.SNV * barplot.padding.percentage),
+            max.sample.SNV * (1 + barplot.padding.percentage)
+            ),
         ylab.label = NULL,
         yaxis.lab = rep('', length(arr)),
         yaxis.cex = 0,
@@ -238,16 +253,16 @@ plot.summary.ccf.hm <- function(
         xaxis.fontface = 1,
         xlab.to.xaxis.padding = - 0.5,
         ylab.label = c( 'SNV per clone', '\t', '\t', 'Sample ID', '\t'),
-        ylab.padding = 13,
+        ylab.padding = 8,
         ylab.cex = 0.7,
         yaxis.cex = 0.6,
         yaxis.tck = 0.4,
         yaxis.fontface = 1,
-        x.spacing = c(- 3),
-        y.spacing = c(- 1.5),
+        x.spacing = c(0),
+        y.spacing = c(-0.5),
         left.padding = 10,
         bottom.padding = 3,
-        # merge.legends = FALSE,
+        merge.legends = FALSE,
         print.new.legend = TRUE,
         legend = list(right = list(
             fun = legend.ccf
