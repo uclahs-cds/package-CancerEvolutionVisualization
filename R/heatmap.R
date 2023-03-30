@@ -80,14 +80,15 @@ plot.cluster.hm <- function(
         ...
         );
 
-    cov <- BoutrosLab.plotting.general::create.heatmap(
+    # Suppress "three-colour scheme" warning with 3 clones.
+    cov <- suppressWarnings(BoutrosLab.plotting.general::create.heatmap(
         x = t(cls.colours[snv.order$clone.id]),
         input.colours = TRUE,
         clustering.method = 'none',
         grid.col = FALSE,
         print.colour.key = FALSE,
         resolution = 5000
-        );
+        ));
 
     legend.clone <- BoutrosLab.plotting.general::legend.grob(
         list(
