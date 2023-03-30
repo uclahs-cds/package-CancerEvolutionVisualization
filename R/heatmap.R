@@ -1,28 +1,33 @@
 plot.ccf.hm <- function(
-    hm.array,
-    ccf.thres = NULL,
-    cls.dim = 'both',
-    cls.method = 'complete',
+    CCF.df,
+    CCF.threshold = NULL,
+    cluster.dim = 'both',
+    cluster.method = 'complete',
     dist.method = 'euclidean',
-    hm.cols = NULL,
+    colour.scheme = NULL,
     xaxis.lab = NULL,
     xlab.label = 'Mutations',
     ...
     ) {
 
-    if (!is.null(ccf.thres)) {
-        hm.array[hm.array <= ccf.thres] <- 0;
+    if (!is.null(CCF.threshold)) {
+        CCF.df[CCF.df <= CCF.threshold] <- 0;
         }
     col.labels <- seq(0, 1, .2);
+    sample.names <- colnames(CCF.df);
 
-    heatmap.colours <- if (!is.null(hm.cols)) hm.cols else default.heatmap.colours();
+    heatmap.colours <- if (!is.null(colour.scheme)) {
+        colour.scheme;
+    } else {
+        default.heatmap.colours();
+        }
 
     hm <- BoutrosLab.plotting.general::create.heatmap(
         filename = NULL,
-        x = hm.array,
+        x = CCF.df,
         force.clustering = TRUE,
-        cluster.dimensions = cls.dim,
-        clustering.method = cls.method,
+        cluster.dimensions = cluster.dim,
+        clustering.method = cluster.method,
         rows.distance.method = dist.method,
         cols.distance.method = dist.method,
         xaxis.lab = xaxis.lab,
@@ -31,7 +36,7 @@ plot.ccf.hm <- function(
         xaxis.cex = 0.6,
         xaxis.fontface = 1,
         xaxis.rot = 90,
-        yaxis.lab = colnames(hm.array),
+        yaxis.lab = sample.names,
         ylab.cex = 1,
         yaxis.cex = 0.6,
         yaxis.fontface = 1,
@@ -50,39 +55,47 @@ plot.ccf.hm <- function(
     }
 
 plot.cluster.hm <- function(
-    DF,
+    cluster.df,
     plt.height = 6,
     plt.width = 11,
-    hm.cols = NULL,
+    colour.scheme = NULL,
     xaxis.col = NULL,
     ...
     ) {
 
-    if (is.null(levels(DF$ID))) {
-        DF$ID <- factor(DF$ID, levels = sort(unique(DF$ID)));
+    if (is.null(levels(cluster.df$ID))) {
+        cluster.df$ID <- factor(
+            cluster.df$ID,
+            levels = sort(unique(cluster.df$ID))
+            );
         }
-    DF              <- droplevels(DF)[order(DF$clone.id, -abs(DF$CCF)), ];
-    arr             <- data.frame.to.array(DF);
-    snv.order       <- unique(DF[, c('snv.id', 'clone.id')]);
-    cls.colours     <- get.colours(DF$clone.id, return.names = TRUE);
-    arr             <- arr[snv.order$snv.id, levels(DF$ID)];
 
-    heatmap.colours <- if (!is.null(hm.cols)) hm.cols else default.heatmap.colours();
+    cluster.df <- droplevels(cluster.df)[order(cluster.df$clone.id, -abs(cluster.df$CCF)), ];
+    arr <- data.frame.to.array(cluster.df);
+    snv.order <- unique(cluster.df[, c('snv.id', 'clone.id')]);
+    cluster.colours <- get.colours(cluster.df$clone.id, return.names = TRUE);
+    arr <- arr[snv.order$snv.id, levels(cluster.df$ID)];
+
+    heatmap.colours <- if (!is.null(colour.scheme)) {
+        colour.scheme;
+    } else {
+        default.heatmap.colours();
+        }
 
     if (!is.null(xaxis.col)) {
-        xaxis.label <- unique(DF[DF$snv.id %in% rownames(arr), xaxis.col]);
+        xaxis.label <- unique(cluster.df[cluster.df$snv.id %in% rownames(arr), xaxis.col]);
         }
 
     hm <- plot.ccf.hm(
-        hm.array = arr,
-        cls.dim = 'none',
-        hm.cols = heatmap.colours,
+        CCF.df = arr,
+        cluster.dim = 'none',
+        colour.scheme = heatmap.colours,
         ...
         );
 
     # Suppress "three-colour scheme" warning with 3 clones.
     cov <- suppressWarnings(BoutrosLab.plotting.general::create.heatmap(
-        x = t(cls.colours[snv.order$clone.id]),
+        x = t(cluster.colours[snv.order$clone.id]),
         input.colours = TRUE,
         clustering.method = 'none',
         grid.col = FALSE,
@@ -94,8 +107,8 @@ plot.cluster.hm <- function(
         list(
             legend = list(
                 title = 'Clones',
-                labels = names(cls.colours),
-                colours = cls.colours,
+                labels = names(cluster.colours),
+                colours = cluster.colours,
                 border = 'black'
                 ),
             legend = list(
@@ -138,31 +151,31 @@ plot.cluster.hm <- function(
     }
 
 plot.summary.ccf.hm <- function(
-    DF,
-    ccf.thres = 0
+    mutation.df,
+    CCF.threshold = 0
     ) {
 
     median.ccf <- aggregate(
-        DF$CCF,
-        by = list(DF$ID, DF$clone.id),
+        mutation.df$CCF,
+        by = list(mutation.df$ID, mutation.df$clone.id),
         FUN = median
         );
 
     colnames(median.ccf) <- c('ID', 'clone.id', 'median.CCF');
 
     arr <- data.frame.to.array(
-        DF = median.ccf,
+        median.ccf,
         value = 'median.CCF',
         x.axis = 'clone.id',
         y.axis = 'ID'
         );
-    arr[arr <= ccf.thres] <- 0;
+    arr[arr <= CCF.threshold] <- 0;
 
-    filtered.CCFs <- DF$CCF > 0;
-    SNV.per.clone <- aggregate(snv.id ~ clone.id, DF[filtered.CCFs, ], FUN = length);
+    filtered.CCFs <- mutation.df$CCF > 0;
+    SNV.per.clone <- aggregate(snv.id ~ clone.id, mutation.df[filtered.CCFs, ], FUN = length);
     colnames(SNV.per.clone) <- c('clone.id', 'num.SNV');
 
-    SNV.per.sample <- aggregate(snv.id ~ ID, DF[filtered.CCFs, ], FUN = length);
+    SNV.per.sample <- aggregate(snv.id ~ ID, mutation.df[filtered.CCFs, ], FUN = length);
     colnames(SNV.per.sample) <- c('ID', 'num.SNV');
 
     heatmap.colours <- default.heatmap.colours();
