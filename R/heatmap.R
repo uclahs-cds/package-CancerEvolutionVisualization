@@ -14,7 +14,7 @@ plot.ccf.hm <- function(
         hm.array[hm.array <= ccf.thres] <- 0;
         }
     col.labels <- seq(0, 1, .2);
-    
+
     heatmap.colours <- if (!is.null(hm.cols)) hm.cols else default.heatmap.colours();
 
     hm <- BoutrosLab.plotting.general::create.heatmap(
@@ -66,9 +66,9 @@ plot.cluster.hm <- function(
     snv.order       <- unique(DF[, c('snv.id', 'clone.id')]);
     cls.colours     <- get.colours(DF$clone.id, return.names = TRUE);
     arr             <- arr[snv.order$snv.id, levels(DF$ID)];
-    
+
     heatmap.colours <- if (!is.null(hm.cols)) hm.cols else default.heatmap.colours();
-    
+
     if (!is.null(xaxis.col)) {
         xaxis.label <- unique(DF[DF$snv.id %in% rownames(arr), xaxis.col]);
         }
@@ -141,13 +141,13 @@ plot.summary.ccf.hm <- function(
     DF,
     ccf.thres = 0
     ) {
-    
+
     median.ccf <- aggregate(
         DF$CCF,
         by = list(DF$ID, DF$clone.id),
         FUN = median
         );
-    
+
     colnames(median.ccf) <- c('ID', 'clone.id', 'median.CCF');
 
     arr <- data.frame.to.array(
@@ -164,7 +164,7 @@ plot.summary.ccf.hm <- function(
 
     SNV.per.sample <- aggregate(snv.id ~ ID, DF[filtered.CCFs, ], FUN = length);
     colnames(SNV.per.sample) <- c('ID', 'num.SNV');
-    
+
     heatmap.colours <- default.heatmap.colours();
     barplot.padding.percentage <- 0.05;
 
