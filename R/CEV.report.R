@@ -23,8 +23,13 @@ CEV.report <- function(
         heatmap.data = inputs$heatmap.input
         );
 
+    template.path <- system.file(
+        'CEV.report.Rmd',
+        package = 'CancerEvolutionVisualization'
+        );
+
     rmarkdown::render(
-        'inst/CEV.report.Rmd',
+        template.path,
         output_file = output.filename,
         params = report.params
         );
