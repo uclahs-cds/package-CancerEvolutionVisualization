@@ -9,7 +9,9 @@ prep.report <- function(
     SNV.counts <- prep.SNV.counts(SNV.counts);
     CCF.values <- prep.CCF.values(CCF.values);
     
-   return(list(
+    validate.clone.ids(phylogeny, SNV.assignment, SNV.counts);
+
+    return(list(
         phylogeny = phylogeny,
         SNV.assignment = SNV.assignment,
         SNV.counts = CCF.values,
@@ -69,3 +71,24 @@ prep.CCF.values <- function(CCF.values) {
 
     return(CCF.values);
     };
+
+validate.clone.ids <- function(
+    phylogeny,
+    SNV.assignment,
+    SNV.counts
+    ) {
+
+    reference.clone.ids <- unique(phylogeny$clone.id);
+
+    get.clone.error.message <- function(input.name) {
+        return(paste(input.name, 'clone IDs do not match phylogeny clone IDs.'))
+        }
+
+    if (!column.contains.all(reference.clone.ids, SNV.assignment$clone.id)) {
+        stop(get.clone.error.message('SNV Assignment'));
+        }
+    
+    if (!column.contains.all(reference.clone.ids, SNV.counts$clone.id)) {
+        stop(get.clone.error.message('SNV Count'))
+        }
+    }
