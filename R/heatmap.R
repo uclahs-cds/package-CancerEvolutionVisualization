@@ -72,9 +72,9 @@ plot.cluster.hm <- function(
 
     cluster.df <- droplevels(cluster.df)[order(cluster.df$clone.id, -abs(cluster.df$CCF)), ];
     arr <- data.frame.to.array(cluster.df);
-    snv.order <- unique(cluster.df[, c('snv.id', 'clone.id')]);
+    snv.order <- unique(cluster.df[, c('SNV.id', 'clone.id')]);
     cluster.colours <- get.colours(cluster.df$clone.id, return.names = TRUE);
-    arr <- arr[snv.order$snv.id, levels(cluster.df$ID)];
+    arr <- arr[snv.order$SNV.id, levels(cluster.df$ID)];
 
     heatmap.colours <- if (!is.null(colour.scheme)) {
         colour.scheme;
@@ -83,7 +83,7 @@ plot.cluster.hm <- function(
         }
 
     if (!is.null(xaxis.col)) {
-        xaxis.label <- unique(cluster.df[cluster.df$snv.id %in% rownames(arr), xaxis.col]);
+        xaxis.label <- unique(cluster.df[cluster.df$SNV.id %in% rownames(arr), xaxis.col]);
         }
 
     hm <- plot.ccf.hm(
@@ -172,10 +172,10 @@ plot.summary.ccf.hm <- function(
     arr[arr <= CCF.threshold] <- 0;
 
     filtered.CCFs <- mutation.df$CCF > 0;
-    SNV.per.clone <- aggregate(snv.id ~ clone.id, mutation.df[filtered.CCFs, ], FUN = length);
+    SNV.per.clone <- aggregate(SNV.id ~ clone.id, mutation.df[filtered.CCFs, ], FUN = length);
     colnames(SNV.per.clone) <- c('clone.id', 'num.SNV');
 
-    SNV.per.sample <- aggregate(snv.id ~ ID, mutation.df[filtered.CCFs, ], FUN = length);
+    SNV.per.sample <- aggregate(SNV.id ~ ID, mutation.df[filtered.CCFs, ], FUN = length);
     colnames(SNV.per.sample) <- c('ID', 'num.SNV');
 
     heatmap.colours <- default.heatmap.colours();

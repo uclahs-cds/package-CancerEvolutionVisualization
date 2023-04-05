@@ -18,11 +18,13 @@ CEV.report <- function(
     report.params <- list(
         title = title,
         author = author,
-        date = if (!is.null(date)) date else Sys.Date()
+        date = if (!is.null(date)) date else Sys.Date(),
+        summary.tree.data = inputs$summary.tree.input,
+        heatmap.data = inputs$heatmap.input
         );
 
     rmarkdown::render(
-        'inst/test.Rmd',
+        'inst/CEV.report.Rmd',
         output_file = output.filename,
         params = report.params
         );

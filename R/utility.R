@@ -73,7 +73,7 @@ column.contains.all <- function(reference.column, checked.column) {
 data.frame.to.array <- function(
     DF,
     value = 'CCF',
-    x.axis = 'snv.id',
+    x.axis = 'SNV.id',
     y.axis = 'ID'
     ) {
 

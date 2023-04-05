@@ -24,12 +24,12 @@ test_that('prep.SNV.assignment errors on missing SNV.id column', {
 
     expect_error(
         prep.SNV.assignment(invalid.SNV.assignment),
-        regexp = 'snv.id'
+        regexp = 'SNV.id'
         );
     });
 
 test_that('prep.SNV.assignment errors on missing clone.id column', {
-    invalid.SNV.assignment <- data.frame(snv.id = c(1));
+    invalid.SNV.assignment <- data.frame(SNV.id = c(1));
 
     expect_error(
         prep.SNV.assignment(invalid.SNV.assignment),
@@ -65,7 +65,7 @@ test_that('prep.SNV.counts errors on missing CP column', {
     });
 
 test_that('prep.CCF.values errors on missing sample.id column', {
-    invalid.CCF.values <- data.frame(snv.id = c(1), CCF = c(1));
+    invalid.CCF.values <- data.frame(SNV.id = c(1), CCF = c(1));
 
     expect_error(
         prep.CCF.values(invalid.CCF.values),
@@ -73,17 +73,17 @@ test_that('prep.CCF.values errors on missing sample.id column', {
         );
     });
 
-test_that('prep.CCF.values errors on missing snv.id column', {
+test_that('prep.CCF.values errors on missing SNV.id column', {
     invalid.CCF.values <- data.frame(sample.id = c(1), CCF = c(1));
 
     expect_error(
         prep.CCF.values(invalid.CCF.values),
-        regexp = 'snv.id'
+        regexp = 'SNV.id'
         );
     });
 
 test_that('prep.CCF.values errors on missing CCF column', {
-    invalid.CCF.values <- data.frame(sample.id = c(1), snv.id = c(1));
+    invalid.CCF.values <- data.frame(sample.id = c(1), SNV.id = c(1));
 
     expect_error(
         prep.CCF.values(invalid.CCF.values),

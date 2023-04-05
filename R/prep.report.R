@@ -40,7 +40,7 @@ prep.SNV.assignment <- function(SNV.assignment) {
         stop(paste(SNV.assignment.data.name, 'input is not a data.frame.'));
         }
 
-    check.column.exists(SNV.assignment, 'snv.id', SNV.assignment.data.name);
+    check.column.exists(SNV.assignment, 'SNV.id', SNV.assignment.data.name);
     check.column.exists(SNV.assignment, 'clone.id', SNV.assignment.data.name);
 
     return(SNV.assignment);
@@ -67,7 +67,7 @@ prep.CCF.values <- function(CCF.values) {
         }
 
     check.column.exists(CCF.values, 'sample.id', CCF.value.data.name);
-    check.column.exists(CCF.values, 'snv.id', CCF.value.data.name);
+    check.column.exists(CCF.values, 'SNV.id', CCF.value.data.name);
     check.column.exists(CCF.values, 'CCF', CCF.value.data.name);
 
     return(CCF.values);
@@ -110,7 +110,7 @@ create.report.heatmap.input <- function(SNV.assignment, CCF.values) {
 
     return(data.frame(
         ID = CCF.values$sample.id,
-        snv.id = CCF.values$SNV.id,
+        SNV.id = CCF.values$SNV.id,
         CCF = CCF.values$CCF,
         clone.id = SNV.assignment[CCF.values$SNV.id, 'clone.id']
         ));
