@@ -15,7 +15,7 @@ plot.ccf.hm <- function(
         }
     col.labels <- seq(0, 1, .2);
 
-    hm <- create.heatmap(
+    hm <- BoutrosLab.plotting.general::create.heatmap(
         filename = NULL,
         x = hm.array,
         force.clustering = TRUE,

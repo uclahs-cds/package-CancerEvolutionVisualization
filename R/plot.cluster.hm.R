@@ -1,6 +1,5 @@
 plot.cluster.hm <- function(
     DF,
-    p = patient,
     plt.height = 6,
     plt.width = 11,
     hm.cols = NULL,
@@ -12,15 +11,14 @@ plot.cluster.hm <- function(
         DF$ID <- factor(DF$ID, levels = sort(unique(DF$ID)));
         }
     DF              <- droplevels(DF)[order(DF$clone.id, -abs(DF$CCF)), ];
-    arr             <- convert.df2array(DF);
+    arr             <- data.frame.to.array(DF);
     snv.order       <- unique(DF[, c('snv.id', 'clone.id')]);
     cls.colours     <- get.colours(DF$clone.id, return.names = TRUE);
     arr             <- arr[snv.order$snv.id, levels(DF$ID)];
 
     if (!is.null(xaxis.col)) {
         xaxis.label <- unique(DF[DF$snv.id %in% rownames(arr), xaxis.col]);
-    }
-
+        }
 
     hm <- plot.ccf.hm(
         hm.array = arr,
@@ -30,7 +28,7 @@ plot.cluster.hm <- function(
         ...
         );
 
-    cov <- create.heatmap(
+    cov <- BoutrosLab.plotting.general::create.heatmap(
         x = t(cls.colours[snv.order$clone.id]),
         input.colours = TRUE,
         clustering.method = 'none',
@@ -39,7 +37,7 @@ plot.cluster.hm <- function(
         resolution = 5000
         );
 
-    legend.clone <- legend.grob(
+    legend.clone <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
                 title = 'Clones',
@@ -61,7 +59,7 @@ plot.cluster.hm <- function(
         label.cex = 0.6
         );
 
-    cls.hm <- create.multiplot(
+    return(BoutrosLab.plotting.general::create.multiplot(
         filename = NULL,
         plot.objects = list(cov, hm),
         plot.layout = c(1, 2),
@@ -83,6 +81,5 @@ plot.cluster.hm <- function(
         )),
         height = plt.height,
         width = plt.width
-        );
-    return(cls.hm);
+        ));
     }

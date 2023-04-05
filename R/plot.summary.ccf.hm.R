@@ -5,15 +5,15 @@ plot.summary.ccf.hm <- function(
     sample.order = NULL
     ) {
 
-    arr <- convert.df2array(
+    arr <- data.frame.to.array(
         DF = DF,
         value = 'median.ccf.per.sample',
         x.axis = 'clone.id'
         );
     arr[arr <= ccf.thres] <- 0;
 
-    clone.df            <- unique(DF[, c('clone.id', 'total.snv')]);
-    sample.df           <- aggregate(CCF ~ ID, data = subset(DF, CCF > 0), FUN = length);
+    clone.df <- unique(DF[, c('clone.id', 'total.snv')]);
+    sample.df <- aggregate(CCF ~ ID, data = DF[DF$CCF > 0, ], FUN = length);
     names(sample.df)[2] <- 'nsnv';
 
     if (!is.null(clone.order) & !is.null(sample.order)) {
@@ -22,7 +22,7 @@ plot.summary.ccf.hm <- function(
         sample.df$ID        <- factor(sample.df$ID, levels = sample.order);
         }
 
-    clone.bar <- create.barplot(
+    clone.bar <- BoutrosLab.plotting.general::create.barplot(
         formula = total.snv ~ clone.id,
         data = clone.df,
         yaxis.cex = 0,
@@ -32,7 +32,7 @@ plot.summary.ccf.hm <- function(
         resolution = 50
         );
 
-    sample.bar <- create.barplot(
+    sample.bar <- BoutrosLab.plotting.general::create.barplot(
         formula = ID ~ nsnv,
         data = sample.df,
         xlab.label = 'SNV per sample',
@@ -44,7 +44,7 @@ plot.summary.ccf.hm <- function(
         plot.horizontal = TRUE
         );
 
-    hm <- create.heatmap(
+    hm <- BoutrosLab.plotting.general::create.heatmap(
         x = arr,
         cluster.dimensions = 'none',
         xlab.cex = 1,
@@ -66,7 +66,7 @@ plot.summary.ccf.hm <- function(
         height = 5
         );
 
-    legend.ccf <- legend.grob(
+    legend.ccf <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
                 title = 'CCF',
@@ -82,7 +82,7 @@ plot.summary.ccf.hm <- function(
         label.cex = 0.6
         );
 
-    summary.hm <- create.multiplot(
+    return(BoutrosLab.plotting.general::create.multiplot(
         filename = NULL,
         plot.objects = list(hm, sample.bar, clone.bar),
         plot.layout = c(2, 2),
@@ -114,6 +114,5 @@ plot.summary.ccf.hm <- function(
         )),
         height = 6,
         width = 11
-        );
-    return(summmary.hm);
+        ));
     }

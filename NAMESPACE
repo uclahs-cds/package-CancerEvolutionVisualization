@@ -2,11 +2,12 @@ import(grid)
 import(gridExtra)
 import(gtable)
 import(plyr)
+import(BoutrosLab.plotting.general)
 
 importFrom("graphics", "par", "strheight", "strwidth")
 importFrom("grDevices", "dev.list", "rainbow")
 importFrom("utils", "read.table", "vi", "head")
 importFrom("stringr", "str_replace_all")
-importFrom("stats", "setNames")
+importFrom("stats", "setNames", "aggregate", "reshape")
 
 export(SRCGrob)
