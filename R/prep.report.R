@@ -8,9 +8,9 @@ prep.report <- function(
     SNV.assignment <- prep.SNV.assignment(SNV.assignment);
     SNV.counts <- prep.SNV.counts(SNV.counts);
     CCF.values <- prep.CCF.values(CCF.values);
-    
+
     validate.clone.ids(phylogeny, SNV.assignment, SNV.counts);
-    
+
     summary.tree.input <- create.report.summary.tree.input(phylogeny, SNV.counts);
     heatmap.input <- create.report.heatmap.input(SNV.assignment, CCF.values);
 
@@ -21,20 +21,20 @@ prep.report <- function(
     }
 
 prep.phylogeny <- function(phylogeny) {
-    phylogeny.data.name <- "Phylogeny";
+    phylogeny.data.name <- 'Phylogeny';
 
     if (!is.data.frame(phylogeny)) {
         stop(paste(phylogeny.data.name, 'input is not a data.frame.'));
         }
 
-    check.column.exists(phylogeny, "clone.id", phylogeny.data.name);
-    check.column.exists(phylogeny, "parent", phylogeny.data.name);
+    check.column.exists(phylogeny, 'clone.id', phylogeny.data.name);
+    check.column.exists(phylogeny, 'parent', phylogeny.data.name);
 
     return(phylogeny);
     }
 
 prep.SNV.assignment <- function(SNV.assignment) {
-    SNV.assignment.data.name <- "SNV Assignment";
+    SNV.assignment.data.name <- 'SNV Assignment';
 
     if (!is.data.frame(SNV.assignment)) {
         stop(paste(SNV.assignment.data.name, 'input is not a data.frame.'));
@@ -88,7 +88,7 @@ validate.clone.ids <- function(
     if (!column.contains.all(reference.clone.ids, SNV.assignment$clone.id)) {
         stop(get.clone.error.message('SNV Assignment'));
         }
-    
+
     if (!column.contains.all(reference.clone.ids, SNV.counts$clone.id)) {
         stop(get.clone.error.message('SNV Count'))
         }

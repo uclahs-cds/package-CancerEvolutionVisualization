@@ -60,13 +60,13 @@ column.contains.all <- function(reference.column, checked.column) {
         reference.column,
         FUN = function(column.name) TRUE,
         USE.NAMES = TRUE
-        );   
+        );
 
     values.in.reference <- all(sapply(
         checked.column,
         FUN = function(column.name) !is.na(reference.values[column.name])
         ));
-    
+
     return(values.in.reference);
     }
 

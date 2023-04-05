@@ -14,7 +14,7 @@ CEV.report <- function(
         SNV.counts,
         CCF.values
         );
-    
+
     report.params <- list(
         title = title,
         author = author,
