@@ -10,12 +10,13 @@ prep.report <- function(
     CCF.values <- prep.CCF.values(CCF.values);
     
     validate.clone.ids(phylogeny, SNV.assignment, SNV.counts);
+    
+    summary.tree.input <- create.report.summary.tree.input(phylogeny, SNV.counts);
+    heatmap.input <- create.report.heatmap.input(SNV.assignment, CCF.values);
 
     return(list(
-        phylogeny = phylogeny,
-        SNV.assignment = SNV.assignment,
-        SNV.counts = CCF.values,
-        CCF.values = CCF.values
+        summary.tree.input = summary.tree.input,
+        heatmap.input = heatmap.input
         ));
     }
 
@@ -91,4 +92,26 @@ validate.clone.ids <- function(
     if (!column.contains.all(reference.clone.ids, SNV.counts$clone.id)) {
         stop(get.clone.error.message('SNV Count'))
         }
+    }
+
+create.report.summary.tree.input <- function(phylogeny, SNV.counts) {
+    clone.ids <- phylogeny$clone.id;
+    rownames(SNV.counts) <- SNV.counts$clone.id;
+
+    return(data.frame(
+       node.id = clone.ids,
+       parent = phylogeny$parent,
+       length1 = SNV.counts[clone.ids, 'num.snv']
+        ));
+    }
+
+create.report.heatmap.input <- function(SNV.assignment, CCF.values) {
+    rownames(SNV.assignment) <- SNV.assignment$SNV.id;
+
+    return(data.frame(
+        ID = CCF.values$sample.id,
+        snv.id = CCF.values$SNV.id,
+        CCF = CCF.values$CCF,
+        clone.id = SNV.assignment[CCF.values$SNV.id, 'clone.id']
+        ));
     }
