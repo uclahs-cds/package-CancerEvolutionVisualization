@@ -1,3 +1,5 @@
+load('data/report.data.Rda');
+
 test_that('prep.phylogeny errors on missing clone.id column', {
     invalid.phylogeny <- data.frame(clone.id = c(1));
     
@@ -114,4 +116,35 @@ test_that('validate.clone.ids handles invalid SNV count clone IDs', {
     
     expect_error(
         validate.clone.ids(phylogeny, SNV.assignment, SNV.counts), 'clone');
+    });
+
+test_that('create.report.tree.input result can create SRCGrob', {
+    input <- create.report.summary.tree.input(phylogeny, SNV.counts);
+    tree <- SRCGrob(input);
+
+    expect_is(tree, 'SRCGrob');
+    });
+
+test_that('create.report.heatmap.input result can create CCF heatmap', {
+    input <- data.frame.to.array(
+        create.report.heatmap.input(SNV.assignment, CCF.values)
+        );
+    
+    heatmap <- plot.ccf.hm(input);
+    
+    expect_is(heatmap, 'trellis');
+    });
+
+test_that('create.report.heatmap.input result can create summary heatmap', {
+    input <- create.report.heatmap.input(SNV.assignment, CCF.values);
+    heatmap <- plot.summary.ccf.hm(input);
+    
+    expect_is(heatmap, 'trellis');
+    });
+
+test_that('create.report.heatmap.input result can create cluster heatmap', {
+    input <- create.report.heatmap.input(SNV.assignment, CCF.values);
+    heatmap <- plot.cluster.hm(input);
+    
+    expect_is(heatmap, 'trellis');
     });
