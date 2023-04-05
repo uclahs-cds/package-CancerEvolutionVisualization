@@ -20,7 +20,7 @@ Imports:
     grDevices,
     utils,
     stringr,
-    rmarkdown
+    rmarkdown,
     BoutrosLab.plotting.general
 Suggests:
     testthat,
