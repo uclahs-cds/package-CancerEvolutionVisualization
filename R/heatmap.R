@@ -7,6 +7,7 @@ plot.ccf.hm <- function(
     colour.scheme = NULL,
     xaxis.lab = NULL,
     xlab.label = 'Mutations',
+    filename = NULL,
     ...
     ) {
 
@@ -23,7 +24,7 @@ plot.ccf.hm <- function(
         }
 
     hm <- BoutrosLab.plotting.general::create.heatmap(
-        filename = NULL,
+        filename = filename,
         x = CCF.df,
         force.clustering = TRUE,
         cluster.dimensions = cluster.dim,
@@ -60,6 +61,7 @@ plot.cluster.hm <- function(
     plt.width = 11,
     colour.scheme = NULL,
     xaxis.col = NULL,
+    filename = NULL,
     ...
     ) {
 
@@ -125,8 +127,8 @@ plot.cluster.hm <- function(
         label.cex = 0.6
         );
 
-    return(BoutrosLab.plotting.general::create.multiplot(
-        filename = NULL,
+    plt <- BoutrosLab.plotting.general::create.multiplot(
+        filename = filename,
         plot.objects = list(cov, hm),
         plot.layout = c(1, 2),
         panel.heights = c(1, 0.05),
@@ -147,12 +149,14 @@ plot.cluster.hm <- function(
         )),
         height = plt.height,
         width = plt.width
-        ));
+        );
+    return(plt);
     }
 
 plot.summary.ccf.hm <- function(
     mutation.df,
-    CCF.threshold = 0
+    CCF.threshold = 0,
+    filename = NULL
     ) {
 
     median.ccf <- aggregate(
@@ -251,8 +255,8 @@ plot.summary.ccf.hm <- function(
         label.cex = 0.6
         );
 
-    return(BoutrosLab.plotting.general::create.multiplot(
-        filename = NULL,
+    plt <- BoutrosLab.plotting.general::create.multiplot(
+        filename = filename,
         plot.objects = list(hm, sample.bar, clone.bar),
         plot.layout = c(2, 2),
         layout.skip = c(FALSE, FALSE, FALSE, TRUE),
@@ -283,7 +287,8 @@ plot.summary.ccf.hm <- function(
         )),
         height = 6,
         width = 11
-        ));
+        )
+    return(plt);
     }
 
 default.heatmap.colours <- function() {
