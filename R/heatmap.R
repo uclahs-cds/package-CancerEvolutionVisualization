@@ -1,5 +1,5 @@
 plot.ccf.hm <- function(
-    CCF.df,
+    CCF.arr,
     CCF.threshold = NULL,
     cluster.dim = 'both',
     cluster.method = 'complete',
@@ -12,10 +12,10 @@ plot.ccf.hm <- function(
     ) {
 
     if (!is.null(CCF.threshold)) {
-        CCF.df[CCF.df <= CCF.threshold] <- 0;
+        CCF.arr[CCF.arr <= CCF.threshold] <- 0;
         }
     col.labels <- seq(0, 1, .2);
-    sample.names <- colnames(CCF.df);
+    sample.names <- colnames(CCF.arr);
 
     heatmap.colours <- if (!is.null(colour.scheme)) {
         colour.scheme;
@@ -25,7 +25,7 @@ plot.ccf.hm <- function(
 
     hm <- BoutrosLab.plotting.general::create.heatmap(
         filename = filename,
-        x = CCF.df,
+        x = CCF.arr,
         force.clustering = TRUE,
         cluster.dimensions = cluster.dim,
         clustering.method = cluster.method,
@@ -89,7 +89,7 @@ plot.cluster.hm <- function(
         }
 
     hm <- plot.ccf.hm(
-        CCF.df = arr,
+        CCF.arr = arr,
         cluster.dim = 'none',
         colour.scheme = heatmap.colours,
         ...
