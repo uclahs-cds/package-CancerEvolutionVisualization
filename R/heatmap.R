@@ -8,13 +8,13 @@ plot.ccf.hm <- function(
     xaxis.lab = NULL,
     xlab.label = 'Mutations',
     filename = NULL,
-    ...
+    ... 
     ) {
 
     if (!is.null(CCF.threshold)) {
         CCF.arr[CCF.arr <= CCF.threshold] <- 0;
         }
-    col.labels <- seq(0, 1, .2);
+    col.labels <- seq(min(CCF.arr), max(CCF.arr), .2);
     sample.names <- colnames(CCF.arr);
 
     heatmap.colours <- if (!is.null(colour.scheme)) {
@@ -60,6 +60,7 @@ plot.cluster.hm <- function(
     plt.height = 6,
     plt.width = 11,
     colour.scheme = NULL,
+    cluster.colours = NULL,
     xaxis.col = NULL,
     filename = NULL,
     ...
@@ -75,8 +76,17 @@ plot.cluster.hm <- function(
     cluster.df <- droplevels(cluster.df)[order(cluster.df$clone.id, -abs(cluster.df$CCF)), ];
     arr <- data.frame.to.array(cluster.df);
     snv.order <- unique(cluster.df[, c('SNV.id', 'clone.id')]);
-    cluster.colours <- get.colours(cluster.df$clone.id, return.names = TRUE);
     arr <- arr[snv.order$SNV.id, levels(cluster.df$ID)];
+
+    cluster.colours <- if (is.null(cluster.colours)) {
+        get.colours(cluster.df$clone.id, return.names = TRUE);
+    } else {
+        # check if cluster.colours is a named vector that corresponds to clone.id
+        if (!(levels(cluster.df$clone.id) %in% names(cluster.colours))) {
+            stop('cluster.colours must be a named vector that corresponds to clone.id');
+            }
+        cluster.colours;
+        }
 
     heatmap.colours <- if (!is.null(colour.scheme)) {
         colour.scheme;
@@ -87,7 +97,6 @@ plot.cluster.hm <- function(
     if (!is.null(xaxis.col)) {
         xaxis.label <- unique(cluster.df[cluster.df$SNV.id %in% rownames(arr), xaxis.col]);
         }
-
     hm <- plot.ccf.hm(
         CCF.arr = arr,
         cluster.dim = 'none',
@@ -156,7 +165,10 @@ plot.cluster.hm <- function(
 plot.summary.ccf.hm <- function(
     mutation.df,
     CCF.threshold = 0,
-    filename = NULL
+    filename = NULL,
+    plt.height = 6,
+    plt.width = 11,
+    ...
     ) {
 
     median.ccf <- aggregate(
@@ -220,23 +232,23 @@ plot.summary.ccf.hm <- function(
     hm <- BoutrosLab.plotting.general::create.heatmap(
         x = arr,
         cluster.dimensions = 'none',
-        xlab.cex = 1,
-        xlab.label = 'Clone ID',
-        xaxis.lab = rownames(arr),
-        xaxis.cex = 0.6,
-        xaxis.fontface = 1,
-        xaxis.rot = 90,
-        ylab.cex = 1,
-        ylab.label = 'Sample ID',
-        yaxis.lab = colnames(arr),
-        yaxis.cex = 0.6,
-        yaxis.fontface = 1,
+        # xlab.cex = 1,
+        # xlab.label = 'Clone ID',
+        # xaxis.lab = rownames(arr),
+        # xaxis.cex = 0.6,
+        # xaxis.fontface = 1,
+        # xaxis.rot = 90,
+        # ylab.cex = 1,
+        # ylab.label = 'Sample ID',
+        # yaxis.lab = colnames(arr),
+        # yaxis.cex = 0.6,
+        # yaxis.fontface = 1,
         print.colour.key = FALSE,
-        colour.scheme = heatmap.colours,
-        left.padding = 1,
-        right.padding = 1,
-        width = 9,
-        height = 5
+        colour.scheme = heatmap.colours
+        # left.padding = 1,
+        # right.padding = 1,
+        # width = 9,
+        # height = 5
         );
 
     legend.ccf <- BoutrosLab.plotting.general::legend.grob(
@@ -271,13 +283,10 @@ plot.summary.ccf.hm <- function(
         xaxis.fontface = 1,
         xlab.to.xaxis.padding = - 0.5,
         ylab.label = c( 'SNV per clone', '\t', '\t', 'Sample ID', '\t'),
-        ylab.padding = 8,
         ylab.cex = 0.7,
         yaxis.cex = 0.6,
         yaxis.tck = 0.4,
         yaxis.fontface = 1,
-        x.spacing = c(0),
-        y.spacing = c(-0.5),
         left.padding = 10,
         bottom.padding = 3,
         merge.legends = FALSE,
@@ -285,8 +294,9 @@ plot.summary.ccf.hm <- function(
         legend = list(right = list(
             fun = legend.ccf
         )),
-        height = 6,
-        width = 11
+        height = plt.height,
+        width = plt.width,
+        ...
         )
     return(plt);
     }
@@ -294,3 +304,4 @@ plot.summary.ccf.hm <- function(
 default.heatmap.colours <- function() {
     return(c('white', 'blue'))
     }
+
