@@ -82,10 +82,10 @@ plot.cluster.hm <- function(
         get.colours(cluster.df$clone.id, return.names = TRUE);
     } else {
         # check if cluster.colours is a named vector that corresponds to clone.id
-        if (!(levels(cluster.df$clone.id) %in% names(cluster.colours))) {
+        if (!all(levels(cluster.df$clone.id) %in% names(cluster.colours))) {
             stop('cluster.colours must be a named vector that corresponds to clone.id');
             }
-        cluster.colours;
+        cluster.colours[levels(cluster.df$clone.id)];
         }
 
     heatmap.colours <- if (!is.null(colour.scheme)) {
@@ -232,23 +232,8 @@ plot.summary.ccf.hm <- function(
     hm <- BoutrosLab.plotting.general::create.heatmap(
         x = arr,
         cluster.dimensions = 'none',
-        # xlab.cex = 1,
-        # xlab.label = 'Clone ID',
-        # xaxis.lab = rownames(arr),
-        # xaxis.cex = 0.6,
-        # xaxis.fontface = 1,
-        # xaxis.rot = 90,
-        # ylab.cex = 1,
-        # ylab.label = 'Sample ID',
-        # yaxis.lab = colnames(arr),
-        # yaxis.cex = 0.6,
-        # yaxis.fontface = 1,
         print.colour.key = FALSE,
         colour.scheme = heatmap.colours
-        # left.padding = 1,
-        # right.padding = 1,
-        # width = 9,
-        # height = 5
         );
 
     legend.ccf <- BoutrosLab.plotting.general::legend.grob(
@@ -282,12 +267,13 @@ plot.summary.ccf.hm <- function(
         xaxis.rot = 90,
         xaxis.fontface = 1,
         xlab.to.xaxis.padding = - 0.5,
-        ylab.label = c( 'SNV per clone', '\t', '\t', 'Sample ID', '\t'),
+        ylab.label = c( 'SNV per clone', rep('\t', 4)),
+        ylab.padding = -1,
         ylab.cex = 0.7,
         yaxis.cex = 0.6,
         yaxis.tck = 0.4,
         yaxis.fontface = 1,
-        left.padding = 10,
+        left.padding = 15,
         bottom.padding = 3,
         merge.legends = FALSE,
         print.new.legend = TRUE,
@@ -304,4 +290,3 @@ plot.summary.ccf.hm <- function(
 default.heatmap.colours <- function() {
     return(c('white', 'blue'))
     }
-
