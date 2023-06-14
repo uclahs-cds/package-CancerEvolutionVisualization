@@ -28,11 +28,6 @@ count.leaves.per.node <- function(v) {
 	return(v);
 	}
 
-assign.weight <- function(node,v, extra.len, spread) {
-	node.weight <- v$leaves[v$id == node] / v$leaves[v$parent == -1];
-	return(node.weight);
-    }
-
 position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 	w <- spread * pi;
 	xpos <- ypos <- 0;
@@ -40,31 +35,37 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 	vi <- v[v$parent == -1, ];
 
 	preorder.traversal <- function(
-	    node = NULL,
-	    tree = NULL,
-	    w = NULL,
-	    tau = NULL,
-	    eta = NULL,
-	    spread = 1
+	    node,
+	    tree,
+	    w,
+	    tau,
+	    spread,
+	    eta = NULL
 	    ) {
 
 		vi <- v[v$id == node, ];
 		d <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
 
+		parent.index <- v$id == vi$parent;
+        child.index <- v$id == vi$id;
+
+        # What is tau + w / 2?
+        angle <- tau + w / 2;
+
 		if (vi$parent != -1) {
-			v$x[v$id == vi$id] <<- v$x[v$id == vi$parent] + d * sin(tau + w / 2);
-			v$y[v$id == vi$id] <<- v$y[v$id == vi$parent] + d * cos(tau + w / 2);
-			tree$angle[tree$tip == vi$id & tree$parent == vi$parent] <<- tau + w / 2;
+			v$x[child.index] <<- v$x[parent.index] + d * sin(angle);
+			v$y[child.index] <<- v$y[parent.index] + d * cos(angle);
+			tree$angle[tree$tip == vi$id & tree$parent == vi$parent] <<- angle;
 		} else {
-			v$x[v$id == vi$id] <<- 0;
-			v$y[v$id == vi$id] <<- d;
+			v$x[child.index] <<- 0;
+			v$y[child.index] <<- d;
 			tree$angle[tree$tip == vi$id & tree$parent == vi$parent] <<- 0;
 		    }
 
 		eta <- tau;
-
+		
 		for (child in v$id[v$parent == vi$id]) {
-			child.weight <- assign.weight(child, v);
+			child.weight <- v$leaves[v$id == child] / v$leaves[v$parent == -1];
 			w <- child.weight * spread * pi;
 			tau <- eta;
 			eta <- eta + w;
