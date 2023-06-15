@@ -46,21 +46,26 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 		vi <- v[v$id == node, ];
 		d <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
 
-		parent.index <- v$id == vi$parent;
-        child.index <- v$id == vi$id;
+		parent.index <- if (vi$parent != -1) {
+		    i <- which(v$id == vi$parent);
 
-        # What is tau + w / 2?
-        angle <- tau + w / 2;
+		    if (length(i) < 1) {
+		        stop(paste('No parent found for node', '"v$id"'));
+		        }
+            i;
+        } else {
+	            NULL;
+	        }
 
-		if (vi$parent != -1) {
-			v$x[child.index] <<- v$x[parent.index] + d * sin(angle);
-			v$y[child.index] <<- v$y[parent.index] + d * cos(angle);
-			tree$angle[tree$tip == vi$id & tree$parent == vi$parent] <<- angle;
-		} else {
-			v$x[child.index] <<- 0;
-			v$y[child.index] <<- d;
-			tree$angle[tree$tip == vi$id & tree$parent == vi$parent] <<- 0;
-		    }
+		child.index <- which(v$id == vi$id);
+		parent <- if (!is.null(parent.index)) v[parent.index, ] else list(x = 0, y = 0);
+
+        # Angle in radians
+        angle <- if (!is.null(parent.index)) tau + w / 2 else 0;
+	    tree[tree$tip == vi$id & tree$parent == vi$parent, 'angle'] <<- angle;
+
+		v$x[child.index] <<- parent$x + d * sin(angle);
+		v$y[child.index] <<- parent$y + d * cos(angle);
 
 		eta <- tau;
 		
