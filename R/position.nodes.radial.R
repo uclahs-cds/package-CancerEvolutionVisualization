@@ -40,6 +40,7 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 	    w,
 	    tau,
 	    spread,
+	    angle = 0,
 	    eta = NULL
 	    ) {
 
@@ -61,19 +62,23 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 		parent <- if (!is.null(parent.index)) v[parent.index, ] else list(x = 0, y = 0);
 
         # Angle in radians
-        angle <- if (!is.null(parent.index)) tau + w / 2 else 0;
 	    tree[tree$tip == vi$id & tree$parent == vi$parent, 'angle'] <<- angle;
 
 		v$x[child.index] <<- parent$x + d * sin(angle);
 		v$y[child.index] <<- parent$y + d * cos(angle);
 
 		eta <- tau;
-		
-		for (child in v$id[v$parent == vi$id]) {
+		children <- v$id[v$parent == vi$id]
+
+		for (child in children) {
 			child.weight <- v$leaves[v$id == child] / v$leaves[v$parent == -1];
 			w <- child.weight * spread * pi;
 			tau <- eta;
 			eta <- eta + w;
+			
+			if (length(children) > 1) {
+			    angle <- tau + w / 2;
+			    }
 
 			preorder.traversal(
 			    node = child,
@@ -81,6 +86,7 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 			    w = w,
 			    tau = tau,
 			    eta = eta,
+			    angle = angle,
 			    spread = spread
 			    );
 		    }
