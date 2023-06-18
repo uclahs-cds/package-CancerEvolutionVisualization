@@ -28,8 +28,7 @@ count.leaves.per.node <- function(v) {
 	return(v);
 	}
 
-position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
-	w <- spread * pi;
+position.nodes.node.radiusial <- function(v, tree, extra.len) {
 	xpos <- ypos <- 0;
 	tau <- -(pi / 2.5);
 	vi <- v[v$parent == -1, ];
@@ -37,9 +36,7 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 	preorder.traversal <- function(
 	    node,
 	    tree,
-	    w,
 	    tau,
-	    spread,
 	    angle = 0,
 	    eta = NULL
 	    ) {
@@ -71,8 +68,9 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 		children <- v$id[v$parent == vi$id]
 
 		for (child in children) {
-			child.weight <- v$leaves[v$id == child] / v$leaves[v$parent == -1];
-			w <- child.weight * spread * pi;
+		    child.node <- v[v$id == child, ];
+			child.weight <- child.node$leaves / v$leaves[v$parent == -1];
+			w <- child.weight * child.node$spread * pi;
 			tau <- eta;
 			eta <- eta + w;
 			
@@ -83,11 +81,9 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 			preorder.traversal(
 			    node = child,
 			    tree = tree,
-			    w = w,
 			    tau = tau,
 			    eta = eta,
-			    angle = angle,
-			    spread = spread
+			    angle = angle
 			    );
 		    }
 	     }
@@ -95,9 +91,7 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 	preorder.traversal(
 	    node = 1,
 	    tree = tree,
-	    w = w,
-	    tau = tau,
-	    spread = spread
+	    tau = tau
 	    );
 
 	v$len <- sapply(
