@@ -19,6 +19,7 @@ prep.tree <- function(
             ));
         }
 
+    tree.df$spread <- prep.tree.spread(tree.df$spread);
     tree.df$parent <- prep.tree.parent(tree.df$parent);
 
     if (!check.parent.values(rownames(tree.df), tree.df$parent)) {
@@ -79,7 +80,8 @@ prep.tree <- function(
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
         alpha = rep(0.5, (nrow(tree.df) + 1)),
-        stringsAsFactors = FALSE
+        stringsAsFactors = FALSE,
+        spread = c(1, tree.df$spread)
         );
 
     out.df$tier <- get.num.tiers(out.df)
@@ -199,4 +201,23 @@ get.y.axis.position <- function(tree.colnames) {
         };
 
     return(y.axis.position);
+    }
+
+prep.tree.spread <- function(tree.spread) {
+    if (is.null(tree.spread)) {
+        return(1);
+        }
+
+    tree.spread <- as.numeric(tree.spread);
+    na.spread <- is.na(tree.spread);
+
+    if (any(na.spread)) {
+        warning(paste(
+            'Non-numeric values found in spread column.',
+            'Non-numeric values will be ignored.'
+            ));
+        }
+
+    tree.spread[na.spread] <- 1;
+    return(tree.spread);
     }
