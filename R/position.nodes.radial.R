@@ -52,14 +52,14 @@ position.nodes.node.radiusial <- function(v, tree, extra.len) {
 		        }
             i;
         } else {
-	            NULL;
+            NULL;
 	        }
 
 		child.index <- which(v$id == vi$id);
 		parent <- if (!is.null(parent.index)) v[parent.index, ] else list(x = 0, y = 0);
 
         # Angle in radians
-	    tree[tree$tip == vi$id & tree$parent == vi$parent, 'angle'] <<- angle;
+	    tree[tree$tip == vi$id, 'angle'] <<- angle;
 
 		v$x[child.index] <<- parent$x + d * sin(angle);
 		v$y[child.index] <<- parent$y + d * cos(angle);
