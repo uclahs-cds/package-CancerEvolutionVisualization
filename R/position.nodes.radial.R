@@ -30,16 +30,14 @@ count.leaves.per.node <- function(v) {
 
 position.nodes.node.radiusial <- function(v, tree, extra.len) {
 	xpos <- ypos <- 0;
-	tau <- -(pi / 2.5);
+	eta <- tau <- -(pi / 2.5);
 	vi <- v[v$parent == -1, ];
 
-	preorder.traversal <- function(
-	    node,
-	    tree,
-	    tau,
-	    angle = 0,
-	    eta = NULL
-	    ) {
+	nodes <- c(1);
+
+	while (length(nodes) > 0) {
+	    node <- nodes[1];
+	    nodes <- nodes[-1];
 
 		vi <- v[v$id == node, ];
 		d <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
@@ -59,40 +57,31 @@ position.nodes.node.radiusial <- function(v, tree, extra.len) {
 		parent <- if (!is.null(parent.index)) v[parent.index, ] else list(x = 0, y = 0);
 
         # Angle in radians
-	    tree[tree$tip == vi$id, 'angle'] <<- angle;
+		angle <- tree$angle[child.index];
 
-		v$x[child.index] <<- parent$x + d * sin(angle);
-		v$y[child.index] <<- parent$y + d * cos(angle);
+		v$x[child.index] <- parent$x + d * sin(angle);
+		v$y[child.index] <- parent$y + d * cos(angle);
 
 		eta <- tau;
 		children <- v$id[v$parent == vi$id]
+        num.siblings <- length(children);
 
-		for (child in children) {
-		    child.node <- v[v$id == child, ];
-			child.weight <- child.node$leaves / v$leaves[v$parent == -1];
-			w <- child.weight * child.node$spread * pi;
-			tau <- eta;
-			eta <- eta + w;
-			
-			if (length(children) > 1) {
-			    angle <- tau + w / 2;
-			    }
+        leaves.weight <- 1 / (1 + exp(-(vi$leaves - 6) ** 3));
+        siblings.weight <- 1 / (1 + exp(-(num.siblings - 4)) ** 3);
+        total.angle <- if (num.siblings > 1) {
+            pi / 12 + pi / 6 * siblings.weight + pi / 3 * leaves.weight;
+        } else {
+            0;
+            }
+        num.sections <- num.siblings - 1;
+		section.size <- total.angle / max(num.sections, 1);
+		child.angles <- 0:num.sections * section.size + angle - (total.angle / 2);
 
-			preorder.traversal(
-			    node = child,
-			    tree = tree,
-			    tau = tau,
-			    eta = eta,
-			    angle = angle
-			    );
-		    }
-	     }
-
-	preorder.traversal(
-	    node = 1,
-	    tree = tree,
-	    tau = tau
-	    );
+		for (i in 1:length(children)) {
+    		tree$angle[tree$tip == children[i]] <- child.angles[i];
+	        }
+		nodes <- c(children, nodes);
+	}
 
 	v$len <- sapply(
 	    v$y,
