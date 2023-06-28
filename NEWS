@@ -1,7 +1,8 @@
-CancerEvolutionVisualization 1.1.1 2022-11-18 (Helena Winata)
+CancerEvolutionVisualization 1.1.0 2023-06-28 (Helena Winata, Dan Knight)
 
 ADDED
 * Generic functions to generate accompanying heatmaps
+* Option to specify tree node colours with "node.col" column
 
 
 --------------------------------------------------------------------------
