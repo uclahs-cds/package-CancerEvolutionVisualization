@@ -37,7 +37,7 @@ add.node.ellipse <- function(
 	    y = unit(clone.out$v$y, 'native'),
 	    size = node.radius * (1 + 0.2 * nchar(clone.out$v$plot.lab)),
 	    ar = 1 - log2(nchar(clone.out$v$plot.lab)) / 10,
-	    gp = gpar(fill = clone.out$v$colour, col = clone.out$v$colour),
+	    gp = gpar(fill = clone.out$v$node.colour, col = clone.out$v$colour),
 	    angle = pi / 2,
 	    position.units = 'native',
 	    size.units = 'inches',

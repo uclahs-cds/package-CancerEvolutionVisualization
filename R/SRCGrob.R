@@ -45,7 +45,8 @@ SRCGrob <- function(
     inputs <- prep.tree(
         tree,
         node.text,
-        colour.scheme = colour.scheme
+        colour.scheme = colour.scheme,
+        default.node.colour = node.col
         );
 
     fixed.angle <- pi / 6;

@@ -2,7 +2,8 @@ prep.tree <- function(
     tree.df,
     text.df,
     bells = TRUE,
-    colour.scheme
+    colour.scheme,
+    default.node.colour
     ) {
 
     if (!('parent' %in% colnames(tree.df))) {
@@ -83,6 +84,14 @@ prep.tree <- function(
         );
 
     out.df$tier <- get.num.tiers(out.df)
+
+    out.df$node.colour <- if (('node.col' %in% colnames(tree.df))) {
+        node.col <- c(NA, tree.df$node.col);
+        node.col[is.na(node.col)] <- default.node.colour;
+        node.col
+    } else {
+        default.node.colour;
+        }
 
     out.tree <- data.frame(
         parent = as.numeric(tree.df$parent),
