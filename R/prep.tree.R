@@ -3,7 +3,7 @@ prep.tree <- function(
     text.df,
     bells = TRUE,
     colour.scheme,
-    default.node.colour
+    default.node.colour = 'grey29'
     ) {
 
     if (!('parent' %in% colnames(tree.df))) {
