@@ -93,6 +93,15 @@ prep.tree <- function(
         default.node.colour;
         }
 
+    out.df$border.colour <- c(NA, tree.df$border.col);
+    out.df$border.colour <- apply(
+        out.df,
+        MARGIN = 1,
+        FUN = function(row) {
+            if (is.na(row['border.colour'])) row['node.colour'] else row['border.colour'];
+            }
+        )
+
     out.tree <- data.frame(
         parent = as.numeric(tree.df$parent),
         tip = as.numeric(tree.df$child),
