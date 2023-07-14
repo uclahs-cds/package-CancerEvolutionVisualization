@@ -70,6 +70,12 @@ prep.tree <- function(
     tree.df$label <- as.character(
         if (is.null(tree.df$label)) tree.df$child else tree.df$label
         );
+    
+    if (('node.col' %in% colnames(tree.df))) { 
+        tree.df$node.col[is.na(tree.df$node.col)] <- default.node.colour;
+    } else {
+        tree.df$node.col <- default.node.colour;
+        }
 
     tree.df$border.col <- apply(
         tree.df,
@@ -77,13 +83,14 @@ prep.tree <- function(
         FUN = function(row) {
             if (is.na(row['border.col'])) row['node.col'] else row['border.col'];
         }
-    )
+    );
 
     out.df <- data.frame(
         id = c(-1, tree.df$child),
         label.text = c('', tree.df$label),
         ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
         color = colour.scheme[1:(nrow(tree.df) + 1)],
+        node.colour = c(NA, tree.df$node.col),
         border.colour = c(NA, tree.df$border.col),
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
@@ -93,14 +100,6 @@ prep.tree <- function(
         );
 
     out.df$tier <- get.num.tiers(out.df)
-
-    out.df$node.colour <- if (('node.col' %in% colnames(tree.df))) {
-        node.col <- c(NA, tree.df$node.col);
-        node.col[is.na(node.col)] <- default.node.colour;
-        node.col
-    } else {
-        default.node.colour;
-        }
 
     out.tree <- data.frame(
         parent = as.numeric(tree.df$parent),
