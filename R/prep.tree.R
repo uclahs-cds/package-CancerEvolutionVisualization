@@ -71,11 +71,20 @@ prep.tree <- function(
         if (is.null(tree.df$label)) tree.df$child else tree.df$label
         );
 
+    tree.df$border.col <- apply(
+        tree.df,
+        MARGIN = 1,
+        FUN = function(row) {
+            if (is.na(row['border.col'])) row['node.col'] else row['border.col'];
+        }
+    )
+
     out.df <- data.frame(
         id = c(-1, tree.df$child),
         label.text = c('', tree.df$label),
         ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
         color = colour.scheme[1:(nrow(tree.df) + 1)],
+        border.colour = c(NA, tree.df$border.col),
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
@@ -92,15 +101,6 @@ prep.tree <- function(
     } else {
         default.node.colour;
         }
-
-    out.df$border.colour <- c(NA, tree.df$border.col);
-    out.df$border.colour <- apply(
-        out.df,
-        MARGIN = 1,
-        FUN = function(row) {
-            if (is.na(row['border.colour'])) row['node.colour'] else row['border.colour'];
-            }
-        )
 
     out.tree <- data.frame(
         parent = as.numeric(tree.df$parent),
