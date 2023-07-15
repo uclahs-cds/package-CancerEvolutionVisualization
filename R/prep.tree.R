@@ -68,7 +68,7 @@ prep.tree <- function(
     text.df$node <- reindex.column(text.df$node, node.id.index);
 
     tree.df$label <- as.character(
-        if (is.null(tree.df$label)) tree.df$child else tree.df$label
+        if ('label' %in% colnames(tree.df)) tree.df$label else tree.df$child
         );
     
     if (('node.col' %in% colnames(tree.df))) { 
