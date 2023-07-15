@@ -85,6 +85,13 @@ prep.tree <- function(
         }
     );
 
+    default.label.colour <- 'white';
+    if (('label.col' %in% colnames(tree.df))) {
+        tree.df$label.col[is.na(tree.df$label.col)] <- default.label.colour;
+    } else {
+        tree.df$label.col <- default.label.colour;
+        }
+
     out.df <- data.frame(
         id = c(-1, tree.df$child),
         label.text = c('', tree.df$label),
@@ -92,6 +99,7 @@ prep.tree <- function(
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         node.colour = c(NA, tree.df$node.col),
         border.colour = c(NA, tree.df$border.col),
+        label.colour = c(NA, tree.df$label.col),
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
