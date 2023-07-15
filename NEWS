@@ -4,6 +4,7 @@ ADDED
 * Generic functions to generate accompanying heatmaps
 * Option to specify tree node colours with "node.col" column
 * Option to specify tree node border colour with "border.col" column
+* Option to specify node label colour with "label.col" column
 
 
 --------------------------------------------------------------------------
