@@ -85,6 +85,41 @@ prep.tree <- function(
         }
     );
 
+    if ('border.type' %in% colnames(tree.df)) {
+        valid.border.types <- c(
+            'blank',
+            'solid',
+            'dashed',
+            'dotted',
+            'dotdash',
+            'longdash',
+            'twodash'
+            );
+        
+        min.numeric.border.type <- 0;
+        max.numeric.border.type <- length(valid.border.types) - 1;
+
+        border.type.is.valid <- if (is.numeric(tree.df$border.type)) {
+            (tree.df$border.type >= min.numeric.border.type
+                & tree.df$border.type <= max.numeric.border.type);
+        } else {
+            tree.df$border.type %in% valid.border.types;
+            }
+
+        if (!all(border.type.is.valid)) {
+            stop(paste(
+                'Invalid border type specified.',
+                'Must be one of', paste(valid.border.types, collapse = ', '),
+                'or a numberic vector between',
+                min.numeric.border.type, 'and', max.numeric.border.type
+                ));
+            }
+
+        tree.df$border.type[is.na(tree.df$border.type)] <- if (is.numeric(tree.df$border.type)) 1 else 'solid';
+    } else {
+        tree.df$border.type <- 'solid';
+        }
+    
     out.df <- data.frame(
         id = c(-1, tree.df$child),
         label.text = c('', tree.df$label),
@@ -92,6 +127,7 @@ prep.tree <- function(
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         node.colour = c(NA, tree.df$node.col),
         border.colour = c(NA, tree.df$border.col),
+        border.type = c(NA, tree.df$border.type),
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
         bell = c(FALSE, rep(bells, nrow(tree.df))),

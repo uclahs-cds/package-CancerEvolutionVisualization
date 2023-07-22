@@ -39,7 +39,8 @@ add.node.ellipse <- function(
 	    ar = 1 - log2(nchar(clone.out$v$plot.lab)) / 10,
 	    gp = gpar(
 	        fill = clone.out$v$node.colour,
-	        col = clone.out$v$border.colour
+	        col = clone.out$v$border.colour,
+	        lty = clone.out$v$border.type
 	        ),
 	    angle = pi / 2,
 	    position.units = 'native',
