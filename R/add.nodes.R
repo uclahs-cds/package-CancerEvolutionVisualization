@@ -40,7 +40,8 @@ add.node.ellipse <- function(
 	    gp = gpar(
 	        fill = clone.out$v$node.colour,
 	        col = clone.out$v$border.colour,
-	        lty = clone.out$v$border.type
+	        lty = clone.out$v$border.type,
+	        lwd = clone.out$v$border.width
 	        ),
 	    angle = pi / 2,
 	    position.units = 'native',

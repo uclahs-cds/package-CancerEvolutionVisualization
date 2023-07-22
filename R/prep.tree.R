@@ -119,7 +119,14 @@ prep.tree <- function(
     } else {
         tree.df$border.type <- 'solid';
         }
-    
+
+    if ('border.width' %in% colnames(tree.df)) {
+        tree.df$border.width <- as.numeric(tree.df$border.width);
+        tree.df$border.width[is.na(tree.df$border.width)] <- 1;
+    } else {
+        tree.df$border.width <- 1;
+        }
+
     out.df <- data.frame(
         id = c(-1, tree.df$child),
         label.text = c('', tree.df$label),
@@ -128,6 +135,7 @@ prep.tree <- function(
         node.colour = c(NA, tree.df$node.col),
         border.colour = c(NA, tree.df$border.col),
         border.type = c(NA, tree.df$border.type),
+        border.width = c(NA, tree.df$border.width),
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
