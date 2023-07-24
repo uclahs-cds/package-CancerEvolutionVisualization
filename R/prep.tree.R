@@ -71,7 +71,7 @@ prep.tree <- function(
         if (is.null(tree.df$label)) tree.df$child else tree.df$label
         );
 
-    if (('node.col' %in% colnames(tree.df))) { 
+    if (('node.col' %in% colnames(tree.df))) {
         tree.df$node.col[is.na(tree.df$node.col)] <- default.node.colour;
     } else {
         tree.df$node.col <- default.node.colour;
