@@ -95,7 +95,7 @@ prep.tree <- function(
             'longdash',
             'twodash'
             );
-        
+
         min.numeric.border.type <- 0;
         max.numeric.border.type <- length(valid.border.types) - 1;
 
