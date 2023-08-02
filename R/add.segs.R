@@ -222,7 +222,7 @@ add.tree.segs <- function(
         default.units = 'native',
         gp = gpar(
             col = clone.out$v$edge.colour.1,
-            lwd = line.lwd,
+            lwd = clone.out$v$edge.width.1,
             lty = clone.out$v$edge.type.1
             )
         );
@@ -240,7 +240,7 @@ add.tree.segs <- function(
                 default.units = 'native',
                 gp = gpar(
                     col = clone.out$v$edge.colour.2,
-                    lwd = line.lwd,
+                    lwd = clone.out$v$edge.width.2,
                     lty = clone.out$v$edge.type.2
                     )
                 );
