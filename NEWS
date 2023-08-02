@@ -1,3 +1,18 @@
+CancerEvolutionVisualization 2.0.0 2023-08-02 (Dan Knight)
+
+ADDED
+* Option to specify edge colour with "edge.col.1" and "edge.col.2" 
+  columns in tree input dataframe
+* Option to specify edge width using "edge.width.1" and "edge.width.2" 
+  columns in tree input dataframe
+* Option to specify edge linetype with "edge.type.1" and "edge.type.2" 
+  columns in tree input dataframe
+
+REMOVED
+* "seg1.col" and "seg2.col" parameters (replaced by tree input columns).
+
+
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 1.1.1 2022-11-18 (Helena Winata)
 
 ADDED
