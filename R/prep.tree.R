@@ -60,6 +60,19 @@ prep.tree <- function(
         tree.df$edge.col.2 <- 'green';
         }
 
+    default.edge.type <- 'solid';
+    if ('edge.type.1' %in% colnames(tree.df)) {
+        tree.df$edge.type.1[is.na(tree.df$edge.type.1)] <- default.edge.type;
+    } else {
+        tree.df$edge.type.1 <- default.edge.type;
+        }
+
+    if ('edge.type.2' %in% colnames(tree.df)) {
+        tree.df$edge.type.2[is.na(tree.df$edge.type.2)] <- default.edge.type;
+    } else {
+        tree.df$edge.type.2 <- default.edge.type;
+        }
+
     tree.df <- reorder.nodes(tree.df);
 
     # Include -1 value for root node.
@@ -87,6 +100,8 @@ prep.tree <- function(
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
         edge.colour.1 = c(NA, tree.df$edge.col.1),
         edge.colour.2 = c(NA, tree.df$edge.col.2),
+        edge.type.1 = c(NA, tree.df$edge.type.1),
+        edge.type.2 = c(NA, tree.df$edge.type.2),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
         alpha = rep(0.5, (nrow(tree.df) + 1)),
         stringsAsFactors = FALSE
