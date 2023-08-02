@@ -52,12 +52,12 @@ prep.tree <- function(
             }
         }
 
-    if (!('edge.colour.1' %in% colnames(tree.df))) {
-        tree.df$edge.colour.1 <- 'black';
+    if (!('edge.col.1' %in% colnames(tree.df))) {
+        tree.df$edge.col.1 <- 'black';
         }
 
-    if (!('edge.colour.2' %in% colnames(tree.df))) {
-        tree.df$edge.colour.2 <- 'green';
+    if (!('edge.col.2' %in% colnames(tree.df))) {
+        tree.df$edge.col.2 <- 'green';
         }
 
     tree.df <- reorder.nodes(tree.df);
