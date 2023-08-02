@@ -1,12 +1,13 @@
 create.test.tree <- function(tree, node.text, sample, ...) {
+    tree$edge.colour.1 <- 'navy';
+    tree$edge.colour.2 <- 'gold';
+
     out <- SRCGrob(
         tree,
         node.text,
         node.radius = 0.1,
         node.text.cex = 0.85,
         scale1 = 0.9,
-        seg1.col = 'navy',
-        seg2.col = 'gold',
         node.col = 'grey40',
         line.lwd = 4,
         yaxis1.label = 'PGA',

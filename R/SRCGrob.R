@@ -19,8 +19,6 @@ SRCGrob <- function(
     main.cex = 1.7,
     node.radius = 0.1,
     node.col = 'grey29',
-    seg1.col = 'black',
-    seg2.col = 'green',
     line.lwd = 3,
     node.text.line.dist = 0.1,
     colour.scheme = CancerEvolutionVisualization::colours,
@@ -41,9 +39,6 @@ SRCGrob <- function(
 
     yat <- prep.yat(yat);
     yaxis.position <- get.y.axis.position(colnames(tree));
-    
-    tree$edge.col.1 <- seg1.col;
-    tree$edge.col.2 <- seg2.col;
 
     inputs <- prep.tree(
         tree,
