@@ -41,6 +41,9 @@ SRCGrob <- function(
 
     yat <- prep.yat(yat);
     yaxis.position <- get.y.axis.position(colnames(tree));
+    
+    tree$edge.col.1 <- seg1.col;
+    tree$edge.col.2 <- seg2.col;
 
     inputs <- prep.tree(
         tree,

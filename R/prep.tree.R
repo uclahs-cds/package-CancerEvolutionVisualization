@@ -77,6 +77,8 @@ prep.tree <- function(
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
+        edge.colour.1 = c(NA, tree.df$edge.col.1),
+        edge.colour.2 = c(NA, tree.df$edge.col.2),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
         alpha = rep(0.5, (nrow(tree.df) + 1)),
         stringsAsFactors = FALSE
