@@ -67,7 +67,7 @@ prep.tree <- function(
         tree.df$edge.type.2 <- default.edge.type;
         }
 
-    default.edge.width <- 3;
+    default.edge.width <- 4;
     if ('edge.width.1' %in% colnames(tree.df)) {
         tree.df$edge.width.1[is.na(tree.df$edge.width.1)] <- default.edge.width;
     } else {
