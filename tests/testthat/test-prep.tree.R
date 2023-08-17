@@ -48,6 +48,123 @@ test_that(
     });
 
 test_that(
+    'prep.tree passes valid edge 1 colour values', {
+        tree.df <- data.frame(
+            parent = c(NA, 1:3),
+            edge.col.1 = 'red'
+            );
+
+        result <- prep.tree(
+            tree.df,
+            text.df = NULL,
+            colour.scheme = colours
+            );
+
+        result.edge.colours <- result$in.tree.df$edge.colour.1;
+        expected.edge.colours <- c(NA, tree.df$edge.col.1);
+
+        expect_equal(result.edge.colours, expected.edge.colours);
+    });
+
+
+test_that(
+    'prep.tree passes valid edge 2 colour values', {
+        tree.df <- data.frame(
+            parent = c(NA, 1:3),
+            edge.col.2 = 'red'
+            );
+
+        result <- prep.tree(
+            tree.df,
+            text.df = NULL,
+            colour.scheme = colours
+            );
+
+        result.edge.colours <- result$in.tree.df$edge.colour.2;
+        expected.edge.colours <- c(NA, tree.df$edge.col.2);
+
+        expect_equal(result.edge.colours, expected.edge.colours);   
+    });
+
+test_that(
+    'prep.tree passes valid edge 1 width values', {
+        tree.df <- data.frame(
+            parent = c(NA, 1:3),
+            edge.width.1 = 1:4
+            );
+
+        result <- prep.tree(
+            tree.df,
+            text.df = NULL,
+            colour.scheme = colours
+            );
+
+        result.edge.widths <- result$in.tree.df$edge.width.1;
+        expected.edge.widths <- c(NA, tree.df$edge.width.1);
+
+        expect_equal(result.edge.widths, expected.edge.widths);
+    });
+
+
+test_that(
+    'prep.tree passes valid edge 2 width values', {
+        tree.df <- data.frame(
+            parent = c(NA, 1:3),
+            edge.width.2 = 1:4
+            );
+
+        result <- prep.tree(
+            tree.df,
+            text.df = NULL,
+            colour.scheme = colours
+            );
+
+        result.edge.widths <- result$in.tree.df$edge.width.2;
+        expected.edge.widths <- c(NA, tree.df$edge.width.2);
+
+        expect_equal(result.edge.widths, expected.edge.widths);   
+    });
+
+test_that(
+    'prep.tree passes valid edge 1 linetype values', {
+        tree.df <- data.frame(
+            parent = c(NA, 1:3),
+            edge.type.1 = 'dotted'
+            );
+
+        result <- prep.tree(
+            tree.df,
+            text.df = NULL,
+            colour.scheme = colours
+            );
+
+        result.edge.linetypes <- result$in.tree.df$edge.type.1;
+        expected.edge.linetypes <- c(NA, tree.df$edge.type.1);
+
+        expect_equal(result.edge.linetypes, expected.edge.linetypes);
+    });
+
+
+test_that(
+    'prep.tree passes valid edge 2 linetype values', {
+        tree.df <- data.frame(
+            parent = c(NA, 1:3),
+            edge.type.2 = 'solid'
+            );
+
+        result <- prep.tree(
+            tree.df,
+            text.df = NULL,
+            colour.scheme = colours
+            );
+
+        result.edge.linetypes <- result$in.tree.df$edge.type.2;
+        expected.edge.linetypes <- c(NA, tree.df$edge.type.2);
+
+        expect_equal(result.edge.linetypes, expected.edge.linetypes);   
+    });
+
+test_that(
     'prep.tree.parent handles values of 0', {
         parent <- c(0:5);
 
