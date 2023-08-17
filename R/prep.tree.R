@@ -52,13 +52,7 @@ prep.tree <- function(
             }
         }
 
-    if (!('edge.col.1' %in% colnames(tree.df))) {
-        tree.df$edge.col.1 <- 'black';
-        }
-
-    if (!('edge.col.2' %in% colnames(tree.df))) {
-        tree.df$edge.col.2 <- 'green';
-        }
+    tree.df <- prep.edge.colours(tree.df);
 
     default.edge.type <- 'solid';
     if ('edge.type.1' %in% colnames(tree.df)) {
@@ -239,4 +233,37 @@ get.y.axis.position <- function(tree.colnames) {
         };
 
     return(y.axis.position);
+    }
+
+prep.edge.colours <- function(tree.df) {
+    edge.colours <- list();
+
+    default.edge.colours <- c('black', 'green');
+    edge.colour.column.names <- sapply(
+        1:2,
+        function(i) paste('edge', 'col', i, sep = '.')
+        );
+
+    for (i in 1:length(edge.colour.column.names)) {
+        column.name <- edge.colour.column.names[i];
+        default.colour <- default.edge.colours[i];
+
+        if (column.name %in% colnames(tree.df)) {
+            tree.df[is.na(tree.df[, column.name]), column.name] <- default.colour;
+        } else {
+            tree.df[, column.name] <- default.colour;
+            }
+        }
+
+    return(tree.df);
+    }
+
+prep.edge.colour.column <- function(tree.df, column.name, default.value) {
+    if (column.name %in% colnames(tree.df)) {
+        values <- tree.df[, column.name];
+        values[is.na(values)] <- default.value;
+        return(values);
+    } else {
+        return(rep(default.value, nrow(tree.df)));
+        }
     }

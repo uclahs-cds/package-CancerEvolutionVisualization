@@ -448,3 +448,103 @@ test_that(
 
         expect_equal(yaxis.position, expected.position);
     });
+
+test_that(
+    'prep.edge.colours handles valid colour columns', {
+        tree <- data.frame(
+            parent = 1:10,
+            edge.col.1 = c('red'),
+            edge.col.2 = c('blue')
+            );
+
+        result <- prep.edge.colours(tree);
+
+        expect_equal(result, tree); 
+    });
+
+test_that(
+    'prep.edge.colours adds missing colour columns', {
+        tree <- data.frame(
+            parent = 1:10
+            );
+
+        result <- prep.edge.colours(tree);
+        expected.edge.colnames <- sapply(
+            1:2, function(i) paste('edge', 'col', i, sep = '.')
+            );
+        edge.columns.found <- expected.edge.colnames %in% colnames(result);
+
+        expect_true(all(edge.columns.found));
+    });
+
+test_that(
+    'prep.edge.colours includes all tree columns', {
+        tree <- data.frame(
+            parent = c(NA, 1:9),
+            length1 = 1:10
+            );
+
+        result <- prep.edge.colours(tree);
+        tree.columns.found <- colnames(tree) %in% colnames(result);
+
+        expect_true(all(tree.columns.found)); 
+    });
+
+test_that(
+    'prep.edge.colour.column handles valid column values', {
+        tree <- data.frame(
+            parent = c(NA, 1:9)
+            );
+
+        valid.colour <- 'green';
+        column.name <- 'edge.col.1';
+        tree[, column.name] <- valid.colour;
+
+        result <- prep.edge.colour.column(tree, column.name, 'blue');
+
+        expect_equal(result, tree[, column.name]);
+    });
+
+test_that(
+    'prep.edge.colour.column replaces NA with default', {
+        tree <- data.frame(
+            parent = c(NA, 1:9)
+        );
+
+        column.name <- 'edge.col.1';
+        tree[, column.name] <- 'green';
+
+        NA.indices <- 2:4;
+        tree[NA.indices, column.name] <- NA;
+
+        default.colour <- 'black';
+        result <- prep.edge.colour.column(tree, column.name, default.colour);
+        result.replaced <- result[NA.indices] == default.colour;
+
+        expect_true(all(result.replaced));
+    });
+
+test_that(
+    'prep.edge.colour.column returns correct length with missing column', {
+        tree <- data.frame(
+            parent = c(NA, 1:9)
+            );
+
+        result <- prep.edge.colour.column(tree, 'edge.col.1', 'black');
+        expected.num.rows <- nrow(tree);
+
+        expect_equal(length(result), expected.num.rows);
+    });
+
+test_that(
+    'prep.edge.colour.column returns default with missing column', {
+        tree <- data.frame(
+            parent = c(NA, 1:9)
+            );
+
+        default.colour <- 'black';
+        result <- prep.edge.colour.column(tree, 'edge.col.1', default.colour);
+        match.default <- result == default.colour;
+
+        expect_true(all(match.default));
+    });
