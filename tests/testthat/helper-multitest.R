@@ -1,6 +1,6 @@
 create.test.tree <- function(tree, node.text, sample, ...) {
-    tree$edge.colour.1 <- 'navy';
-    tree$edge.colour.2 <- 'gold';
+    tree$edge.col.1 <- 'navy';
+    tree$edge.col.2 <- 'gold';
 
     out <- SRCGrob(
         tree,
