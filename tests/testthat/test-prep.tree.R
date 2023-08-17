@@ -83,7 +83,7 @@ test_that(
         result.edge.colours <- result$in.tree.df$edge.colour.2;
         expected.edge.colours <- c(NA, tree.df$edge.col.2);
 
-        expect_equal(result.edge.colours, expected.edge.colours);   
+        expect_equal(result.edge.colours, expected.edge.colours);
     });
 
 test_that(
@@ -122,7 +122,7 @@ test_that(
         result.edge.widths <- result$in.tree.df$edge.width.2;
         expected.edge.widths <- c(NA, tree.df$edge.width.2);
 
-        expect_equal(result.edge.widths, expected.edge.widths);   
+        expect_equal(result.edge.widths, expected.edge.widths);
     });
 
 test_that(
@@ -161,7 +161,7 @@ test_that(
         result.edge.linetypes <- result$in.tree.df$edge.type.2;
         expected.edge.linetypes <- c(NA, tree.df$edge.type.2);
 
-        expect_equal(result.edge.linetypes, expected.edge.linetypes);   
+        expect_equal(result.edge.linetypes, expected.edge.linetypes);
     });
 
 test_that(
@@ -459,7 +459,7 @@ test_that(
 
         result <- prep.edge.colours(tree);
 
-        expect_equal(result, tree); 
+        expect_equal(result, tree);
     });
 
 test_that(
@@ -487,7 +487,7 @@ test_that(
         result <- prep.edge.colours(tree);
         tree.columns.found <- colnames(tree) %in% colnames(result);
 
-        expect_true(all(tree.columns.found)); 
+        expect_true(all(tree.columns.found));
     });
 
 test_that(
