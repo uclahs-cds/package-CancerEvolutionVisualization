@@ -27,9 +27,6 @@ SRCGrob(
     main.cex = 1.7,
     node.radius = 0.1,
     node.col = "grey29",
-    seg1.col = "black",
-    seg2.col = "green",
-    line.lwd = 3,
     node.text.line.dist = 0.1,
     colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
@@ -73,9 +70,6 @@ SRCGrob(
   \item{main.cex}{Font size for the main plot title}
   \item{node.radius}{Node size}
   \item{node.col}{Node colour}
-  \item{seg1.col}{Colour of the first set of tree branch segments}
-  \item{seg2.col}{Colour of the second set of tree branch segments}
-  \item{line.lwd}{Branch segment thickness}
   \item{node.text.line.dist}{
   Distance between node text and tree branches (as a value between 0 and 1)
   }
