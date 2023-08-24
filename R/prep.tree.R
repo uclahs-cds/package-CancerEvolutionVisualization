@@ -77,6 +77,8 @@ prep.tree <- function(
         tree.df$node.col <- default.node.colour;
         }
 
+    tree.df$node.label.col <- prep.node.label.colours(tree.df);
+
     tree.df$border.col <- apply(
         tree.df,
         MARGIN = 1,
@@ -133,6 +135,7 @@ prep.tree <- function(
         ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         node.colour = c(NA, tree.df$node.col),
+        node.label.colour = c(NA, tree.df$node.label.col),
         border.colour = c(NA, tree.df$border.col),
         border.type = c(NA, tree.df$border.type),
         border.width = c(NA, tree.df$border.width),
@@ -260,4 +263,38 @@ get.y.axis.position <- function(tree.colnames) {
         };
 
     return(y.axis.position);
+    }
+
+prep.node.label.colours <- function(tree.df) {
+    node.col.error.message <- 'Cannot prepare node label colour without node colour values.';
+
+    if (!'node.col' %in% colnames(tree.df)) {
+        stop(paste(
+            node.col.error.message,
+            '"node.col" column not found in tree.df'
+            ));
+    } else if (any(is.na(tree.df$node.col))) {
+        stop(paste(
+            node.col.error.message,
+            'NA values found in tree.df "node.col" column.'
+            ));
+        }
+
+    label.colours <- if (!'node.label.col' %in% colnames(tree.df)) {
+        rep(NA, nrow(tree.df));
+    } else {
+        tree.df$node.label.col;
+        }
+
+    NA.indices <- is.na(label.colours);
+    label.colours[NA.indices] <- sapply(
+        tree.df$node.col[NA.indices],
+        FUN = get.default.node.label.colour
+        );
+
+    return(label.colours);
+    }
+
+get.default.node.label.colour <- function(node.colour) {
+    return('white');
     }

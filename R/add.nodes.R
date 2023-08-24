@@ -62,7 +62,7 @@ add.node.ellipse <- function(
   		    x = unit(clone.out$v$x, 'native'),
   		    y = unit(clone.out$v$y, 'native'),
   		    just = c('center', 'center'),
-  		    gp = gpar(col = '#FFFFFF', cex = label.cex - log2(nchar(clone.out$v$plot.lab)) / 10)
+  		    gp = gpar(col = clone.out$v$node.label.colour, cex = label.cex - log2(nchar(clone.out$v$plot.lab)) / 10)
   		    );
 
 	    clone.out$grobs <- c(clone.out$grobs, list(node.label.grob));
