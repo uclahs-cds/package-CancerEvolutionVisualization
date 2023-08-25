@@ -395,8 +395,3 @@ test_that(
             regexp = '"node.col"'
             );
     });
-
-test_that(
-    'prep.node.label.colours', {
-        
-    });
