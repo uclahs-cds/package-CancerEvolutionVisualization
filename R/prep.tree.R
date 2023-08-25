@@ -287,10 +287,10 @@ prep.node.label.colours <- function(tree.df) {
         }
 
     NA.indices <- is.na(label.colours);
-    label.colours[NA.indices] <- sapply(
+    label.colours[NA.indices] <- as.character(sapply(
         tree.df$node.col[NA.indices],
         FUN = get.default.node.label.colour
-        );
+        ));
 
     return(label.colours);
     }
