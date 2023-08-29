@@ -342,9 +342,6 @@ test_that(
 
         result <- prep.node.label.colours(tree.df);
         expected.label.colours <- node.label.colours;
-        
-        print(result)
-        print(expected.label.colours)
 
         expect_equal(result, expected.label.colours);
     });
@@ -381,7 +378,7 @@ test_that(
         tree.df <- data.frame(parent = 1:5);
 
         expect_error(
-            { prep.node.label.colours(tree.df); },
+            prep.node.label.colours(tree.df),
             regexp = '"node.col"'
             );
     });
@@ -391,7 +388,7 @@ test_that(
         tree.df <- data.frame(node.col = c(NA, 1:3));
 
         expect_error(
-            { prep.node.label.colours(tree.df); },
+            prep.node.label.colours(tree.df),
             regexp = '"node.col"'
             );
     });
