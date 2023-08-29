@@ -39,6 +39,8 @@ get.colour.luminance <- function(colour) {
     }
 
 get.contrast.ratio <- function(luminance1, luminance2) {
+    # Based on WCAG accessibility standards:
+    # https://www.w3.org/TR/2008/REC-WCAG20-20081211/#visual-audio-contrast-contrast
     luminance <- sort(
         c(luminance1, luminance2),
         decreasing = TRUE
