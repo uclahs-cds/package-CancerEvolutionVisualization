@@ -296,9 +296,9 @@ prep.node.label.colours <- function(tree.df) {
     }
 
 get.default.node.label.colour <- function(node.colour) {
-    white.luminance <- get.colour.luminance('white');
+    white.luminance <- get.colour.luminance('black');
     node.colour.luminance <- get.colour.luminance(node.colour);
 
     contrast.ratio <- get.contrast.ratio(white.luminance, node.colour.luminance);
-    return(if (contrast.ratio >= 4.5) 'white' else 'black');
+    return(if (contrast.ratio < 7) 'white' else 'black');
     }
