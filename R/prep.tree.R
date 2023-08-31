@@ -300,5 +300,9 @@ get.default.node.label.colour <- function(node.colour) {
     node.colour.luminance <- get.colour.luminance(node.colour);
 
     contrast.ratio <- get.contrast.ratio(white.luminance, node.colour.luminance);
-    return(if (contrast.ratio < 7) 'white' else 'black');
+
+    # WCAG minimum contrast for normal/small text
+    # https://www.w3.org/TR/2008/REC-WCAG20-20081211/#visual-audio-contrast-contrast
+    WCAG.contrast.threshold <- 7;
+    return(if (contrast.ratio < WCAG.contrast.threshold) 'white' else 'black');
     }
