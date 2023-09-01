@@ -109,6 +109,22 @@ CEV gives the user control over numerous visual aspects of the tree. By specifyi
 
 Default values replace missing columns and `NA` values, allowing node-by-node, and edge-by-edge control as needed. For sparsely defined values (for example, only specifying a single edge), it can be convenient to initialize a column with `NA`s, then manually assign specific nodes as needed.
 
+#### Line Types
+Valid values for line type columns are based on lattice's values (with some additions and differences).
+
+| Line Type |
+| --- |
+| `NA` |
+| `'none'` |
+| `'solid'` |
+| `'dashed'` |
+| `'dotted'` |
+| `'dotdash'` |
+| `'longdash'` |
+| `'twodash'` |
+
+#### Styled Nodes
+
 ```{r echo=F}
 node.style <- tree.input[, c(
     'parent',
