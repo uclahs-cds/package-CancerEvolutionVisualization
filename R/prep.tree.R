@@ -98,22 +98,12 @@ prep.tree <- function(
             'twodash'
             );
 
-        min.numeric.border.type <- 0;
-        max.numeric.border.type <- length(valid.border.types) - 1;
-
-        border.type.is.valid <- if (is.numeric(tree.df$border.type)) {
-            (tree.df$border.type >= min.numeric.border.type
-                & tree.df$border.type <= max.numeric.border.type);
-        } else {
-            tree.df$border.type %in% valid.border.types | is.na(tree.df$border.type);
-            }
+        border.type.is.valid <- tree.df$border.type %in% valid.border.types | is.na(tree.df$border.type);
 
         if (!all(border.type.is.valid)) {
             stop(paste(
                 'Invalid border type specified.',
-                'Must be one of', paste(valid.border.types, collapse = ', '),
-                'or a numberic vector between',
-                min.numeric.border.type, 'and', max.numeric.border.type
+                'Must be one of', paste(c(valid.border.types, 'or NA.'), collapse = ', ')
                 ));
             }
 
