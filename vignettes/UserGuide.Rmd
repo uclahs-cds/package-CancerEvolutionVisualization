@@ -96,7 +96,7 @@ grid.draw(branch.lengths.tree);
 
 ### Ex. 3 Styling the Tree
 
-CEV gives the user control over numerous visual aspects of the tree. By specifying optional columns and values in the tree input data.frame, the user has individual control of edge colour, width, and line type.
+CEV gives the user control over numerous visual aspects of the tree. By specifying optional columns and values in the tree input data.frame, the user has individual control of the colour, width, and line type of each node, label border, and edge.
 
 #### Optional Style Columns
 | Style | Column |
@@ -106,6 +106,11 @@ CEV gives the user control over numerous visual aspects of the tree. By specifyi
 | Node Border Colour | `border.col` |
 | Node Border Width | `border.width` |
 | Node Border Line Type | `border.type` |
+| | |
+| Edge Colour | `edge.col.2`, `edge.col.2` |
+| Edge Width | `edge.width.2`, `edge.width.2` |
+| Edge Line Type | `edge.type.2`, `edge.type.2` |
+
 
 Default values replace missing columns and `NA` values, allowing node-by-node, and edge-by-edge control as needed. For sparsely defined values (for example, only specifying a single edge), it can be convenient to initialize a column with `NA`s, then manually assign specific nodes as needed.
 
@@ -123,14 +128,14 @@ Valid values for line type columns are based on lattice's values (with some addi
 | `'longdash'` |
 | `'twodash'` |
 
-#### Styled Nodes
+#### Styled Tree
 
 ```{r echo=F}
-node.style <- tree.input[, c(
-    'parent',
-    'node.col', 'node.label.col',
-    'border.col', 'border.width', 'border.type'
-    )];
+node.style <- subset(
+tree.input, select = c(
+    -CP,
+    -angle
+    ));
 
 knitr::kable(
     node.style,
