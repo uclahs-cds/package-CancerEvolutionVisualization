@@ -11,9 +11,9 @@ get.default.branch.length.colnames <- function(num.columns) {
             }
     }
 
-get.default.branch.lengths <- function(num.rows) {
-    lengths <- data.frame(a = rep(1, times = num.rows));
-    colnames(lengths) <- get.default.branch.length.colnames(1);
+get.default.branch.lengths <- function(num.rows, num.cols) {
+    lengths <- data.frame(a = rep(num.cols, times = num.rows));
+    colnames(lengths) <- get.default.branch.length.colnames(num.cols);
 
     return(lengths);
     }
@@ -78,12 +78,16 @@ prep.branch.lengths <- function(tree.df) {
             )
         );
 
-    if (length(length.cols) > 0) {
+    # TODO: Automatically create length2 if an edge.style.2 column is present.
+    if (length(length.cols) > 1) {
         lengths.df <- data.frame(tree.df[, length.cols]);
         colnames(lengths.df) <- get.default.branch.length.colnames(length(length.cols));
 
         return(lengths.df);
     } else {
-        return(get.default.branch.lengths(nrow(tree.df)));
+        return(get.default.branch.lengths(
+            num.rows = nrow(tree.df),
+            num.cols = 1
+            ));
         }
     }
