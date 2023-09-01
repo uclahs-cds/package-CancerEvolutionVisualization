@@ -105,7 +105,7 @@ prep.tree <- function(
             (tree.df$border.type >= min.numeric.border.type
                 & tree.df$border.type <= max.numeric.border.type);
         } else {
-            tree.df$border.type %in% valid.border.types;
+            tree.df$border.type %in% valid.border.types | is.na(tree.df$border.type);
             }
 
         if (!all(border.type.is.valid)) {
