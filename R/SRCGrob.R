@@ -119,5 +119,9 @@ SRCGrob <- function(
         cl = 'SRCGrob'
         );
 
+    out.tree$input.data <- list(
+        tree = inputs$in.tree.df[-1, ], # Remove Normal node placeholder row
+        text = inputs$text.df
+        );
     return(out.tree);
     }
