@@ -88,6 +88,32 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 	    spread = spread
 	    );
 
+	tree$angle[!is.na(v$angle)] <- degrees.to.radians(v$angle[!is.na(v$angle)]);
+
+	for (i in seq_along(v$id)) {
+	    vi <- v[i, ];
+	    angle <- tree$angle[tree$tip == vi$id];
+
+	    if (!is.na(vi$parent) && vi$parent == -1) {
+	        x0 <- 0;
+	        y0 <- tree$length[tree$parent == -1];
+	        len0 <- 0;
+	    } else {
+	        par <- v[v$id == vi$parent, ];
+	        
+	        r <- tree$length[tree$tip == vi$id];
+	        x.shift <- r * sin(angle);
+	        x0 <- par$x + x.shift;
+	        y.shift <- r * cos(angle);
+	        y0 <- par$y + y.shift;
+	        len0 <- par$len + y.shift;
+	        }
+
+	    v[i,]$len <- len0;
+	    v[i,]$y <- y0;
+	    v[i,]$x <- x0;
+	    }
+
 	v$len <- sapply(
 	    v$y,
 	    FUN = function(x) {
