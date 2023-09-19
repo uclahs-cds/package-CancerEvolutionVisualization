@@ -100,7 +100,7 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 	        len0 <- 0;
 	    } else {
 	        par <- v[v$id == vi$parent, ];
-	        
+
 	        r <- tree$length[tree$tip == vi$id];
 	        x.shift <- r * sin(angle);
 	        x0 <- par$x + x.shift;

@@ -156,7 +156,7 @@ position.nodes.fixed <- function(v, tree, fixed.angle, len) {
         v[i,]$y <- y0;
         v[i,]$x <- x0;
         }
-    
+
     clone.env <-  new.env(parent = emptyenv());
     clone.env$v <- v;
     clone.env$tree <- tree;
