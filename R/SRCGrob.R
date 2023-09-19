@@ -26,6 +26,7 @@ SRCGrob <- function(
     colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
     add.normal = FALSE,
+    angle.unit = 'degrees',
     normal.cex = 1,
     sig.shape = 3,
     label.nodes = TRUE,
@@ -45,7 +46,8 @@ SRCGrob <- function(
     inputs <- prep.tree(
         tree,
         node.text,
-        colour.scheme = colour.scheme
+        colour.scheme = colour.scheme,
+        angle.unit = angle.unit
         );
 
     fixed.angle <- pi / 6;

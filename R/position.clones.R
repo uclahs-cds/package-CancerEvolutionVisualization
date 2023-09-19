@@ -131,7 +131,7 @@ position.nodes.fixed <- function(v, tree, fixed.angle, len) {
         v[i,]$x <- x0;
         }
 
-    tree$angle[!is.na(v$angle)] <- degrees.to.radians(v$angle[!is.na(v$angle)]);
+    tree$angle[!is.na(v$angle)] <- v$angle[!is.na(v$angle)];
 
     for (i in seq_along(v$id)) {
         vi <- v[i, ];

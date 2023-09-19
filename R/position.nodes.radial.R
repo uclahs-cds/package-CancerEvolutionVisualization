@@ -88,7 +88,7 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 	    spread = spread
 	    );
 
-	tree$angle[!is.na(v$angle)] <- degrees.to.radians(v$angle[!is.na(v$angle)]);
+	tree$angle[!is.na(v$angle)] <- v$angle[!is.na(v$angle)];
 
 	for (i in seq_along(v$id)) {
 	    vi <- v[i, ];
