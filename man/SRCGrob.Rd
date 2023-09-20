@@ -82,6 +82,7 @@ SRCGrob(
   \item{colour.scheme}{Vector of colour values to be used for CP polygons}
   \item{draw.nodes}{Enable or disable drawing tree nodes}
   \item{add.normal}{Adds a normal}
+  \item{angle.unit}{Unit to be used for "angle" column, either "degrees" or "radians"(degrees by default)}
   \item{normal.cex}{Font size within the normal "box"}
   \item{sig.shape}{
   Changes the shape of the CP shading.
@@ -127,6 +128,27 @@ SRCGrob(CP.tree);
 SRCGrob(
     branch.lengths.tree,
     scale1 = 0.8
+    );
+
+
+# Override Branch Angles in Degrees
+degrees.tree <- data.frame(
+    parent = c(NA, 1, 2),
+    angle = c(NA, NA, 90)
+    );
+
+SRCGrob(angle.tree);
+
+
+# Override Branch Angles in Radians
+radians.tree <- data.frame(
+    parent = c(NA, 1, 2),
+    angle = c(NA, NA, pi / 2)
+    );
+
+SRCGrob(
+    angle.tree,
+    angle.unit = 'radians'
     );
 
 
