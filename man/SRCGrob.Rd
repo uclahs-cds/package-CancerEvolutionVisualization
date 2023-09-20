@@ -138,7 +138,7 @@ degrees.tree <- data.frame(
     angle = c(NA, NA, 90)
     );
 
-SRCGrob(angle.tree);
+SRCGrob(degrees.tree);
 
 
 # Override Branch Angles in Radians
@@ -148,7 +148,7 @@ radians.tree <- data.frame(
     );
 
 SRCGrob(
-    angle.tree,
+    radians.tree,
     angle.unit = 'radians'
     );
 
