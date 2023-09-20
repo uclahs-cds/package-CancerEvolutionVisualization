@@ -34,6 +34,7 @@ SRCGrob(
     colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
     add.normal = FALSE,
+    angle.unit = 'degrees',
     normal.cex = 1,
     sig.shape = 3,
     label.nodes = TRUE,
