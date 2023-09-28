@@ -81,40 +81,46 @@ position.clones <- function(v, tree, wid) {
     }
 
 position.nodes.fixed <- function(v, tree, fixed.angle, len) {
+    calculate.angles <- function(tree, fixed.angle) {
+        node.ids <- c(v$id[[1]]);
+        
+        while (length(node.ids) > 0) {
+            current.node.id <- node.ids[1];
+            node.ids <- node.ids[-1];
+
+            child.ids <- tree$tip[tree$parent == current.node.id & !is.na(tree$parent)];
+
+            if (length(child.ids) > 0) {
+                # Safe to hardcode temporarily. as this will only ever apply to 
+                child.angles <- if (length(child.ids) == 1) c(0) else c(-1, 1) * fixed.angle;
+
+                for (i in seq_along(child.ids)) {
+                    child.id <- child.ids[i];
+                    angle <- child.angles[i];
+                    tree$angle[tree$tip == child.id] <- angle;
+                    }
+                }
+
+            node.ids <- append(node.ids, child.ids);
+            }
+        
+        return(tree);
+        }
+
+    tree <- calculate.angles(tree, fixed.angle);
+
     for (i in seq_along(v$id)) {
         vi <- v[i, ];
 
-        if (!is.na(vi$parent) && vi$parent == -1) {
-            angle <- 0;
+        angle <- tree$angle[tree$tip == vi$id];
 
+        if (!is.na(vi$parent) && vi$parent == -1) {
             # If root the clone extends the full width of the plot
             x0 <- 0;
             y0 <- tree$length[tree$parent == -1];
             len0 <- len + y0;
         } else {
-            # Parent not root -- not trunk clone
             par <- v[v$id == vi$parent, ];
-
-            #get parent clone
-            siblings <- v[which(v$parent == par$id),];
-
-            if (nrow(siblings) == 1) {
-                angle <- 0;
-            } else if (nrow(siblings) == 2) {
-                if (any(siblings$x > par$x)) {
-                    angle <- -(fixed.angle);
-                } else {
-                    angle <- fixed.angle;
-                }
-            } else if (nrow(siblings) == 3) {
-                if (any(siblings$x > par$x)) {
-                    angle <- -(fixed.angle);
-                } else if (any(siblings$x < par$x)) {
-                    angle <- fixed.angle;
-                } else {
-                    angle <- 0;
-                    }
-                }
 
             r <- tree$length[tree$tip == vi$id];
             x.shift <- r * sin(angle);
@@ -123,8 +129,6 @@ position.nodes.fixed <- function(v, tree, fixed.angle, len) {
             y0 <- par$y + y.shift;
             len0 <- par$len + y.shift;
             }
-
-        tree$angle[tree$tip == vi$id] <- angle;
 
         v[i,]$len <- len0;
         v[i,]$y <- y0;
