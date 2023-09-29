@@ -1,10 +1,13 @@
-CancerEvolutionVisualization 1.1.0 2023-09-19 (Dan Knight, Helena Winata)
+CancerEvolutionVisualization 2.0.0 2023-09-29 (Dan Knight, Helena Winata)
 
 ADDED
 * Support for specifying tree angles in either radians or degrees using
   an optional "angle" column
 * Generic functions to generate accompanying heatmaps
 
+UPDATE
+* Reimplemented tree angle calculations
+* Fixed lopsided radial tree bug
 
 --------------------------------------------------------------------------
 CancerEvolutionVisualization 1.0.1 2022-10-03 (Dan Knight)
