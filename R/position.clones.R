@@ -228,7 +228,7 @@ override.angles <- function(tree, v) {
             node.id <- as.character(x['tip']);
             angle.override <- angle.overrides[[node.id]];
             angle <- if (is.null(angle.override)) x['angle'] else angle.override;
-            return(angle);        
+            return(angle);
             }
         );
 

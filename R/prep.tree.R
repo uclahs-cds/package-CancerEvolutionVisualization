@@ -3,7 +3,7 @@ prep.tree <- function(
     text.df,
     bells = TRUE,
     colour.scheme,
-    angle.unit = NULL
+    use.radians = FALSE
     ) {
 
     if (!('parent' %in% colnames(tree.df))) {
@@ -15,7 +15,7 @@ prep.tree <- function(
 
     if ('angle' %in% colnames(tree.df)) {
         tree.df$angle <- as.numeric(tree.df$angle);
-        if (angle.unit == 'degrees') {
+        if (!use.radians) {
             tree.df$angle <- degrees.to.radians(tree.df$angle);
             }
         }
