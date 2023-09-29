@@ -131,7 +131,6 @@ position.nodes.fixed <- function(v, tree, fixed.angle, len) {
         v[i,]$x <- x0;
         }
 
-    tree <- override.angles(tree, v);
     v <- reposition.clones(tree, v);
 
     clone.env <-  new.env(parent = emptyenv());
@@ -213,7 +212,22 @@ position.clones.no.vaf <- function(v, wid, spread = TRUE) {
     }
 
 override.angles <- function(tree, v) {
-    tree$angle[!is.na(v$angle)] <- v$angle[!is.na(v$angle)];
+    angle.overrides <- as.list(v$angle);
+    names(angle.overrides) <- v$id;
+    angle.overrides <- angle.overrides[!is.na(angle.overrides)];
+
+    angles <- apply(
+        tree,
+        MARGIN = 1,
+        FUN = function(x) {
+            node.id <- as.character(x['tip']);
+            angle.override <- angle.overrides[[node.id]];
+            angle <- if (is.null(angle.override)) x['angle'] else angle.override;
+            return(angle);
+            }
+        );
+
+    tree$angle <- angles;
     return(tree);
     }
 
