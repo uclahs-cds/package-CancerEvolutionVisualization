@@ -39,48 +39,7 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 	tau <- -(pi / 2.5);
 	vi <- v[v$parent == -1, ];
 
-	calculate.angles <- function(v, tree, spread) {
-	    root.node.id <- v$id[[1]];
-        node.ids <- c(root.node.id);
-
-        total.angle <- abs(tau) * spread;
-
-        while (length(node.ids) > 0) {
-            current.node.id <- node.ids[1];
-            node.ids <- node.ids[-1];
-
-            parent.id <- tree$parent[tree$tip == current.node.id];
-
-            if (parent.id == -1) {
-                tree$angle[tree$tip == current.node.id] <- 0;
-                }
-
-            child.ids <- tree$tip[tree$parent == current.node.id & !is.na(tree$parent)];
-            num.children <- length(child.ids);
-
-            if (length(child.ids) > 0) {
-                parent.angle <- parent.angle <- tree$angle[tree$tip == current.node.id];
-                child.weight <- assign.weight(current.node.id, v);
-
-                start.angle <- parent.angle - (total.angle) * (num.children > 1) / 2;
-                num.slices <- max(num.children - 1, 1);
-                angle.increment <- total.angle / num.slices;
-
-                for (i in seq_along(child.ids)) {
-                    child.id <- child.ids[i];
-                    angle <- start.angle + (i - 1) * (angle.increment);
-                    tree$angle[tree$tip == child.id] <- angle;
-                    }
-
-                node.ids <- append(node.ids, child.ids);
-                }
-            }
-
-        tree <- override.angles(tree, v);
-        return(tree);
-        }
-
-	tree <- calculate.angles(v, tree, spread);
+	tree <- calculate.angles.radial(v, tree, spread, abs(tau));
 
 	preorder.traversal <- function(
 	    node = NULL,

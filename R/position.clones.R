@@ -81,39 +81,7 @@ position.clones <- function(v, tree, wid) {
     }
 
 position.nodes.fixed <- function(v, tree, fixed.angle, len) {
-    calculate.angles <- function(v, tree, fixed.angle) {
-        node.ids <- c(v$id[[1]]);
-
-        while (length(node.ids) > 0) {
-            current.node.id <- node.ids[1];
-            node.ids <- node.ids[-1];
-
-            child.ids <- tree$tip[tree$parent == current.node.id & !is.na(tree$parent)];
-
-            if (length(child.ids) > 0) {
-                # Safe to hardcode temporarily. This will only ever apply to
-                # cases with 0, 1, or 2 children. 3+ will use radial calculation.
-
-                # In future, I would like to remove this fixed angle calculation entirely.
-                # It would be ideal to handle all calculations in the same way, and
-                # rely more on user defined spread and explicit angle overrides.
-                child.angles <- if (length(child.ids) == 1) c(0) else c(-1, 1) * fixed.angle;
-
-                for (i in seq_along(child.ids)) {
-                    child.id <- child.ids[i];
-                    angle <- child.angles[i];
-                    tree$angle[tree$tip == child.id] <- angle;
-                    }
-                }
-
-            node.ids <- append(node.ids, child.ids);
-            }
-
-        tree <- override.angles(tree, v);
-        return(tree);
-        }
-
-    tree <- calculate.angles(v, tree, fixed.angle);
+    tree <- calculate.angles.fixed(v, tree, fixed.angle);
 
     for (i in seq_along(v$id)) {
         vi <- v[i, ];
