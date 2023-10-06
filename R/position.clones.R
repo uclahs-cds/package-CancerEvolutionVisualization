@@ -83,7 +83,7 @@ position.clones <- function(v, tree, wid) {
 position.nodes.fixed <- function(v, tree, fixed.angle, len) {
     calculate.angles <- function(v, tree, fixed.angle) {
         node.ids <- c(v$id[[1]]);
-        
+
         while (length(node.ids) > 0) {
             current.node.id <- node.ids[1];
             node.ids <- node.ids[-1];
