@@ -39,7 +39,7 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 	tau <- -(pi / 2.5);
 	vi <- v[v$parent == -1, ];
 
-	tree <- calculate.angles.radial(v, tree, spread, abs(tau));
+	tree$angle <- calculate.angles.radial(v, tree, spread, abs(tau));
 
 	preorder.traversal <- function(
 	    node = NULL,

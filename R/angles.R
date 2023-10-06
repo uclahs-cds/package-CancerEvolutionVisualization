@@ -36,7 +36,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
         }
 
     tree <- override.angles(tree, v);
-    return(tree);
+    return(tree$angle);
     }
 
 calculate.angles.fixed <- function(v, tree, fixed.angle) {
@@ -68,5 +68,5 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
         }
 
     tree <- override.angles(tree, v);
-    return(tree);
+    return(tree$angle);
     }

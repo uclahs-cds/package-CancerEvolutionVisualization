@@ -81,7 +81,7 @@ position.clones <- function(v, tree, wid) {
     }
 
 position.nodes.fixed <- function(v, tree, fixed.angle, len) {
-    tree <- calculate.angles.fixed(v, tree, fixed.angle);
+    tree$angle <- calculate.angles.fixed(v, tree, fixed.angle);
 
     for (i in seq_along(v$id)) {
         vi <- v[i, ];
