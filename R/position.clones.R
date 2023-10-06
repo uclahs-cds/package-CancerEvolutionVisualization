@@ -189,24 +189,23 @@ position.clones.no.vaf <- function(v, wid, spread = TRUE) {
     return(v);
     }
 
-override.angles <- function(tree, v) {
-    angle.overrides <- as.list(v$angle);
-    names(angle.overrides) <- v$id;
-    angle.overrides <- angle.overrides[!is.na(angle.overrides)];
+override.angles <- function(tree, v, angles) {
+    angle.index <- as.list(angles);
+    names(angle.index) <- v$id;
+    angle.index <- angle.index[!is.na(angle.index)];
 
     angles <- apply(
         tree,
         MARGIN = 1,
         FUN = function(x) {
             node.id <- as.character(x['tip']);
-            angle.override <- angle.overrides[[node.id]];
+            angle.override <- angle.index[[node.id]];
             angle <- if (is.null(angle.override)) x['angle'] else angle.override;
             return(angle);
             }
         );
 
-    tree$angle <- angles;
-    return(tree);
+    return(angles);
     }
 
 reposition.clones <- function(tree, v) {

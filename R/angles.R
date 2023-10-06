@@ -3,6 +3,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
     node.ids <- c(root.node.id);
 
     total.angle <- total.angle * spread;
+    angles <- numeric(nrow(tree));
 
     while (length(node.ids) > 0) {
         current.node.id <- node.ids[1];
@@ -28,18 +29,19 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
             for (i in seq_along(child.ids)) {
                 child.id <- child.ids[i];
                 angle <- start.angle + (i - 1) * (angle.increment);
-                tree$angle[tree$tip == child.id] <- angle;
+                angles[tree$tip == child.id] <- angle;
                 }
 
             node.ids <- append(node.ids, child.ids);
             }
         }
-
-    tree <- override.angles(tree, v);
-    return(tree$angle);
+    
+    angles <- override.angles(tree, v, angles);
+    return(angles);
     }
 
 calculate.angles.fixed <- function(v, tree, fixed.angle) {
+    angles <- numeric(nrow(tree));
     node.ids <- c(v$id[[1]]);
 
     while (length(node.ids) > 0) {
@@ -60,13 +62,13 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
             for (i in seq_along(child.ids)) {
                 child.id <- child.ids[i];
                 angle <- child.angles[i];
-                tree$angle[tree$tip == child.id] <- angle;
+                angles[tree$tip == child.id] <- angle;
                 }
             }
 
         node.ids <- append(node.ids, child.ids);
         }
 
-    tree <- override.angles(tree, v);
-    return(tree$angle);
+    angles <- override.angles(tree, v, angles);
+    return(angles);
     }
