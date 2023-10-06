@@ -10,3 +10,16 @@ test_that(
             ));
         }
     );
+
+test_that(
+    'Radial branching case values', {
+        load('data/branching.radial.plots.Rda');
+        load('data/branching.radial.data.Rda')
+        
+        result.tree <- SRCGrob(branching.radial.test.data$tree);
+        expect_true(compare.trees(
+            result.tree,
+            branching.radial.example
+            ));
+        }
+    );
