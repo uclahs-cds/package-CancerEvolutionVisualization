@@ -93,7 +93,7 @@ position.nodes.fixed <- function(v, tree, fixed.angle, len) {
             if (length(child.ids) > 0) {
                 # Safe to hardcode temporarily. This will only ever apply to
                 # cases with 0, 1, or 2 children. 3+ will use radial calculation.
-    
+
                 # In future, I would like to remove this fixed angle calculation entirely.
                 # It would be ideal to handle all calculations in the same way, and
                 # rely more on user defined spread and explicit angle overrides.

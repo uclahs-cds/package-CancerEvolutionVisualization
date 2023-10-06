@@ -196,12 +196,14 @@ compare.trees <- function(example, test) {
             ));
         }
 
-    
     segments.match <- test.segment.grobs(example, test)
+    text.match <- test.text.grobs(example, test);
+    polygons.match <- test.polygon.grobs(example, test);
+    lines.match <- test.line.grobs(example, test);
     all(
         segments.match,
-        test.text.grobs(example, test),
-        test.polygon.grobs(example, test),
-        test.line.grobs(example, test)
+        text.match,
+        polygons.match,
+        lines.match
         );
     }
