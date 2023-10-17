@@ -1,17 +1,11 @@
-
-## Function: plot.density --------------------------------------------------------------------------
-# Description: Plot the densityplot (using create.scatterplot() that shows SNV density along the genome
-    # per cluster for this sample
-# Input: `density.df` (dataframe) - dataframe of density values and the color assignments
-
-plot.snv.across.genome.density <- function(
+plot.clone.genome.distribution.density <- function(
     density.df,
     cluster.colours,
     chr.info,
     save.plt = NULL
     ) {
 
-    create.scatterplot(
+    return(BoutrosLab.plotting.general::create.scatterplot(
         filename = save.plt,
         formula = scaled.y ~ x,
         data = density.df,
@@ -37,7 +31,7 @@ plot.snv.across.genome.density <- function(
         abline.col = 'black',
         abline.lwd = 1.2,
         abline.lty = 1,
-        );
+        ));
     }
 
 calculate.density.and.scale <- function(cluster.df, total.nsnv) {

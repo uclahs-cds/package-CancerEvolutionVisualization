@@ -1,11 +1,4 @@
-
-## Function: plot.scatterplot ----------------------------------------------------------------------
-# Description: Plot the scatterplot that shows SNV distribution by cluster
-# Input:
-    # `scatter.df` (dataframe) - clusters of SNVs dataframe to be plotted
-    # `nsnv` (integer) - number of SNVs for this sample
-    # nclone (integer) - number of clusters returned by SRC tool for this sample
-plot.snv.across.genome.scatter <- function(
+plot.clone.genome.distribution.scatter <- function(
     scatter.df,
     nsnv,
     nclone,
@@ -13,7 +6,7 @@ plot.snv.across.genome.scatter <- function(
     save.plt = NULL
     ) {
 
-    create.scatterplot(
+    return(BoutrosLab.plotting.general::create.scatterplot(
         filename = save.plt,
         formula = clone.id ~ genome.pos,
         data = scatter.df,
@@ -44,5 +37,5 @@ plot.snv.across.genome.scatter <- function(
         cex = 1.3,
         abline.v = chr.info$start,
         abline.lwd = 1,
-        );
+        ));
     }
