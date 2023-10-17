@@ -1,3 +1,10 @@
+CancerEvolutionVisualization [unreleased] (Helena Winata)
+
+ADDED
+* Plotting functions to visualize the distribution of clones across the genome.
+
+
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 1.1.1 2022-11-18 (Helena Winata)
 
 ADDED
