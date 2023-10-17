@@ -11,3 +11,11 @@ importFrom("stringr", "str_replace_all")
 importFrom("stats", "setNames", "aggregate", "reshape")
 
 export(SRCGrob)
+
+export(plot.ccf.hm)
+export(plot.cluster.hm)
+export(plot.summary.ccf.hm)
+
+
+export(plot.clone.genome.distribution)
+export(plot.clone.genome.distribution.per.sample)
