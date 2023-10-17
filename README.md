@@ -1,6 +1,5 @@
-# Project/Repo Title
+# Cancer Evolution Visualization (CEV)
 
-Template Repository for the Boutros Lab general project repos. Describe a simple overview of use/purpose here.
 
 ## Description
 

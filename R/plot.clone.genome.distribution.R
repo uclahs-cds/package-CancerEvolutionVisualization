@@ -45,7 +45,7 @@ plot.clone.genome.distribution.per.sample <- function(
     chr.info,
     save.plt = NULL
     ) {
-    
+
     # calculate densities for each cluster --------------------------------------------------------
     density.list <- list();
     for (c in unique(sample.df$clone.id)) {
@@ -85,7 +85,7 @@ plot.clone.genome.distribution.per.sample <- function(
         nsnv = nrow(sample.df),
         nclone = length(unique(sample.df$clone.id)),
         chr.info = chr.info
-        );  
+        );
 
     density.plt <- plot.clone.genome.distribution.density(
         density.df,
@@ -96,7 +96,7 @@ plot.clone.genome.distribution.per.sample <- function(
     # automate plot sizing based on cumber of clones in the scatter plot
     height.scatter <- 0.5 * length(unique(sample.df$clone.id));
     total.height <- height.scatter + 5;
-    
+
     mp <- BoutrosLab.plotting.general::create.multipanelplot(
         filename = save.plt,
         plot.objects = list(

@@ -35,12 +35,9 @@ plot.clone.genome.distribution.density <- function(
     }
 
 calculate.density.and.scale <- function(cluster.df, total.nsnv) {
-    # Calculate the density of each cluster.df
     density <- density(x = cluster.df$genome.pos, bw = 'nrd', adjust = 0.05);
-    # Convert to a dataframe and assign a group number
     density.df <- as.data.frame(density[c('x','y')]);
     density.df$clone.id <- unique(cluster.df$clone.id);
-    # Scale by multiplying by the ratio of: (# of group)/(total count)
     density.df$scaled.y <- density.df$y * nrow(cluster.df) / total.nsnv;
 
     return(density.df)
