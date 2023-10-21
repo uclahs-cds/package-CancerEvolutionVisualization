@@ -1,4 +1,4 @@
-CancerEvolutionVisualization 1.1.0 2023-08-31 (Helena Winata, Dan Knight)
+CancerEvolutionVisualization 2.0.0 2023-10-20 (Helena Winata, Dan Knight)
 
 ADDED
 * Generic functions to generate accompanying heatmaps
@@ -7,6 +7,9 @@ ADDED
   "border.col", "border.width", and "border.type" columns
 * Option ot specify tree node label colour with "node.label.col" column
 
+REMOVED
+* "node.col" parameter to SRCGrob. (Node colour only customizable through
+  tree input data.frame.)
 
 --------------------------------------------------------------------------
 CancerEvolutionVisualization 1.0.1 2022-10-03 (Dan Knight)
