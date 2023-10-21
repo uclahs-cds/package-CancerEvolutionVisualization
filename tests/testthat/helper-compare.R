@@ -19,9 +19,10 @@ compare.trees <- function(example, test) {
     # Grob comparisons
     test.segment.grobs <- function(example, test) {
         get.segment.grobs <- function(x) {
+            tree.segs2 <- getGrob(x, 'tree.segs.2');
             c(
                 list(getGrob(x, 'tree.segs.1')),
-                list(getGrob(x, 'tree.segs.2')),
+                if (!is.null(tree.segs2)) list(tree.segs2) else NULL,
                 sapply(
                     x$children[get.axis.keys(x)],
                     FUN = function(ax) {
@@ -89,15 +90,21 @@ compare.trees <- function(example, test) {
         example.grobs <- get.line.grobs(example);
         test.grobs <- get.line.grobs(test);
 
-        all(sapply(
-            1:(length(example.grobs)),
-            FUN = function(i) {
-                compare.lines(
-                    example.grobs[[i]],
-                    test.grobs[[i]]
-                    );
-                }
-            ));
+        result <- if (length(example.grobs) > 0) {
+            all(sapply(
+                1:(length(example.grobs)),
+                FUN = function(i) {
+                    compare.lines(
+                        example.grobs[[i]],
+                        test.grobs[[i]]
+                        );
+                    }
+                ));
+        } else {
+            TRUE;
+            }
+
+        return(result);
         }
 
     test.text.grobs <- function(example, test) {
@@ -174,7 +181,6 @@ compare.trees <- function(example, test) {
                 ));
 
             gp.equal <- identical(x$gp, y$gp);
-
             all(coords.equal, gp.equal);
             }
 
@@ -192,10 +198,15 @@ compare.trees <- function(example, test) {
             ));
         }
 
+    segs.equal <- test.segment.grobs(example, test);
+    text.equal <- test.text.grobs(example, test);
+    polygons.equal <- test.polygon.grobs(example, test);
+    lines.equal <- test.line.grobs(example, test);
+    print(c(segs.equal, text.equal, polygons.equal, lines.equal))
     all(
-        test.segment.grobs(example, test),
-        test.text.grobs(example, test),
-        test.polygon.grobs(example, test),
-        test.line.grobs(example, test)
+        segs.equal,
+        text.equal,
+        polygons.equal,
+        lines.equal
         );
     }

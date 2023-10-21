@@ -7,7 +7,6 @@ create.test.tree <- function(tree, node.text, sample, ...) {
         scale1 = 0.9,
         seg1.col = 'navy',
         seg2.col = 'gold',
-        node.col = 'grey40',
         line.lwd = 4,
         yaxis1.label = 'PGA',
         yaxis2.label = 'SNV',

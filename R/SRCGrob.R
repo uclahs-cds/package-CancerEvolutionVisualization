@@ -18,7 +18,6 @@ SRCGrob <- function(
     main.y = NULL,
     main.cex = 1.7,
     node.radius = 0.1,
-    node.col = 'grey29',
     seg1.col = 'black',
     seg2.col = 'green',
     line.lwd = 3,
@@ -42,10 +41,13 @@ SRCGrob <- function(
     yat <- prep.yat(yat);
     yaxis.position <- get.y.axis.position(colnames(tree));
 
+    node.col <- 'grey40';
+
     inputs <- prep.tree(
         tree,
         node.text,
-        colour.scheme = colour.scheme
+        colour.scheme = colour.scheme,
+        default.node.colour = node.col
         );
 
     fixed.angle <- pi / 6;

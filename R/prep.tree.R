@@ -2,7 +2,8 @@ prep.tree <- function(
     tree.df,
     text.df,
     bells = TRUE,
-    colour.scheme
+    colour.scheme,
+    default.node.colour = 'grey29'
     ) {
 
     if (!('parent' %in% colnames(tree.df))) {
@@ -70,11 +71,64 @@ prep.tree <- function(
         if (is.null(tree.df$label)) tree.df$child else tree.df$label
         );
 
+    if (('node.col' %in% colnames(tree.df))) {
+        tree.df$node.col[is.na(tree.df$node.col)] <- default.node.colour;
+    } else {
+        tree.df$node.col <- default.node.colour;
+        }
+
+    tree.df$node.label.col <- prep.node.label.colours(tree.df);
+
+    tree.df$border.col <- apply(
+        tree.df,
+        MARGIN = 1,
+        FUN = function(row) {
+            if (is.na(row['border.col'])) row['node.col'] else row['border.col'];
+        }
+    );
+
+    if ('border.type' %in% colnames(tree.df)) {
+        valid.border.types <- c(
+            'blank',
+            'solid',
+            'dashed',
+            'dotted',
+            'dotdash',
+            'longdash',
+            'twodash'
+            );
+
+        border.type.is.valid <- tree.df$border.type %in% valid.border.types | is.na(tree.df$border.type);
+
+        if (!all(border.type.is.valid)) {
+            stop(paste(
+                'Invalid border type specified.',
+                'Must be one of', paste(c(valid.border.types, 'or NA.'), collapse = ', ')
+                ));
+            }
+
+        tree.df$border.type[is.na(tree.df$border.type)] <- if (is.numeric(tree.df$border.type)) 1 else 'solid';
+    } else {
+        tree.df$border.type <- 'solid';
+        }
+
+    if ('border.width' %in% colnames(tree.df)) {
+        tree.df$border.width <- as.numeric(tree.df$border.width);
+        tree.df$border.width[is.na(tree.df$border.width)] <- 1;
+    } else {
+        tree.df$border.width <- 1;
+        }
+
     out.df <- data.frame(
         id = c(-1, tree.df$child),
         label.text = c('', tree.df$label),
         ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
         color = colour.scheme[1:(nrow(tree.df) + 1)],
+        node.colour = c(NA, tree.df$node.col),
+        node.label.colour = c(NA, tree.df$node.label.col),
+        border.colour = c(NA, tree.df$border.col),
+        border.type = c(NA, tree.df$border.type),
+        border.width = c(NA, tree.df$border.width),
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
@@ -199,4 +253,46 @@ get.y.axis.position <- function(tree.colnames) {
         };
 
     return(y.axis.position);
+    }
+
+prep.node.label.colours <- function(tree.df) {
+    node.col.error.message <- 'Cannot prepare node label colour without node colour values.';
+
+    if (!'node.col' %in% colnames(tree.df)) {
+        stop(paste(
+            node.col.error.message,
+            '"node.col" column not found in tree.df'
+            ));
+    } else if (any(is.na(tree.df$node.col))) {
+        stop(paste(
+            node.col.error.message,
+            'NA values found in tree.df "node.col" column.'
+            ));
+        }
+
+    label.colours <- if (!'node.label.col' %in% colnames(tree.df)) {
+        rep(NA, nrow(tree.df));
+    } else {
+        tree.df$node.label.col;
+        }
+
+    NA.indices <- is.na(label.colours);
+    label.colours[NA.indices] <- as.character(sapply(
+        tree.df$node.col[NA.indices],
+        FUN = get.default.node.label.colour
+        ));
+
+    return(label.colours);
+    }
+
+get.default.node.label.colour <- function(node.colour) {
+    white.luminance <- get.colour.luminance('black');
+    node.colour.luminance <- get.colour.luminance(node.colour);
+
+    contrast.ratio <- get.contrast.ratio(white.luminance, node.colour.luminance);
+
+    # WCAG minimum contrast for normal/small text
+    # https://www.w3.org/TR/2008/REC-WCAG20-20081211/#visual-audio-contrast-contrast
+    WCAG.contrast.threshold <- 7;
+    return(if (contrast.ratio < WCAG.contrast.threshold) 'white' else 'black');
     }
