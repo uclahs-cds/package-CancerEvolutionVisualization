@@ -359,11 +359,9 @@ test_that(
         default.label.colour <- 'white';
 
         local({
-            local_mock(
-                get.default.node.label.colour = function(node.colour) {
-                    default.label.colour;
-                    }
-                );
+            get.default.node.label.colour <- function(node.colour) {
+                default.label.colour;
+                }
 
             result <- prep.node.label.colours(tree.df);
 
