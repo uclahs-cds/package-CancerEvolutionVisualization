@@ -1,4 +1,4 @@
-CancerEvolutionVisualization 2.0.0 2023-08-31 (Dan Knight)
+CancerEvolutionVisualization 2.0.0 2023-10-20 (Helena Winata, Dan Knight)
 
 ADDED
 * Option to specify edge colour with "edge.col.1" and "edge.col.2" 
@@ -7,16 +7,10 @@ ADDED
   columns in tree input dataframe
 * Option to specify edge linetype with "edge.type.1" and "edge.type.2" 
   columns in tree input dataframe
+* Generic functions to generate accompanying heatmaps
 
 REMOVED
 * "seg1.col" and "seg2.col" parameters (replaced by tree input columns).
-
-
---------------------------------------------------------------------------
-CancerEvolutionVisualization 1.1.1 2022-11-18 (Helena Winata)
-
-ADDED
-* Generic functions to generate accompanying heatmaps
 
 
 --------------------------------------------------------------------------
