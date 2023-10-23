@@ -8,10 +8,14 @@ ADDED
 * Option to specify edge linetype with "edge.type.1" and "edge.type.2" 
   columns in tree input dataframe
 * Generic functions to generate accompanying heatmaps
+* Option to specify tree node colours with "node.col" column
+* Option to specify tree node border colour, width, and line-type with 
+  "border.col", "border.width", and "border.type" columns
+* Option ot specify tree node label colour with "node.label.col" column
 
 REMOVED
 * "seg1.col" and "seg2.col" parameters (replaced by tree input columns).
-
+* "node.col" parameter to SRCGrob. (Node colour only customizable through tree input data.frame.)
 
 --------------------------------------------------------------------------
 CancerEvolutionVisualization 1.0.1 2022-10-03 (Dan Knight)

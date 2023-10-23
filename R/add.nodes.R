@@ -37,7 +37,12 @@ add.node.ellipse <- function(
 	    y = unit(clone.out$v$y, 'native'),
 	    size = node.radius * (1 + 0.2 * nchar(clone.out$v$plot.lab)),
 	    ar = 1 - log2(nchar(clone.out$v$plot.lab)) / 10,
-	    gp = gpar(fill = clone.out$v$colour, col = clone.out$v$colour),
+	    gp = gpar(
+	        fill = clone.out$v$node.colour,
+	        col = clone.out$v$border.colour,
+	        lty = clone.out$v$border.type,
+	        lwd = clone.out$v$border.width
+	        ),
 	    angle = pi / 2,
 	    position.units = 'native',
 	    size.units = 'inches',
@@ -57,7 +62,7 @@ add.node.ellipse <- function(
   		    x = unit(clone.out$v$x, 'native'),
   		    y = unit(clone.out$v$y, 'native'),
   		    just = c('center', 'center'),
-  		    gp = gpar(col = '#FFFFFF', cex = label.cex - log2(nchar(clone.out$v$plot.lab)) / 10)
+  		    gp = gpar(col = clone.out$v$node.label.colour, cex = label.cex - log2(nchar(clone.out$v$plot.lab)) / 10)
   		    );
 
 	    clone.out$grobs <- c(clone.out$grobs, list(node.label.grob));

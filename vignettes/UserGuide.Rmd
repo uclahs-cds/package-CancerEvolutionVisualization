@@ -111,7 +111,6 @@ CEV gives the user control over numerous visual aspects of the tree. By specifyi
 | Edge Width | `edge.width.2`, `edge.width.2` |
 | Edge Line Type | `edge.type.2`, `edge.type.2` |
 
-
 Default values replace missing columns and `NA` values, allowing node-by-node, and edge-by-edge control as needed. For sparsely defined values (for example, only specifying a single edge), it can be convenient to initialize a column with `NA`s, then manually assign specific nodes as needed.
 
 #### Line Types
@@ -131,11 +130,11 @@ Valid values for line type columns are based on lattice's values (with some addi
 #### Styled Tree
 
 ```{r echo=F}
-node.style <- subset(
-tree.input, select = c(
-    -CP,
-    -angle
-    ));
+node.style <- tree.input[, c(
+    'parent',
+    'node.col', 'node.label.col',
+    'border.col', 'border.width', 'border.type'
+    )];
 
 knitr::kable(
     node.style,

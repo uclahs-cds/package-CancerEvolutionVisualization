@@ -8,7 +8,6 @@ create.test.tree <- function(tree, node.text, sample, ...) {
         node.radius = 0.1,
         node.text.cex = 0.85,
         scale1 = 0.9,
-        node.col = 'grey40',
         yaxis1.label = 'PGA',
         yaxis2.label = 'SNV',
         xaxis.label = 'CP',

@@ -18,7 +18,6 @@ SRCGrob <- function(
     main.y = NULL,
     main.cex = 1.7,
     node.radius = 0.1,
-    node.col = 'grey29',
     node.text.line.dist = 0.1,
     colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
@@ -39,10 +38,13 @@ SRCGrob <- function(
     yat <- prep.yat(yat);
     yaxis.position <- get.y.axis.position(colnames(tree));
 
+    node.col <- 'grey40';
+
     inputs <- prep.tree(
         tree,
         node.text,
-        colour.scheme = colour.scheme
+        colour.scheme = colour.scheme,
+        default.node.colour = node.col
         );
 
     fixed.angle <- pi / 6;
@@ -116,5 +118,9 @@ SRCGrob <- function(
         cl = 'SRCGrob'
         );
 
+    out.tree$input.data <- list(
+        tree = inputs$in.tree.df[-1, ], # Remove Normal node placeholder row
+        text = inputs$text.df
+        );
     return(out.tree);
     }
