@@ -549,7 +549,7 @@ test_that(
         expect_true(all(match.default));
     });
 
-test_that(    
+test_that(
     'prep.node.label.colours returns valid values', {
         node.label.colours <- c('green', 'white');
         tree.df <- data.frame(
