@@ -74,12 +74,17 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
     }
 
 override.angles <- function(tree, v, angles) {
+    if (is.null(v$angle)) {
+        v$angle <- NA;
+        }
+
     angle.index <- as.list(v$angle);
+
     names(angle.index) <- v$id;
     angle.index <- angle.index[!is.na(angle.index)];
 
     angles <- apply(
-        tree,
+        data.frame(tip = tree$tip, angle = angles),
         MARGIN = 1,
         FUN = function(x) {
             node.id <- as.character(x['tip']);
@@ -87,7 +92,7 @@ override.angles <- function(tree, v, angles) {
             if (!is.null(angle.override)) {
                 angle.override <- as.numeric(angle.override);
                 }
-            angle <- if (is.null(angle.override) || is.na(angle.override)) x['angle']  else angle.override;
+            angle <- if (is.null(angle.override) || is.na(angle.override)) x['angle'] else angle.override;
             return(as.numeric(angle));
             }
         );

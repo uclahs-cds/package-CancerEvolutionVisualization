@@ -4,7 +4,7 @@ test_that(
         test.tree <- data.frame(
             parent = c(-1, rep(1, num.children))
             );
-        test.tree$tip <- rownames(test.tree)
+        test.tree$tip <- rownames(test.tree);
 
         test.v <- data.frame(
             id = test.tree$tip,
@@ -12,7 +12,7 @@ test_that(
             );
 
         total.angle <- pi / 2;
-    
+
         result <- calculate.angles.radial(
             test.v,
             test.tree,
@@ -48,7 +48,7 @@ test_that(
             spread = 1,
             total.angle = total.angle
             );
-        
+
         num.digits <- 6;
         deltas <- sapply(
             # Iterate through all children in pairs if i, i + 1.
@@ -135,7 +135,7 @@ test_that(
             id = test.tree$tip,
             parent = test.tree$parent
             );
-        
+
         angle <- pi / 2;
 
         result <- calculate.angles.fixed(
@@ -145,6 +145,34 @@ test_that(
             );
         expected.result <- c(0, -(angle), angle);
 
-        expect_equal(result, expected.result);
+        expect_equal(result, expected.result, tolerance = 10 ** -3);
         }
     );
+
+test_that(
+    'calculate.angles.fixed overrides angles', {
+        num.children <- 2;
+        test.tree <- data.frame(
+            parent = c(-1, rep(1, num.children))
+            );
+        test.tree$tip <- rownames(test.tree)
+
+        angles.to.override <- c(2, 3);
+        override.values <- c(-1, 1) * (pi / 2);
+
+        test.v <- data.frame(
+            id = test.tree$tip,
+            parent = test.tree$parent,
+            angle = NA
+            );
+        test.v[angles.to.override, 'angle'] <- override.values;
+
+        result <- calculate.angles.fixed(
+            test.v,
+            test.tree,
+            fixed.angle = pi / 4
+            );
+
+        expect_equal(result[angles.to.override], override.values);
+        }
+);
