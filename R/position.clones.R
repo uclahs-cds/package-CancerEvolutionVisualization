@@ -80,42 +80,6 @@ position.clones <- function(v, tree, wid) {
     return(v);
     }
 
-position.nodes.fixed <- function(v, tree, fixed.angle, len) {
-    for (i in seq_along(v$id)) {
-        vi <- v[i, ];
-
-        angle <- tree$angle[tree$tip == vi$id];
-
-        if (!is.na(vi$parent) && vi$parent == -1) {
-            # If root the clone extends the full width of the plot
-            x0 <- 0;
-            y0 <- tree$length[tree$parent == -1];
-            len0 <- len + y0;
-        } else {
-            par <- v[v$id == vi$parent, ];
-
-            r <- tree$length[tree$tip == vi$id];
-            x.shift <- r * sin(angle);
-            x0 <- par$x + x.shift;
-            y.shift <- r * cos(angle);
-            y0 <- par$y + y.shift;
-            len0 <- par$len + y.shift;
-            }
-
-        v[i,]$len <- len0;
-        v[i,]$y <- y0;
-        v[i,]$x <- x0;
-        }
-
-    v <- reposition.clones(tree, v);
-
-    clone.env <-  new.env(parent = emptyenv());
-    clone.env$v <- v;
-    clone.env$tree <- tree;
-
-    return(clone.env);
-    }
-
 position.clones.no.vaf <- function(v, wid, spread = TRUE) {
     v$y.mid <- v$y1 <- v$y2 <- 0;
 

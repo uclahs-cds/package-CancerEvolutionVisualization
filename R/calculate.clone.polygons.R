@@ -340,7 +340,7 @@ compute.clones <- function(
 	    } else {
 	        calculate.angles.fixed(v, tree, fixed.angle);
 	        }
-	    tmp <- position.nodes.node.radiusial(v, tree, extra.len);
+	    tmp <- position.nodes(v, tree, extra.len);
 
 	    clone.env <-  new.env(parent = emptyenv());
 	    clone.env$v <- tmp$v;
