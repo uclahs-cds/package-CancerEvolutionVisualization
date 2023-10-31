@@ -333,13 +333,20 @@ compute.clones <- function(
 
 	if (no.ccf && (is.null(fixed.angle) && nrow(v) > 6) || any(table(v$parent) > 2)) {
 		v <- count.leaves.per.node(v);
-		tmp <-  position.nodes.node.radiusial(v, tree, extra.len, spread);
+
+		tau <- -(pi / 2.5);
+		vi <- v[v$parent == -1, ];
+
+		tree$angle <- calculate.angles.radial(v, tree, spread, abs(tau));
+
+		tmp <-  position.nodes.node.radiusial(v, tree, extra.len);
 		clone.env <-  new.env(parent = emptyenv());
 		clone.env$v <- tmp$v;
 		clone.env$tree <- tmp$tree;
 		return(clone.env);
 	} else if (no.ccf && !is.null(fixed.angle)) {
-		#position nodes fixed angle
+	    tree$angle <- calculate.angles.fixed(v, tree, fixed.angle);
+
 		clone.env <- position.nodes.fixed(
 		    v,
 		    tree,

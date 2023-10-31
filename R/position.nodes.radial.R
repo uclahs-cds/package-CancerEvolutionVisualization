@@ -33,23 +33,11 @@ assign.weight <- function(node,v, extra.len, spread) {
 	return(node.weight);
     }
 
-position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
-	w <- spread * pi;
+position.nodes.node.radiusial <- function(v, tree, extra.len) {
 	xpos <- ypos <- 0;
-	tau <- -(pi / 2.5);
 	vi <- v[v$parent == -1, ];
 
-	tree$angle <- calculate.angles.radial(v, tree, spread, abs(tau));
-
-	preorder.traversal <- function(
-	    node = NULL,
-	    tree = NULL,
-	    w = NULL,
-	    tau = NULL,
-	    eta = NULL,
-	    spread = 1
-	    ) {
-
+	preorder.traversal <- function(node, tree) {
 		vi <- v[v$id == node, ];
 		d <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
 
@@ -62,32 +50,12 @@ position.nodes.node.radiusial <- function(v, tree, extra.len, spread = 1) {
 			v$y[v$id == vi$id] <<- d;
 		    }
 
-		eta <- tau;
-
 		for (child in v$id[v$parent == vi$id]) {
-			child.weight <- assign.weight(child, v);
-			w <- child.weight * spread * pi;
-			tau <- eta;
-			eta <- eta + w;
-
-			preorder.traversal(
-			    node = child,
-			    tree = tree,
-			    w = w,
-			    tau = tau,
-			    eta = eta,
-			    spread = spread
-			    );
+			preorder.traversal(node = child, tree = tree);
 		    }
 	     }
 
-	preorder.traversal(
-	    node = 1,
-	    tree = tree,
-	    w = w,
-	    tau = tau,
-	    spread = spread
-	    );
+	preorder.traversal(node = 1, tree = tree);
 
 	v <- reposition.clones(tree, v);
 
