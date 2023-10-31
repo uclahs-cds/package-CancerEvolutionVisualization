@@ -341,12 +341,12 @@ compute.clones <- function(
 	        calculate.angles.fixed(v, tree, fixed.angle);
 	        }
 	    tmp <- position.nodes.node.radiusial(v, tree, extra.len);
-	    
+
 	    clone.env <-  new.env(parent = emptyenv());
 	    clone.env$v <- tmp$v;
 	    clone.env$tree <- tmp$tree;
-	    
-	    return(clone.env)
+
+	    return(clone.env);
 	    }
 
 	v <- position.clones(v, tree, wid);
