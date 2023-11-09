@@ -18,7 +18,6 @@ SRCGrob <- function(
     main.y = NULL,
     main.cex = 1.7,
     node.radius = 0.1,
-    node.col = 'grey29',
     seg1.col = 'black',
     seg2.col = 'green',
     line.lwd = 3,
@@ -43,11 +42,17 @@ SRCGrob <- function(
     yat <- prep.yat(yat);
     yaxis.position <- get.y.axis.position(colnames(tree));
 
+    node.col <- 'grey40';
+
     inputs <- prep.tree(
         tree,
         node.text,
         colour.scheme = colour.scheme,
+<<<<<<< HEAD
         use.radians = use.radians
+=======
+        default.node.colour = node.col
+>>>>>>> e9fd02b08dad613689f57f3c74b7c0ee522d25be
         );
 
     fixed.angle <- pi / 6;
@@ -121,5 +126,9 @@ SRCGrob <- function(
         cl = 'SRCGrob'
         );
 
+    out.tree$input.data <- list(
+        tree = inputs$in.tree.df[-1, ], # Remove Normal node placeholder row
+        text = inputs$text.df
+        );
     return(out.tree);
     }

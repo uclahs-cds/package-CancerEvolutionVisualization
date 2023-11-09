@@ -331,3 +331,62 @@ test_that(
 
         expect_equal(yaxis.position, expected.position);
     });
+
+test_that(
+    'prep.node.label.colours returns valid values', {
+        node.label.colours <- c('green', 'white');
+        tree.df <- data.frame(
+            node.label.col = node.label.colours,
+            node.col = 'red'
+            );
+
+        result <- prep.node.label.colours(tree.df);
+        expected.label.colours <- node.label.colours;
+
+        expect_equal(result, expected.label.colours);
+    });
+
+test_that(
+    'prep.node.label.colours replaces NAs with default value', {
+        tree.df <- data.frame(
+            node.label.col = 'black',
+            node.col = rep('red', 10)
+            );
+
+        NA.indices <- 3:(nrow(tree.df));
+        tree.df$node.label.col[NA.indices] <- NA;
+
+        default.label.colour <- 'white';
+
+        local({
+            get.default.node.label.colour <- function(node.colour) {
+                default.label.colour;
+                }
+
+            result <- prep.node.label.colours(tree.df);
+
+            expected.label.colours <- tree.df$node.label.col;
+            expected.label.colours[NA.indices] <- default.label.colour;
+            expect_equal(result, expected.label.colours);
+            });
+    });
+
+test_that(
+    'prep.node.label.colours errors if "node.col" column does not exist', {
+        tree.df <- data.frame(parent = 1:5);
+
+        expect_error(
+            prep.node.label.colours(tree.df),
+            regexp = '"node.col"'
+            );
+    });
+
+test_that(
+    'prep.node.label.colours errors if "node.col" columb contains NAs', {
+        tree.df <- data.frame(node.col = c(NA, 1:3));
+
+        expect_error(
+            prep.node.label.colours(tree.df),
+            regexp = '"node.col"'
+            );
+    });
