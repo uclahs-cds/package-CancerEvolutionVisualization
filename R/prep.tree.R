@@ -3,6 +3,7 @@ prep.tree <- function(
     text.df,
     bells = TRUE,
     colour.scheme,
+    use.radians = FALSE,
     default.node.colour = 'grey29'
     ) {
 
@@ -14,10 +15,10 @@ prep.tree <- function(
     get.root.node(tree.df);
 
     if ('angle' %in% colnames(tree.df)) {
-        message(paste(
-            'Overriding branch angles will be supported in a future version.',
-            'The angle column will not be used.'
-            ));
+        tree.df$angle <- as.numeric(tree.df$angle);
+        if (!use.radians) {
+            tree.df$angle <- degrees.to.radians(tree.df$angle);
+            }
         }
 
     tree.df$parent <- prep.tree.parent(tree.df$parent);
@@ -124,6 +125,7 @@ prep.tree <- function(
         label.text = c('', tree.df$label),
         ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
         color = colour.scheme[1:(nrow(tree.df) + 1)],
+        angle = c(NA, tree.df$angle),
         node.colour = c(NA, tree.df$node.col),
         node.label.colour = c(NA, tree.df$node.label.col),
         border.colour = c(NA, tree.df$border.col),
