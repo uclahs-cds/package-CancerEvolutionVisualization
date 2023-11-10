@@ -6,6 +6,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
     angles <- numeric(nrow(tree));
 
     while (length(node.ids) > 0) {
+        # "Pops" next element in FIFO queue node.ids
         current.node.id <- node.ids[1];
         node.ids <- node.ids[-1];
 
@@ -32,6 +33,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
                 angles[tree$tip == child.id] <- angle;
                 }
 
+            # Appending to end of queue for breadth-first traversal
             node.ids <- append(node.ids, child.ids);
             }
         }
@@ -45,6 +47,7 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
     node.ids <- c(v$id[[1]]);
 
     while (length(node.ids) > 0) {
+        # "Pops" next element in FIFO queue node.ids
         current.node.id <- node.ids[1];
         node.ids <- node.ids[-1];
 
@@ -66,6 +69,7 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
                 }
             }
 
+        # Appending to end of queue for breadth-first traversal
         node.ids <- append(node.ids, child.ids);
         }
 
