@@ -51,3 +51,7 @@ data.frame.to.array <- function(
 
     return(arr);
     }
+
+degrees.to.radians <- function(degrees) {
+    return(degrees * pi / 180);
+    }

@@ -19,17 +19,20 @@ compare.trees <- function(example, test) {
     # Grob comparisons
     test.segment.grobs <- function(example, test) {
         get.segment.grobs <- function(x) {
-            tree.segs2 <- getGrob(x, 'tree.segs.2');
-            c(
-                list(getGrob(x, 'tree.segs.1')),
-                if (!is.null(tree.segs2)) list(tree.segs2) else NULL,
-                sapply(
-                    x$children[get.axis.keys(x)],
-                    FUN = function(ax) {
-                        list(getGrob(ax, gPath('axis.content', 'ticks')));
-                        }
+            edges <- Filter(
+                Negate(is.null),
+                c(
+                    list(getGrob(x, 'tree.segs.1')),
+                    list(getGrob(x, 'tree.segs.2'))
                     )
                 );
+            axes <- sapply(
+                x$children[get.axis.keys(x)],
+                FUN = function(ax) {
+                    list(getGrob(ax, gPath('axis.content', 'ticks')));
+                    }
+                );
+            c(edges, axes);
             }
 
         example.grobs <- get.segment.grobs(example);
@@ -198,15 +201,14 @@ compare.trees <- function(example, test) {
             ));
         }
 
-    segs.equal <- test.segment.grobs(example, test);
-    text.equal <- test.text.grobs(example, test);
-    polygons.equal <- test.polygon.grobs(example, test);
-    lines.equal <- test.line.grobs(example, test);
-    print(c(segs.equal, text.equal, polygons.equal, lines.equal))
+    segments.match <- test.segment.grobs(example, test)
+    text.match <- test.text.grobs(example, test);
+    polygons.match <- test.polygon.grobs(example, test);
+    lines.match <- test.line.grobs(example, test);
     all(
-        segs.equal,
-        text.equal,
-        polygons.equal,
-        lines.equal
+        segments.match,
+        text.match,
+        polygons.match,
+        lines.match
         );
     }

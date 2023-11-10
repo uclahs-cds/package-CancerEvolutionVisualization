@@ -30,6 +30,7 @@ SRCGrob(
     colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
     add.normal = FALSE,
+    use.radians = FALSE,
     normal.cex = 1,
     sig.shape = 3,
     label.nodes = TRUE,
@@ -74,6 +75,7 @@ SRCGrob(
   \item{colour.scheme}{Vector of colour values to be used for CP polygons}
   \item{draw.nodes}{Enable or disable drawing tree nodes}
   \item{add.normal}{Adds a normal}
+  \item{use.radians}{Unit to be used for "angle" column (degrees or radians)}
   \item{normal.cex}{Font size within the normal "box"}
   \item{sig.shape}{
   Changes the shape of the CP shading.
@@ -119,6 +121,27 @@ SRCGrob(CP.tree);
 SRCGrob(
     branch.lengths.tree,
     scale1 = 0.8
+    );
+
+
+# Override Branch Angles in Degrees
+degrees.tree <- data.frame(
+    parent = c(NA, 1, 2),
+    angle = c(NA, NA, 90)
+    );
+
+SRCGrob(degrees.tree);
+
+
+# Override Branch Angles in Radians
+radians.tree <- data.frame(
+    parent = c(NA, 1, 2),
+    angle = c(NA, NA, pi / 2)
+    );
+
+SRCGrob(
+    radians.tree,
+    use.radians = TRUE
     );
 
 

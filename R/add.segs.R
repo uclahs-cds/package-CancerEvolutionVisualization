@@ -149,8 +149,6 @@ get.seg.coords <- function(
             }
         );
 
-    tree.segs.adjusted <- tree.segs.adjusted[which(tree.segs.adjusted$basey != tree.segs.adjusted$tipy), ];
-
     if (length(grep('length',colnames(tree))) == 4) {
         second.tree.segs <- tree.segs;
         second.tree.segs$tipy <- second.tree.segs$basey + second.tree.segs$length2.c * cos(second.tree.segs$angle);

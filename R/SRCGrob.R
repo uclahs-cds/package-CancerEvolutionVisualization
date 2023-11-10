@@ -22,6 +22,7 @@ SRCGrob <- function(
     colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
     add.normal = FALSE,
+    use.radians = FALSE,
     normal.cex = 1,
     sig.shape = 3,
     label.nodes = TRUE,
@@ -44,6 +45,7 @@ SRCGrob <- function(
         tree,
         node.text,
         colour.scheme = colour.scheme,
+        use.radians = use.radians,
         default.node.colour = node.col
         );
 
