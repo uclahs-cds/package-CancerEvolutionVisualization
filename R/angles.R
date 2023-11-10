@@ -35,7 +35,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
             node.ids <- append(node.ids, child.ids);
             }
         }
-    
+
     angles <- override.angles(tree, v, angles);
     return(angles);
     }

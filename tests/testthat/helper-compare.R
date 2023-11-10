@@ -23,7 +23,7 @@ compare.trees <- function(example, test) {
                 Negate(is.null),
                 c(
                     list(getGrob(x, 'tree.segs.1')),
-                    list(getGrob(x, 'tree.segs.2'))=
+                    list(getGrob(x, 'tree.segs.2'))
                     )
                 );
             axes <- sapply(
@@ -201,7 +201,6 @@ compare.trees <- function(example, test) {
             ));
         }
 
-<<<<<<< HEAD
     segments.match <- test.segment.grobs(example, test)
     text.match <- test.text.grobs(example, test);
     polygons.match <- test.polygon.grobs(example, test);
@@ -211,17 +210,5 @@ compare.trees <- function(example, test) {
         text.match,
         polygons.match,
         lines.match
-=======
-    segs.equal <- test.segment.grobs(example, test);
-    text.equal <- test.text.grobs(example, test);
-    polygons.equal <- test.polygon.grobs(example, test);
-    lines.equal <- test.line.grobs(example, test);
-    print(c(segs.equal, text.equal, polygons.equal, lines.equal))
-    all(
-        segs.equal,
-        text.equal,
-        polygons.equal,
-        lines.equal
->>>>>>> e9fd02b08dad613689f57f3c74b7c0ee522d25be
         );
     }

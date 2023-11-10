@@ -48,11 +48,8 @@ SRCGrob <- function(
         tree,
         node.text,
         colour.scheme = colour.scheme,
-<<<<<<< HEAD
-        use.radians = use.radians
-=======
+        use.radians = use.radians,
         default.node.colour = node.col
->>>>>>> e9fd02b08dad613689f57f3c74b7c0ee522d25be
         );
 
     fixed.angle <- pi / 6;
