@@ -141,7 +141,7 @@ test_that(
         result <- calculate.angles.fixed(
             test.v,
             test.tree,
-            fixed.angle <- angle
+            fixed.angle = angle
             );
         expected.result <- c(0, -(angle), angle);
 
