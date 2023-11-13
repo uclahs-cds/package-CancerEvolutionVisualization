@@ -139,7 +139,7 @@ node.style <- tree.input[, c(
     )];
 
 knitr::kable(
-    node.style |> subset(select = -c(parent, length1, length2)),
+    node.style[, !(colnames(node.style) %in% c('parent', 'length1', 'length2'))],
     row.names = TRUE
     );
 ```
