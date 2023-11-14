@@ -79,7 +79,7 @@ prep.branch.lengths <- function(tree.df) {
         );
 
     # TODO: Automatically create length2 if an edge.style.2 column is present.
-    if (length(length.cols) > 1) {
+    if (length(length.cols) > 0) {
         lengths.df <- data.frame(tree.df[, length.cols]);
         colnames(lengths.df) <- get.default.branch.length.colnames(length(length.cols));
 
