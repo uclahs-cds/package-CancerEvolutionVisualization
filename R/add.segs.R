@@ -219,8 +219,9 @@ add.tree.segs <- function(
         y1 = tree.segs1$tipy,
         default.units = 'native',
         gp = gpar(
-            col = seg1.col,
-            lwd = line.lwd
+            col = clone.out$v$edge.colour.1,
+            lwd = clone.out$v$edge.width.1,
+            lty = clone.out$v$edge.type.1
             )
         );
 
@@ -236,8 +237,9 @@ add.tree.segs <- function(
                 y1 = tree.segs2$tipy,
                 default.units = 'native',
                 gp = gpar(
-                    col = seg2.col,
-                    lwd = line.lwd
+                    col = clone.out$v$edge.colour.2,
+                    lwd = clone.out$v$edge.width.2,
+                    lty = clone.out$v$edge.type.2
                     )
                 );
             }

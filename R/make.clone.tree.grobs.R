@@ -6,7 +6,7 @@ make.clone.tree.grobs <- function(
     scale2,
     wid,
     yat,
-    line.lwd,
+    default.branch.width,
     length.from.node.edge,
     seg1.col,
     seg2.col,
@@ -121,7 +121,7 @@ make.clone.tree.grobs <- function(
 		get.CP.polygons(clone.out);
 	}
 
-	add.tree.segs(clone.out, node.radius, line.lwd, scale1, seg1.col, seg2.col);
+	add.tree.segs(clone.out, node.radius, default.branch.width, scale1, seg1.col, seg2.col);
 
 	if (!is.null(cluster.list)) {
 	    message(paste(
