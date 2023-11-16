@@ -83,8 +83,6 @@ SRCGrob <- function(
         yat = yat,
         wid = wid,
         length.from.node.edge = length.from.node.edge,
-        seg1.col = seg1.col,
-        seg2.col = seg2.col,
         default.branch.width = 4,
         add.polygons = add.polygons,
         sig.shape = sig.shape,
