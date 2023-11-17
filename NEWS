@@ -1,3 +1,10 @@
+CancerEvolutionVisualization 2.0.1 2023-11-17 (Helena Winata, Dan Knight)
+
+BUG
+* Fixed S3 naming conflict in heatmap functions, using safe "create." prefix
+
+
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 2.0.0 2023-11-16 (Helena Winata, Dan Knight)
 
 ADDED
