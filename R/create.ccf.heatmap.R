@@ -1,4 +1,4 @@
-plot.ccf.hm <- function(
+create.ccf.heatmap <- function(
     hm.array,
     ccf.thres = NULL,
     cls.dim = 'both',

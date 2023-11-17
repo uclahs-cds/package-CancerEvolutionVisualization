@@ -1,4 +1,4 @@
-plot.summary.ccf.hm <- function(
+create.ccf.summary.heatmap <- function(
     DF,
     ccf.thres = 0,
     clone.order = NULL,
