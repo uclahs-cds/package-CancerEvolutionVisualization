@@ -1,4 +1,4 @@
-plot.cluster.hm <- function(
+create.cluster.heatmap <- function(
     DF,
     plt.height = 6,
     plt.width = 11,
@@ -20,7 +20,7 @@ plot.cluster.hm <- function(
         xaxis.label <- unique(DF[DF$snv.id %in% rownames(arr), xaxis.col]);
         }
 
-    hm <- plot.ccf.hm(
+    hm <- create.ccf.heatmap(
         hm.array = arr,
         fname = NULL,
         cls.dim = 'none',
