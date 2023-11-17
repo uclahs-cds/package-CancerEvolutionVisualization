@@ -26,14 +26,11 @@ SRCGrob(
     main.y = NULL,
     main.cex = 1.7,
     node.radius = 0.1,
-    node.col = "grey29",
-    seg1.col = "black",
-    seg2.col = "green",
-    line.lwd = 3,
     node.text.line.dist = 0.1,
     colour.scheme = CancerEvolutionVisualization::colours,
     draw.nodes = TRUE,
     add.normal = FALSE,
+    use.radians = FALSE,
     normal.cex = 1,
     sig.shape = 3,
     label.nodes = TRUE,
@@ -72,16 +69,13 @@ SRCGrob(
   \item{main.y}{Move the main plot title position up or down}
   \item{main.cex}{Font size for the main plot title}
   \item{node.radius}{Node size}
-  \item{node.col}{Node colour}
-  \item{seg1.col}{Colour of the first set of tree branch segments}
-  \item{seg2.col}{Colour of the second set of tree branch segments}
-  \item{line.lwd}{Branch segment thickness}
   \item{node.text.line.dist}{
   Distance between node text and tree branches (as a value between 0 and 1)
   }
   \item{colour.scheme}{Vector of colour values to be used for CP polygons}
   \item{draw.nodes}{Enable or disable drawing tree nodes}
   \item{add.normal}{Adds a normal}
+  \item{use.radians}{Unit to be used for "angle" column (degrees or radians)}
   \item{normal.cex}{Font size within the normal "box"}
   \item{sig.shape}{
   Changes the shape of the CP shading.
@@ -127,6 +121,27 @@ SRCGrob(CP.tree);
 SRCGrob(
     branch.lengths.tree,
     scale1 = 0.8
+    );
+
+
+# Override Branch Angles in Degrees
+degrees.tree <- data.frame(
+    parent = c(NA, 1, 2),
+    angle = c(NA, NA, 90)
+    );
+
+SRCGrob(degrees.tree);
+
+
+# Override Branch Angles in Radians
+radians.tree <- data.frame(
+    parent = c(NA, 1, 2),
+    angle = c(NA, NA, pi / 2)
+    );
+
+SRCGrob(
+    radians.tree,
+    use.radians = TRUE
     );
 
 
