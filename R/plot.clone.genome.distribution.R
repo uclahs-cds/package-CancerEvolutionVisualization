@@ -2,6 +2,7 @@ plot.clone.genome.distribution <- function(
     snv.df,
     genome.build = 'GRCh37',
     clone.order = NULL,
+    cluster.colours = NULL,
     save.plt.dir = NULL
     ) {
 
@@ -13,10 +14,15 @@ plot.clone.genome.distribution <- function(
     if (is.null(clone.order)) {
         clone.order <- sort(unique(snv.df$clone.id));
         }
+    if (is.null(snv.df$ID)) {
+        snv.df$ID <- 'all';
+        }
+    if (is.null(cluster.colours)) {
+        cluster.colours <- get.colours(clone.order, return.names = TRUE);
+        }
     snv.df$clone.id <- factor(snv.df$clone.id, levels = clone.order);
     genome.pos.df   <- get.genome.pos(snv.df, genome.build);
     snv.df          <- genome.pos.df$snv;
-    cluster.colours <- get.colours(unique(snv.df$clone.id), return.names = TRUE);
 
     # use chr.info to set x-axis label positions
     chr.info <- genome.pos.df$chr.info;
@@ -28,7 +34,7 @@ plot.clone.genome.distribution <- function(
         print(paste('Plotting', s));
         plt <- plot.clone.genome.distribution.per.sample(
             sample.df,
-            cluster.colours[unique(sample.df$clone.id)],
+            cluster.colours[levels(sample.df$clone.id)],
             chr.info,
             save.plt = ifelse(
                 is.null(save.plt.dir),
@@ -61,6 +67,7 @@ plot.clone.genome.distribution.per.sample <- function(
     density.df <- do.call(rbind, density.list);
 
     # get plot legend -----------------------------------------------------------------------------
+    cluster.colours <- cluster.colours[levels(sample.df$clone.id)];
     cluster.legend <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
@@ -110,7 +117,7 @@ plot.clone.genome.distribution.per.sample <- function(
                 fun = cluster.legend
                 )),
         left.padding = - 0.75,
-        y.spacing = - 0.5,
+        y.spacing = - 0.25,
         height = total.height,
         width = 18,
         resolution = 800
