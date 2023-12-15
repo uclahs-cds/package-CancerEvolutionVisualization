@@ -94,7 +94,65 @@ branch.lengths.tree <- SRCGrob(branch.lengths);
 grid.draw(branch.lengths.tree);
 ```
 
-### Ex. 3: Showing Cellular Prevalence
+### Ex. 3 Styling the Tree
+
+CEV gives the user control over numerous visual aspects of the tree. By specifying optional columns and values in the tree input data.frame, the user has individual control of the colour, width, and line type of each node, label border, and edge.
+
+#### Optional Style Columns
+| Style | Column |
+| --- | --- |
+| Node Colour | `node.col` |
+| Node Label Colour | `node.label.col` |
+| Node Border Colour | `border.col` |
+| Node Border Width | `border.width` |
+| Node Border Line Type | `border.type` |
+| | |
+| Edge Colour | `edge.col.1`, `edge.col.2` |
+| Edge Width | `edge.width.1`, `edge.width.2` |
+| Edge Line Type | `edge.type.1`, `edge.type.2` |
+
+Default values replace missing columns and `NA` values, allowing node-by-node, and edge-by-edge control as needed. For sparsely defined values (for example, only specifying a single edge), it can be convenient to initialize a column with `NA`s, then manually assign specific nodes as needed.
+
+#### Line Types
+Valid values for line type columns are based on lattice's values (with some additions and differences).
+
+| Line Type |
+| --- |
+| `NA` |
+| `'none'` |
+| `'solid'` |
+| `'dashed'` |
+| `'dotted'` |
+| `'dotdash'` |
+| `'longdash'` |
+| `'twodash'` |
+
+#### Styled Tree
+
+```{r echo=F}
+node.style <- tree.input[, c(
+    'parent', 'length1', 'length2',
+    'node.col', 'node.label.col',
+    'border.col', 'border.width', 'border.type',
+    'edge.col.1', 'edge.type.1',
+    'edge.col.2', 'edge.width.2'
+    )];
+
+knitr::kable(
+    node.style[, !(colnames(node.style) %in% c('parent', 'length1', 'length2'))],
+    row.names = TRUE
+    );
+```
+
+```{r, fig.show='hide'}
+node.style.tree <- SRCGrob(node.style);
+```
+
+```{r, fig.dim=c(5, 3.5), echo=F}
+grid.draw(node.style.tree);
+```
+
+### Ex. 4: Showing Cellular Prevalence
 
 A `cellular.prevalence` column can also be added. These values must range between 0 and 1, and the sum of all child nodes must not be larger than their parent node's value.
 
@@ -119,7 +177,7 @@ grid.draw(CP.tree);
 This secondary dataframe can be used to specify additional text corresponding to each 
 node.
 
-### Ex. 4: Node Text
+### Ex. 5: Node Text
 Each row must include a node ID for the text. Text will be stacked next to the 
 specified node.
 
@@ -141,7 +199,7 @@ simple.text.tree <- SRCGrob(parent.only, simple.text.data);
 grid.draw(simple.text.tree);
 ```
 
-### Ex. 5: Specifying Colour and Style
+### Ex. 6: Specifying Colour and Style
 - An optional `col` column can be included to specify the colour of each text.
 - A `fontface` column can be included to bold, italicize, etc. These values correspond to the standard R `fontface` values.
 - `NA` values in each column will default to `black` and `plain` respectively.
@@ -167,7 +225,7 @@ common parameters in `SRCGRob`.
 
 ## Plot Size
 
-### Ex. 6: Plot Width with Horizontal Padding
+### Ex. 7: Plot Width with Horizontal Padding
 Some plots require more or less horizontal padding between the x-axes and the tree
 itself. The `horizontal.padding` parameter scales the default padding proportionally.
 For example, `horizontal.padding = -0.2` would reduce the padding by 20%.
@@ -183,7 +241,7 @@ padding.tree <- SRCGrob(
 grid.draw(padding.tree);
 ```
 
-### Ex. 7: Branch Scaling
+### Ex. 8: Branch Scaling
 Branches are scaled automatically, but users can further scale each branch with
 the `scale1` and `scale2` parameters. These values scale each branch proportionally,
 so `scale1 = 1.1` would make the first set of branch lengths 10% longer.
@@ -201,7 +259,7 @@ grid.draw(scaled.tree);
 ```
 
 
-### Ex. 8: Plot Title
+### Ex. 9: Plot Title
 The main title of the plot is referred to as `main` in plot parameters. `main` sets
 the title text, `main.cex` sets the font size, and `main.y` is used to move the main
 title up if more space is required for the plot.
@@ -226,10 +284,10 @@ A y-axis will be added automatically for each branch length column (the
 left-sided axis corresponding to the first branch length column, and the right
 with the second length column).
 
-### Ex. 9: Y-Axis
+### Ex. 10: Y-Axis
 Ticks are placed automatically based on the plot size and the branch lengths. 
 
-### Ex. 10: Axis Title
+### Ex. 11: Axis Title
 Axis titles are specified with the `yaxis1.label` and `yaxis2.label` parameters.
 
 ```{r, fig.show='hide'}
@@ -248,7 +306,7 @@ axis.title.tree$vp$x <- unit(0.75, 'npc');
 grid.draw(axis.title.tree);
 ```
 
-### Ex. 11: Axis Tick Placement
+### Ex. 12: Axis Tick Placement
 The default axis tick positions can be overridden with the `yat` parameter. This
 expects a list of vectors, each corresponding to the ticks on an x-axis.
 
@@ -270,7 +328,7 @@ yat.tree <- SRCGrob(
 grid.draw(yat.tree);
 ```
 
-### Ex. 12: Normal
+### Ex. 13: Normal
 ```{r, fig.show='hide'}
 normal.tree <- SRCGrob(
     parent.only,

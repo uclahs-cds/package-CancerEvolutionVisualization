@@ -69,7 +69,10 @@ test_that(
         expected.length <- 10;
 
         expect_equal(
-            nrow(get.default.branch.lengths(expected.length)),
+            nrow(get.default.branch.lengths(
+                num.rows = expected.length,
+                num.cols = 1
+                )),
             expected.length
             );
     });
@@ -80,7 +83,7 @@ test_that(
 
         expect_true(all(
             apply(
-                get.default.branch.lengths(3),
+                get.default.branch.lengths(num.rows = 3, num.cols = 1),
                 MARGIN = 1,
                 FUN = function(x) {
                     x == expected.value;

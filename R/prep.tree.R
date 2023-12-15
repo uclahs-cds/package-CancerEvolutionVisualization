@@ -2,7 +2,9 @@ prep.tree <- function(
     tree.df,
     text.df,
     bells = TRUE,
-    colour.scheme
+    colour.scheme,
+    use.radians = FALSE,
+    default.node.colour = 'grey29'
     ) {
 
     if (!('parent' %in% colnames(tree.df))) {
@@ -13,10 +15,10 @@ prep.tree <- function(
     get.root.node(tree.df);
 
     if ('angle' %in% colnames(tree.df)) {
-        message(paste(
-            'Overriding branch angles will be supported in a future version.',
-            'The angle column will not be used.'
-            ));
+        tree.df$angle <- as.numeric(tree.df$angle);
+        if (!use.radians) {
+            tree.df$angle <- degrees.to.radians(tree.df$angle);
+            }
         }
 
     tree.df$parent <- prep.tree.parent(tree.df$parent);
@@ -52,6 +54,34 @@ prep.tree <- function(
             }
         }
 
+    tree.df <- prep.edge.colours(tree.df);
+
+    default.edge.type <- 'solid';
+    if ('edge.type.1' %in% colnames(tree.df)) {
+        tree.df$edge.type.1[is.na(tree.df$edge.type.1)] <- default.edge.type;
+    } else {
+        tree.df$edge.type.1 <- default.edge.type;
+        }
+
+    if ('edge.type.2' %in% colnames(tree.df)) {
+        tree.df$edge.type.2[is.na(tree.df$edge.type.2)] <- default.edge.type;
+    } else {
+        tree.df$edge.type.2 <- default.edge.type;
+        }
+
+    default.edge.width <- 3;
+    if ('edge.width.1' %in% colnames(tree.df)) {
+        tree.df$edge.width.1[is.na(tree.df$edge.width.1)] <- default.edge.width;
+    } else {
+        tree.df$edge.width.1 <- default.edge.width;
+        }
+
+    if ('edge.width.2' %in% colnames(tree.df)) {
+        tree.df$edge.width.2[is.na(tree.df$edge.width.2)] <- default.edge.width;
+    } else {
+        tree.df$edge.width.2 <- default.edge.width;
+        }
+
     tree.df <- reorder.nodes(tree.df);
 
     # Include -1 value for root node.
@@ -70,13 +100,73 @@ prep.tree <- function(
         if (is.null(tree.df$label)) tree.df$child else tree.df$label
         );
 
+    if (('node.col' %in% colnames(tree.df))) {
+        tree.df$node.col[is.na(tree.df$node.col)] <- default.node.colour;
+    } else {
+        tree.df$node.col <- default.node.colour;
+        }
+
+    tree.df$node.label.col <- prep.node.label.colours(tree.df);
+
+    tree.df$border.col <- apply(
+        tree.df,
+        MARGIN = 1,
+        FUN = function(row) {
+            if (is.na(row['border.col'])) row['node.col'] else row['border.col'];
+        }
+    );
+
+    if ('border.type' %in% colnames(tree.df)) {
+        valid.border.types <- c(
+            'blank',
+            'solid',
+            'dashed',
+            'dotted',
+            'dotdash',
+            'longdash',
+            'twodash'
+            );
+
+        border.type.is.valid <- tree.df$border.type %in% valid.border.types | is.na(tree.df$border.type);
+
+        if (!all(border.type.is.valid)) {
+            stop(paste(
+                'Invalid border type specified.',
+                'Must be one of', paste(c(valid.border.types, 'or NA.'), collapse = ', ')
+                ));
+            }
+
+        tree.df$border.type[is.na(tree.df$border.type)] <- if (is.numeric(tree.df$border.type)) 1 else 'solid';
+    } else {
+        tree.df$border.type <- 'solid';
+        }
+
+    if ('border.width' %in% colnames(tree.df)) {
+        tree.df$border.width <- as.numeric(tree.df$border.width);
+        tree.df$border.width[is.na(tree.df$border.width)] <- 1;
+    } else {
+        tree.df$border.width <- 1;
+        }
+
     out.df <- data.frame(
         id = c(-1, tree.df$child),
         label.text = c('', tree.df$label),
         ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
         color = colour.scheme[1:(nrow(tree.df) + 1)],
+        angle = c(NA, tree.df$angle),
+        node.colour = c(NA, tree.df$node.col),
+        node.label.colour = c(NA, tree.df$node.label.col),
+        border.colour = c(NA, tree.df$border.col),
+        border.type = c(NA, tree.df$border.type),
+        border.width = c(NA, tree.df$border.width),
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
+        edge.colour.1 = c(NA, tree.df$edge.col.1),
+        edge.colour.2 = c(NA, tree.df$edge.col.2),
+        edge.type.1 = c(NA, tree.df$edge.type.1),
+        edge.type.2 = c(NA, tree.df$edge.type.2),
+        edge.width.1 = c(NA, tree.df$edge.width.1),
+        edge.width.2 = c(NA, tree.df$edge.width.2),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
         alpha = rep(0.5, (nrow(tree.df) + 1)),
         stringsAsFactors = FALSE
@@ -199,4 +289,79 @@ get.y.axis.position <- function(tree.colnames) {
         };
 
     return(y.axis.position);
+    }
+
+prep.edge.colours <- function(tree.df) {
+    edge.colours <- list();
+
+    default.edge.colours <- c('black', 'green');
+    edge.colour.column.names <- sapply(
+        1:2,
+        function(i) paste('edge', 'col', i, sep = '.')
+        );
+
+    for (i in 1:length(edge.colour.column.names)) {
+        column.name <- edge.colour.column.names[i];
+        default.colour <- default.edge.colours[i];
+
+        if (column.name %in% colnames(tree.df)) {
+            tree.df[is.na(tree.df[, column.name]), column.name] <- default.colour;
+        } else {
+            tree.df[, column.name] <- default.colour;
+            }
+        }
+
+    return(tree.df);
+    }
+
+prep.edge.colour.column <- function(tree.df, column.name, default.value) {
+    if (column.name %in% colnames(tree.df)) {
+        values <- tree.df[, column.name];
+        values[is.na(values)] <- default.value;
+        return(values);
+    } else {
+        return(rep(default.value, nrow(tree.df)));
+        }
+    }
+
+prep.node.label.colours <- function(tree.df) {
+    node.col.error.message <- 'Cannot prepare node label colour without node colour values.';
+
+    if (!'node.col' %in% colnames(tree.df)) {
+        stop(paste(
+            node.col.error.message,
+            '"node.col" column not found in tree.df'
+            ));
+    } else if (any(is.na(tree.df$node.col))) {
+        stop(paste(
+            node.col.error.message,
+            'NA values found in tree.df "node.col" column.'
+            ));
+        }
+
+    label.colours <- if (!'node.label.col' %in% colnames(tree.df)) {
+        rep(NA, nrow(tree.df));
+    } else {
+        tree.df$node.label.col;
+        }
+
+    NA.indices <- is.na(label.colours);
+    label.colours[NA.indices] <- as.character(sapply(
+        tree.df$node.col[NA.indices],
+        FUN = get.default.node.label.colour
+        ));
+
+    return(label.colours);
+    }
+
+get.default.node.label.colour <- function(node.colour) {
+    white.luminance <- get.colour.luminance('black');
+    node.colour.luminance <- get.colour.luminance(node.colour);
+
+    contrast.ratio <- get.contrast.ratio(white.luminance, node.colour.luminance);
+
+    # WCAG minimum contrast for normal/small text
+    # https://www.w3.org/TR/2008/REC-WCAG20-20081211/#visual-audio-contrast-contrast
+    WCAG.contrast.threshold <- 7;
+    return(if (contrast.ratio < WCAG.contrast.threshold) 'white' else 'black');
     }

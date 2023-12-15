@@ -330,27 +330,26 @@ compute.clones <- function(
 	root <- v[!is.na(v$parent) & v$parent == -1, ];
 	v <- v[is.na(v$parent) | v$parent != -1, ];
 	v <- rbind(root, v);
+	v <- count.leaves.per.node(v);
 
-	if (no.ccf && (is.null(fixed.angle) && nrow(v) > 6) || any(table(v$parent) > 2)) {
-		v <- count.leaves.per.node(v);
-		tmp <-  position.nodes.node.radiusial(v, tree, extra.len, spread);
-		clone.env <-  new.env(parent = emptyenv());
-		clone.env$v <- tmp$v;
-		clone.env$tree <- tmp$tree;
-		return(clone.env);
-	} else if (no.ccf && !is.null(fixed.angle)) {
-		#position nodes fixed angle
-		clone.env <- position.nodes.fixed(
-		    v,
-		    tree,
-		    fixed.angle = fixed.angle,
-		    len = extra.len
-		    );
+	if (no.ccf) {
+	    tree$angle <- if ((is.null(fixed.angle) && nrow(v) > 6) || any(table(v$parent) > 2)) {
+    		tau <- -(pi / 2.5);
+    		vi <- v[v$parent == -1, ];
+    		calculate.angles.radial(v, tree, spread, abs(tau));
+	    } else {
+	        calculate.angles.fixed(v, tree, fixed.angle);
+	        }
+	    tmp <- position.nodes(v, tree, extra.len);
 
-		return(clone.env)
-	} else{
-		v <- position.clones(v, tree, wid);
-    	}
+	    clone.env <-  new.env(parent = emptyenv());
+	    clone.env$v <- tmp$v;
+	    clone.env$tree <- tmp$tree;
+
+	    return(clone.env);
+	    }
+
+	v <- position.clones(v, tree, wid);
 
 	v$x <- v$y <- v$len <- 0;
 	len <- extra.len;

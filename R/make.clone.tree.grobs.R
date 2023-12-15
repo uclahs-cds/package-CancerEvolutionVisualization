@@ -6,7 +6,7 @@ make.clone.tree.grobs <- function(
     scale2,
     wid,
     yat,
-    line.lwd,
+    default.branch.width,
     length.from.node.edge,
     seg1.col,
     seg2.col,
@@ -62,8 +62,13 @@ make.clone.tree.grobs <- function(
 	    }
 
 	if (all(is.null(ccf.df$colour))) {
-	    v$colour <- node.col
-	    }
+		if (!is.null(names(node.col))) {
+			# if node.col is a named vector, use the labels to assign colours
+	    	v$colour <- node.col[v$label.text];
+		} else {
+			v$colour <- node.col;
+		    }
+		}
 
     extra.len <- if (no.ccf) node.radius else node.radius * 4;
 
@@ -121,7 +126,7 @@ make.clone.tree.grobs <- function(
 		get.CP.polygons(clone.out);
 	}
 
-	add.tree.segs(clone.out, node.radius, line.lwd, scale1, seg1.col, seg2.col);
+	add.tree.segs(clone.out, node.radius, default.branch.width, scale1, seg1.col, seg2.col);
 
 	if (!is.null(cluster.list)) {
 	    message(paste(

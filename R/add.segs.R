@@ -149,8 +149,6 @@ get.seg.coords <- function(
             }
         );
 
-    tree.segs.adjusted <- tree.segs.adjusted[which(tree.segs.adjusted$basey != tree.segs.adjusted$tipy), ];
-
     if (length(grep('length',colnames(tree))) == 4) {
         second.tree.segs <- tree.segs;
         second.tree.segs$tipy <- second.tree.segs$basey + second.tree.segs$length2.c * cos(second.tree.segs$angle);
@@ -221,8 +219,9 @@ add.tree.segs <- function(
         y1 = tree.segs1$tipy,
         default.units = 'native',
         gp = gpar(
-            col = seg1.col,
-            lwd = line.lwd
+            col = clone.out$v$edge.colour.1,
+            lwd = clone.out$v$edge.width.1,
+            lty = clone.out$v$edge.type.1
             )
         );
 
@@ -238,8 +237,9 @@ add.tree.segs <- function(
                 y1 = tree.segs2$tipy,
                 default.units = 'native',
                 gp = gpar(
-                    col = seg2.col,
-                    lwd = line.lwd
+                    col = clone.out$v$edge.colour.2,
+                    lwd = clone.out$v$edge.width.2,
+                    lty = clone.out$v$edge.type.2
                     )
                 );
             }
