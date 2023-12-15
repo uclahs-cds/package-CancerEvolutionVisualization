@@ -1,42 +1,76 @@
 create.ccf.summary.heatmap <- function(
-    DF,
-    ccf.thres = 0,
+    mutation.df,
+    CCF.threshold = 0,
     clone.order = NULL,
-    sample.order = NULL
+    sample.order = NULL,
+    colour.scheme = NULL,
+    plt.height = 6,
+    plt.width = 11,
+    filename = NULL,
+    ...
     ) {
 
-    arr <- data.frame.to.array(
-        DF = DF,
-        value = 'median.ccf.per.sample',
-        x.axis = 'clone.id'
+    median.ccf <- aggregate(
+        mutation.df$CCF,
+        by = list(mutation.df$ID, mutation.df$clone.id),
+        FUN = median
         );
-    arr[arr <= ccf.thres] <- 0;
 
-    clone.df <- unique(DF[, c('clone.id', 'total.snv')]);
-    sample.df <- aggregate(CCF ~ ID, data = DF[DF$CCF > 0, ], FUN = length);
-    names(sample.df)[2] <- 'nsnv';
+    colnames(median.ccf) <- c('ID', 'clone.id', 'median.CCF');
+
+    arr <- data.frame.to.array(
+        median.ccf,
+        value = 'median.CCF',
+        x.axis = 'clone.id',
+        y.axis = 'ID'
+        );
+    arr[arr <= CCF.threshold] <- 0;
+
+    # get data for barplots
+    filtered.CCFs <- mutation.df$CCF > 0;
+    SNV.per.clone <- aggregate(SNV.id ~ clone.id, mutation.df[filtered.CCFs, ], FUN = length);
+    colnames(SNV.per.clone) <- c('clone.id', 'num.SNV');
+
+    SNV.per.sample <- aggregate(SNV.id ~ ID, mutation.df[filtered.CCFs, ], FUN = length);
+    colnames(SNV.per.sample) <- c('ID', 'num.SNV');
+
+    heatmap.colours <- if (!is.null(colour.scheme)) {
+        colour.scheme;
+    } else {
+        default.heatmap.colours();
+        }
 
     if (!is.null(clone.order) & !is.null(sample.order)) {
         arr                 <- arr[clone.order, sample.order];
-        clone.df$clone.id   <- factor(clone.df$clone.id, levels = clone.order);
-        sample.df$ID        <- factor(sample.df$ID, levels = sample.order);
+        SNV.per.clone$clone.id   <- factor(SNV.per.clone$clone.id, levels = clone.order);
+        SNV.per.sample$ID        <- factor(SNV.per.sample$ID, levels = sample.order);
         }
 
+    barplot.padding.percentage <- 0.05;
+    max.clone.SNV <- max(SNV.per.clone$num.SNV);
+
     clone.bar <- BoutrosLab.plotting.general::create.barplot(
-        formula = total.snv ~ clone.id,
-        data = clone.df,
+        formula = num.SNV ~ clone.id,
+        data = SNV.per.clone,
         yaxis.cex = 0,
         xaxis.lab = rep('', nrow(arr)),
         xaxis.cex = 0,
-        ylimits = c( - max(clone.df$total.snv) * 0.05, max(clone.df$total.snv) * 1.05),
+        ylimits = c(
+            -(max.clone.SNV * barplot.padding.percentage),
+            max.clone.SNV * (1 + barplot.padding.percentage)
+            ),
         resolution = 50
         );
 
+    max.sample.SNV <- max(SNV.per.sample$num.SNV);
+
     sample.bar <- BoutrosLab.plotting.general::create.barplot(
-        formula = ID ~ nsnv,
-        data = sample.df,
-        xlab.label = 'SNV per sample',
-        xlimits = c( - max(sample.df$nsnv) * 0.05, max(sample.df$nsnv) * 1.05),
+        formula = ID ~ num.SNV,
+        data = SNV.per.sample,
+        xlimits = c(
+            -(max.sample.SNV * barplot.padding.percentage),
+            max.sample.SNV * (1 + barplot.padding.percentage)
+            ),
         ylab.label = NULL,
         yaxis.lab = rep('', length(arr)),
         yaxis.cex = 0,
@@ -47,23 +81,8 @@ create.ccf.summary.heatmap <- function(
     hm <- BoutrosLab.plotting.general::create.heatmap(
         x = arr,
         cluster.dimensions = 'none',
-        xlab.cex = 1,
-        xlab.label = 'Clone ID',
-        xaxis.lab = rownames(arr),
-        xaxis.cex = 0.6,
-        xaxis.fontface = 1,
-        xaxis.rot = 90,
-        ylab.cex = 1,
-        ylab.label = 'Sample ID',
-        yaxis.lab = colnames(arr),
-        yaxis.cex = 0.6,
-        yaxis.fontface = 1,
         print.colour.key = FALSE,
-        colour.scheme = c('white', 'blue'),
-        left.padding = 1,
-        right.padding = 1,
-        width = 9,
-        height = 5
+        colour.scheme = heatmap.colours
         );
 
     legend.ccf <- BoutrosLab.plotting.general::legend.grob(
@@ -71,7 +90,7 @@ create.ccf.summary.heatmap <- function(
             legend = list(
                 title = 'CCF',
                 labels = c(min(arr), max(arr)),
-                colours = c('white', 'blue'),
+                colours =  heatmap.colours,
                 border = 'black',
                 continuous = TRUE,
                 size = 0.6
@@ -83,7 +102,7 @@ create.ccf.summary.heatmap <- function(
         );
 
     return(BoutrosLab.plotting.general::create.multiplot(
-        filename = NULL,
+        filename = filename,
         plot.objects = list(hm, sample.bar, clone.bar),
         plot.layout = c(2, 2),
         layout.skip = c(FALSE, FALSE, FALSE, TRUE),
@@ -107,12 +126,13 @@ create.ccf.summary.heatmap <- function(
         y.spacing = c(- 1.5),
         left.padding = 10,
         bottom.padding = 3,
-        # merge.legends = FALSE,
+        merge.legends = FALSE,
         print.new.legend = TRUE,
         legend = list(right = list(
             fun = legend.ccf
         )),
-        height = 6,
-        width = 11
+        height = plt.height,
+        width = plt.width,
+        ...
         ));
     }

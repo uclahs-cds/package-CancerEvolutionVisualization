@@ -1,26 +1,33 @@
 create.ccf.heatmap <- function(
-    hm.array,
-    ccf.thres = NULL,
-    cls.dim = 'both',
-    cls.method = 'complete',
+    CCF.array,
+    CCF.threshold = NULL,
+    cluster.dim = 'both',
+    cluster.method = 'complete',
     dist.method = 'euclidean',
-    hm.cols = c('white', 'blue'),
+    colour.scheme = NULL,
     xaxis.lab = NULL,
     xlab.label = 'Mutations',
+    filename = NULL,
     ...
     ) {
 
-    if (!is.null(ccf.thres)) {
-        hm.array[hm.array <= ccf.thres] <- 0;
+    if (!is.null(CCF.threshold)) {
+        CCF.array[CCF.array <= CCF.threshold] <- 0;
         }
     col.labels <- seq(0, 1, .2);
 
-    hm <- BoutrosLab.plotting.general::create.heatmap(
-        filename = NULL,
-        x = hm.array,
+    heatmap.colours <- if (!is.null(colour.scheme)) {
+        colour.scheme;
+    } else {
+        default.heatmap.colours();
+        }
+
+    return(BoutrosLab.plotting.general::create.heatmap(
+        filename = filename,
+        x = CCF.array,
         force.clustering = TRUE,
-        cluster.dimensions = cls.dim,
-        clustering.method = cls.method,
+        cluster.dimensions = cluster.dim,
+        clustering.method = cluster.method,
         rows.distance.method = dist.method,
         cols.distance.method = dist.method,
         xaxis.lab = xaxis.lab,
@@ -29,19 +36,16 @@ create.ccf.heatmap <- function(
         xaxis.cex = 0.6,
         xaxis.fontface = 1,
         xaxis.rot = 90,
-        yaxis.lab = colnames(hm.array),
+        yaxis.lab = colnames(CCF.array),
         ylab.cex = 1,
         yaxis.cex = 0.6,
         yaxis.fontface = 1,
+        colour.scheme = heatmap.colours,
         colourkey.cex = 0.6,
-        colour.scheme = hm.cols,
+        colourkey.labels.at = col.labels,
         left.padding = 1,
         right.padding = 1,
         resolution = 3000,
-        width = 9,
-        height = 5,
-        colourkey.labels.at = col.labels,
         ...
-        );
-    return(hm);
+        ));
     }

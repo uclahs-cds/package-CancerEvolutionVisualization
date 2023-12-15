@@ -2,6 +2,7 @@ get.colours <- function(
     value.list,
     return.names = FALSE
     ) {
+
     colours <- grDevices::colors()[grep('gr(a|e)y', grDevices::colors(), invert = T)];
     n <- length(unique(value.list));
 
@@ -49,4 +50,8 @@ get.contrast.ratio <- function(luminance1, luminance2) {
 
     contrast.ratio <- luminance[1] / luminance[2];
     return(contrast.ratio);
+    }
+
+default.heatmap.colours <- function() {
+    return(c('white', 'blue'))
     }
