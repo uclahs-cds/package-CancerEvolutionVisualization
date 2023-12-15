@@ -1,7 +1,12 @@
 get.colours <- function(
     value.list,
-    return.names = FALSE
+    return.names = FALSE,
+    seed = NULL
     ) {
+
+    if (!is.null(seed)) {
+        set.seed(seed);
+        }
 
     colours <- grDevices::colors()[grep('gr(a|e)y', grDevices::colors(), invert = T)];
     n <- length(unique(value.list));
