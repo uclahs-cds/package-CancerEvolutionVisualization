@@ -1,3 +1,10 @@
+CancerEvolutionVisualization [unreleased] (Helena Winata, Dan Knight)
+
+CHANGED
+* Informative parameter names for heatmap functions
+
+--------------------------------------------------------------------------
+
 CancerEvolutionVisualization 2.0.1 2023-11-17 (Helena Winata, Dan Knight)
 
 ADDED
