@@ -1,0 +1,28 @@
+---
+params:
+    title:
+    author:
+    date:
+    summary.tree.data:
+    heatmap.data:
+title: '`r params$title`'
+author: '`r params$author`'
+date: '`r params$date`'
+output: pdf_document
+---
+
+# Phylogenetic Tree
+```{r summary-tree, echo=F, warning=F}
+summary.tree <- SRCGrob(params$summary.tree.data);
+grid.draw(summary.tree);
+```
+
+# Mutation Assignment Heatmap
+```{r snv-heatmap, echo=F, warning=F}
+plot.cluster.hm(params$heatmap.data);
+```
+
+# Clone Summary Heatmap
+```{r summary-heatmap, echo=F, warning=F}
+plot.summary.ccf.hm(params$heatmap.data);
+```

@@ -1,3 +1,11 @@
+CancerEvolutionVisualization 2.1.0 2023-12-15 (Helena Winata, Dan Knight)
+
+ADDED
+* CEV report template and public function
+* Generic functions to generate accompanying heatmaps for summarizing
+  CCF and clustering datas
+
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 2.0.1 2023-11-17 (Helena Winata, Dan Knight)
 
 ADDED

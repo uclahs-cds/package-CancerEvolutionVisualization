@@ -19,10 +19,61 @@ reindex.column <- function(column.values, new.value.index) {
         ));
     }
 
+check.column.exists <- function(
+    df,
+    column.name,
+    data.name = NULL
+    ) {
+
+    result <- column.name %in% colnames(df);
+
+    if (!result) {
+        message <- paste(
+            'No column',
+            paste0('"', column.name, '"'),
+            'found in',
+            if (!is.null(data.name)) data.name else 'data'
+            );
+
+        stop(message);
+        }
+    }
+
+column.contains.all <- function(reference.column, checked.column) {
+    vector.error.message <- function(column.type) {
+        return(paste(column.type, 'must be a vector.'))
+        }
+
+    if (!is.vector(reference.column)) {
+        stop(vector.error.message('Reference'));
+    }
+
+    if (!is.vector(checked.column)) {
+        stop(vector.error.message('Checked'));
+        }
+
+    if (is.list(reference.column)) {
+        reference.column <- unlist(reference.column);
+        }
+
+    reference.values <- sapply(
+        reference.column,
+        FUN = function(column.name) TRUE,
+        USE.NAMES = TRUE
+        );
+
+    values.in.reference <- all(sapply(
+        checked.column,
+        FUN = function(column.name) !is.na(reference.values[column.name])
+        ));
+
+    return(values.in.reference);
+    }
+
 data.frame.to.array <- function(
     DF,
     value = 'CCF',
-    x.axis = 'snv.id',
+    x.axis = 'SNV.id',
     y.axis = 'ID'
     ) {
 
