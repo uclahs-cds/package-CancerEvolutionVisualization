@@ -1,18 +1,18 @@
 load('data/multisample.test.data.Rda');
 
-test_that('plot.ccf.hm runs with valid data input', {
+test_that('create.ccf.heatmap runs with valid data input', {
     mutation.CCF.data <- data.frame.to.array(multisample.result.data$mutation);
 
-    CCF.heatmap <- plot.ccf.hm(mutation.CCF.data);
+    CCF.heatmap <- create.ccf.heatmap(mutation.CCF.data);
     expect_is(CCF.heatmap, 'trellis');
     });
 
-test_that('plot.cluster.hm runs with valid data input', {
-    CCF.heatmap <- plot.cluster.hm(multisample.result.data$mutation);
+test_that('create.cluster.heatmap runs with valid data input', {
+    CCF.heatmap <- create.cluster.heatmap(multisample.result.data$mutation);
     expect_is(CCF.heatmap, 'trellis');
     });
 
-test_that('plot.summary.ccf.hm runs with valid data input', {
-    CCF.heatmap <- plot.summary.ccf.hm(multisample.result.data$mutation);
+test_that('create.ccf.summary.heatmap runs with valid data input', {
+    CCF.heatmap <- create.ccf.summary.heatmap(multisample.result.data$mutation);
     expect_is(CCF.heatmap, 'trellis');
     });

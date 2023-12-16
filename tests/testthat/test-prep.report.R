@@ -130,21 +130,21 @@ test_that('create.report.heatmap.input result can create CCF heatmap', {
         create.report.heatmap.input(SNV.assignment, CCF.values)
         );
 
-    heatmap <- plot.ccf.hm(input);
+    heatmap <- create.ccf.heatmap(input);
 
     expect_is(heatmap, 'trellis');
     });
 
 test_that('create.report.heatmap.input result can create summary heatmap', {
     input <- create.report.heatmap.input(SNV.assignment, CCF.values);
-    heatmap <- plot.summary.ccf.hm(input);
+    heatmap <- create.summary.ccf.heatmap(input);
 
     expect_is(heatmap, 'trellis');
     });
 
 test_that('create.report.heatmap.input result can create cluster heatmap', {
     input <- create.report.heatmap.input(SNV.assignment, CCF.values);
-    heatmap <- plot.cluster.hm(input);
+    heatmap <- create.cluster.heatmap(input);
 
     expect_is(heatmap, 'trellis');
     });
