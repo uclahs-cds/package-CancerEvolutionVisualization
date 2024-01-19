@@ -94,7 +94,7 @@ add.segs3 <- function(
     return(tree.out);
     }
 
-init.seg.coords <- function(
+calculate.seg.coords <- function(
     tree,
     v,
     length.colname,
@@ -157,51 +157,6 @@ init.seg.coords <- function(
         );
     }
 
-get.seg.coords <- function(
-    tree,
-    v,
-    offset = 0,
-    node.radius = 0,
-    scale1 = NULL
-    ) {
-
-    # Calculate offset based on the line width
-    offset <- offset / scale1 / 2;
-
-    tree.segs <- init.seg.coords(
-        tree,
-        v,
-        length.colname = 'length1',
-        offset = offset,
-        side = 'left'
-        );
-
-    second.seg.colname <-'length2';
-    if (second.seg.colname%in% colnames(tree)) {
-        second.tree.segs <- init.seg.coords(
-            tree,
-            v,
-            length.colname = second.seg.colname,
-            offset = offset,
-            side = 'right'
-            );
-
-        valid.segs <- which(
-            second.tree.segs$basey != second.tree.segs$tipy
-            );
-        second.tree.segs <- second.tree.segs[valid.segs, ];
-    } else {
-        second.tree.segs <- NULL;
-        }
-
-    tree.out <- list(
-        tree.segs = tree.segs,
-        tree.segs2 = second.tree.segs
-        );
-
-    return(tree.out);
-    }
-
 add.tree.segs <- function(
     clone.out,
     node.radius,
@@ -211,16 +166,37 @@ add.tree.segs <- function(
     seg2.col
     ) {
 
-    offset <- line.lwd / 96;
+    offset <- line.lwd / 96 / scale1 / 2;
 
     if (!('length2' %in% colnames(clone.out$tree))) {
-        offset <- 0
+        offset <- 0;
         }
 
-    tree.out <- get.seg.coords(clone.out$tree, clone.out$v, offset, node.radius, scale1);
+    tree.segs1 <- calculate.seg.coords(
+            clone.out$tree,
+            clone.out$v,
+            length.colname = 'length1',
+            offset = offset,
+            side = 'left'
+        );
 
-    tree.segs1 <- tree.out[[1]];
-    tree.segs2 <- tree.out[[2]];
+    second.seg.colname <-'length2';
+    if (second.seg.colname%in% colnames(clone.out$tree)) {
+        tree.segs2 <- calculate.seg.coords(
+            clone.out$tree,
+            clone.out$v,
+            length.colname = second.seg.colname,
+            offset = offset,
+            side = 'right'
+            );
+
+        valid.segs <- which(
+            tree.segs2$basey != tree.segs2$tipy
+            );
+        tree.segs2 <- tree.segs2[valid.segs, ];
+    } else {
+        tree.segs2 <- NULL;
+        }
 
     out <- list();
 
