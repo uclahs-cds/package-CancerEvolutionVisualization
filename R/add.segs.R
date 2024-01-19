@@ -94,18 +94,13 @@ add.segs3 <- function(
     return(tree.out);
     }
 
-get.seg.coords <- function(
+init.seg.coords <- function(
     tree,
     v,
-    offset = 0,
-    node.radius = 0,
-    scale1 = NULL
+    length.colname
     ) {
 
-    # Calculate offset based on the line width
-    offset <- offset / scale1 / 2;
-
-    tree.segs <- adply(
+    segs <- adply(
         tree,
         .margins = 1,
         .fun = function(x) {
@@ -119,8 +114,8 @@ get.seg.coords <- function(
                 basex <- v$x[parent.id];
                 }
 
-            dy <- x$length1 * cos(x$angle);
-            dx <- x$length1 * sin(x$angle);
+            dy <- x[, length.colname] * cos(x$angle);
+            dx <- x[, length.colname] * sin(x$angle);
 
             tipx <- basex + dx;
             tipy <- basey + dy;
@@ -132,6 +127,24 @@ get.seg.coords <- function(
                 tipy
                 ));
             }
+        );
+    }
+
+get.seg.coords <- function(
+    tree,
+    v,
+    offset = 0,
+    node.radius = 0,
+    scale1 = NULL
+    ) {
+
+    # Calculate offset based on the line width
+    offset <- offset / scale1 / 2;
+
+    tree.segs <- init.seg.coords(
+        tree,
+        v,
+        length.colname = 'length1'
         );
 
     tree.out <- list();
@@ -159,15 +172,13 @@ get.seg.coords <- function(
             }
         );
 
-    if (length(grep('length',colnames(tree))) == 4) {
-        second.tree.segs <- tree.segs;
-
-        second.dx <- second.tree.segs$length2.c * sin(second.tree.segs$angle);
-        second.dy <- second.tree.segs$length2.c * cos(second.tree.segs$angle);
-
-        second.tree.segs$tipx <- second.tree.segs$basex + second.dx;
-        second.tree.segs$tipy <- second.tree.segs$basey + second.dy;
-
+    second.seg.colname <-'length2';
+    if (second.seg.colname%in% colnames(tree)) {
+        second.tree.segs <- init.seg.coords(
+            tree,
+            v,
+            length.colname = second.seg.colname
+            );
 
         second.tree.segs.adjusted <- adply(
             second.tree.segs,
