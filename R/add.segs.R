@@ -97,13 +97,34 @@ add.segs3 <- function(
 init.seg.coords <- function(
     tree,
     v,
-    length.colname
+    length.colname,
+    offset,
+    side = 'left'
     ) {
+
+    offset.x.modifier <- offset.y.modifier <- 1;
+
+    if (side == 'left') {
+        offset.x.modifier <- -1;
+    } else if (side == 'right') {
+        offset.y.modifier <- -1;
+    } else if (side == 'center') {
+        stop(paste(
+            'Side "center" only needed with > 3 segments.',
+            'This will be supported in a future version.'
+            ));
+    } else {
+        stop(paste(
+            'Side must be one of "left", "right", or "center".',
+            paste0('(received ', side, ').')
+            ));
+        }
 
     segs <- adply(
         tree,
         .margins = 1,
         .fun = function(x) {
+            angle <- x$angle;
             parent.id <- which(v$id == x$parent);
 
             if (x$parent == -1) {
@@ -114,11 +135,17 @@ init.seg.coords <- function(
                 basex <- v$x[parent.id];
                 }
 
-            dy <- x[, length.colname] * cos(x$angle);
-            dx <- x[, length.colname] * sin(x$angle);
+            dy <- x[, length.colname] * cos(angle);
+            dx <- x[, length.colname] * sin(angle);
 
-            tipx <- basex + dx;
-            tipy <- basey + dy;
+            offset.x <- offset * cos(angle) * offset.x.modifier;
+            offset.y <- offset * sin(angle) * offset.y.modifier;
+
+            tipx <- basex + dx + offset.x;
+            tipy <- basey + dy + offset.y;
+
+            basex <- basex + offset.x;
+            basey <- basey + offset.y;
 
             return(data.frame(
                 basex,
@@ -144,32 +171,9 @@ get.seg.coords <- function(
     tree.segs <- init.seg.coords(
         tree,
         v,
-        length.colname = 'length1'
-        );
-
-    tree.out <- list();
-    second.tree.segs.adjusted <- NULL;
-
-    tree.segs.adjusted <- adply(
-        tree.segs,
-        .margins = 1,
-        .fun = function(r) {
-            offset.x <- offset * cos(r$angle);
-            offset.y <- offset * sin(r$angle);
-
-            basey <- r$basey + offset.y;
-            tipy <- r$tipy + offset.y;
-
-            basex <- r$basex - offset.x;
-            tipx <- r$tipx - offset.x;
-
-            return(data.frame(
-                basex,
-                basey,
-                tipx,
-                tipy
-                ));
-            }
+        length.colname = 'length1',
+        offset = offset,
+        side = 'left'
         );
 
     second.seg.colname <-'length2';
@@ -177,35 +181,22 @@ get.seg.coords <- function(
         second.tree.segs <- init.seg.coords(
             tree,
             v,
-            length.colname = second.seg.colname
-            );
-
-        second.tree.segs.adjusted <- adply(
-            second.tree.segs,
-            .margins = 1,
-            .fun = function(r) {
-                offset.x  <- offset * cos(r$angle);
-                offset.y  <- offset * sin(r$angle);
-
-                basey <- r$basey - offset.y;
-                tipy <- r$tipy - offset.y;
-
-                basex <- r$basex + offset.x;
-                tipx <- r$tipx + offset.x;
-
-                return(data.frame(basex, basey, tipx, tipy));
-                }
+            length.colname = second.seg.colname,
+            offset = offset,
+            side = 'right'
             );
 
         valid.segs <- which(
-            second.tree.segs.adjusted$basey != second.tree.segs.adjusted$tipy
+            second.tree.segs$basey != second.tree.segs$tipy
             );
-        second.tree.segs.adjusted <- second.tree.segs.adjusted[valid.segs, ];
+        second.tree.segs <- second.tree.segs[valid.segs, ];
+    } else {
+        second.tree.segs <- NULL;
         }
 
     tree.out <- list(
-        tree.segs = tree.segs.adjusted,
-        tree.segs2 = second.tree.segs.adjusted
+        tree.segs = tree.segs,
+        tree.segs2 = second.tree.segs
         );
 
     return(tree.out);
