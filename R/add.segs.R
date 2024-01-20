@@ -94,13 +94,16 @@ add.segs3 <- function(
     return(tree.out);
     }
 
-calculate.seg.coords <- function(
-    tree,
+calculate.coords.radial <- function(
+    x,
     v,
     length.colname,
     offset,
-    side = 'left'
+    side
     ) {
+
+    angle <- x$angle;
+    parent.id <- which(v$id == x$parent);
 
     offset.x.modifier <- offset.y.modifier <- 1;
 
@@ -120,39 +123,53 @@ calculate.seg.coords <- function(
             ));
         }
 
+    if (x$parent == -1) {
+        basey <- 0;
+        basex <- 0;
+    } else {
+        basey <- v$y[parent.id];
+        basex <- v$x[parent.id];
+        }
+
+    dy <- x[, length.colname] * cos(angle);
+    dx <- x[, length.colname] * sin(angle);
+
+    offset.x <- offset * cos(angle) * offset.x.modifier;
+    offset.y <- offset * sin(angle) * offset.y.modifier;
+
+    tipx <- basex + dx + offset.x;
+    tipy <- basey + dy + offset.y;
+
+    basex <- basex + offset.x;
+    basey <- basey + offset.y;
+
+    return(data.frame(
+        basex,
+        basey,
+        tipx,
+        tipy
+        ));
+    }
+
+calculate.seg.coords <- function(
+    tree,
+    v,
+    length.colname,
+    offset,
+    side
+    ) {
+
     segs <- adply(
         tree,
         .margins = 1,
         .fun = function(x) {
-            angle <- x$angle;
-            parent.id <- which(v$id == x$parent);
-
-            if (x$parent == -1) {
-                basey <- 0;
-                basex <- 0;
-            } else {
-                basey <- v$y[parent.id];
-                basex <- v$x[parent.id];
-                }
-
-            dy <- x[, length.colname] * cos(angle);
-            dx <- x[, length.colname] * sin(angle);
-
-            offset.x <- offset * cos(angle) * offset.x.modifier;
-            offset.y <- offset * sin(angle) * offset.y.modifier;
-
-            tipx <- basex + dx + offset.x;
-            tipy <- basey + dy + offset.y;
-
-            basex <- basex + offset.x;
-            basey <- basey + offset.y;
-
-            return(data.frame(
-                basex,
-                basey,
-                tipx,
-                tipy
-                ));
+            calculate.coords.radial(
+                x,
+                v,
+                length.colname = length.colname,
+                offset = offset,
+                side = side
+                );
             }
         );
     }
