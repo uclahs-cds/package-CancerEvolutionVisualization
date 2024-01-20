@@ -98,13 +98,12 @@ calculate.coords.radial <- function(
     x,
     v,
     length.colname,
+    parent.id,
     offset,
     side
     ) {
 
     angle <- x$angle;
-    parent.id <- which(v$id == x$parent);
-
     offset.x.modifier <- offset.y.modifier <- 1;
 
     if (side == 'left') {
@@ -151,6 +150,64 @@ calculate.coords.radial <- function(
         ));
     }
 
+calculate.coords.dendrogram <- function(
+    x,
+    v,
+    length.colname,
+    parent.id,
+    offset,
+    side
+    ) {
+
+    angle <- x$angle;
+    offset.x.modifier <- offset.y.modifier <- 1;
+
+    if (side == 'left') {
+        offset.x.modifier <- -1;
+    } else if (side == 'right') {
+        offset.y.modifier <- -1;
+    } else if (side == 'center') {
+        stop(paste(
+            'Side "center" only needed with > 3 segments.',
+            'This will be supported in a future version.'
+            ));
+    } else {
+        stop(paste(
+            'Side must be one of "left", "right", or "center".',
+            paste0('(received ', side, ').')
+            ));
+        }
+
+    if (x$parent == -1) {
+        basey <- 0;
+        basex <- 0;
+    } else {
+        basey <- v$y[parent.id];
+        basex <- v$x[parent.id];
+        }
+
+    dy <- x[, length.colname];
+    dx <- x[, length.colname] * tan(angle);
+
+    offset.x <- offset * cos(angle) * offset.x.modifier;
+    offset.y <- offset * sin(angle) * offset.y.modifier;
+
+    tipx <- basex + dx + offset.x;
+    tipy <- basey + dy + offset.y;
+
+    basex <- tipx;
+
+    basex <- basex + offset.x;
+    basey <- basey + offset.y;
+
+    return(data.frame(
+        basex,
+        basey,
+        tipx,
+        tipy
+        ));
+    }
+
 calculate.seg.coords <- function(
     tree,
     v,
@@ -163,13 +220,34 @@ calculate.seg.coords <- function(
         tree,
         .margins = 1,
         .fun = function(x) {
-            calculate.coords.radial(
-                x,
-                v,
-                length.colname = length.colname,
-                offset = offset,
-                side = side
-                );
+            parent.id <- which(v$id == x$parent);
+
+            dendrogram.mode <- x$mode;
+            if (is.null(x$mode)) {
+                dendrogram.mode <- "R";
+                }
+
+            coords <- if (dendrogram.mode == "R") {
+                calculate.coords.radial(
+                    x,
+                    v,
+                    length.colname = length.colname,
+                    parent.id = parent.id,
+                    offset = offset,
+                    side = side
+                    );
+            } else {
+                calculate.coords.dendrogram(
+                    x,
+                    v,
+                    length.colname = length.colname,
+                    parent.id = parent.id,
+                    offset = offset,
+                    side = side
+                    );
+                }
+    
+            return(coords);
             }
         );
     }
