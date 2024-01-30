@@ -39,15 +39,28 @@ position.nodes <- function(v, tree, extra.len) {
 
 	preorder.traversal <- function(node, tree) {
 		vi <- v[v$id == node, ];
-		d <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
+		distance <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
+		angle <- tree$angle[tree$tip == vi$id & tree$parent == vi$parent];
+
+		dendrogram.mode <- vi$mode;
+		if (is.null(dendrogram.mode)) {
+		    dendrogram.mode <- "R";
+		    }
+
+		if (dendrogram.mode == "R") {
+		    dx <- distance * sin(angle);
+		    dy <- distance * cos(angle);
+		} else {
+		    dx <- distance * tan(angle);
+		    dy <- distance;
+	        }
 
 		if (vi$parent != -1) {
-		    angle <- tree$angle[tree$tip == vi$id & tree$parent == vi$parent];
-			v$x[v$id == vi$id] <<- v$x[v$id == vi$parent] + d * sin(angle);
-			v$y[v$id == vi$id] <<- v$y[v$id == vi$parent] + d * cos(angle);
+			v$x[v$id == vi$id] <<- v$x[v$id == vi$parent] + dx;
+			v$y[v$id == vi$id] <<- v$y[v$id == vi$parent] + dy;
 		} else {
 		    v$x[v$id == vi$id] <<- 0;
-			v$y[v$id == vi$id] <<- d;
+			v$y[v$id == vi$id] <<- distance;
 		    }
 
 		for (child in v$id[v$parent == vi$id]) {

@@ -220,10 +220,11 @@ calculate.seg.coords <- function(
         tree,
         .margins = 1,
         .fun = function(x) {
+            node.id <- which(v$id == x$tip);
             parent.id <- which(v$id == x$parent);
 
-            dendrogram.mode <- x$mode;
-            if (is.null(x$mode)) {
+            dendrogram.mode <- v[node.id, "mode"];
+            if (length(dendrogram.mode) == 0) {
                 dendrogram.mode <- "R";
                 }
 
