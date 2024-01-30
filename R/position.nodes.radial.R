@@ -70,7 +70,7 @@ position.nodes <- function(v, tree, extra.len) {
 
 	preorder.traversal(node = 1, tree = tree);
 
-	v <- reposition.clones(tree, v);
+	# v <- reposition.clones(tree, v);
 
 	v$len <- sapply(
 	    v$y,
