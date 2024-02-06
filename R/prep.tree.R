@@ -100,7 +100,11 @@ prep.tree <- function(
         if (is.null(tree.df$label)) tree.df$child else tree.df$label
         );
 
-    if (('node.col' %in% colnames(tree.df))) {
+    if (!('mode' %in% colnames(tree.df))) {
+          tree.df$mode <- "R";
+          }
+
+    if ('node.col' %in% colnames(tree.df)) {
         tree.df$node.col[is.na(tree.df$node.col)] <- default.node.colour;
     } else {
         tree.df$node.col <- default.node.colour;
@@ -167,6 +171,7 @@ prep.tree <- function(
         edge.type.2 = c(NA, tree.df$edge.type.2),
         edge.width.1 = c(NA, tree.df$edge.width.1),
         edge.width.2 = c(NA, tree.df$edge.width.2),
+        mode = c(NA, tree.df$mode),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
         alpha = rep(0.5, (nrow(tree.df) + 1)),
         stringsAsFactors = FALSE
