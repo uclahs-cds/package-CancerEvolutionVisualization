@@ -275,6 +275,7 @@ add.tree.segs <- function(
             offset = offset,
             side = 'left'
         );
+    tree.segs1 <- rbind(tree.segs1, get.dendrogram.connector.segs(tree.segs1));
 
     second.seg.colname <-'length2';
     if (second.seg.colname%in% colnames(clone.out$tree)) {
@@ -331,4 +332,39 @@ add.tree.segs <- function(
         }
 
     clone.out$grobs <- c(clone.out$grobs, out)
+    }
+
+get.dendrogram.connector.segs <- function(branch.coords) {
+    tree.levels <- by(
+        branch.coords[, c("basex", "basey")],
+        branch.coords$parent,
+        function(row) {
+            x.range <- range(row$basex);
+            y <- unique(row$basey);
+            if (length(y) > 1) {
+                stop();
+                }
+
+            return(list(
+                basex = x.range[1],
+                tipx = x.range[2],
+                basey = y,
+                tipy = y
+                ));
+            }
+        );
+
+    # Cannot directly coerce to data.frame
+    horizontal.branch.coords <- as.data.frame(t(sapply(tree.levels, function(x) x)));
+
+    horizontal.levels <- as.numeric(horizontal.branch.coords$basex) != as.numeric(horizontal.branch.coords$tipx);
+    horizontal.branch.coords <- horizontal.branch.coords[horizontal.levels, ];
+
+    if (nrow(horizontal.branch.coords) > 0) {
+        for (missing.column in setdiff(colnames(branch.coords), colnames(horizontal.branch.coords))) {
+            horizontal.branch.coords[, missing.column] <- NA;
+            }
+        }
+
+    return(horizontal.branch.coords);
     }
