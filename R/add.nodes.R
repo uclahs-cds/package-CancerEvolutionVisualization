@@ -59,11 +59,11 @@ add.node.ellipse <- function(
 
   		node.label.grob <- textGrob(
   		    name = 'node.labels',
-  		    clone.out$v$plot.lab,
-  		    x = unit(clone.out$v$x, 'native'),
-  		    y = unit(clone.out$v$y, 'native'),
+  		    circle.nodes$plot.lab,
+  		    x = unit(circle.nodes$x, 'native'),
+  		    y = unit(circle.nodes$y, 'native'),
   		    just = c('center', 'center'),
-  		    gp = gpar(col = clone.out$v$node.label.colour, cex = label.cex - log2(nchar(clone.out$v$plot.lab)) / 10)
+  		    gp = gpar(col = circle.nodes$node.label.colour, cex = label.cex - log2(nchar(circle.nodes$plot.lab)) / 10)
   		    );
 
 	    clone.out$grobs <- c(clone.out$grobs, list(node.label.grob));
