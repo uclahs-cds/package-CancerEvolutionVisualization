@@ -100,7 +100,9 @@ prep.tree <- function(
         if (is.null(tree.df$label)) tree.df$child else tree.df$label
         );
 
-    if (('node.col' %in% colnames(tree.df))) {
+    tree.df <- prep.draw.node.setting(tree.df);
+
+    if ('node.col' %in% colnames(tree.df)) {
         tree.df$node.col[is.na(tree.df$node.col)] <- default.node.colour;
     } else {
         tree.df$node.col <- default.node.colour;
@@ -113,8 +115,8 @@ prep.tree <- function(
         MARGIN = 1,
         FUN = function(row) {
             if (is.na(row['border.col'])) row['node.col'] else row['border.col'];
-        }
-    );
+            }
+        );
 
     if ('border.type' %in% colnames(tree.df)) {
         valid.border.types <- c(
@@ -154,6 +156,7 @@ prep.tree <- function(
         ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         angle = c(NA, tree.df$angle),
+        draw.node = c(NA, tree.df$draw.node),
         node.colour = c(NA, tree.df$node.col),
         node.label.colour = c(NA, tree.df$node.label.col),
         border.colour = c(NA, tree.df$border.col),
@@ -322,6 +325,23 @@ prep.edge.colour.column <- function(tree.df, column.name, default.value) {
     } else {
         return(rep(default.value, nrow(tree.df)));
         }
+    }
+
+prep.draw.node.setting <- function(tree.df) {
+    if ('draw.node' %in% colnames(tree.df)) {
+        NA.indices <- is.na(tree.df$draw.node);
+        tree.df$draw.node <- as.logical(tree.df$draw.node);
+
+        if (any(is.na(tree.df$draw.node) & !NA.indices)) {
+            warning('Non-logical values found in "draw.node" column.');
+            }
+
+        tree.df$draw.node[is.na(tree.df$draw.node)] <- TRUE;
+    } else {
+        tree.df$draw.node <- TRUE;
+        }
+
+    return(tree.df);
     }
 
 prep.node.label.colours <- function(tree.df) {
