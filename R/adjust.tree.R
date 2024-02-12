@@ -33,6 +33,7 @@ adjust.branch.lengths <- function(node.df, tree, node.radius, scale1) {
         }
 
     node.df$node.radius[node.df$id == -1] <- 0;
+    node.df[!node.df$draw.node, 'node.radius'] <- 0;
     length.cols <- grep('length', colnames(tree));
 
     tree.adj <- adply(

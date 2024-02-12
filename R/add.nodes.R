@@ -29,19 +29,20 @@ add.node.ellipse <- function(
 	    );
 
 	node.grob.name <- 'node.polygons';
+    circle.nodes <- clone.out$v[clone.out$v$draw.node, ];
 
-	#more precise than circleGrob
+	# More precise than circleGrob
 	circle.grobs <- ellipseGrob(
 	    name = node.grob.name,
-	    x = unit(clone.out$v$x, 'native'),
-	    y = unit(clone.out$v$y, 'native'),
-	    size = node.radius * (1 + 0.2 * nchar(clone.out$v$plot.lab)),
-	    ar = 1 - log2(nchar(clone.out$v$plot.lab)) / 10,
+	    x = unit(circle.nodes$x, 'native'),
+	    y = unit(circle.nodes$y, 'native'),
+	    size = node.radius * (1 + 0.2 * nchar(circle.nodes$plot.lab)),
+	    ar = 1 - log2(nchar(circle.nodes$plot.lab)) / 10,
 	    gp = gpar(
-	        fill = clone.out$v$node.colour,
-	        col = clone.out$v$border.colour,
-	        lty = clone.out$v$border.type,
-	        lwd = clone.out$v$border.width
+	        fill = circle.nodes$node.colour,
+	        col = circle.nodes$border.colour,
+	        lty = circle.nodes$border.type,
+	        lwd = circle.nodes$border.width
 	        ),
 	    angle = pi / 2,
 	    position.units = 'native',

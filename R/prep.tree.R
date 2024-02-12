@@ -230,8 +230,6 @@ reset.tree.node.ids <- function(tree.df, value.index) {
     return(tree.df);
     }
 
-
-
 check.parent.values <- function(node.names, parent.col) {
     unique.node.names <- as.list(setNames(
         !vector(length = length(unique(node.names))),
