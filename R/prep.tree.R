@@ -102,53 +102,16 @@ prep.tree <- function(
 
     tree.df <- prep.draw.node.setting(tree.df);
 
-    if ('node.col' %in% colnames(tree.df)) {
-        tree.df$node.col[is.na(tree.df$node.col)] <- default.node.colour;
-    } else {
-        tree.df$node.col <- default.node.colour;
-        }
-
-    tree.df$node.label.col <- prep.node.label.colours(tree.df);
-
-    tree.df$border.col <- apply(
+    tree.df <- prep.node.colours(
         tree.df,
-        MARGIN = 1,
-        FUN = function(row) {
-            if (is.na(row['border.col'])) row['node.col'] else row['border.col'];
-            }
+        default.node.colour = default.node.colour
         );
 
-    if ('border.type' %in% colnames(tree.df)) {
-        valid.border.types <- c(
-            'blank',
-            'solid',
-            'dashed',
-            'dotted',
-            'dotdash',
-            'longdash',
-            'twodash'
-            );
-
-        border.type.is.valid <- tree.df$border.type %in% valid.border.types | is.na(tree.df$border.type);
-
-        if (!all(border.type.is.valid)) {
-            stop(paste(
-                'Invalid border type specified.',
-                'Must be one of', paste(c(valid.border.types, 'or NA.'), collapse = ', ')
-                ));
-            }
-
-        tree.df$border.type[is.na(tree.df$border.type)] <- if (is.numeric(tree.df$border.type)) 1 else 'solid';
-    } else {
-        tree.df$border.type <- 'solid';
-        }
-
-    if ('border.width' %in% colnames(tree.df)) {
-        tree.df$border.width <- as.numeric(tree.df$border.width);
-        tree.df$border.width[is.na(tree.df$border.width)] <- 1;
-    } else {
-        tree.df$border.width <- 1;
-        }
+    tree.df$node.label.col <- prep.node.label.colours(tree.df);
+    
+    tree.df <- prep.node.border.colours(tree.df);
+    tree.df <- prep.node.border.type(tree.df);
+    tree.df <- prep.node.border.width(tree.df);
 
     out.df <- data.frame(
         id = c(-1, tree.df$child),
@@ -337,6 +300,68 @@ prep.draw.node.setting <- function(tree.df) {
         tree.df$draw.node[is.na(tree.df$draw.node)] <- TRUE;
     } else {
         tree.df$draw.node <- TRUE;
+        }
+
+    return(tree.df);
+    }
+
+prep.node.colours <- function(tree.df, default.node.colour) {
+    if ('node.col' %in% colnames(tree.df)) {
+        tree.df$node.col[is.na(tree.df$node.col)] <- default.node.colour;
+    } else {
+        tree.df$node.col <- default.node.colour;
+        }
+
+    return(tree.df);
+    }
+
+prep.node.border.colours <- function(tree.df) {
+    tree.df$border.col <- apply(
+        tree.df,
+        MARGIN = 1,
+        FUN = function(row) {
+            if (is.na(row['border.col'])) row['node.col'] else row['border.col'];
+            }
+        );
+
+    return(tree.df);
+    }
+
+prep.node.border.type <- function(tree.df) {
+    if ('border.type' %in% colnames(tree.df)) {
+        valid.border.types <- c(
+            'blank',
+            'solid',
+            'dashed',
+            'dotted',
+            'dotdash',
+            'longdash',
+            'twodash'
+            );
+        
+        border.type.is.valid <- tree.df$border.type %in% valid.border.types | is.na(tree.df$border.type);
+
+        if (!all(border.type.is.valid)) {
+            stop(paste(
+                'Invalid border type specified.',
+                'Must be one of', paste(c(valid.border.types, 'or NA.'), collapse = ', ')
+                ));
+            }
+
+        tree.df$border.type[is.na(tree.df$border.type)] <- if (is.numeric(tree.df$border.type)) 1 else 'solid';
+    } else {
+        tree.df$border.type <- 'solid';
+        }
+
+    return(tree.df);
+    }
+
+prep.node.border.width <- function(tree.df) {
+    if ('border.width' %in% colnames(tree.df)) {
+        tree.df$border.width <- as.numeric(tree.df$border.width);
+        tree.df$border.width[is.na(tree.df$border.width)] <- 1;
+    } else {
+        tree.df$border.width <- 1;
         }
 
     return(tree.df);
