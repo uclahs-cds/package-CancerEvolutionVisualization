@@ -42,12 +42,7 @@ position.nodes <- function(v, tree, extra.len) {
 		distance <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
 		angle <- tree$angle[tree$tip == vi$id & tree$parent == vi$parent];
 
-		dendrogram.mode <- vi$mode;
-		if (is.null(dendrogram.mode)) {
-		    dendrogram.mode <- "R";
-		    }
-
-		if (dendrogram.mode == "R") {
+		if (vi$mode == "radial") {
 		    dx <- distance * sin(angle);
 		    dy <- distance * cos(angle);
 		} else {

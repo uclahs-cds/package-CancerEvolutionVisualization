@@ -100,9 +100,7 @@ prep.tree <- function(
         if (is.null(tree.df$label)) tree.df$child else tree.df$label
         );
 
-    if (!('mode' %in% colnames(tree.df))) {
-          tree.df$mode <- "R";
-          }
+    tree.df <- prep.branch.mode(tree.df);
 
     if ('node.col' %in% colnames(tree.df)) {
         tree.df$node.col[is.na(tree.df$node.col)] <- default.node.colour;
@@ -294,6 +292,27 @@ get.y.axis.position <- function(tree.colnames) {
         };
 
     return(y.axis.position);
+    }
+
+prep.branch.mode <- function(tree.df) {
+    radial.mode.name <- 'radial';
+    dendrogram.mode.name <- 'dendrogram';
+
+    if ('mode' %in% colnames(tree.df)) {
+        invalid.mode <- !(tree.df$mode %in% c(radial.mode.name, dendrogram.mode.name));
+        if (any(invalid.mode)) {
+            warning(paste(
+                '"mode" must be one of "radial" or "dendrogram".',
+                '"radial" will be used where mode is invalid.'
+                ));
+            }
+        tree.df$mode[invalid.mode] <- NA;
+    } else {
+        tree.df$mode <- NA;
+        }
+
+    tree.df$mode[is.na(tree.df$mode)] <- radial.mode.name;
+    return(tree.df);
     }
 
 prep.edge.colours <- function(tree.df) {

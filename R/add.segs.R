@@ -223,12 +223,7 @@ calculate.seg.coords <- function(
             node.id <- which(v$id == x$tip);
             parent.id <- which(v$id == x$parent);
 
-            dendrogram.mode <- v[node.id, "mode"];
-            if (length(dendrogram.mode) == 0) {
-                dendrogram.mode <- "R";
-                }
-
-            coords <- if (dendrogram.mode == "R") {
+            coords <- if (v[node.id, "mode"] == "radial") {
                 calculate.coords.radial(
                     x,
                     v,
