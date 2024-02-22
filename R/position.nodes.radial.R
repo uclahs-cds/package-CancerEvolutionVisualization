@@ -42,7 +42,7 @@ position.nodes <- function(v, tree, extra.len) {
 		distance <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
 		angle <- tree$angle[tree$tip == vi$id & tree$parent == vi$parent];
 
-		if (vi$mode == "radial") {
+		if (vi$mode == 'radial') {
 		    dx <- distance * sin(angle);
 		    dy <- distance * cos(angle);
 		} else {

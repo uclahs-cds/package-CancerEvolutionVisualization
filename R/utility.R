@@ -68,13 +68,13 @@ degrees.to.radians <- function(degrees) {
     }
 
 get.encoded.distance <- function(points) {
-    if (!is.data.frame(points)) { 
+    if (!is.data.frame(points)) {
         stop(paste(
-            "Input data \"points\" must be a data.frame",
-            paste0("(received \"", class(points), "\").")
+            'Input data \"points\" must be a data.frame',
+            paste0('(received \"", class(points), "\").')
             ));
         }
-    validate.data.frame.columns(points, expected.columns = c("x", "y"));
+    validate.data.frame.columns(points, expected.columns = c('x', 'y'));
 
     # Line calculations will not be valid with a single point
     if (nrow(points) < 2) {

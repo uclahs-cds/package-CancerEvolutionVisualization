@@ -40,7 +40,7 @@ test_that(
         input.data <- data.frame(a = 1:10, b = 1:10);
         colnames(input.data) <- expected.columns;
 
-        expect_no_error({ 
+        expect_no_error({
             validate.data.frame.columns(
                 input.data,
                 expected.columns = expected.columns
@@ -55,7 +55,7 @@ test_that(
         input.data <- data.frame(a = 1:10, b = 1:10);
 
         expect_error(
-            object = { 
+            object = {
                 validate.data.frame.columns(
                     input.data,
                     expected.columns = expected.columns

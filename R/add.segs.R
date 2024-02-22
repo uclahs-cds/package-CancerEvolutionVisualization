@@ -223,7 +223,7 @@ calculate.seg.coords <- function(
             node.id <- which(v$id == x$tip);
             parent.id <- which(v$id == x$parent);
 
-            coords <- if (v[node.id, "mode"] == "radial") {
+            coords <- if (v[node.id, 'mode'] == 'radial') {
                 calculate.coords.radial(
                     x,
                     v,
@@ -242,7 +242,7 @@ calculate.seg.coords <- function(
                     side = side
                     );
                 }
-    
+
             return(coords);
             }
         );
@@ -272,8 +272,8 @@ add.tree.segs <- function(
         );
     tree.segs1 <- rbind(tree.segs1, get.dendrogram.connector.segs(tree.segs1));
 
-    second.seg.colname <-'length2';
-    if (second.seg.colname%in% colnames(clone.out$tree)) {
+    second.seg.colname <- 'length2';
+    if (second.seg.colname %in% colnames(clone.out$tree)) {
         tree.segs2 <- calculate.seg.coords(
             clone.out$tree,
             clone.out$v,
@@ -331,7 +331,7 @@ add.tree.segs <- function(
 
 get.dendrogram.connector.segs <- function(branch.coords) {
     tree.levels <- by(
-        branch.coords[, c("basex", "basey")],
+        branch.coords[, c('basex', 'basey')],
         branch.coords$parent,
         function(row) {
             x.range <- range(row$basex);
