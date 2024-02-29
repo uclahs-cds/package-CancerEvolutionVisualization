@@ -165,7 +165,7 @@ calculate.coords.dendrogram <- function(
     if (side == 'left') {
         offset.x.modifier <- -1;
     } else if (side == 'right') {
-        offset.y.modifier <- -1;
+        # No Y offset needed
     } else if (side == 'center') {
         stop(paste(
             'Side "center" only needed with > 3 segments.',
@@ -187,18 +187,16 @@ calculate.coords.dendrogram <- function(
         }
 
     dy <- x[, length.colname];
-    dx <- x[, length.colname] * tan(angle);
+    dx <- x[, 'length'] * tan(angle);
 
-    offset.x <- offset * cos(angle) * offset.x.modifier;
-    offset.y <- offset * sin(angle) * offset.y.modifier;
+    offset.x <- offset * offset.x.modifier;
+    
+    basex <- basex + dx + offset.x;
+    tipx <- basex;
 
-    tipx <- basex + dx + offset.x;
-    tipy <- basey + dy + offset.y;
+    tipy <- basey + dy;
 
-    basex <- tipx;
 
-    basex <- basex + offset.x;
-    basey <- basey + offset.y;
 
     return(data.frame(
         basex,
@@ -272,7 +270,7 @@ add.tree.segs <- function(
         );
     tree.segs1 <- rbind(tree.segs1, get.dendrogram.connector.segs(tree.segs1));
 
-    second.seg.colname <- 'length2';
+    second.seg.colname <- 'length2.c';
     if (second.seg.colname %in% colnames(clone.out$tree)) {
         tree.segs2 <- calculate.seg.coords(
             clone.out$tree,
@@ -326,7 +324,7 @@ add.tree.segs <- function(
             }
         }
 
-    clone.out$grobs <- c(clone.out$grobs, out)
+    clone.out$grobs <- c(clone.out$grobs, rev(out));
     }
 
 get.dendrogram.connector.segs <- function(branch.coords) {
