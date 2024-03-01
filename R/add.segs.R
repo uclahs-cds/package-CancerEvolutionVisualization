@@ -268,7 +268,6 @@ add.tree.segs <- function(
             offset = offset,
             side = 'left'
         );
-    tree.segs1 <- rbind(tree.segs1, get.dendrogram.connector.segs(tree.segs1));
 
     second.seg.colname <- 'length2.c';
     if (second.seg.colname %in% colnames(clone.out$tree)) {
@@ -288,9 +287,9 @@ add.tree.segs <- function(
         tree.segs2 <- NULL;
         }
 
-    out <- list();
+    seg.grobs <- list();
 
-    out$tree.segs1 <- segmentsGrob(
+    seg.grobs[[1]] <- segmentsGrob(
         name = 'tree.segs.1',
         x0 = tree.segs1$basex,
         y0 = tree.segs1$basey,
@@ -308,7 +307,7 @@ add.tree.segs <- function(
         tree.segs2 <- tree.segs2[which(tree.segs2$basey != tree.segs2$tipy), ];
 
         if (nrow(tree.segs2) > 0) {
-            out$tree.segs2 <- segmentsGrob(
+            seg.grobs[[2]] <- segmentsGrob(
                 name = 'tree.segs.2',
                 x0 = tree.segs2$basex,
                 y0 = tree.segs2$basey,
@@ -323,8 +322,22 @@ add.tree.segs <- function(
                 );
             }
         }
-
-    clone.out$grobs <- c(clone.out$grobs, rev(out));
+    
+    connector.segs <- get.dendrogram.connector.segs(tree.segs1);
+    seg.grobs$connectors <- segmentsGrob(
+        name = 'connector.segs',
+        x0 = connector.segs$basex,
+        y0 = connector.segs$basey,
+        x1 = connector.segs$tipx,
+        y1 = connector.segs$tipy,
+        default.units = 'native',
+        gp = gpar(
+            # col = clone.out$v$edge.colour.1,
+            lwd = line.lwd
+            # lty = clone.out$v$edge.type.1
+        )
+    );
+    clone.out$grobs <- c(clone.out$grobs, seg.grobs);
     }
 
 get.dendrogram.connector.segs <- function(branch.coords) {
