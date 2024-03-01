@@ -322,21 +322,27 @@ add.tree.segs <- function(
                 );
             }
         }
-    
-    connector.segs <- get.dendrogram.connector.segs(tree.segs1);
-    seg.grobs$connectors <- segmentsGrob(
-        name = 'connector.segs',
-        x0 = connector.segs$basex,
-        y0 = connector.segs$basey,
-        x1 = connector.segs$tipx,
-        y1 = connector.segs$tipy,
-        default.units = 'native',
-        gp = gpar(
-            # col = clone.out$v$edge.colour.1,
-            lwd = line.lwd
-            # lty = clone.out$v$edge.type.1
-        )
-    );
+
+    dendrogram.ids <- clone.out$v[clone.out$v$mode == 'dendrogram', 'id'];
+    dendrogram.coords <- rbind(tree.segs1, tree.segs2);
+    dendrogram.coords <- dendrogram.coords[dendrogram.coords$parent %in% dendrogram.ids, ];
+
+    if (nrow(dendrogram.coords) > 0) {
+        connector.segs <- get.dendrogram.connector.segs(dendrogram.coords);
+        seg.grobs$connectors <- segmentsGrob(
+            name = 'connector.segs',
+            x0 = connector.segs$basex,
+            y0 = connector.segs$basey,
+            x1 = connector.segs$tipx,
+            y1 = connector.segs$tipy,
+            default.units = 'native',
+            gp = gpar(
+                # col = clone.out$v$edge.colour.1,
+                lwd = line.lwd
+                # lty = clone.out$v$edge.type.1
+                )
+            );
+        }
     clone.out$grobs <- c(clone.out$grobs, seg.grobs);
     }
 
