@@ -1,3 +1,16 @@
+CancerEvolutionVisualization 3.0.0 2024-02-21 (Dan Knight)
+
+ADDED
+* Dendrogram mode with node-by-node control
+
+--------------------------------------------------------------------------
+CancerEvolutionVisualization 2.0.2 2023-12-15 (Dan Knight)
+
+UPDATE
+* Updated package metadata and README
+
+
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 2.0.1 2023-11-17 (Helena Winata, Dan Knight)
 
 ADDED
