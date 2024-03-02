@@ -337,9 +337,9 @@ add.tree.segs <- function(
             y1 = connector.segs$tipy,
             default.units = 'native',
             gp = gpar(
-                # col = clone.out$v$edge.colour.1,
-                lwd = line.lwd
-                # lty = clone.out$v$edge.type.1
+                col = clone.out$v$connector.col,
+                lwd = clone.out$v$connector.width,
+                lty = clone.out$v$connector.type
                 )
             );
         }
