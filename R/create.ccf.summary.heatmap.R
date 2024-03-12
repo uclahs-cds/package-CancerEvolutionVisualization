@@ -2,7 +2,9 @@ create.ccf.summary.heatmap <- function(
     DF,
     ccf.thres = 0,
     clone.order = NULL,
-    sample.order = NULL
+    sample.order = NULL,
+    filename = NULL,
+    ...
     ) {
 
     arr <- data.frame.to.array(
@@ -12,7 +14,7 @@ create.ccf.summary.heatmap <- function(
         );
     arr[arr <= ccf.thres] <- 0;
 
-    clone.df <- unique(DF[, c('clone.id', 'total.snv')]);
+    clone.df <- unique(DF[, c('clone.id', 'total.nsnv')]);
     sample.df <- aggregate(CCF ~ ID, data = DF[DF$CCF > 0, ], FUN = length);
     names(sample.df)[2] <- 'nsnv';
 
@@ -23,12 +25,12 @@ create.ccf.summary.heatmap <- function(
         }
 
     clone.bar <- BoutrosLab.plotting.general::create.barplot(
-        formula = total.snv ~ clone.id,
+        formula = total.nsnv ~ clone.id,
         data = clone.df,
         yaxis.cex = 0,
         xaxis.lab = rep('', nrow(arr)),
         xaxis.cex = 0,
-        ylimits = c( - max(clone.df$total.snv) * 0.05, max(clone.df$total.snv) * 1.05),
+        ylimits = c( - max(clone.df$total.nsnv) * 0.05, max(clone.df$total.nsnv) * 1.05),
         resolution = 50
         );
 
@@ -59,18 +61,18 @@ create.ccf.summary.heatmap <- function(
         yaxis.cex = 0.6,
         yaxis.fontface = 1,
         print.colour.key = FALSE,
-        colour.scheme = c('white', 'blue'),
-        left.padding = 1,
-        right.padding = 1,
-        width = 9,
-        height = 5
+        colour.scheme = c('white', 'blue')
+        # left.padding = 1,
+        # right.padding = 1,
+        # width = 9,
+        # height = 5
         );
 
     legend.ccf <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
                 title = 'CCF',
-                labels = c(min(arr), max(arr)),
+                labels = c(0, round(max(arr), digits = 2)),
                 colours = c('white', 'blue'),
                 border = 'black',
                 continuous = TRUE,
@@ -83,7 +85,7 @@ create.ccf.summary.heatmap <- function(
         );
 
     return(BoutrosLab.plotting.general::create.multiplot(
-        filename = NULL,
+        filename = filename,
         plot.objects = list(hm, sample.bar, clone.bar),
         plot.layout = c(2, 2),
         layout.skip = c(FALSE, FALSE, FALSE, TRUE),
@@ -103,16 +105,15 @@ create.ccf.summary.heatmap <- function(
         yaxis.cex = 0.6,
         yaxis.tck = 0.4,
         yaxis.fontface = 1,
-        x.spacing = c(- 3),
+        x.spacing = c(- 1.5),
         y.spacing = c(- 1.5),
-        left.padding = 10,
+        left.padding = max(nchar(unique(DF$ID))) / 2,
         bottom.padding = 3,
         # merge.legends = FALSE,
         print.new.legend = TRUE,
         legend = list(right = list(
             fun = legend.ccf
         )),
-        height = 6,
-        width = 11
+        ...
         ));
     }

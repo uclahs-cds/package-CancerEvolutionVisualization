@@ -4,19 +4,23 @@ create.ccf.heatmap <- function(
     cls.dim = 'both',
     cls.method = 'complete',
     dist.method = 'euclidean',
-    hm.cols = c('white', 'blue'),
+    hm.cols = NULL,
     xaxis.lab = NULL,
     xlab.label = 'Mutations',
+    filename = NULL,
     ...
     ) {
 
     if (!is.null(ccf.thres)) {
         hm.array[hm.array <= ccf.thres] <- 0;
         }
-    col.labels <- seq(0, 1, .2);
+    if (is.null(hm.cols)) {
+        hm.cols <- c('white', 'blue');
+        }
+    col.labels <- seq(0, max(hm.array), .2);
 
     hm <- BoutrosLab.plotting.general::create.heatmap(
-        filename = NULL,
+        filename = filename,
         x = hm.array,
         force.clustering = TRUE,
         cluster.dimensions = cls.dim,

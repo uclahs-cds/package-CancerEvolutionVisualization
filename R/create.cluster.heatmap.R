@@ -4,32 +4,40 @@ create.cluster.heatmap <- function(
     plt.width = 11,
     hm.cols = NULL,
     xaxis.col = NULL,
+    filename = NULL,
+    cluster.colours = NULL,
     ...
     ) {
 
     if (is.null(levels(DF$ID))) {
         DF$ID <- factor(DF$ID, levels = sort(unique(DF$ID)));
         }
+
     DF              <- droplevels(DF)[order(DF$clone.id, -abs(DF$CCF)), ];
     arr             <- data.frame.to.array(DF);
-    snv.order       <- unique(DF[, c('snv.id', 'clone.id')]);
-    cls.colours     <- get.colours(DF$clone.id, return.names = TRUE);
-    arr             <- arr[snv.order$snv.id, levels(DF$ID)];
+    snv.order       <- unique(DF[, c('SNV.id', 'clone.id')]);
+    arr             <- arr[snv.order$SNV.id, levels(DF$ID)];
+
+    if (is.null(cluster.colours)) {
+        cluster.colours <- get.colours(levels(DF$clone.id), return.names = TRUE);
+    } else {
+        cluster.colours <- cluster.colours[levels(DF$clone.id)];
+        }
 
     if (!is.null(xaxis.col)) {
-        xaxis.label <- unique(DF[DF$snv.id %in% rownames(arr), xaxis.col]);
+        xaxis.label <- unique(DF[DF$SNV.id %in% rownames(arr), xaxis.col]);
         }
 
     hm <- create.ccf.heatmap(
         hm.array = arr,
-        fname = NULL,
+        filename = NULL,
         cls.dim = 'none',
         hm.cols = hm.cols,
         ...
         );
 
     cov <- BoutrosLab.plotting.general::create.heatmap(
-        x = t(cls.colours[snv.order$clone.id]),
+        x = t(cluster.colours[snv.order$clone.id]),
         input.colours = TRUE,
         clustering.method = 'none',
         grid.col = FALSE,
@@ -41,13 +49,13 @@ create.cluster.heatmap <- function(
         list(
             legend = list(
                 title = 'Clones',
-                labels = names(cls.colours),
-                colours = cls.colours,
+                labels = names(cluster.colours),
+                colours = cluster.colours,
                 border = 'black'
                 ),
             legend = list(
                 title = 'CCF',
-                labels = c(min(arr), max(arr)),
+                labels =  c(0, round(max(arr), digits = 2)),
                 colours = if (is.null(hm.cols)) c('white', 'blue') else hm.cols,
                 border = 'black',
                 continuous = TRUE,
@@ -60,7 +68,7 @@ create.cluster.heatmap <- function(
         );
 
     return(BoutrosLab.plotting.general::create.multiplot(
-        filename = NULL,
+        filename = filename,
         plot.objects = list(cov, hm),
         plot.layout = c(1, 2),
         panel.heights = c(1, 0.05),
