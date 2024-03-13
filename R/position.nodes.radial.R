@@ -29,7 +29,7 @@ count.leaves.per.node <- function(v) {
 	}
 
 assign.weight <- function(node,v, extra.len, spread) {
-	node.weight <- v$leaves[v$id == node] / v$leaves[v$parent == -1];
+	node.weight <- (v$leaves[v$id == node] - 1) / v$leaves[v$parent == -1];
 	return(node.weight);
     }
 

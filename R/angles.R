@@ -4,6 +4,11 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
 
     total.angle <- total.angle * spread;
     angles <- numeric(nrow(tree));
+    child.weights <- sapply(
+        v$id,
+        function(node.id) assign.weight(node.id, v),
+        USE.NAMES = FALSE
+        );
 
     while (length(node.ids) > 0) {
         # "Pops" next element in FIFO queue node.ids
@@ -21,7 +26,6 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
 
         if (num.children > 0) {
             parent.angle <- angles[tree$tip == current.node.id];
-            child.weight <- assign.weight(current.node.id, v);
 
             start.angle <- parent.angle - (total.angle) * (num.children > 1) / 2;
             num.slices <- max(num.children - 1, 1);
