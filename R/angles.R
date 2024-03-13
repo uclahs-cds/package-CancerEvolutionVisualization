@@ -20,7 +20,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
         num.children <- length(child.ids);
 
         if (num.children > 0) {
-            parent.angle <- tree$angle[tree$tip == current.node.id];
+            parent.angle <- angles[tree$tip == current.node.id];
             child.weight <- assign.weight(current.node.id, v);
 
             start.angle <- parent.angle - (total.angle) * (num.children > 1) / 2;
@@ -60,7 +60,8 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
             # In future, I would like to remove this fixed angle calculation entirely.
             # It would be ideal to handle all calculations in the same way, and
             # rely more on user defined spread and explicit angle overrides.
-            child.angles <- if (num.children == 1) c(0) else c(-1, 1) * fixed.angle;
+            parent.angle <- angles[tree$tip == current.node.id];
+            child.angles <- (if (num.children == 1) c(0) else c(-1, 1) * fixed.angle) + parent.angle;
 
             for (i in seq_along(child.ids)) {
                 child.id <- child.ids[i];
