@@ -3,11 +3,11 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
     node.ids <- c(root.node.id);
 
     total.angle <- total.angle * spread;
-    angles <- numeric(nrow(tree));
+    angles <- v$angle;
 
     while (length(node.ids) > 0) {
         # "Pops" next element in FIFO queue node.ids
-        current.node.id <- node.ids[1];
+        current.node.id <- as.numeric(node.ids[1]);
         node.ids <- node.ids[-1];
 
         parent.id <- tree$parent[tree$tip == current.node.id];
@@ -20,7 +20,11 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
         num.children <- length(child.ids);
 
         if (num.children > 0) {
-            parent.angle <- tree$angle[tree$tip == current.node.id];
+            parent.angle <- angles[current.node.id];
+            if (is.na(parent.angle)) {
+                parent.angle <- 0;
+                angles[current.node.id] <- parent.angle;
+                }
             child.weight <- assign.weight(current.node.id, v);
 
             start.angle <- parent.angle - (total.angle) * (num.children > 1) / 2;
@@ -29,8 +33,11 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
 
             for (i in seq_along(child.ids)) {
                 child.id <- child.ids[i];
-                angle <- start.angle + (i - 1) * (angle.increment);
-                angles[tree$tip == child.id] <- angle;
+
+                if (is.na(angles[child.id])) {
+                    angle <- start.angle + (i - 1) * (angle.increment);
+                    angles[tree$tip == child.id] <- angle;
+                    }
                 }
 
             # Appending to end of queue for breadth-first traversal
