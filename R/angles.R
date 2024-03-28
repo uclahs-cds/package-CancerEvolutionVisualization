@@ -49,13 +49,19 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
     }
 
 calculate.angles.fixed <- function(v, tree, fixed.angle) {
-    angles <- numeric(nrow(tree));
+    angles <- v$angle;
     node.ids <- c(v$id[[1]]);
 
     while (length(node.ids) > 0) {
         # "Pops" next element in FIFO queue node.ids
-        current.node.id <- node.ids[1];
+        current.node.id <- as.numeric(node.ids[1]);
         node.ids <- node.ids[-1];
+
+        parent.angle <- angles[current.node.id];
+        if (is.na(parent.angle)) {
+            parent.angle <- 0;
+            angles[current.node.id] <- parent.angle;
+            }
 
         child.ids <- tree$tip[tree$parent == current.node.id & !is.na(tree$parent)];
         num.children <- length(child.ids);
@@ -66,12 +72,16 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
             # In future, I would like to remove this fixed angle calculation entirely.
             # It would be ideal to handle all calculations in the same way, and
             # rely more on user defined spread and explicit angle overrides.
-            child.angles <- if (num.children == 1) c(0) else c(-1, 1) * fixed.angle;
+            child.angles <- (if (num.children == 1) c(0) else c(-1, 1)) * fixed.angle;
+            child.angles <- child.angles + parent.angle;
 
             for (i in seq_along(child.ids)) {
                 child.id <- child.ids[i];
-                angle <- child.angles[i];
-                angles[tree$tip == child.id] <- angle;
+
+                if (is.na(angles[child.id])) {
+                    angle <- child.angles[i];
+                    angles[tree$tip == child.id] <- angle;
+                    }
                 }
             }
 
@@ -79,7 +89,6 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
         node.ids <- append(node.ids, child.ids);
         }
 
-    angles <- override.angles(tree, v, angles);
     return(angles);
     }
 
