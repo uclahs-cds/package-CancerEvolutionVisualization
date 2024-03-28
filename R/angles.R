@@ -45,7 +45,6 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
             }
         }
 
-    angles <- override.angles(tree, v, angles);
     return(angles);
     }
 
