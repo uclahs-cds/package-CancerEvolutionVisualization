@@ -8,7 +8,37 @@ ADDED
 CancerEvolutionVisualization 1.1.1 2022-11-18 (Helena Winata)
 
 ADDED
+* GitHub links for code and bug reports
+
+BUG
+* Fixed S3 naming conflict in heatmap functions, using safe "create." prefix
+
+
+--------------------------------------------------------------------------
+CancerEvolutionVisualization 2.0.0 2023-11-16 (Helena Winata, Dan Knight)
+
+ADDED
+* Option to specify edge colour with "edge.col.1" and "edge.col.2" 
+  columns in tree input dataframe
+* Option to specify edge width using "edge.width.1" and "edge.width.2" 
+  columns in tree input dataframe
+* Option to specify edge linetype with "edge.type.1" and "edge.type.2" 
+  columns in tree input dataframe
+* Support for specifying tree angles in either radians or degrees using
+  an optional "angle" column
 * Generic functions to generate accompanying heatmaps
+* Option to specify tree node colours with "node.col" column
+* Option to specify tree node border colour, width, and line-type with 
+  "border.col", "border.width", and "border.type" columns
+* Option ot specify tree node label colour with "node.label.col" column
+
+UPDATE
+* Reimplemented tree angle calculations
+* Fixed lopsided radial tree bug
+
+REMOVED
+* "seg1.col" and "seg2.col" parameters (replaced by tree input columns).
+* "node.col" parameter to SRCGrob. (Node colour only customizable through tree input data.frame.)
 
 
 --------------------------------------------------------------------------

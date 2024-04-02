@@ -1,7 +1,7 @@
 Package: CancerEvolutionVisualization
 Title: Publication Quality Phylogenetic Tree Plots
-Version: 1.1.1
-Date: 2023-03-24
+Version: 2.0.1
+Date: 2023-11-17
 Authors@R: c(
 	person("Paul Boutros", role = "cre", email = "PBoutros@mednet.ucla.edu"),
 	person("Adriana Salcedo", role = "aut"),
@@ -10,6 +10,8 @@ Authors@R: c(
 	person("Selina Wu", role = "ctb"))
 Description: Generates tree plots with precise branch lengths, gene annotations, and cellular prevalence. The package handles complex tree structures (angles, lengths, etc.) and can be further refined as needed by the user.
 License: GPL-2
+URL: https://github.com/uclahs-cds/package-CancerEvolutionVisualization
+BugReports: https://github.com/uclahs-cds/package-CancerEvolutionVisualization/issues
 Depends:
 	R (>= 3.5.0),
     	graphics,

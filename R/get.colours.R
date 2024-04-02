@@ -16,3 +16,37 @@ get.colours <- function(
         return(col.list[value.list]);
         }
     }
+
+get.colour.luminance <- function(colour) {
+    # Formulas and values documented in:
+    # https://www.w3.org/WAI/GL/wiki/Relative_luminance
+    sRGB.values <- col2rgb(colour) / 255;
+    sRGB.values <- sapply(
+        sRGB.values,
+        FUN = function(sRGB.value) {
+            if (sRGB.value <= 0.03928) {
+                return(sRGB.value / 12.92);
+            } else {
+                return(((sRGB.value + 0.055 ) / 1.055) ** 2.4);
+                }
+            }
+        );
+
+    luminance.modifiers <- c(0.2126, 0.7152, 0.0722);
+    luminance <- sum(sRGB.values * luminance.modifiers);
+
+    return(luminance);
+    }
+
+get.contrast.ratio <- function(luminance1, luminance2) {
+    # Based on WCAG accessibility standards:
+    # https://www.w3.org/TR/2008/REC-WCAG20-20081211/#visual-audio-contrast-contrast
+    luminance <- sort(
+        c(luminance1, luminance2),
+        decreasing = TRUE
+        );
+    luminance <- luminance + 0.05;
+
+    contrast.ratio <- luminance[1] / luminance[2];
+    return(contrast.ratio);
+    }

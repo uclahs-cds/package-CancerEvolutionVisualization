@@ -77,3 +77,7 @@ get.genome.pos <- function(
 
     return(list('snv' = snv.df, 'chr.info' = chr.info));
     }
+
+degrees.to.radians <- function(degrees) {
+    return(degrees * pi / 180);
+    }
