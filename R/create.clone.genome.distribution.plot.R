@@ -1,4 +1,4 @@
-plot.clone.genome.distribution <- function(
+create.clone.genome.distribution.plot <- function(
     snv.df,
     genome.build = 'GRCh37',
     clone.order = NULL,

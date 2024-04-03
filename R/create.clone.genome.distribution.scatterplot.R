@@ -1,4 +1,4 @@
-plot.clone.genome.distribution.scatter <- function(
+create.clone.genome.distribution.scatterplot <- function(
     scatter.df,
     nsnv,
     nclone,

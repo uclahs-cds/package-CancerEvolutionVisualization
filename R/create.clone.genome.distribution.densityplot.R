@@ -1,4 +1,4 @@
-plot.clone.genome.distribution.density <- function(
+create.clone.genome.distribution.densityplot <- function(
     density.df,
     cluster.colours,
     chr.info,
