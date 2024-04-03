@@ -32,7 +32,7 @@ create.clone.genome.distribution.plot <- function(
         # Iterate through each sample -------------------------------------------------------------
         sample.df <- droplevels(snv.df[snv.df$ID == s, ])
         print(paste('Plotting', s));
-        plt <- plot.clone.genome.distribution.per.sample(
+        plt <- create.clone.genome.distribution.plot.per.sample(
             sample.df,
             cluster.colours[levels(sample.df$clone.id)],
             chr.info,
@@ -45,7 +45,7 @@ create.clone.genome.distribution.plot <- function(
         }
     }
 
-plot.clone.genome.distribution.per.sample <- function(
+create.clone.genome.distribution.plot.per.sample <- function(
     sample.df,
     cluster.colours,
     chr.info,
@@ -71,7 +71,7 @@ plot.clone.genome.distribution.per.sample <- function(
     cluster.legend <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
-                colours = cluster.colours,
+                colours = c(cluster.colours),
                 title = 'Clones',
                 labels = names(cluster.colours),
                 border = 'black'
@@ -87,14 +87,14 @@ plot.clone.genome.distribution.per.sample <- function(
 
     # create individual plot ----------------------------------------------------------------------
     sample.df$colour <- cluster.colours[sample.df$clone.id];
-    scatter.plt <- plot.clone.genome.distribution.scatter(
+    scatter.plt <- create.clone.genome.distribution.scatterplot(
         scatter.df = sample.df,
         nsnv = nrow(sample.df),
         nclone = length(unique(sample.df$clone.id)),
         chr.info = chr.info
         );
 
-    density.plt <- plot.clone.genome.distribution.density(
+    density.plt <- create.clone.genome.distribution.densityplot(
         density.df,
         cluster.colours,
         chr.info

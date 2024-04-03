@@ -62,11 +62,8 @@ get.genome.pos <- function(
     if (!(genome.build %in% c('GRCh37', 'GRCh38'))) {
         stop('genome.build must be either GRCh37 or GRCh38')
         }
-    chr.info <- read.table(
-        file = paste0('data/chr_info/', genome.build, '.tsv'),
-        sep = '\t',
-        header = TRUE
-        );
+    assign('chr.info', get(genome.build));
+
     snv.df$chr      <- droplevels(factor(snv.df$chr, levels = chr.order));
     chr.info        <- chr.info[chr.info$chr %in% levels(snv.df$chr), c('chr', 'length')];
     chr.info$chr    <- droplevels(factor(chr.info$chr, levels = chr.order));
