@@ -21,7 +21,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
 
         if (num.children > 0) {
             parent.angle <- angles[current.node.id];
-            if (is.na(parent.angle)) {
+            if (is.na(parent.angle) || length(parent.angle) == 0) {
                 parent.angle <- 0;
                 angles[current.node.id] <- parent.angle;
                 }
@@ -58,7 +58,7 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
         node.ids <- node.ids[-1];
 
         parent.angle <- angles[current.node.id];
-        if (is.na(parent.angle)) {
+        if (is.na(parent.angle) || length(parent.angle) == 0) {
             parent.angle <- 0;
             angles[current.node.id] <- parent.angle;
             }
