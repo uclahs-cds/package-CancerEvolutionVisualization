@@ -16,7 +16,9 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
             tree$angle[tree$tip == current.node.id] <- 0;
             }
 
-        child.ids <- tree$tip[tree$parent == current.node.id & !is.na(tree$parent)];
+        child.ids <- as.numeric(
+            tree$tip[tree$parent == current.node.id & !is.na(tree$parent)]
+            );
         num.children <- length(child.ids);
 
         if (num.children > 0) {
@@ -63,7 +65,9 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
             angles[current.node.id] <- parent.angle;
             }
 
-        child.ids <- tree$tip[tree$parent == current.node.id & !is.na(tree$parent)];
+        child.ids <- as.numeric(
+            tree$tip[tree$parent == current.node.id & !is.na(tree$parent)]
+            );
         num.children <- length(child.ids);
         if (num.children > 0) {
             # Safe to hardcode temporarily. This will only ever apply to
