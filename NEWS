@@ -4,6 +4,10 @@ BUG
 * Fixed angle calculation bug where child angles do not follow
   their parent angle, instead moving "downward" at 0 degrees.
 
+UPDATE
+* Updated package metadata and README
+
+
 --------------------------------------------------------------------------
 CancerEvolutionVisualization 2.0.1 2023-11-17 (Helena Winata, Dan Knight)
 
