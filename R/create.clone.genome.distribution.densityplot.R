@@ -2,7 +2,8 @@ create.clone.genome.distribution.densityplot <- function(
     density.df,
     cluster.colours,
     chr.info,
-    save.plt = NULL
+    save.plt = NULL,
+    ...
     ) {
 
     return(BoutrosLab.plotting.general::create.scatterplot(
@@ -11,26 +12,16 @@ create.clone.genome.distribution.densityplot <- function(
         data = density.df,
         groups = density.df$clone.id,
         xlab.label = 'Chromosome',
-        ylab.label = 'Number of SNVs',
-        xlab.cex = 1.65,
-        ylab.cex = 1.65,
-        xaxis.cex = 1.5,
-        yaxis.cex = 1.5,
+        ylab.label = 'Density',
         xlimits = c(0, sum(chr.info$length)),
         xaxis.lab = chr.info$chr,
-        yaxis.lab = seq(0, 100, 10),
         xat = chr.info$xat,
-        xaxis.tck = 0,
-        yaxis.tck = 0.5,
-        xaxis.fontface = 1,
-        yaxis.fontface = 1,
         col = cluster.colours,
         type = 'l',
         lwd = 2,
         abline.v = chr.info$start,
-        abline.col = 'black',
         abline.lwd = 1.2,
-        abline.lty = 1,
+        ...
         ));
     }
 

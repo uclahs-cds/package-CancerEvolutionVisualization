@@ -3,7 +3,8 @@ create.clone.genome.distribution.plot <- function(
     genome.build = 'GRCh37',
     clone.order = NULL,
     cluster.colours = NULL,
-    save.plt.dir = NULL
+    save.plt.dir = NULL,
+    ...
     ) {
 
     print('Plotting clone distribution across the genome');
@@ -28,7 +29,7 @@ create.clone.genome.distribution.plot <- function(
     chr.info <- genome.pos.df$chr.info;
     chr.info$xat <- (chr.info$length / 2) + chr.info$start;
 
-    for (s in unique(snv.df$ID)) { # s = 'MSK-AB-0014-T13-3'
+    for (s in unique(snv.df$ID)) {
         # Iterate through each sample -------------------------------------------------------------
         sample.df <- droplevels(snv.df[snv.df$ID == s, ])
         print(paste('Plotting', s));
@@ -40,7 +41,8 @@ create.clone.genome.distribution.plot <- function(
                 is.null(save.plt.dir),
                 NULL,
                 file.path(save.plt.dir, paste0(s, '_clone-genome-dist.png'))
-                )
+                ),
+            ...
             );
         }
     }
@@ -49,7 +51,19 @@ create.clone.genome.distribution.plot.per.sample <- function(
     sample.df,
     cluster.colours,
     chr.info,
-    save.plt = NULL
+    save.plt = NULL,
+    width = 18,
+    # scatter and density plot params
+    xaxis.tck = 0,
+    yaxis.tck = 0.5,
+    xaxis.fontface = 1,
+    yaxis.fontface = 1,
+    xlab.cex = 1.65,
+    ylab.cex = 1.65,
+    xaxis.cex = 1.5,
+    yaxis.cex = 1.5,
+    xlab.top.cex = 1.2,
+    ...
     ) {
 
     # calculate densities for each cluster --------------------------------------------------------
@@ -71,9 +85,9 @@ create.clone.genome.distribution.plot.per.sample <- function(
     cluster.legend <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
-                colours = c(cluster.colours),
                 title = 'Clones',
                 labels = names(cluster.colours),
+                colours = c(cluster.colours),
                 border = 'black'
                 )
             ),
@@ -91,13 +105,31 @@ create.clone.genome.distribution.plot.per.sample <- function(
         scatter.df = sample.df,
         nsnv = nrow(sample.df),
         nclone = length(unique(sample.df$clone.id)),
-        chr.info = chr.info
+        chr.info = chr.info,
+        xlab.top.cex = xlab.top.cex,
+        xaxis.tck = xaxis.tck,
+        yaxis.tck = yaxis.tck,
+        xaxis.fontface = xaxis.fontface,
+        yaxis.fontface = yaxis.fontface,
+        xlab.cex = xlab.cex,
+        ylab.cex = ylab.cex,
+        xaxis.cex = xaxis.cex,
+        yaxis.cex = yaxis.cex
         );
 
     density.plt <- create.clone.genome.distribution.densityplot(
         density.df,
         cluster.colours,
-        chr.info
+        chr.info = chr.info,
+        xlab.top.cex = xlab.top.cex,
+        xaxis.tck = xaxis.tck,
+        yaxis.tck = yaxis.tck,
+        xaxis.fontface = xaxis.fontface,
+        yaxis.fontface = yaxis.fontface,
+        xlab.cex = xlab.cex,
+        ylab.cex = ylab.cex,
+        xaxis.cex = xaxis.cex,
+        yaxis.cex = yaxis.cex
         );
     # create multipanel plot ----------------------------------------------------------------------
     # automate plot sizing based on cumber of clones in the scatter plot
@@ -116,10 +148,8 @@ create.clone.genome.distribution.plot.per.sample <- function(
         legend = list(right = list(
                 fun = cluster.legend
                 )),
-        left.padding = - 0.75,
-        y.spacing = - 0.25,
         height = total.height,
-        width = 18,
-        resolution = 800
+        width = width,
+        ...
         );
     }
