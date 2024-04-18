@@ -40,6 +40,7 @@ mutations at each node.
 ### Ex. 1: Parent Data
 ```{r echo=F}
 load('data/simple.example.Rda');
+load('data/complex.example.Rda');
 ```
 
 The simplest input format is a column containing the parent node of each
@@ -94,10 +95,42 @@ branch.lengths.tree <- SRCGrob(branch.lengths);
 grid.draw(branch.lengths.tree);
 ```
 
-### Ex. 3: Node Spread
+### Ex. 3: Complex Trees
 
-CEV provides several methods for refining the spacing and arrangement of a tree's nodes. This is especially useful in complex trees, which often require more attention to avoid visual problems such as node collisions and uneven branch/level spacing.
+CEV provides several methods for refining the spacing and arrangement of a tree's nodes. This is especially useful in complex trees, which often require more attention to avoid visual problems such as node collisions and uneven branch/level spacing. Here, we see a tree with many issues.
 
+Consider this example tree.
+
+```{r complex-tree, echo=F, fig.height=3.5}
+complex.tree.input <- complex.example$tree;
+
+grid.draw(SRCGrob(complex.tree.input));
+```
+
+
+#### Node Spread
+An optional `spread` column can be included in the input tree data.frame. Spread operates _relatively_ as a percentage of the initial angle calculation.
+
+- A `spread` value of 1 or `NA` will leave the spacing unchanged _unchanged_.
+- A `spread` value greater than 1 will _increase_ the space between nodes. For example, a `spread` value of 1.25 will spread the nodes 25% more.
+- A `spread` value less than 1 will _decrease_ the space between nodes. For example, a `spread` of 0.85 will spread the nodes 15% less.
+
+To create more space for the numerous nodes in the lower levels of our example tree, we can increase the spread of the nodes at the top level. To create even more room, we can _decrease_ the spread of some lower level nodes where appropriate.
+
+```{r node-spread, echo=F}
+spread.tree.input <- complex.tree.input;
+
+spread.tree.input$spread <- NA;
+spread.tree.input$spread[2:5] <- c(1.25, 1.5, 2, 1.5);
+spread.tree.input$spread[c(6:7, 17:18, 19:20, 24:25)] <- 0.5;
+spread.tree.input$spread[c(8:10)] <- 0.75;
+
+knitr::kable(spread.tree.input[!is.na(spread.tree.input$spread) | is.na(spread.tree.input$parent), ]);
+```
+
+```{r, echo=F, fig.height=3.5}
+grid.draw(SRCGrob(spread.tree.input));
+```
 
 ### Ex. 4: Styling the Tree
 
