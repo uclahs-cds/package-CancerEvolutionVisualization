@@ -21,6 +21,7 @@ prep.tree <- function(
             }
         }
 
+    tree.df <- prep.tree.spread(tree.df);
     tree.df$parent <- prep.tree.parent(tree.df$parent);
 
     if (!check.parent.values(rownames(tree.df), tree.df$parent)) {
@@ -154,6 +155,7 @@ prep.tree <- function(
         ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         angle = c(NA, tree.df$angle),
+        spread = c(NA, tree.df$spread),
         node.colour = c(NA, tree.df$node.col),
         node.label.colour = c(NA, tree.df$node.label.col),
         border.colour = c(NA, tree.df$border.col),
@@ -289,6 +291,23 @@ get.y.axis.position <- function(tree.colnames) {
         };
 
     return(y.axis.position);
+    }
+
+prep.tree.spread <- function(tree.df) {
+    default.spread <- 1;
+    if ('spread' %in% colnames(tree.df)) {
+        tree.df$spread[is.na(tree.df$spread)] <- default.spread;
+        tree.df$spread <- as.numeric(tree.df$spread);
+
+        non.numeric <- is.na(tree.df$spread);
+        if (any(non.numeric)) {
+            warning('Non-numeric values found in tree input "spread" column.');
+            tree.df$spread[non.numeric] <- default.spread;
+            }
+    } else {
+        tree.df$spread <- default.spread;
+        }
+    return(tree.df);
     }
 
 prep.edge.colours <- function(tree.df) {
