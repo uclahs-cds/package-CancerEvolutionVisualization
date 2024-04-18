@@ -94,7 +94,12 @@ branch.lengths.tree <- SRCGrob(branch.lengths);
 grid.draw(branch.lengths.tree);
 ```
 
-### Ex. 3 Styling the Tree
+### Ex. 3: Node Spread
+
+CEV provides several methods for refining the spacing and arrangement of a tree's nodes. This is especially useful in complex trees, which often require more attention to avoid visual problems such as node collisions and uneven branch/level spacing.
+
+
+### Ex. 4: Styling the Tree
 
 CEV gives the user control over numerous visual aspects of the tree. By specifying optional columns and values in the tree input data.frame, the user has individual control of the colour, width, and line type of each node, label border, and edge.
 
@@ -152,7 +157,7 @@ node.style.tree <- SRCGrob(node.style);
 grid.draw(node.style.tree);
 ```
 
-### Ex. 4: Showing Cellular Prevalence
+### Ex. 5: Showing Cellular Prevalence
 
 A `cellular.prevalence` column can also be added. These values must range between 0 and 1, and the sum of all child nodes must not be larger than their parent node's value.
 
@@ -177,7 +182,7 @@ grid.draw(CP.tree);
 This secondary dataframe can be used to specify additional text corresponding to each 
 node.
 
-### Ex. 5: Node Text
+### Ex. 6: Node Text
 Each row must include a node ID for the text. Text will be stacked next to the 
 specified node.
 
@@ -199,7 +204,7 @@ simple.text.tree <- SRCGrob(parent.only, simple.text.data);
 grid.draw(simple.text.tree);
 ```
 
-### Ex. 6: Specifying Colour and Style
+### Ex. 7: Specifying Colour and Style
 - An optional `col` column can be included to specify the colour of each text.
 - A `fontface` column can be included to bold, italicize, etc. These values correspond to the standard R `fontface` values.
 - `NA` values in each column will default to `black` and `plain` respectively.
@@ -225,7 +230,7 @@ common parameters in `SRCGRob`.
 
 ## Plot Size
 
-### Ex. 7: Plot Width with Horizontal Padding
+### Ex. 8: Plot Width with Horizontal Padding
 Some plots require more or less horizontal padding between the x-axes and the tree
 itself. The `horizontal.padding` parameter scales the default padding proportionally.
 For example, `horizontal.padding = -0.2` would reduce the padding by 20%.
@@ -241,7 +246,7 @@ padding.tree <- SRCGrob(
 grid.draw(padding.tree);
 ```
 
-### Ex. 8: Branch Scaling
+### Ex. 9: Branch Scaling
 Branches are scaled automatically, but users can further scale each branch with
 the `scale1` and `scale2` parameters. These values scale each branch proportionally,
 so `scale1 = 1.1` would make the first set of branch lengths 10% longer.
@@ -259,7 +264,7 @@ grid.draw(scaled.tree);
 ```
 
 
-### Ex. 9: Plot Title
+### Ex. 10: Plot Title
 The main title of the plot is referred to as `main` in plot parameters. `main` sets
 the title text, `main.cex` sets the font size, and `main.y` is used to move the main
 title up if more space is required for the plot.
@@ -284,10 +289,10 @@ A y-axis will be added automatically for each branch length column (the
 left-sided axis corresponding to the first branch length column, and the right
 with the second length column).
 
-### Ex. 10: Y-Axis
+### Ex. 11: Y-Axis
 Ticks are placed automatically based on the plot size and the branch lengths. 
 
-### Ex. 11: Axis Title
+### Ex. 12: Axis Title
 Axis titles are specified with the `yaxis1.label` and `yaxis2.label` parameters.
 
 ```{r, fig.show='hide'}
@@ -306,7 +311,7 @@ axis.title.tree$vp$x <- unit(0.75, 'npc');
 grid.draw(axis.title.tree);
 ```
 
-### Ex. 12: Axis Tick Placement
+### Ex. 13: Axis Tick Placement
 The default axis tick positions can be overridden with the `yat` parameter. This
 expects a list of vectors, each corresponding to the ticks on an x-axis.
 
@@ -328,7 +333,7 @@ yat.tree <- SRCGrob(
 grid.draw(yat.tree);
 ```
 
-### Ex. 13: Normal
+### Ex. 14: Normal
 ```{r, fig.show='hide'}
 normal.tree <- SRCGrob(
     parent.only,
