@@ -37,7 +37,8 @@ test_that(
 
         test.v <- data.frame(
             id = test.tree$tip,
-            parent = test.tree$parent
+            parent = test.tree$parent,
+            spread = 1
             );
 
         total.angle <- pi / 2;
@@ -68,17 +69,20 @@ test_that(
 test_that(
     'calculate.angles.radial applies spread to angle range', {
         num.children <- 4;
+        spread <- 2.5;
+        
         test.tree <- data.frame(
             parent = c(-1, rep(1, num.children))
             );
         test.tree$tip <- rownames(test.tree)
 
+        spread <- 2.5;
         test.v <- data.frame(
             id = test.tree$tip,
-            parent = test.tree$parent
+            parent = test.tree$parent,
+            spread = spread
             );
 
-        spread <- 2.5;
         total.angle <- pi / 4;
 
         result <- calculate.angles.radial(
@@ -133,7 +137,8 @@ test_that(
 
         test.v <- data.frame(
             id = test.tree$tip,
-            parent = test.tree$parent
+            parent = test.tree$parent,
+            spread = 1
             );
 
         angle <- pi / 2;
@@ -163,7 +168,8 @@ test_that(
         test.v <- data.frame(
             id = test.tree$tip,
             parent = test.tree$parent,
-            angle = NA
+            angle = NA,
+            spread = 1
             );
         test.v[angles.to.override, 'angle'] <- override.values;
 
