@@ -70,7 +70,7 @@ test_that(
     'calculate.angles.radial applies spread to angle range', {
         num.children <- 4;
         spread <- 2.5;
-        
+
         test.tree <- data.frame(
             parent = c(-1, rep(1, num.children))
             );
