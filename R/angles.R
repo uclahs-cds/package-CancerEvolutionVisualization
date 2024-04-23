@@ -28,10 +28,18 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
             num.slices <- max(num.children - 1, 1);
             angle.increment <- total.angle / num.slices;
 
+            previous.angle <- start.angle;
             for (i in seq_along(child.ids)) {
                 child.id <- child.ids[i];
-                angle <- start.angle + (i - 1) * (angle.increment) * (sum(v$spread[v$ id %in% child.ids[c(i - 1, i)]]) / 2);
+                angle <- if (i == 1) {
+                    start.angle;
+                } else {
+                    pair.spread <- v$spread[v$id %in% child.ids[c(i - 1, i)]];
+                    previous.angle + angle.increment * mean(pair.spread);
+                    }
+
                 angles[tree$tip == child.id] <- angle;
+                previous.angle <- angle;
                 }
 
             # Appending to end of queue for breadth-first traversal
