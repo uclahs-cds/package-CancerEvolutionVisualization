@@ -637,9 +637,7 @@ test_that(
             );
 
         expect_warning(
-            {
-                prep.tree.spread(tree.df);
-                },
+            prep.tree.spread(tree.df),
             regexp = 'spread'
             );
     });
@@ -651,9 +649,7 @@ test_that(
             );
 
         expect_error(
-            {
-                prep.tree.spread(tree.df);
-                },
+            prep.tree.spread(tree.df),
             regexp = 'spread'
             );
     });
