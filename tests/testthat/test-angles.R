@@ -71,7 +71,7 @@ test_that(
     'calculate.angles.radial applies spread to angle range', {
         num.children <- 4;
         spread <- 2.5;
- 
+
         test.tree <- data.frame(
             parent = c(-1, rep(1, num.children))
             );
@@ -134,7 +134,7 @@ test_that(
     'calculate.angles.radial applies central spread correctly', {
         # Three child nodes.
         # Node in the middle has larger spread.
-        # Outer nodes have default spread. 
+        # Outer nodes have default spread.
         num.children <- 3;
         test.tree <- data.frame(
             parent = c(-1, rep(1, num.children))
@@ -172,7 +172,7 @@ test_that(
     'calculate.angles.radial applies left-outer spread correctly', {
         # Three child nodes.
         # Leftmost node has larger spread.
-        # All other nodes have default spread. 
+        # All other nodes have default spread.
         num.children <- 3;
         test.tree <- data.frame(
             parent = c(-1, rep(1, num.children))
@@ -214,7 +214,7 @@ test_that(
     'calculate.angles.radial applies right-outer spread correctly', {
         # Three child nodes.
         # Rightmost node has larger spread.
-        # All other nodes have default spread. 
+        # All other nodes have default spread.
         num.children <- 3;
         test.tree <- data.frame(
             parent = c(-1, rep(1, num.children))
