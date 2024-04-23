@@ -304,6 +304,12 @@ prep.tree.spread <- function(tree.df) {
             warning('Non-numeric values found in tree input "spread" column.');
             tree.df$spread[non.numeric] <- default.spread;
             }
+        if (any(tree.df$spread < 0, na.rm = TRUE)) {
+            stop(paste(
+                'Tree input "spread" column values must be positive.',
+                'See documentation and User Guide vignette for more information on "spread".'
+                ));
+            }
     } else {
         tree.df$spread <- default.spread;
         }
