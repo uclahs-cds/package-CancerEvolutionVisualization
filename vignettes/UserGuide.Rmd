@@ -39,7 +39,8 @@ mutations at each node.
 
 ### Ex. 1: Parent Data
 ```{r echo=F}
-load('data/input.examples.Rda');
+load('data/simple.example.Rda');
+load('data/complex.example.Rda');
 ```
 
 The simplest input format is a column containing the parent node of each
@@ -47,11 +48,11 @@ individual node. (A node will only have one parent.) The root node will not have
 a parent, so a value of `NA` is used.
 
 ```{r echo=F}
-parent.only <- data.frame(tree.input[, 'parent', drop = FALSE]);
+parent.only <- data.frame(simple.example$tree[, 'parent', drop = FALSE]);
 
 knitr::kable(
     parent.only,
-    col.names = c(colnames(tree.input)[1]),
+    col.names = c(colnames(simple.example$tree)[1]),
     row.names = TRUE
     );
 ```
@@ -78,7 +79,7 @@ length conflicts will be resolved automatically. For each branch, the next node
 will be placed at the end of the longest line.
 
 ```{r echo=F}
-branch.lengths <- tree.input[, 1:3];
+branch.lengths <- simple.example$tree[, 1:3];
 
 knitr::kable(
     branch.lengths,
@@ -94,7 +95,44 @@ branch.lengths.tree <- SRCGrob(branch.lengths);
 grid.draw(branch.lengths.tree);
 ```
 
-### Ex. 3 Styling the Tree
+### Ex. 3: Complex Trees
+
+CEV provides several methods for refining the spacing and arrangement of a tree's nodes. This is especially useful in complex trees, which often require more attention to avoid visual problems such as node collisions and uneven branch/level spacing. Here, we see a tree with many issues.
+
+Consider this example tree.
+
+```{r complex-tree, echo=F, fig.height=3.5}
+complex.tree.input <- complex.example$tree;
+
+grid.draw(SRCGrob(complex.tree.input));
+```
+
+
+#### Node Spread
+An optional `spread` column can be included in the input tree data.frame. Spread operates _relatively_ as a percentage of the initial angle calculation.
+
+- A `spread` value of 1 or `NA` will leave the spacing unchanged _unchanged_.
+- A `spread` value greater than 1 will _increase_ the space between nodes. For example, a `spread` value of 1.25 will spread the nodes 25% more.
+- A `spread` value less than 1 will _decrease_ the space between nodes. For example, a `spread` of 0.85 will spread the nodes 15% less.
+
+To create more space for the numerous nodes in the lower levels of our example tree, we can increase the spread of the nodes at the top level. To create even more room, we can _decrease_ the spread of some lower level nodes where appropriate.
+
+```{r node-spread, echo=F}
+spread.tree.input <- complex.tree.input;
+
+spread.tree.input$spread <- NA;
+spread.tree.input$spread[2:5] <- c(1.25, 1.5, 2, 1.5);
+spread.tree.input$spread[c(6:7, 17:18, 19:20, 24:25)] <- 0.5;
+spread.tree.input$spread[c(8:10)] <- 0.75;
+
+knitr::kable(spread.tree.input[!is.na(spread.tree.input$spread) | is.na(spread.tree.input$parent), ]);
+```
+
+```{r, echo=F, fig.height=3.5}
+grid.draw(SRCGrob(spread.tree.input));
+```
+
+### Ex. 4: Styling the Tree
 
 CEV gives the user control over numerous visual aspects of the tree. By specifying optional columns and values in the tree input data.frame, the user has individual control of the colour, width, and line type of each node, label border, and edge.
 
@@ -130,7 +168,7 @@ Valid values for line type columns are based on lattice's values (with some addi
 #### Styled Tree
 
 ```{r echo=F}
-node.style <- tree.input[, c(
+node.style <- simple.example$tree[, c(
     'parent', 'length1', 'length2',
     'node.col', 'node.label.col',
     'border.col', 'border.width', 'border.type',
@@ -152,12 +190,12 @@ node.style.tree <- SRCGrob(node.style);
 grid.draw(node.style.tree);
 ```
 
-### Ex. 4: Showing Cellular Prevalence
+### Ex. 5: Showing Cellular Prevalence
 
 A `cellular.prevalence` column can also be added. These values must range between 0 and 1, and the sum of all child nodes must not be larger than their parent node's value.
 
 ```{r echo=F}
-CP <- tree.input[, c('parent', 'length1', 'length2', 'CP')];
+CP <- simple.example$tree[, c('parent', 'length1', 'length2', 'CP')];
 
 knitr::kable(
     CP,
@@ -177,16 +215,16 @@ grid.draw(CP.tree);
 This secondary dataframe can be used to specify additional text corresponding to each 
 node.
 
-### Ex. 5: Node Text
+### Ex. 6: Node Text
 Each row must include a node ID for the text. Text will be stacked next to the 
 specified node.
 
 ```{r echo=F}
-simple.text.data <- text.input[, 1:2];
+simple.text.data <- simple.example$text[, 1:2];
 
 knitr::kable(
     simple.text.data,
-    col.names = colnames(text.input)[1:2]
+    col.names = colnames(simple.example$text)[1:2]
     );
 ```
 
@@ -199,19 +237,19 @@ simple.text.tree <- SRCGrob(parent.only, simple.text.data);
 grid.draw(simple.text.tree);
 ```
 
-### Ex. 6: Specifying Colour and Style
+### Ex. 7: Specifying Colour and Style
 - An optional `col` column can be included to specify the colour of each text.
 - A `fontface` column can be included to bold, italicize, etc. These values correspond to the standard R `fontface` values.
 - `NA` values in each column will default to `black` and `plain` respectively.
 
 ```{r echo=F}
 knitr::kable(
-    text.input
+    simple.example$text
     );
 ```
 
 ```{r, fig.show='hide'}
-full.text.tree <- SRCGrob(parent.only, text.input);
+full.text.tree <- SRCGrob(parent.only, simple.example$text);
 ```
 
 ```{r}
@@ -225,7 +263,7 @@ common parameters in `SRCGRob`.
 
 ## Plot Size
 
-### Ex. 7: Plot Width with Horizontal Padding
+### Ex. 8: Plot Width with Horizontal Padding
 Some plots require more or less horizontal padding between the x-axes and the tree
 itself. The `horizontal.padding` parameter scales the default padding proportionally.
 For example, `horizontal.padding = -0.2` would reduce the padding by 20%.
@@ -241,7 +279,7 @@ padding.tree <- SRCGrob(
 grid.draw(padding.tree);
 ```
 
-### Ex. 8: Branch Scaling
+### Ex. 9: Branch Scaling
 Branches are scaled automatically, but users can further scale each branch with
 the `scale1` and `scale2` parameters. These values scale each branch proportionally,
 so `scale1 = 1.1` would make the first set of branch lengths 10% longer.
@@ -259,7 +297,7 @@ grid.draw(scaled.tree);
 ```
 
 
-### Ex. 9: Plot Title
+### Ex. 10: Plot Title
 The main title of the plot is referred to as `main` in plot parameters. `main` sets
 the title text, `main.cex` sets the font size, and `main.y` is used to move the main
 title up if more space is required for the plot.
@@ -284,10 +322,10 @@ A y-axis will be added automatically for each branch length column (the
 left-sided axis corresponding to the first branch length column, and the right
 with the second length column).
 
-### Ex. 10: Y-Axis
+### Ex. 11: Y-Axis
 Ticks are placed automatically based on the plot size and the branch lengths. 
 
-### Ex. 11: Axis Title
+### Ex. 12: Axis Title
 Axis titles are specified with the `yaxis1.label` and `yaxis2.label` parameters.
 
 ```{r, fig.show='hide'}
@@ -306,7 +344,7 @@ axis.title.tree$vp$x <- unit(0.75, 'npc');
 grid.draw(axis.title.tree);
 ```
 
-### Ex. 12: Axis Tick Placement
+### Ex. 13: Axis Tick Placement
 The default axis tick positions can be overridden with the `yat` parameter. This
 expects a list of vectors, each corresponding to the ticks on an x-axis.
 
@@ -328,7 +366,7 @@ yat.tree <- SRCGrob(
 grid.draw(yat.tree);
 ```
 
-### Ex. 13: Normal
+### Ex. 14: Normal
 ```{r, fig.show='hide'}
 normal.tree <- SRCGrob(
     parent.only,
