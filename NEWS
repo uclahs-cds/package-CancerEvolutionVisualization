@@ -1,4 +1,7 @@
-CancerEvolutionVisualization 2.0.2 2023-12-15 (Dan Knight)
+CancerEvolutionVisualization 2.1.0 2024-04-24 (Dan Knight)
+
+ADDED
+* Optional "spread" column to control node/branch spacing
 
 UPDATE
 * Updated package metadata and README
