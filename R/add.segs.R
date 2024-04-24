@@ -190,7 +190,7 @@ calculate.coords.dendrogram <- function(
     dx <- x[, 'length'] * tan(angle);
 
     offset.x <- offset * offset.x.modifier;
-    
+
     basex <- basex + dx + offset.x;
     tipx <- basex;
 
