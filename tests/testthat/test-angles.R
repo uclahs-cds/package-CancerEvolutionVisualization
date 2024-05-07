@@ -8,7 +8,8 @@ test_that(
 
         test.v <- data.frame(
             id = test.tree$tip,
-            parent = test.tree$parent
+            parent = test.tree$parent,
+            spread = 1
             );
 
         total.angle <- pi / 2;
@@ -37,7 +38,8 @@ test_that(
 
         test.v <- data.frame(
             id = test.tree$tip,
-            parent = test.tree$parent
+            parent = test.tree$parent,
+            spread = 1
             );
 
         total.angle <- pi / 2;
@@ -68,17 +70,20 @@ test_that(
 test_that(
     'calculate.angles.radial applies spread to angle range', {
         num.children <- 4;
+        spread <- 2.5;
+
         test.tree <- data.frame(
             parent = c(-1, rep(1, num.children))
             );
         test.tree$tip <- rownames(test.tree)
 
+        spread <- 2.5;
         test.v <- data.frame(
             id = test.tree$tip,
-            parent = test.tree$parent
+            parent = test.tree$parent,
+            spread = spread
             );
 
-        spread <- 2.5;
         total.angle <- pi / 4;
 
         result <- calculate.angles.radial(
@@ -109,7 +114,8 @@ test_that(
         test.v <- data.frame(
             id = test.tree$tip,
             parent = test.tree$parent,
-            angle = NA
+            angle = NA,
+            spread = 1
             );
         test.v[angles.to.override, 'angle'] <- override.values;
 
@@ -151,16 +157,102 @@ test_that(
         }
     );
 
+
+test_that(
+    'calculate.angles.radial applies left-outer spread correctly', {
+        # Three child nodes.
+        # Leftmost node has larger spread.
+        # All other nodes have default spread.
+        num.children <- 3;
+        test.tree <- data.frame(
+            parent = c(-1, rep(1, num.children))
+            );
+        test.tree$tip <- rownames(test.tree);
+
+        spread <- 1.5;
+        test.v <- data.frame(
+            id = test.tree$tip,
+            parent = test.tree$parent,
+            spread = 1
+            );
+        test.v$spread[2] <- spread;
+
+        total.angle <- pi / 2;
+
+        result <- calculate.angles.radial(
+            test.v,
+            test.tree,
+            spread = 1,
+            total.angle = total.angle
+            );
+        result.angle.increments <- c(
+            result[3] - result[2],
+            result[4] - result[3]
+            );
+
+        # First increment larger, second unaffected
+        expected.angle.increments <- c(
+            total.angle / 2 * mean(c(1, spread)),
+            total.angle / 2
+            );
+
+        expect_equal(result.angle.increments, expected.angle.increments);
+        }
+    );
+
+test_that(
+    'calculate.angles.radial applies right-outer spread correctly', {
+        # Three child nodes.
+        # Rightmost node has larger spread.
+        # All other nodes have default spread.
+        num.children <- 3;
+        test.tree <- data.frame(
+            parent = c(-1, rep(1, num.children))
+            );
+        test.tree$tip <- rownames(test.tree);
+
+        spread <- 1.5;
+        test.v <- data.frame(
+            id = test.tree$tip,
+            parent = test.tree$parent,
+            spread = 1
+            );
+        test.v$spread[4] <- spread;
+
+        total.angle <- pi / 2;
+
+        result <- calculate.angles.radial(
+            test.v,
+            test.tree,
+            spread = 1,
+            total.angle = total.angle
+            );
+        result.angle.increments <- c(
+            result[3] - result[2],
+            result[4] - result[3]
+            );
+
+        # First increment larger, second unaffected
+        expected.angle.increments <- c(
+            total.angle / 2,
+            total.angle / 2 * mean(c(1, spread))
+            );
+
+        expect_equal(result.angle.increments, expected.angle.increments);
+        }
+    );
+
 test_that(
     'calculate.angles.fixed sets angle correctly', {
         test.tree <- data.frame(
             parent = c(-1, 1, 1)
             );
-        test.tree$tip <- rownames(test.tree)
+        test.tree$tip <- rownames(test.tree);
 
         test.v <- data.frame(
             id = test.tree$tip,
-            parent = test.tree$parent
+            parent = test.tree$parent,
+            spread = 1
             );
 
         angle <- pi / 2;
@@ -190,7 +282,8 @@ test_that(
         test.v <- data.frame(
             id = test.tree$tip,
             parent = test.tree$parent,
-            angle = NA
+            angle = NA,
+            spread = 1
             );
         test.v[angles.to.override, 'angle'] <- override.values;
 
@@ -205,20 +298,22 @@ test_that(
     );
 
 test_that(
-    'calculate.angles.fixed handles children of overriden angle', {
+    'calculate.angles.fixed applies spread to angle range', {
         num.children <- 2;
         test.tree <- data.frame(
             parent = c(-1, rep(1, num.children))
             );
         test.tree$tip <- rownames(test.tree)
 
+        override.values <- c(-1, 1) * (pi / 2);
+
+        spread <- 2.1;
         test.v <- data.frame(
             id = test.tree$tip,
             parent = test.tree$parent,
-            angle = NA
+            angle = NA,
+            spread = spread
             );
-        new.angle <- 15;
-        test.v[1, 'angle'] <- new.angle;
 
         fixed.angle <- pi / 4;
         result <- calculate.angles.fixed(
@@ -226,8 +321,9 @@ test_that(
             test.tree,
             fixed.angle = fixed.angle
             );
-        expected.angles <- c(new.angle, new.angle - fixed.angle, new.angle + fixed.angle);
+        result.angle.range <- result[3] - result[2];
+        expected.angle.range <- fixed.angle * 2 * spread;
 
-        expect_equal(result, expected.angles);
+        expect_equal(result.angle.range, expected.angle.range, tolerance = 0.001);
         }
     );
