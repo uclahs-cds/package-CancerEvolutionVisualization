@@ -2,11 +2,16 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
     root.node.id <- v$id[[1]];
     node.ids <- c(root.node.id);
 
-    angles <- numeric(nrow(tree));
+    angles <- v$angle;
+    child.weights <- sapply(
+        v$id,
+        function(node.id) assign.weight(node.id, v),
+        USE.NAMES = FALSE
+        );
 
     while (length(node.ids) > 0) {
         # "Pops" next element in FIFO queue node.ids
-        current.node.id <- node.ids[1];
+        current.node.id <- as.numeric(node.ids[1]);
         node.ids <- node.ids[-1];
 
         parent.id <- tree$parent[tree$tip == current.node.id];
@@ -15,11 +20,17 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
             tree$angle[tree$tip == current.node.id] <- 0;
             }
 
-        child.ids <- tree$tip[tree$parent == current.node.id & !is.na(tree$parent)];
+        child.ids <- as.numeric(
+            tree$tip[tree$parent == current.node.id & !is.na(tree$parent)]
+            );
         num.children <- length(child.ids);
 
         if (num.children > 0) {
-            parent.angle <- tree$angle[tree$tip == current.node.id];
+            parent.angle <- angles[current.node.id];
+            if (is.na(parent.angle) || length(parent.angle) == 0) {
+                parent.angle <- 0;
+                angles[current.node.id] <- parent.angle;
+                }
             child.weight <- assign.weight(current.node.id, v);
 
             level.spread <- calculate.level.spread(v$spread[v$id %in% child.ids]);
@@ -31,14 +42,19 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
             previous.angle <- start.angle;
             for (i in seq_along(child.ids)) {
                 child.id <- child.ids[i];
-                angle <- if (i == 1) {
-                    start.angle;
-                } else {
-                    pair.spread <- v$spread[v$id %in% child.ids[c(i - 1, i)]];
-                    previous.angle + angle.increment * mean(pair.spread);
+
+                angle <- angles[tree$tip == child.id];
+                if (is.na(angle)) {
+                    if (i == 1) {
+                        angle <- start.angle;
+                    } else {
+                        pair.spread <- v$spread[v$id %in% child.ids[c(i - 1, i)]];
+                        angle <- previous.angle + angle.increment * mean(pair.spread);
+                        }
+
+                    angles[tree$tip == child.id] <- angle;
                     }
 
-                angles[tree$tip == child.id] <- angle;
                 previous.angle <- angle;
                 }
 
@@ -47,20 +63,27 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
             }
         }
 
-    angles <- override.angles(tree, v, angles);
     return(angles);
     }
 
 calculate.angles.fixed <- function(v, tree, fixed.angle) {
-    angles <- numeric(nrow(tree));
+    angles <- v$angle;
     node.ids <- c(v$id[[1]]);
 
     while (length(node.ids) > 0) {
         # "Pops" next element in FIFO queue node.ids
-        current.node.id <- node.ids[1];
+        current.node.id <- as.numeric(node.ids[1]);
         node.ids <- node.ids[-1];
 
-        child.ids <- tree$tip[tree$parent == current.node.id & !is.na(tree$parent)];
+        parent.angle <- angles[current.node.id];
+        if (is.na(parent.angle) || length(parent.angle) == 0) {
+            parent.angle <- 0;
+            angles[current.node.id] <- parent.angle;
+            }
+
+        child.ids <- as.numeric(
+            tree$tip[tree$parent == current.node.id & !is.na(tree$parent)]
+            );
         num.children <- length(child.ids);
         if (num.children > 0) {
             # Safe to hardcode temporarily. This will only ever apply to
@@ -70,12 +93,16 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
             # It would be ideal to handle all calculations in the same way, and
             # rely more on user defined spread and explicit angle overrides.
             level.spread <- mean(v$spread[v$id %in% child.ids]);
-            child.angles <- if (num.children == 1) c(0) else c(-1, 1) * fixed.angle * level.spread;
+            child.angles <- (if (num.children == 1) c(0) else c(-1, 1)) * fixed.angle * level.spread;
+            child.angles <- child.angles + parent.angle;
 
             for (i in seq_along(child.ids)) {
                 child.id <- child.ids[i];
-                angle <- child.angles[i];
-                angles[tree$tip == child.id] <- angle;
+
+                if (is.na(angles[child.id])) {
+                    angle <- child.angles[i];
+                    angles[tree$tip == child.id] <- angle;
+                    }
                 }
             }
 
@@ -83,7 +110,6 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
         node.ids <- append(node.ids, child.ids);
         }
 
-    angles <- override.angles(tree, v, angles);
     return(angles);
     }
 

@@ -1,9 +1,11 @@
-CancerEvolutionVisualization 2.1.0 2024-04-24 (Dan Knight)
+CancerEvolutionVisualization 2.1.0 2024-05-07 (Dan Knight)
 
 ADDED
 * Optional "spread" column to control node/branch spacing
 
 UPDATE
+* Fixed angle calculation bug where child angles do not follow
+  their parent angle, instead moving "downward" at 0 degrees.
 * Updated package metadata and README
 
 

@@ -131,39 +131,30 @@ test_that(
     );
 
 test_that(
-    'calculate.angles.radial applies central spread correctly', {
-        # Three child nodes.
-        # Node in the middle has larger spread.
-        # Outer nodes have default spread.
-        num.children <- 3;
+    'calculate.angles.radial handles children of overriden angle', {
+        num.children <- 4;
         test.tree <- data.frame(
             parent = c(-1, rep(1, num.children))
             );
-        test.tree$tip <- rownames(test.tree);
+        test.tree$tip <- rownames(test.tree)
 
-        spread <- 1.5;
         test.v <- data.frame(
             id = test.tree$tip,
             parent = test.tree$parent,
+            angle = NA,
             spread = 1
             );
-        test.v$spread[3] <- spread;
-
-        total.angle <- pi / 2;
+        new.angle <- degrees.to.radians(15);
+        test.v[1, 'angle'] <- new.angle;
 
         result <- calculate.angles.radial(
             test.v,
             test.tree,
             spread = 1,
-            total.angle = total.angle
+            total.angle = pi / 2.5
             );
-        result.angle.increments <- c(
-            result[3] - result[2],
-            result[4] - result[3]
-            );
-        expected.angle.increments <- rep(total.angle / 2 * mean(c(1, spread)), 2);
 
-        expect_equal(result.angle.increments, expected.angle.increments);
+        expect_equal(mean(result[-1]), new.angle);
         }
     );
 
