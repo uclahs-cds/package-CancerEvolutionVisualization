@@ -44,13 +44,12 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
                 child.id <- child.ids[i];
 
                 angle <- angles[tree$tip == child.id];
-                if (is.na(angles[child.id])) {
-                    angle <- start.angle + (i - 1) * (angle.increment);
-                    angle <- if (i == 1) {
-                        start.angle;
+                if (is.na(angle)) {
+                    if (i == 1) {
+                        angle <- start.angle;
                     } else {
                         pair.spread <- v$spread[v$id %in% child.ids[c(i - 1, i)]];
-                        previous.angle + angle.increment * mean(pair.spread);
+                        angle <- previous.angle + angle.increment * mean(pair.spread);
                         }
 
                     angles[tree$tip == child.id] <- angle;

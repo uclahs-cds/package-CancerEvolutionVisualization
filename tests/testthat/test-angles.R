@@ -141,7 +141,8 @@ test_that(
         test.v <- data.frame(
             id = test.tree$tip,
             parent = test.tree$parent,
-            angle = NA
+            angle = NA,
+            spread = 1
             );
         new.angle <- degrees.to.radians(15);
         test.v[1, 'angle'] <- new.angle;
