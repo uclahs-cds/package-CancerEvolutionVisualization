@@ -9,26 +9,33 @@ get.seg.coords <- function(
     # Calculate offset based on the line width
     offset <- offset / scale1 / 2;
 
-    tree.segs <- adply(
+    tree.segs <- apply(
         tree,
-        .margins = 1,
-        .fun = function(x) {
-            if (x$parent == -1) {
+        MARGIN = 1,
+        FUN = function(x) {
+            if (x['parent'] == -1) {
                 basey <- 0;
                 basex <- 0;
             } else {
-                basey <- v$y[v$id == x$parent];
-                basex <- v$x[v$id == x$parent];
+                basey <- v$y[v$id == x['parent']];
+                basex <- v$x[v$id == x['parent']];
                 }
 
-            tipy <- basey + x$length1 * cos(x$angle);
-            tipx <- basex + x$length1 * sin(x$angle);
+            tipy <- basey + x['length1'] * cos(x['angle']);
+            tipx <- basex + x['length1'] * sin(x['angle']);
 
-            return(data.frame(basex, basey, tipx, tipy));
+            data.frame(
+                basex = basex,
+                basey = basey,
+                tipx = tipx,
+                tipy = tipy
+                );
             }
         );
+    tree.segs <- as.data.frame(do.call('rbind', tree.segs));
+    rownames(tree.segs) <- rownames(tree);
+    tree.segs <- cbind(tree, tree.segs);
 
-    tree.out <- list();
     second.tree.segs.adjusted <- NULL;
 
     tree.segs.adjusted <- tree.segs;
