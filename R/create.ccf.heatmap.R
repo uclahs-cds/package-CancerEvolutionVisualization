@@ -1,5 +1,5 @@
 create.ccf.heatmap <- function(
-    hm.array,
+    x,
     ccf.thres = NULL,
     cluster.dimensions = 'both',
     clustering.method = 'complete',
@@ -12,13 +12,13 @@ create.ccf.heatmap <- function(
     ) {
 
     if (!is.null(ccf.thres)) {
-        hm.array[hm.array <= ccf.thres] <- 0;
+        x[x <= ccf.thres] <- 0;
         }
 
-    col.labels <- seq(min(hm.array), max(hm.array), length.out = 5);
+    col.labels <- seq(min(x), max(x), length.out = 5);
 
     return(BoutrosLab.plotting.general::create.heatmap(
-        x = hm.array,
+        x = x,
         force.clustering = TRUE,
         cluster.dimensions = cluster.dimensions,
         clustering.method = clustering.method,
@@ -26,7 +26,7 @@ create.ccf.heatmap <- function(
         cols.distance.method = distance.method,
         xaxis.lab = xaxis.lab,
         xlab.label = xlab.label,
-        yaxis.lab = colnames(hm.array),
+        yaxis.lab = colnames(x),
         print.colour.key = print.colour.key,
         colourkey.labels.at = col.labels,
         colour.scheme = colour.scheme,

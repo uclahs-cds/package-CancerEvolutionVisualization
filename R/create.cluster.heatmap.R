@@ -33,7 +33,7 @@ create.cluster.heatmap <- function(
         }
 
     hm <- create.ccf.heatmap(
-        hm.array = arr,
+        x = arr,
         cluster.dimensions = 'none',
         xlab.label = '',
         xaxis.lab = xaxis.label,
