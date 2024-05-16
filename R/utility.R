@@ -22,7 +22,7 @@ reindex.column <- function(column.values, new.value.index) {
 data.frame.to.array <- function(
     DF,
     value = 'CCF',
-    x.axis = 'snv.id',
+    x.axis = 'SNV.id',
     y.axis = 'ID'
     ) {
 
