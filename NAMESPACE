@@ -1,7 +1,6 @@
 import(grid)
 import(gridExtra)
 import(gtable)
-import(plyr)
 import(BoutrosLab.plotting.general)
 
 importFrom("graphics", "par", "strheight", "strwidth")
