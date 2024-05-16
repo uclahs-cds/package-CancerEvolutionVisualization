@@ -47,26 +47,3 @@ adjust.branch.lengths <- function(node.df, tree, node.radius, scale1) {
 
     return(tree);
     }
-
-adjust.tree <- function(in.tree.node.radius, tree.in, node.radius, scale.x.real) {
-    if (is.null(in.tree.node.radius$node.radius)) {
-        node.radius <- node.radius / scale.x.real;
-        in.tree.node.radius$node.radius <- rep(node.radius, nrow(in.tree.node.radius));
-        }
-
-    in.tree.node.radius$node.radius[in.tree.node.radius$id == -1] <- 0;
-    length.cols <- grep('length', colnames(tree.in));
-    tree.adj <- adply(
-        tree.in,
-        .margins = 1,
-        .fun = function(x) {
-            adjust.lengths(x, length.cols, in.tree.node.radius);
-            }
-        );
-
-    tree.in$length <- tree.adj$length.adj;
-    tree.in$length1 <- tree.adj$length1.adj;
-    tree.in$length2.c <- tree.adj$length2.c.adj;
-
-    return(tree.in);
-    }
