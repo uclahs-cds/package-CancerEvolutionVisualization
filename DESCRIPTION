@@ -1,7 +1,7 @@
 Package: CancerEvolutionVisualization
 Title: Publication Quality Phylogenetic Tree Plots
 Version: 2.1.0
-Date: 2024-05-07
+Date: 2024-05-16
 Authors@R: c(
 	person("Paul Boutros", role = "cre", email = "PBoutros@mednet.ucla.edu"),
 	person("Adriana Salcedo", role = "aut"),
@@ -18,7 +18,6 @@ Depends:
 	gridExtra,
 	gtable,
 Imports:
-    plyr,
     grDevices,
     utils,
     stringr,
