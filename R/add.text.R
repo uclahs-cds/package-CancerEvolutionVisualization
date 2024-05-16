@@ -507,37 +507,6 @@ add.text2 <- function(
     node.text.col <- node.list;
     node.text.fontface <- node.list;
 
-    a_ply(
-        seq_len(
-            nrow(node.text)),
-        .margins = 1,
-        .fun = function(x) {
-            text.row <- node.text[x, ];
-            pos <- which(tree$tip == text.row$node);
-            text.value <- text.row$name;
-
-            if (length(grep('_', text.value)) > 0) {
-                text.split <- strsplit(text.value, split = '_')[[1]];
-                node.text.value <- text.split[1];
-                amp <- text.split[2];
-                call <- paste0(node.text.value, '^\'A', amp, '\'');
-                text.value <- parse(text = call);
-                }
-
-            node.list[[pos]] <<- c(node.list[[pos]], text.value);
-
-            node.text.col[[pos]] <<- c(
-                node.text.col[[pos]],
-                if (!is.na(text.row$col)) text.row$col else 'black'
-                );
-
-            node.text.fontface[[pos]] <<- c(
-                node.text.fontface[[pos]],
-                if (!is.na(text.row$fontface)) text.row$fontface else 'plain'
-                );
-            }
-        );
-
     tree.max.adjusted <- apply(
         tree,
         MARGIN = 1,
