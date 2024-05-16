@@ -496,16 +496,9 @@ add.text2 <- function(
     # Radius in native units
     node.radius <- node.radius / scale;
     node.text <- node.text[node.text$node %in% tree$tip, ];
-    node.list <- alply(
-        seq_len(nrow(tree)),
-        .margins = 1,
-        .fun = function(x) {
-            return(character())
-            }
-        );
 
-    node.text.col <- node.list;
-    node.text.fontface <- node.list;
+    node.list <- data.frame(row.names = rownames(tree));
+    node.text.col <- node.text.fontface <- lapply
 
     tree.max.adjusted <- apply(
         tree,
