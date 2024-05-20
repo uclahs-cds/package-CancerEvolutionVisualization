@@ -4,10 +4,10 @@ create.clone.genome.distribution.plot <- function(
     clone.order = NULL,
     cluster.colours = NULL,
     save.plt.dir = NULL,
+    multi.sample = FALSE,
     ...
     ) {
 
-    print('Plotting clone distribution across the genome');
     # Preprocess ----------------------------------------------------------------------------------
     if (!all(c('chr', 'pos', 'clone.id') %in% names(snv.df))) {
         stop('snv.df does not contain at least one of chr, pos or clone.id columns')
@@ -15,9 +15,14 @@ create.clone.genome.distribution.plot <- function(
     if (is.null(clone.order)) {
         clone.order <- sort(unique(snv.df$clone.id));
         }
-    if (is.null(snv.df$ID)) {
+    if (multi.sample) { # if multi-sample is true, check for sample ids in 'ID' column
+        if (is.null(snv.df$ID)) {
+            stop('ID column must contain sample ID if multi.sample is TRUE')
+        }
+    } else {
         snv.df$ID <- 'all';
         }
+
     if (is.null(cluster.colours)) {
         cluster.colours <- get.colours(clone.order, return.names = TRUE);
         }
@@ -32,7 +37,7 @@ create.clone.genome.distribution.plot <- function(
     for (s in unique(snv.df$ID)) {
         # Iterate through each sample -------------------------------------------------------------
         sample.df <- droplevels(snv.df[snv.df$ID == s, ])
-        print(paste('Plotting', s));
+        print(paste('Plotting clone distribution across the genome for sample:', s));
         plt <- create.clone.genome.distribution.plot.per.sample(
             sample.df,
             cluster.colours[levels(sample.df$clone.id)],
@@ -53,16 +58,18 @@ create.clone.genome.distribution.plot.per.sample <- function(
     chr.info,
     save.plt = NULL,
     width = 18,
-    # scatter and density plot params
-    xaxis.tck = 0,
+    xaxis.tck = 0.5,
     yaxis.tck = 0.5,
-    xaxis.fontface = 1,
-    yaxis.fontface = 1,
+    xaxis.fontface = 'bold',
+    yaxis.fontface = 'bold',
     xlab.cex = 1.65,
     ylab.cex = 1.65,
     xaxis.cex = 1.5,
     yaxis.cex = 1.5,
     xlab.top.cex = 1.2,
+    legend.size = 3,
+    legend.title.cex = 1.2,
+    legend.label.cex = 1,
     ...
     ) {
 
@@ -91,12 +98,9 @@ create.clone.genome.distribution.plot.per.sample <- function(
                 border = 'black'
                 )
             ),
-        title.just = 'left',
-        title.cex = 1.3,
-        label.cex = 1.2,
-        size = 2,
-        x = 0.5,
-        y = 0.5
+        size = legend.size,
+        title.cex = legend.title.cex,
+        label.cex = legend.label.cex
         );
 
     # create individual plot ----------------------------------------------------------------------
@@ -107,13 +111,12 @@ create.clone.genome.distribution.plot.per.sample <- function(
         nclone = length(unique(sample.df$clone.id)),
         chr.info = chr.info,
         xlab.top.cex = xlab.top.cex,
-        xaxis.tck = xaxis.tck,
+        xaxis.tck = 0,
         yaxis.tck = yaxis.tck,
-        xaxis.fontface = xaxis.fontface,
         yaxis.fontface = yaxis.fontface,
-        xlab.cex = xlab.cex,
+        xlab.cex = 0,
         ylab.cex = ylab.cex,
-        xaxis.cex = xaxis.cex,
+        xaxis.cex = 0,
         yaxis.cex = yaxis.cex
         );
 
@@ -121,7 +124,6 @@ create.clone.genome.distribution.plot.per.sample <- function(
         density.df,
         cluster.colours,
         chr.info = chr.info,
-        xlab.top.cex = xlab.top.cex,
         xaxis.tck = xaxis.tck,
         yaxis.tck = yaxis.tck,
         xaxis.fontface = xaxis.fontface,
@@ -131,12 +133,13 @@ create.clone.genome.distribution.plot.per.sample <- function(
         xaxis.cex = xaxis.cex,
         yaxis.cex = yaxis.cex
         );
+
     # create multipanel plot ----------------------------------------------------------------------
     # automate plot sizing based on cumber of clones in the scatter plot
     height.scatter <- 0.5 * length(unique(sample.df$clone.id));
     total.height <- height.scatter + 5;
 
-    mp <- BoutrosLab.plotting.general::create.multipanelplot(
+    return(BoutrosLab.plotting.general::create.multipanelplot(
         filename = save.plt,
         plot.objects = list(
             scatter.plt,
@@ -151,5 +154,5 @@ create.clone.genome.distribution.plot.per.sample <- function(
         height = total.height,
         width = width,
         ...
-        );
+        ));
     }
