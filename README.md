@@ -1,11 +1,12 @@
 # CancerEvolutionVisualization
 
-1. [Description](#description)
-2. [Installation](#installation)
-3. [Resources](#resources)
-4. [Getting help](#getting-help)
-5. [Contributors](#contributors)
-6. [License](#license)
+- [CancerEvolutionVisualization](#cancerevolutionvisualization)
+  - [Description](#description)
+  - [Installation](#installation)
+  - [Resources](#resources)
+  - [Getting help](#getting-help)
+  - [Contributors](#contributors)
+  - [License](#license)
 
 ## Description
 

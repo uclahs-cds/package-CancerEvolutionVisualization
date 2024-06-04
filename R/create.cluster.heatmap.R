@@ -11,6 +11,7 @@ create.cluster.heatmap <- function(
     xlab.cex = 1.2,
     xaxis.cex = 1,
     xaxis.fontface = 'bold',
+    colour.scheme = c('white', 'blue'),
     ...
     ) {
 
@@ -37,6 +38,7 @@ create.cluster.heatmap <- function(
         cluster.dimensions = 'none',
         xlab.label = '',
         xaxis.lab = xaxis.label,
+        colour.scheme = colour.scheme,
         ...
         );
 
@@ -64,7 +66,7 @@ create.cluster.heatmap <- function(
             legend = list(
                 title = 'CCF',
                 labels = c(min(arr), max(arr)),
-                colours = if (is.null(colour.scheme)) c('white', 'blue') else colour.scheme,
+                colours = colour.scheme,
                 border = 'black',
                 continuous = TRUE
                 )
