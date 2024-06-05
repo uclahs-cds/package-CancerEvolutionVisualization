@@ -2,7 +2,7 @@ create.clone.genome.distribution.plot <- function(
     snv.df,
     genome.build = 'GRCh37',
     clone.order = NULL,
-    cluster.colours = NULL,
+    clone.colours = NULL,
     save.plt.dir = NULL,
     multi.sample = FALSE,
     ...
@@ -23,8 +23,8 @@ create.clone.genome.distribution.plot <- function(
         snv.df$ID <- 'all';
         }
 
-    if (is.null(cluster.colours)) {
-        cluster.colours <- get.colours(clone.order, return.names = TRUE);
+    if (is.null(clone.colours)) {
+        clone.colours <- get.colours(clone.order, return.names = TRUE);
         }
     snv.df$clone.id <- factor(snv.df$clone.id, levels = clone.order);
     genome.pos.df   <- get.genome.pos(snv.df, genome.build);
@@ -40,7 +40,7 @@ create.clone.genome.distribution.plot <- function(
         print(paste('Plotting clone distribution across the genome for sample:', s));
         plt <- create.clone.genome.distribution.plot.per.sample(
             sample.df,
-            cluster.colours[levels(sample.df$clone.id)],
+            clone.colours[levels(sample.df$clone.id)],
             chr.info,
             save.plt = ifelse(
                 is.null(save.plt.dir),
@@ -54,7 +54,7 @@ create.clone.genome.distribution.plot <- function(
 
 create.clone.genome.distribution.plot.per.sample <- function(
     sample.df,
-    cluster.colours,
+    clone.colours,
     chr.info,
     save.plt = NULL,
     width = 18,
@@ -88,13 +88,13 @@ create.clone.genome.distribution.plot.per.sample <- function(
     density.df <- do.call(rbind, density.list);
 
     # get plot legend -----------------------------------------------------------------------------
-    cluster.colours <- cluster.colours[levels(sample.df$clone.id)];
+    clone.colours <- clone.colours[levels(sample.df$clone.id)];
     cluster.legend <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
                 title = 'Clones',
-                labels = names(cluster.colours),
-                colours = c(cluster.colours),
+                labels = names(clone.colours),
+                colours = c(clone.colours),
                 border = 'black'
                 )
             ),
@@ -104,7 +104,7 @@ create.clone.genome.distribution.plot.per.sample <- function(
         );
 
     # create individual plot ----------------------------------------------------------------------
-    sample.df$colour <- cluster.colours[sample.df$clone.id];
+    sample.df$colour <- clone.colours[sample.df$clone.id];
     scatter.plt <- create.clone.genome.distribution.scatterplot(
         scatter.df = sample.df,
         nsnv = nrow(sample.df),
@@ -122,7 +122,7 @@ create.clone.genome.distribution.plot.per.sample <- function(
 
     density.plt <- create.clone.genome.distribution.densityplot(
         density.df,
-        cluster.colours,
+        clone.colours,
         chr.info = chr.info,
         xaxis.tck = xaxis.tck,
         yaxis.tck = yaxis.tck,
