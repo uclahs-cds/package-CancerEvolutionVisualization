@@ -2,7 +2,7 @@
 \alias{create.ccf.heatmap}
 \title{Subclone Tree Plot}
 \description{
-Creates a heatmap of cancer cell fraction (CCF) distribution across tumour samples. The function is a wrapper around \dQuote{BoutrosLab.plotting.general::create.heatmap()} with some changes in the default parameters. All parameter description are the same as in \dQuote{BoutrosLab.plotting.general::create.heatmap()} except for \dQuote{ccf.thres}.
+Creates a heatmap of cancer cell fraction (CCF) distribution across tumour samples. The function is a wrapper around \code{BoutrosLab.plotting.general::create.heatmap()} with some changes in the default parameters. All parameter description are the same as in \code{BoutrosLab.plotting.general::create.heatmap()} except for \code{ccf.thres}.
 }
 \usage{
 create.ccf.heatmap(
@@ -19,7 +19,7 @@ create.ccf.heatmap(
 }
 \arguments{
     \item{x}{Either a data-frame or a matrix from which the heatmap is to created}
-    \item{ccf.thres}{CCF threshold to be applied to the heatmap. Values below the threshold will be set to 0.}
+    \item{ccf.thres}{CCF threshold to be applied to the heatmap. Values below the threshold will be set to 0. Defaults to \code{NULL}}
     \item{cluster.dimensions}{Defaults to \dQuote{both}.}
     \item{clustering.method}{Defaults to \dQuote{complete}.}
     \item{distance.method}{Defaults to \dQuote{euclidean}.}

@@ -1,6 +1,6 @@
 create.ccf.summary.heatmap <- function(
     DF,
-    ccf.thres = 0,
+    ccf.thres = NULL,
     median.col = 'median.ccf.per.sample',
     clone.order = NULL,
     sample.order = NULL,
@@ -24,7 +24,10 @@ create.ccf.summary.heatmap <- function(
         value = median.col,
         x.axis = 'clone.id'
         );
-    arr[arr <= ccf.thres] <- 0;
+
+    if (!is.null(ccf.thres)) {
+        arr[arr <= ccf.thres] <- 0;
+        }
 
     clone.df  <- aggregate(CCF ~ clone.id, data = DF[DF$CCF > 0, ], FUN = length);
     sample.df <- aggregate(CCF ~ ID, data = DF[DF$CCF > 0, ], FUN = length);
