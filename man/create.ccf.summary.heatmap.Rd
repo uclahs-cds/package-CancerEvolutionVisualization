@@ -23,7 +23,8 @@ create.ccf.summary.heatmap <- function(
     hm.xaxis.rot = 90,
     legend.size = 3,
     legend.title.cex = 1.2,
-    legend.label.cex = 1
+    legend.label.cex = 1,
+    ...
     )
 }
 \arguments{

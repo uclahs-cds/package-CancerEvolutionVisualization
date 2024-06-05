@@ -14,7 +14,8 @@ create.ccf.heatmap(
     xaxis.lab = '',
     xlab.label = 'Mutations',
     print.colour.key = FALSE,
-    colour.scheme = c('white', 'blue')
+     colour.scheme = c('white', 'blue'),
+    ...
     )
 }
 \arguments{
@@ -23,7 +24,7 @@ create.ccf.heatmap(
     \item{cluster.dimensions}{Defaults to \dQuote{both}.}
     \item{clustering.method}{Defaults to \dQuote{complete}.}
     \item{distance.method}{Defaults to \dQuote{euclidean}.}
-    \item{xaxis.lab} {Defaults to an empty string.}
+    \item{xaxis.lab}{Defaults to an empty string.}
     \item{xlab.label}{Defaults to \dQuote{Mutations}.}
     \item{print.colour.key}{Defaults to \code{FALSE}.}
     \item{colour.scheme}{Defaults to \code{c('white', 'blue')}.}

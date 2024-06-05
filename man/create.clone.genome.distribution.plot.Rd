@@ -11,7 +11,8 @@ create.clone.genome.distribution.plot(
     clone.order = NULL,
     clone.colours = NULL,
     save.plt.dir = NULL,
-    multi.sample = FALSE
+    multi.sample = FALSE,
+    ...
     )
 }
 \arguments{

@@ -17,7 +17,8 @@ create.cluster.heatmap <- function(
     filename = NULL,
     xlab.cex = 1.2,
     xaxis.cex = 1,
-    xaxis.fontface = 'bold'
+    xaxis.fontface = 'bold',
+    ...
     )
 }
 \arguments{
@@ -34,7 +35,6 @@ create.cluster.heatmap <- function(
     \item{xaxis.cex}{Defaults to 1}
     \item{xaxis.fontface}{Defaults to \dQuote{bold}.}
     \item{...}{Pass through argument. See BoutrosLab.plotting.general::create.heatmap() for further details.}
-
 }
 \value{A `grob` object of the heatmap.}
 \author{Helena Winata}
