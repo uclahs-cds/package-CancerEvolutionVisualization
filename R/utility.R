@@ -22,7 +22,7 @@ reindex.column <- function(column.values, new.value.index) {
 data.frame.to.array <- function(
     DF,
     value = 'CCF',
-    x.axis = 'snv.id',
+    x.axis = 'SNV.id',
     y.axis = 'ID'
     ) {
 
@@ -50,6 +50,29 @@ data.frame.to.array <- function(
         }
 
     return(arr);
+    }
+
+# conver chr coordinates to genome position
+get.genome.pos <- function(
+    snv.df,
+    genome.build = 'GRCh37',
+    chr.order = c(1:22, 'X', 'Y')
+    ) {
+
+    if (!(genome.build %in% c('GRCh37', 'GRCh38'))) {
+        stop('genome.build must be either GRCh37 or GRCh38')
+        }
+    assign('chr.info', get(genome.build));
+
+    snv.df$chr      <- droplevels(factor(snv.df$chr, levels = chr.order));
+    chr.info        <- chr.info[chr.info$chr %in% levels(snv.df$chr), c('chr', 'length')];
+    chr.info$chr    <- droplevels(factor(chr.info$chr, levels = chr.order));
+    chr.info$length <- as.numeric(chr.info$length);
+    chr.info$start  <- c(0, cumsum(chr.info$length[-length(chr.info$length)]));
+
+    snv.df$genome.pos <- chr.info[match(snv.df$chr, chr.info$chr), 'start'] + as.integer(snv.df$pos);
+
+    return(list('snv' = snv.df, 'chr.info' = chr.info));
     }
 
 degrees.to.radians <- function(degrees) {

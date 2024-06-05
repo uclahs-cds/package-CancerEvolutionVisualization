@@ -1,8 +1,14 @@
-CancerEvolutionVisualization 2.0.2 2023-12-15 (Dan Knight)
+CancerEvolutionVisualization 2.1.0 2024-05-07 (Helena Winata, Dan Knight)
 
+ADDED
+* Optional "spread" column to control node/branch spacing
+* Plotting functions to visualize the distribution of clones across the genome.
+  
 UPDATE
+* Fixed angle calculation bug where child angles do not follow
+  their parent angle, instead moving "downward" at 0 degrees.
 * Updated package metadata and README
-
+* Set default parameters for heatmaps, defaulting too BPG defaults unless necessary
 
 --------------------------------------------------------------------------
 CancerEvolutionVisualization 2.0.1 2023-11-17 (Helena Winata, Dan Knight)
