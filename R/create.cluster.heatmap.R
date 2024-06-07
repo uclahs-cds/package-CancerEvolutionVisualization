@@ -1,8 +1,8 @@
 create.cluster.heatmap <- function(
     DF,
+    clone.colours = NULL,
     plt.height = 6,
     plt.width = 11,
-    hm.cols = NULL,
     xaxis.col = NULL,
     filename = NULL,
     cluster.colours = NULL,
@@ -14,6 +14,7 @@ create.cluster.heatmap <- function(
         }
 
     DF              <- droplevels(DF)[order(DF$clone.id, -abs(DF$CCF)), ];
+    snv.order       <- unique(DF[, c('SNV.id', 'clone.id')]);
     arr             <- data.frame.to.array(DF);
     snv.order       <- unique(DF[, c('SNV.id', 'clone.id')]);
     arr             <- arr[snv.order$SNV.id, levels(DF$ID)];
@@ -42,7 +43,7 @@ create.cluster.heatmap <- function(
         clustering.method = 'none',
         grid.col = FALSE,
         print.colour.key = FALSE,
-        resolution = 5000
+        yaxis.tck = 0
         );
 
     legend.clone <- BoutrosLab.plotting.general::legend.grob(
@@ -58,13 +59,12 @@ create.cluster.heatmap <- function(
                 labels =  c(0, round(max(arr), digits = 2)),
                 colours = if (is.null(hm.cols)) c('white', 'blue') else hm.cols,
                 border = 'black',
-                continuous = TRUE,
-                size = 0.6
+                continuous = TRUE
                 )
             ),
-        size = 1,
-        title.cex = 0.75,
-        label.cex = 0.6
+        size = legend.size,
+        title.cex = legend.title.cex,
+        label.cex = legend.label.cex
         );
 
     return(BoutrosLab.plotting.general::create.multiplot(

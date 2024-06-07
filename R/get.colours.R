@@ -2,8 +2,7 @@ get.colours <- function(
     value.list,
     return.names = FALSE
     ) {
-    
-    colours <- grDevices::colors()[grep('gr(a|e)y', grDevices::colors(), invert = T)];
+    colours <- grDevices::colors()[grep('(white|gr(a|e)y)', grDevices::colors(), invert = T)];
     n <- length(unique(value.list));
 
     col.list <- sample(colours, n);

@@ -1,6 +1,7 @@
 create.ccf.summary.heatmap <- function(
     DF,
     ccf.thres = 0,
+    median.col = 'median.ccf.per.sample',
     clone.order = NULL,
     sample.order = NULL,
     filename = NULL,
@@ -9,14 +10,14 @@ create.ccf.summary.heatmap <- function(
 
     arr <- data.frame.to.array(
         DF = DF,
-        value = 'median.ccf.per.sample',
+        value = median.col,
         x.axis = 'clone.id'
         );
     arr[arr <= ccf.thres] <- 0;
 
     clone.df <- unique(DF[, c('clone.id', 'total.nsnv')]);
     sample.df <- aggregate(CCF ~ ID, data = DF[DF$CCF > 0, ], FUN = length);
-    names(sample.df)[2] <- 'nsnv';
+    names(sample.df)[2] <- names(clone.df)[2] <- 'nsnv';
 
     if (!is.null(clone.order) & !is.null(sample.order)) {
         arr                 <- arr[clone.order, sample.order];
@@ -27,8 +28,6 @@ create.ccf.summary.heatmap <- function(
     clone.bar <- BoutrosLab.plotting.general::create.barplot(
         formula = total.nsnv ~ clone.id,
         data = clone.df,
-        yaxis.cex = 0,
-        xaxis.lab = rep('', nrow(arr)),
         xaxis.cex = 0,
         ylimits = c( - max(clone.df$total.nsnv) * 0.05, max(clone.df$total.nsnv) * 1.05),
         resolution = 50
@@ -38,28 +37,29 @@ create.ccf.summary.heatmap <- function(
         formula = ID ~ nsnv,
         data = sample.df,
         xlab.label = 'SNV per sample',
+        xlab.cex = subplot.xlab.cex,
+        xaxis.cex = subplot.xaxis.cex,
+        xaxis.fontface = subplot.xaxis.fontface,
         xlimits = c( - max(sample.df$nsnv) * 0.05, max(sample.df$nsnv) * 1.05),
-        ylab.label = NULL,
-        yaxis.lab = rep('', length(arr)),
         yaxis.cex = 0,
-        resolution = 50,
+        ylab.label = NULL,
         plot.horizontal = TRUE
         );
 
     hm <- BoutrosLab.plotting.general::create.heatmap(
         x = arr,
         cluster.dimensions = 'none',
-        xlab.cex = 1,
         xlab.label = 'Clone ID',
+        xlab.cex = subplot.xlab.cex,
         xaxis.lab = rownames(arr),
-        xaxis.cex = 0.6,
-        xaxis.fontface = 1,
-        xaxis.rot = 90,
-        ylab.cex = 1,
+        xaxis.cex = subplot.xaxis.cex,
+        xaxis.fontface = subplot.xaxis.fontface,
+        xaxis.rot = hm.xaxis.rot,
         ylab.label = 'Sample ID',
+        ylab.cex = subplot.ylab.cex,
         yaxis.lab = colnames(arr),
-        yaxis.cex = 0.6,
-        yaxis.fontface = 1,
+        yaxis.cex = subplot.yaxis.cex,
+        yaxis.fontface = subplot.yaxis.fontface,
         print.colour.key = FALSE,
         colour.scheme = c('white', 'blue')
         # left.padding = 1,
@@ -75,13 +75,12 @@ create.ccf.summary.heatmap <- function(
                 labels = c(0, round(max(arr), digits = 2)),
                 colours = c('white', 'blue'),
                 border = 'black',
-                continuous = TRUE,
-                size = 0.6
+                continuous = TRUE
                 )
             ),
-        size = 1,
-        title.cex = 0.75,
-        label.cex = 0.6
+        size = legend.size,
+        title.cex = legend.title.cex,
+        label.cex = legend.label.cex
         );
 
     return(BoutrosLab.plotting.general::create.multiplot(
