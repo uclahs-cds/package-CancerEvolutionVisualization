@@ -8,8 +8,8 @@ Creates a heatmap of cancer cell fraction (CCF) distribution across tumour sampl
 create.cluster.heatmap <- function(
     DF,
     clone.colours = NULL,
-    plt.height = 6,
-    plt.width = 11,
+    height = 6,
+    width = 11,
     xaxis.col = NULL,
     legend.size = 3,
     legend.title.cex = 1.2,
@@ -18,6 +18,7 @@ create.cluster.heatmap <- function(
     xlab.cex = 1.2,
     xaxis.cex = 1,
     xaxis.fontface = 'bold',
+    y.spacing = 1,
     ...
     )
 }
@@ -34,6 +35,7 @@ create.cluster.heatmap <- function(
     \item{xlab.cex}{Defaults to 1.2}
     \item{xaxis.cex}{Defaults to 1}
     \item{xaxis.fontface}{Defaults to \dQuote{bold}.}
+    \item{y.spacing}{Spacing between heatmap and clone covariate bar. Defaults to 1}
     \item{...}{Pass through argument. See BoutrosLab.plotting.general::create.heatmap() for further details.}
 }
 \value{A `grob` object of the heatmap.}

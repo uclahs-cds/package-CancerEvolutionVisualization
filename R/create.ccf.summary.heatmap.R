@@ -44,6 +44,7 @@ create.ccf.summary.heatmap <- function(
         data = clone.df,
         xaxis.cex = 0,
         xlab.label = NULL,
+        xaxis.tck = 0,
         ylab.label = 'SNV per clone',
         ylab.cex = subplot.ylab.cex,
         yaxis.cex = subplot.yaxis.cex,
@@ -60,6 +61,7 @@ create.ccf.summary.heatmap <- function(
         xaxis.fontface = subplot.xaxis.fontface,
         xlimits = c( - max(sample.df$nsnv) * 0.05, max(sample.df$nsnv) * 1.05),
         yaxis.cex = 0,
+        yaxis.tck = 0,
         ylab.label = NULL,
         plot.horizontal = TRUE
         );

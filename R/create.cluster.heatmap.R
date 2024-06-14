@@ -1,8 +1,8 @@
 create.cluster.heatmap <- function(
     DF,
     clone.colours = NULL,
-    plt.height = 6,
-    plt.width = 11,
+    height = 6,
+    width = 11,
     xaxis.col = NULL,
     legend.size = 3,
     legend.title.cex = 1.2,
@@ -11,7 +11,7 @@ create.cluster.heatmap <- function(
     xlab.cex = 1.2,
     xaxis.cex = 1,
     xaxis.fontface = 'bold',
-    colour.scheme = c('white', 'blue'),
+    y.spacing = 1,
     ...
     ) {
 
@@ -38,7 +38,6 @@ create.cluster.heatmap <- function(
         cluster.dimensions = 'none',
         xlab.label = '',
         xaxis.lab = xaxis.label,
-        colour.scheme = colour.scheme,
         ...
         );
 
@@ -85,7 +84,9 @@ create.cluster.heatmap <- function(
         legend = list(right = list(
             fun = legend.clone
         )),
-        height = plt.height,
-        width = plt.width
+        y.spacing = y.spacing,
+        right.legend.padding = 0.5,
+        height = height,
+        width = width
         ));
     }
