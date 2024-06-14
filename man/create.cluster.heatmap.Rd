@@ -19,6 +19,7 @@ create.cluster.heatmap <- function(
     xaxis.cex = 1,
     xaxis.fontface = 'bold',
     y.spacing = 1,
+    colour.scheme = c('white', 'blue'),
     ...
     )
 }
@@ -36,6 +37,7 @@ create.cluster.heatmap <- function(
     \item{xaxis.cex}{Defaults to 1}
     \item{xaxis.fontface}{Defaults to \dQuote{bold}.}
     \item{y.spacing}{Spacing between heatmap and clone covariate bar. Defaults to 1}
+    \item{colour.scheme}{Colour scheme for the heatmap. Defaults to \code{c('white', 'blue')}.}
     \item{...}{Pass through argument. See BoutrosLab.plotting.general::create.heatmap() for further details.}
 }
 \value{A `grob` object of the heatmap.}

@@ -12,6 +12,7 @@ create.cluster.heatmap <- function(
     xaxis.cex = 1,
     xaxis.fontface = 'bold',
     y.spacing = 1,
+    colour.scheme = c('white', 'blue'),
     ...
     ) {
 
@@ -38,6 +39,7 @@ create.cluster.heatmap <- function(
         cluster.dimensions = 'none',
         xlab.label = '',
         xaxis.lab = xaxis.label,
+        colour.scheme = colour.scheme,
         ...
         );
 
