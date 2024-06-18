@@ -14,7 +14,7 @@ create.ccf.heatmap(
     xaxis.lab = '',
     xlab.label = 'Mutations',
     print.colour.key = FALSE,
-     colour.scheme = c('white', 'blue'),
+    colour.scheme = c('white', 'blue'),
     ...
     )
 }

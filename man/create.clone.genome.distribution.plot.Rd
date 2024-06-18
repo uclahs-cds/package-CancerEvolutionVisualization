@@ -10,7 +10,7 @@ create.clone.genome.distribution.plot(
     genome.build = 'GRCh37',
     clone.order = NULL,
     clone.colours = NULL,
-    save.plt.dir = NULL,
+    save.plt = NULL,
     multi.sample = FALSE,
     ...
     )
@@ -20,7 +20,7 @@ create.clone.genome.distribution.plot(
     \item{genome.build}{The genome build to use. Defaults to \dQuote{GRCh37}.}
     \item{clone.order}{The order in which to plot the clones. If \code{NULL}, clones will be sorted alphabetically.}
     \item{clone.colours}{A named vector specifying the color to use for each clone. If \code{NULL}, colors will be automatically assigned.}
-    \item{save.plt.dir}{Directory to save the plot in. If \code{NULL}, the plot will not be saved.}
+    \item{save.plt}{Directory or filepath to save the plot in. If \code{multi.sample = TRUE}, this must be a directory. if \code{multi.sample = FALSE}, this must be a filepath. If \code{NULL}, the plot will not be saved.}
     \item{multi.sample}{Logical indicating whether the input data contains multiple samples. Defaults to \code{FALSE}.}
     \item{...}{Additional arguments to be passed to \code{BoutrosLab.plotting.general::create.multipanelplot()}.}
 }
