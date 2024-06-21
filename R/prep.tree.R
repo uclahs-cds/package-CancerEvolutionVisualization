@@ -14,6 +14,20 @@ prep.tree <- function(
     # Error on invalid tree structure
     get.root.node(tree.df);
 
+    branch.names <- gsub(
+        "length\\.?", "",
+        get.branch.length.colnames(colnames(tree.df))
+        );
+    # Limit to 2 branches. This will
+    if (length(branch.names) > 2) {
+        warning(paste(
+            'Only 2 branches are supported in the current version.',
+            shQuote(branch.names[1], type = 'cmd'), 'and',
+            shQuote(branch.names[2], type = 'cmd'), 'will be used.'
+            ));
+        branch.names <- branch.names[1:2];
+        }
+
     if ('angle' %in% colnames(tree.df)) {
         tree.df$angle <- as.numeric(tree.df$angle);
         if (!use.radians) {
@@ -57,16 +71,13 @@ prep.tree <- function(
     tree.df <- prep.edge.colours(tree.df);
 
     default.edge.type <- 'solid';
-    if ('edge.type.1' %in% colnames(tree.df)) {
-        tree.df$edge.type.1[is.na(tree.df$edge.type.1)] <- default.edge.type;
-    } else {
-        tree.df$edge.type.1 <- default.edge.type;
-        }
-
-    if ('edge.type.2' %in% colnames(tree.df)) {
-        tree.df$edge.type.2[is.na(tree.df$edge.type.2)] <- default.edge.type;
-    } else {
-        tree.df$edge.type.2 <- default.edge.type;
+    for (branch in branch.names) {
+        edge.type.column <- colnames(tree.df)[grepl(paste0('^edge\\.type\\.?', branch), colnames(tree.df))];
+        if (length(edge.type.column) == 1) {
+            tree.df[is.na(tree.df[, edge.type.column]), edge.type.column] <- default.edge.type;
+        } else {
+            tree.df[, paste0('edge.type.', branch)] <- default.edge.type;
+            }
         }
 
     default.edge.width <- 3;
@@ -233,8 +244,6 @@ reset.tree.node.ids <- function(tree.df, value.index) {
     return(tree.df);
     }
 
-
-
 check.parent.values <- function(node.names, parent.col) {
     unique.node.names <- as.list(setNames(
         !vector(length = length(unique(node.names))),
@@ -379,6 +388,50 @@ prep.node.label.colours <- function(tree.df) {
         ));
 
     return(label.colours);
+    }
+
+prep.connector.line.width <- function(
+    connector.line.width,
+    branch.line.width,
+    default.line.width
+    ) {
+    check.lengths(
+        connector.line.width,
+        branch.line.width,
+        a.name = "connector.line.width",
+        b.name = "branch.line.width",
+        );
+    NA.indices <- is.na(branch.line.width)
+    connector.line.width[NA.indices] <- branch.line.width[NA.indices];
+
+    connector.line.width <- as.numeric(connector.line.width);
+    non.numeric.indices <- is.na(connector.line.width);
+    if (any(non.numeric.indices)) {
+        warning(
+            non.numeric.warning.message("connector.width", "branch line width values")
+            );
+        connector.line.width[non.numeric.indices] <- branch.line.width[non.numeric.indices];
+        }
+    return(connector.line.width);
+    }
+
+prep.branch.line.width <- function(
+    branch.line.width,
+    default.line.width,
+    edge.name
+    ) {
+    branch.line.width[is.na(branch.line.width)] <- default.line.width;
+    branch.line.width <- is.numeric(branch.line.width);
+
+    non.numeric.indices <- is.na(branch.line.width);
+    if (any(non.numeric.indices)) {
+        warning(non.numeric.warning.message(
+            argument.name = edge.name,
+            default.value = default.line.width
+            ));
+        branch.line.width[non.numeric.indices] <- default.line.width;
+        }
+    return(branch.line.width);
     }
 
 get.default.node.label.colour <- function(node.colour) {
