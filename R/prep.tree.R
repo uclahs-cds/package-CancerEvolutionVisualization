@@ -434,6 +434,61 @@ prep.branch.line.width <- function(
     return(branch.line.width);
     }
 
+# default.values must be either a scalar or matching length of column.values.
+# A scalar will be applied to all NAs.
+# Otherwise, the corresponding value from default.values will be used.
+# conversion.fun is optional, and must return a vector of the same length.
+prep.column.values <- function(
+    column.values,
+    default.values,
+    conversion.fun = NULL
+    ) {
+    if (any(is.na(default.values))) {
+        stop('NAs found in "default.values"');
+        }
+    if(!is.null(conversion.fun)) {
+        default.values <- suppressWarnings(conversion.fun(default.values));
+        if (any(is.na(default.values))) {
+            print(default.values)
+            stop('"default.values" incompatible with "conversion.fun" (NAs found after conversion).');
+            }
+        }
+
+    n <- length(column.values);
+    default.values.n <- length(default.values);
+    if (default.values.n != 1 && default.values.n != n) {
+        stop('"default.values" must be either length 1 or the same length as "column.values".');
+        }
+    
+    replace.with.default <- function(x) {
+        if (default.values.n == 1) {
+            x[NA.indices] <- default.values;
+        } else {
+            x[NA.indices] <- default.values[NA.indices];
+            }
+        return(x);
+        }
+    NA.indices <- is.na(column.values);
+    column.values <- replace.with.default(column.values);
+
+    if (!is.null(conversion.fun)) {
+        column.values <- conversion.fun(column.values);
+        converted.n <- length(column.values);
+        if (converted.n != n) {
+            stop(paste(
+                'Conversion function changed length of column values',
+                paste0("(", "expected ", n, ", ", "received ", converted.n, ")")
+                ));
+            }
+        NA.indices <- is.na(column.values);
+        if (any(NA.indices)) {
+            warning('NAs found after conversion. Replacing with default values.');
+            column.values <- replace.with.default(column.values);
+            }
+        }
+    return(column.values);
+    }
+
 get.default.node.label.colour <- function(node.colour) {
     white.luminance <- get.colour.luminance('black');
     node.colour.luminance <- get.colour.luminance(node.colour);

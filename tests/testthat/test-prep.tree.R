@@ -607,3 +607,150 @@ test_that(
             regexp = '"node.col"'
             );
     });
+
+test_that(
+    'prep.column.values errors if "default.values" vector length does not match "column.values"', {
+        n <- 5;
+        column.values <- rep(1, n);
+        default.values <- rep(2, n + 2);
+
+        expect_error(
+            prep.column.values(column.values, default.values),
+            regexp = "default"
+            );
+    });
+
+test_that(
+    'prep.column.values replaces NAs with scalar default value', {
+        NA.indices <- c(1, 4);
+        column.values <- rep(1, 5);
+        column.values[NA.indices] <- NA;
+
+        default.value <- 2;
+
+        result <- prep.column.values(column.values, default.value);
+        expect_equal(
+            result[NA.indices],
+            rep(default.value, length(NA.indices))
+            );
+    });
+
+test_that(
+    'prep.column.values replaces NAs with scalar default value', {
+        n <- 5;
+        column.values <- rep(1, n);
+        NA.indices <- c(1, 4);
+        column.values[NA.indices] <- NA;
+
+        default.values <- 1:n;
+
+        result <- prep.column.values(column.values, default.values);
+        expect_equal(
+            result[NA.indices],
+            NA.indices
+            );
+    });
+
+test_that(
+    'prep.column.values leaves non-NA values unchanged', {
+        valid.indices <- c(1, 2, 4);
+        value <- 3;
+        column.values <- rep(NA, 5);
+        column.values[valid.indices] <- value;
+
+        result <- prep.column.values(column.values, default.value = 2);
+        expect_equal(
+            result[valid.indices],
+            rep(value, length(valid.indices))
+            );
+    });
+
+test_that(
+    'prep.column.values errors if "default.values" contains NAs', {
+        n <- 5;
+        column.values <- rep(1, n);
+        default.values <- rep(2, n);
+        default.values[3] <- NA;
+
+        expect_error(
+            prep.column.values(column.values, default.values),
+            regexp = "NA"
+            );
+    });
+
+test_that(
+    'prep.column.values errors if "conversion.fun" changes column length', {
+        column.values <- rep(1, 5);
+        conversion.fun <- function(x) rep(x, 2);
+
+        expect_error(
+            prep.column.values(column.values, 2, conversion.fun = conversion.fun),
+            regexp = "length"
+            );
+    });
+
+test_that(
+    'prep.column.values errors if "conversion.fun" introduces NAs in "default.values" ', {
+        column.values <- rep(1, 5);
+        default.values <- "test";
+        conversion.fun <- as.numeric;
+
+        expect_error(
+            prep.column.values(
+                column.values,
+                default.values,
+                conversion.fun = conversion.fun
+                ),
+            regexp = "conversion"
+            );
+    });
+
+test_that(
+    'prep.column.values warns if "conversion.fun" introduces NAs in "column.values"', {
+        column.values <- rep("hello", 5);
+        default.values <- 1;
+        conversion.fun <- as.numeric;
+
+        expect_warning(
+            prep.column.values(
+                column.values,
+                default.values,
+                conversion.fun = conversion.fun
+                ),
+            regexp = "conversion"
+            );
+    });
+
+test_that(
+    'prep.column.values applies conversion function', {
+        column.values <- rep("10", 5);
+        default.values <- 1;
+        conversion.fun <- as.numeric;
+
+        result <- prep.column.values(
+            column.values,
+            default.values,
+            conversion.fun = conversion.fun
+            );
+        expect_true(is.numeric(result));
+    });
+
+test_that(
+    'prep.column.values replaces NA values after conversion with default', {
+        column.values <- rep(4, 5);
+        non.numeric.indices <- c(2, 3);
+        column.values[non.numeric.indices] <- "test";
+        default.values <- 1;
+        conversion.fun <- as.numeric;
+
+        result <- suppressWarnings(prep.column.values(
+            column.values,
+            default.values,
+            conversion.fun = conversion.fun
+            ));
+        expect_equal(
+            result[non.numeric.indices],
+            rep(default.values, length(non.numeric.indices))
+            );
+        expect_true(is.numeric(result));
+    });
