@@ -754,3 +754,58 @@ test_that(
             );
         expect_true(is.numeric(result));
     });
+
+test_that(
+    'get.branch.names handles "length" columns', {
+        branch.names <- c('test', 'CEV');
+
+        tree.df <- data.frame(lapply(1:length(branch.names), function(i) 1:10));
+        colnames(tree.df) <- paste('length', branch.names, sep = '');
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'get.branch.names handles "edge.col" columns', {
+        branch.names <- c('test', 'SRC');
+
+        tree.df <- data.frame(lapply(1:length(branch.names), function(i) 1:10));
+        colnames(tree.df) <- paste('edge.col', branch.names, sep = '.');
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'get.branch.names handles "edge.type" columns', {
+        branch.names <- c('test', 'SRC');
+
+        tree.df <- data.frame(lapply(1:length(branch.names), function(i) 1:10));
+        colnames(tree.df) <- paste('edge.type', branch.names, sep = '.');
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'get.branch.names handles "edge.width" columns', {
+        branch.names <- c('test', 'SRC');
+
+        tree.df <- data.frame(lapply(1:length(branch.names), function(i) 1:10));
+        colnames(tree.df) <- paste('edge.width', branch.names, sep = '.');
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'get.branch.names handles different edge columns', {
+        branch.names <- c('test', 'SRC');
+
+        tree.df <- data.frame(lapply(1:length(branch.names), function(i) 1:10));
+        colnames(tree.df) <- paste(c('edge.type', 'length'), branch.names, sep = '.');
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });

@@ -449,7 +449,6 @@ prep.column.values <- function(
     if(!is.null(conversion.fun)) {
         default.values <- suppressWarnings(conversion.fun(default.values));
         if (any(is.na(default.values))) {
-            print(default.values)
             stop('"default.values" incompatible with "conversion.fun" (NAs found after conversion).');
             }
         }
@@ -499,4 +498,12 @@ get.default.node.label.colour <- function(node.colour) {
     # https://www.w3.org/TR/2008/REC-WCAG20-20081211/#visual-audio-contrast-contrast
     WCAG.contrast.threshold <- 7;
     return(if (contrast.ratio < WCAG.contrast.threshold) 'white' else 'black');
+    }
+
+get.branch.names <- function(tree.df) {
+    gsub(
+        '(edge\\.((type)|(width)|(col))\\.)|(length\\.?)',
+        '',
+        colnames(tree.df)
+        );
     }
