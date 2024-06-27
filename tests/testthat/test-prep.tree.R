@@ -149,6 +149,7 @@ test_that(
     'prep.tree passes valid edge 2 linetype values', {
         tree.df <- data.frame(
             parent = c(NA, 1:3),
+            length1 = 5,
             edge.type.2 = 'solid'
             );
 
@@ -805,6 +806,38 @@ test_that(
 
         tree.df <- data.frame(lapply(1:length(branch.names), function(i) 1:10));
         colnames(tree.df) <- paste(c('edge.type', 'length'), branch.names, sep = '.');
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'get.branch.names returns unique values', {
+        branch.names <- c('test', 'SRC');
+        branch.columns <- paste(
+            c('edge.type', 'length', 'length'),
+            c(rep(branch.names[1], 2), branch.names[2]),
+            sep = '.'
+            );
+
+        tree.df <- data.frame(lapply(1:length(branch.columns), function(i) 1:10));
+        colnames(tree.df) <- branch.columns;
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'get.branch.names returns unique values', {
+        branch.names <- c('test', 'SRC');
+        branch.columns <- paste(
+            c('edge.type', 'length', 'length'),
+            c(rep(branch.names[1], 2), branch.names[2]),
+            sep = '.'
+            );
+
+        tree.df <- data.frame(lapply(1:length(branch.columns), function(i) 1:10));
+        colnames(tree.df) <- branch.columns;
 
         result <- get.branch.names(tree.df);
         expect_equal(result, branch.names);

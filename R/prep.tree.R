@@ -14,10 +14,7 @@ prep.tree <- function(
     # Error on invalid tree structure
     get.root.node(tree.df);
 
-    branch.names <- gsub(
-        "length\\.?", "",
-        get.branch.length.colnames(colnames(tree.df))
-        );
+    branch.names <- get.branch.names(tree.df);
     # Limit to 2 branches. This will
     if (length(branch.names) > 2) {
         warning(paste(
@@ -26,6 +23,8 @@ prep.tree <- function(
             shQuote(branch.names[2], type = 'cmd'), 'will be used.'
             ));
         branch.names <- branch.names[1:2];
+    } else if (length(branch.names) == 0) {
+        branch.names <- c("1");
         }
 
     if ('angle' %in% colnames(tree.df)) {
@@ -70,27 +69,46 @@ prep.tree <- function(
 
     tree.df <- prep.edge.colours(tree.df);
 
-    default.edge.type <- 'solid';
-    for (branch in branch.names) {
-        edge.type.column <- colnames(tree.df)[grepl(paste0('^edge\\.type\\.?', branch), colnames(tree.df))];
-        if (length(edge.type.column) == 1) {
-            tree.df[is.na(tree.df[, edge.type.column]), edge.type.column] <- default.edge.type;
-        } else {
-            tree.df[, paste0('edge.type.', branch)] <- default.edge.type;
+    for (i in 1:length(branch.names)) {
+        branch <- branch.names[i];
+        edge.type.column <- colnames(tree.df)[grepl(paste0('^edge\\.type\\.', branch), colnames(tree.df))];
+        if (length(edge.type.column) < 1) {
+            edge.type.column <- paste0('edge.type.', branch);
+            tree.df[, edge.type.column] <- NA;
             }
-        }
 
-    default.edge.width <- 3;
-    if ('edge.width.1' %in% colnames(tree.df)) {
-        tree.df$edge.width.1[is.na(tree.df$edge.width.1)] <- default.edge.width;
-    } else {
-        tree.df$edge.width.1 <- default.edge.width;
-        }
+        default.edge.type <- 'solid';
+        tree.df[, edge.type.column] <- prep.column.values(
+            tree.df[, edge.type.column],
+            default.values = default.edge.type,
+            conversion.fun = as.character
+            );
 
-    if ('edge.width.2' %in% colnames(tree.df)) {
-        tree.df$edge.width.2[is.na(tree.df$edge.width.2)] <- default.edge.width;
-    } else {
-        tree.df$edge.width.2 <- default.edge.width;
+        edge.width.column <- colnames(tree.df)[grepl(paste0('^edge\\.width\\.', branch), colnames(tree.df))];
+        if (length(edge.width.column) < 1) {
+            edge.width.column <- paste0('edge.width.', branch);
+            tree.df[, edge.width.column] <- NA;
+            }
+
+        default.edge.width <- 3;
+        tree.df[, edge.width.column] <- prep.column.values(
+            tree.df[, edge.width.column],
+            default.values = default.edge.width,
+            conversion.fun = as.numeric
+            );
+
+        edge.col.column <- colnames(tree.df)[grepl(paste0('^edge\\.col\\.', branch), colnames(tree.df))];
+        if (length(edge.col.column) < 1) {
+            edge.col.column <- paste0('edge.col.', branch);
+            tree.df[, edge.col.column] <- NA;
+            }
+        
+        default.edge.col <- 'black';
+        tree.df[, edge.col.column] <- prep.column.values(
+            tree.df[, edge.col.column],
+            default.values = default.edge.col,
+            conversion.fun = as.character
+            );
         }
 
     tree.df <- reorder.nodes(tree.df);
@@ -177,7 +195,6 @@ prep.tree <- function(
         edge.colour.1 = c(NA, tree.df$edge.col.1),
         edge.colour.2 = c(NA, tree.df$edge.col.2),
         edge.type.1 = c(NA, tree.df$edge.type.1),
-        edge.type.2 = c(NA, tree.df$edge.type.2),
         edge.width.1 = c(NA, tree.df$edge.width.1),
         edge.width.2 = c(NA, tree.df$edge.width.2),
         connector.col = c(NA, tree.df$connector.col),
@@ -188,6 +205,9 @@ prep.tree <- function(
         alpha = rep(0.5, (nrow(tree.df) + 1)),
         stringsAsFactors = FALSE
         );
+    if (length(branch.names) > 1) {
+        out.df$edge.type.2 <- c(NA, tree.df[, paste0('edge.type.', branch.names[2])]);
+        }
 
     out.df$tier <- get.num.tiers(out.df)
 
@@ -340,11 +360,14 @@ prep.edge.colours <- function(tree.df) {
         column.name <- edge.colour.column.names[i];
         default.colour <- default.edge.colours[i];
 
-        if (column.name %in% colnames(tree.df)) {
-            tree.df[is.na(tree.df[, column.name]), column.name] <- default.colour;
-        } else {
-            tree.df[, column.name] <- default.colour;
+        if (!(column.name %in% colnames(tree.df))) {
+            tree.df[, column.name] <- NA;
             }
+        tree.df[, column.name] <- prep.column.values(
+            tree.df[, column.name],
+            default.values = default.colour,
+            conversion.fun = as.character
+            );
         }
 
     return(tree.df);
@@ -501,9 +524,8 @@ get.default.node.label.colour <- function(node.colour) {
     }
 
 get.branch.names <- function(tree.df) {
-    gsub(
-        '(edge\\.((type)|(width)|(col))\\.)|(length\\.?)',
-        '',
-        colnames(tree.df)
-        );
+    prefix.regex <- '(edge\\.((type)|(width)|(col))\\.)|(length\\.?)';
+    branch.columns <- grep(prefix.regex, colnames(tree.df), value = TRUE);
+    branch.names <- gsub(prefix.regex, '', branch.columns);
+    return(unique(branch.names));
     }
