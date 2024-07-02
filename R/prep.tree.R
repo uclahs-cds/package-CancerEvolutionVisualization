@@ -71,6 +71,19 @@ prep.tree <- function(
 
     for (i in 1:length(branch.names)) {
         branch <- branch.names[i];
+
+        length.column <- colnames(tree.df)[grepl(paste0('^length\\.', branch), colnames(tree.df))];
+        if (length(length.column) < 1) {
+            length.column <- paste0('length.', branch);
+            tree.df[, length.column] <- NA;
+            }
+        default.length <- 1;
+        tree.df[, length.column] <- prep.column.values(
+            tree.df[, length.column],
+            default.values = default.length,
+            conversion.fun = as.numeric
+            );
+
         edge.type.column <- colnames(tree.df)[grepl(paste0('^edge\\.type\\.', branch), colnames(tree.df))];
         if (length(edge.type.column) < 1) {
             edge.type.column <- paste0('edge.type.', branch);
@@ -192,11 +205,9 @@ prep.tree <- function(
         border.width = c(NA, tree.df$border.width),
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
-        edge.colour.1 = c(NA, tree.df$edge.col.1),
-        edge.colour.2 = c(NA, tree.df$edge.col.2),
-        edge.type.1 = c(NA, tree.df$edge.type.1),
-        edge.width.1 = c(NA, tree.df$edge.width.1),
-        edge.width.2 = c(NA, tree.df$edge.width.2),
+        edge.colour.1 = c(NA, tree.df[, paste0('edge.col.', branch.names[1])]),
+        edge.type.1 = c(NA, tree.df[, paste0('edge.type.', branch.names[1])]),
+        edge.width.1 = c(NA, tree.df[, paste0('edge.width.', branch.names[1])]),
         connector.col = c(NA, tree.df$connector.col),
         connector.width = c(NA, tree.df$connector.width),
         connector.type = c(NA, tree.df$connector.type),
@@ -206,7 +217,10 @@ prep.tree <- function(
         stringsAsFactors = FALSE
         );
     if (length(branch.names) > 1) {
+        out.df$length2 <- c(NA, tree.df[, paste0('length.', branch.names[2])])
         out.df$edge.type.2 <- c(NA, tree.df[, paste0('edge.type.', branch.names[2])]);
+        out.df$edge.colour.2 <- c(NA, tree.df[, paste0('edge.col.', branch.names[2])]);
+        out.df$edge.width.2 <- c(NA, tree.df[, paste0('edge.width.', branch.names[2])]);
         }
 
     out.df$tier <- get.num.tiers(out.df)
