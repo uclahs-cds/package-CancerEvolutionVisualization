@@ -124,6 +124,33 @@ prep.tree <- function(
             );
         }
 
+    if (!('connector.type' %in% colnames(tree.df))) {
+        tree.df$connector.type <- NA;
+        }
+    tree.df$connector.type <- prep.column.values(
+        tree.df$connector.type,
+        default.values = tree.df[, paste0('edge.type.', branch.names[1])],
+        conversion.fun = as.character
+        );
+
+    if (!('connector.col' %in% colnames(tree.df))) {
+        tree.df$connector.col <- NA;
+        }
+    tree.df$connector.col <- prep.column.values(
+        tree.df$connector.col,
+        default.values = tree.df[, paste0('edge.col.', branch.names[1])],
+        conversion.fun = as.character
+        );
+
+    if (!('connector.width' %in% colnames(tree.df))) {
+        tree.df$connector.width <- NA;
+        }
+    tree.df$connector.width <- prep.column.values(
+        tree.df$connector.width,
+        default.values = tree.df[, paste0('edge.width.', branch.names[1])],
+        conversion.fun = as.character
+        );
+
     tree.df <- reorder.nodes(tree.df);
 
     # Include -1 value for root node.
