@@ -71,6 +71,7 @@ test_that(
     'prep.tree passes valid edge 2 colour values', {
         tree.df <- data.frame(
             parent = c(NA, 1:3),
+            edge.col.1 = 'black',
             edge.col.2 = 'red'
             );
 
@@ -110,6 +111,7 @@ test_that(
     'prep.tree passes valid edge 2 width values', {
         tree.df <- data.frame(
             parent = c(NA, 1:3),
+            edge.width.1 = 3,
             edge.width.2 = 1:4
             );
 
