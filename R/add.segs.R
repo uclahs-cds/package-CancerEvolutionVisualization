@@ -329,6 +329,13 @@ add.tree.segs <- function(
 
     if (nrow(dendrogram.coords) > 0) {
         connector.segs <- get.dendrogram.connector.segs(dendrogram.coords);
+        connector.gpar <- data.frame(t(sapply(
+            connector.segs$i,
+            function(i) clone.out$v[
+                clone.out$v$id == i,
+                c('connector.col', 'connector.width', 'connector.type')
+                ]
+            )));
         seg.grobs$connectors <- segmentsGrob(
             name = 'connector.segs',
             x0 = connector.segs$basex,
@@ -337,9 +344,9 @@ add.tree.segs <- function(
             y1 = connector.segs$tipy,
             default.units = 'native',
             gp = gpar(
-                col = clone.out$v$connector.col,
-                lwd = clone.out$v$connector.width,
-                lty = clone.out$v$connector.type
+                col = as.character(connector.gpar$connector.col),
+                lwd = as.numeric(connector.gpar$connector.width),
+                lty = as.character(connector.gpar$connector.type)
                 )
             );
         }
@@ -368,13 +375,13 @@ get.dendrogram.connector.segs <- function(branch.coords) {
 
     # Cannot directly coerce to data.frame
     horizontal.branch.coords <- as.data.frame(t(sapply(tree.levels, function(x) x)));
+    horizontal.branch.coords$i <- rownames(horizontal.branch.coords);
 
     horizontal.levels <- as.numeric(horizontal.branch.coords$basex) != as.numeric(horizontal.branch.coords$tipx);
     horizontal.branch.coords <- horizontal.branch.coords[horizontal.levels, ];
 
     if (nrow(horizontal.branch.coords) > 0) {
         for (missing.column in setdiff(colnames(branch.coords), colnames(horizontal.branch.coords))) {
-            horizontal.branch.coords[, missing.column] <- NA;
             }
         }
 
