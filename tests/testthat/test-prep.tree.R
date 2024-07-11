@@ -842,3 +842,108 @@ test_that(
         result <- get.branch.names(tree.df);
         expect_equal(result, branch.names);
     });
+
+test_that(
+    'check.radial.x.conflicts does not warn when "x" present in dendrogram mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            mode = 'dendrogram'
+            );
+        expect_no_warning(check.radial.x.conflicts(tree.df));
+    });
+
+test_that(
+    'check.radial.x.conflicts does not warn when "x" is NA in radial mode', {
+        tree.df <- data.frame(
+            parent = c(NA, 1, 2),
+            mode = 'radial',
+            x = NA
+            );
+        expect_no_warning(check.radial.x.conflicts(tree.df));
+    });
+
+test_that(
+    'check.radial.x.conflicts does not warn when "x" is NA in dendrogram mode', {
+        tree.df <- data.frame(
+            parent = c(NA, 1, 2),
+            mode = 'dendrogram',
+            x = NA
+            );
+        expect_no_warning(check.radial.x.conflicts(tree.df));
+    });
+
+test_that(
+    'check.radial.x.conflicts warns when "x" is present in radial mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            mode = 'radial'
+            );
+        expect_warning(
+            check.radial.x.conflicts(tree.df),
+            regexp = 'dendrogram'
+            );
+    });
+
+test_that(
+    'check.dendrogram.angle.conflicts warns when "x" is present with "angle" in dendrogram mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            angle = 4,
+            mode = 'dendrogram',
+            spread = NA
+            );
+        expect_warning(
+            check.dendrogram.angle.conflicts(tree.df),
+            regexp = 'angle'
+            );
+    });
+
+test_that(
+    'check.dendrogram.angle.conflicts does not warn when "x" is present with "angle" in radial mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            angle = 15,
+            mode = 'radial',
+            spread = NA
+            );
+        expect_no_warning(check.dendrogram.angle.conflicts(tree.df));
+    });
+
+test_that(
+    'check.dendrogram.angle.conflicts does not warn when "x" is present with "spread" in radial mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            spread = 1.5,
+            mode = 'radial',
+            angle = NA
+            );
+        expect_no_warning(check.dendrogram.angle.conflicts(tree.df));
+    });
+
+test_that(
+    'check.dendrogram.angle.conflicts warns when "x" is present with "angle" in dendrogram mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            angle = 15,
+            mode = 'dendrogram',
+            spread = NA
+            );
+        expect_warning(
+            check.dendrogram.angle.conflicts(tree.df),
+            regexp = 'spread'
+            );
+    });
+
+test_that(
+    'check.dendrogram.angle.conflicts warns when "x" is present with "spread" in dendrogram mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            spread = 1.5,
+            mode = 'dendrogram',
+            angle = NA
+            );
+        expect_warning(
+            check.dendrogram.angle.conflicts(tree.df),
+            regexp = 'spread'
+            );
+    });
