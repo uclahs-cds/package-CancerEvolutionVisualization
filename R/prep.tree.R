@@ -498,6 +498,22 @@ prep.branch.line.width <- function(
     return(branch.line.width);
     }
 
+check.radial.x.conflicts <- function(tree.df) {
+    conflicts <- !is.na(tree.df$x) & tree.df$mode != 'dendrogram';
+    if (any(conflicts)) {
+        warning('"x" values on non-dendrogram nodes will be ignored.')
+        }
+    }
+
+check.dendrogram.angle.conflicts <- function(tree.df) {
+    conflicts <- (
+        !is.na(tree.df$x) & tree.df$mode == 'dendrogram' & (!is.na(tree.df$angle) | !is.na(tree.df$spread))
+        );
+    if (any(conflicts)) {
+        warning('"x" values override "angle" and "spread" values in dendrogram mode.')
+    }
+}
+
 # default.values must be either a scalar or matching length of column.values.
 # A scalar will be applied to all NAs.
 # Otherwise, the corresponding value from default.values will be used.
