@@ -669,16 +669,13 @@ test_that(
     });
 
 test_that(
-    'prep.column.values errors if "default.values" contains NAs', {
+    'prep.column.values allows "default.values" to contains NAs', {
         n <- 5;
         column.values <- rep(1, n);
         default.values <- rep(2, n);
         default.values[3] <- NA;
 
-        expect_error(
-            prep.column.values(column.values, default.values),
-            regexp = "NA"
-            );
+        expect_no_error(prep.column.values(column.values, default.values));
     });
 
 test_that(

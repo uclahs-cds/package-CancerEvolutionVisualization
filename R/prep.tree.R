@@ -14,7 +14,7 @@ prep.tree <- function(
     # Error on invalid tree structure
     get.root.node(tree.df);
 
-    branch.names <- get.branch.names(tree.df);
+    branch.names <- sort(get.branch.names(tree.df));
     # Limit to 2 branches. This will
     if (length(branch.names) > 2) {
         warning(paste(
@@ -27,12 +27,26 @@ prep.tree <- function(
         branch.names <- c("1");
         }
 
-    if ('angle' %in% colnames(tree.df)) {
-        tree.df$angle <- as.numeric(tree.df$angle);
-        if (!use.radians) {
-            tree.df$angle <- degrees.to.radians(tree.df$angle);
-            }
+    if (!('angle' %in% colnames(tree.df))) {
+        tree.df$angle <- NA;
         }
+    tree.df$angle <- prep.column.values(
+        tree.df$angle,
+        default.values = NA,
+        conversion.fun = as.numeric
+        );
+    if (!use.radians) {
+        tree.df$angle <- degrees.to.radians(tree.df$angle);
+        }
+
+    if (!('spread' %in% colnames(tree.df))) {
+        tree.df$spread <- NA;
+        }
+    tree.df$spread <- prep.column.values(
+        tree.df$spread,
+        default.values = NA,
+        conversion.fun = as.numeric
+        );
 
     tree.df$parent <- prep.tree.parent(tree.df$parent);
 
@@ -511,8 +525,8 @@ check.dendrogram.angle.conflicts <- function(tree.df) {
         );
     if (any(conflicts)) {
         warning('"x" values override "angle" and "spread" values in dendrogram mode.')
+        }
     }
-}
 
 # default.values must be either a scalar or matching length of column.values.
 # A scalar will be applied to all NAs.
@@ -523,12 +537,10 @@ prep.column.values <- function(
     default.values,
     conversion.fun = NULL
     ) {
-    if (any(is.na(default.values))) {
-        stop('NAs found in "default.values"');
-        }
     if(!is.null(conversion.fun)) {
+        original.default.NAs <- is.na(default.values);
         default.values <- suppressWarnings(conversion.fun(default.values));
-        if (any(is.na(default.values))) {
+        if (any(is.na(default.values) & !original.default.NAs)) {
             stop('"default.values" incompatible with "conversion.fun" (NAs found after conversion).');
             }
         }
@@ -539,7 +551,7 @@ prep.column.values <- function(
         stop('"default.values" must be either length 1 or the same length as "column.values".');
         }
     
-    replace.with.default <- function(x) {
+    replace.with.default <- function(x, NA.indices) {
         if (default.values.n == 1) {
             x[NA.indices] <- default.values;
         } else {
@@ -547,8 +559,8 @@ prep.column.values <- function(
             }
         return(x);
         }
-    NA.indices <- is.na(column.values);
-    column.values <- replace.with.default(column.values);
+    original.NAs <- is.na(column.values);
+    column.values <- replace.with.default(column.values, original.NAs);
 
     if (!is.null(conversion.fun)) {
         column.values <- conversion.fun(column.values);
@@ -559,8 +571,8 @@ prep.column.values <- function(
                 paste0("(", "expected ", n, ", ", "received ", converted.n, ")")
                 ));
             }
-        NA.indices <- is.na(column.values);
-        if (any(NA.indices)) {
+        converted.NAs <- is.na(column.values);
+        if (any(converted.NAs & !original.NAs)) {
             warning('NAs found after conversion. Replacing with default values.');
             column.values <- replace.with.default(column.values);
             }
