@@ -53,7 +53,7 @@ create.clone.genome.distribution.plot <- function(
 
         sample.df <- droplevels(snv.df[snv.df$ID == s, ])
         if (multi.sample & !is.null(filename)) {
-            save.plt <- file.path(save.plt, paste0(s, '_clone-genome-dist.png'));
+            save.plt <- file.path(save.plt, paste0(s, '.png'));
             }
 
         plt <- create.clone.genome.distribution.plot.per.sample(
