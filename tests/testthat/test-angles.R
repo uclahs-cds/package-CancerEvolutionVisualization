@@ -125,6 +125,33 @@ test_that(
     );
 
 test_that(
+    'calculate.angles.radial handles children of overriden angle', {
+        num.children <- 4;
+        test.tree <- data.frame(
+            parent = c(-1, rep(1, num.children))
+            );
+        test.tree$tip <- rownames(test.tree)
+
+        test.v <- data.frame(
+            id = test.tree$tip,
+            parent = test.tree$parent,
+            angle = NA
+            );
+        new.angle <- degrees.to.radians(15);
+        test.v[1, 'angle'] <- new.angle;
+
+        result <- calculate.angles.radial(
+            test.v,
+            test.tree,
+            spread = 1,
+            total.angle = pi / 2.5
+            );
+
+        expect_equal(mean(result[-1]), new.angle);
+        }
+    );
+
+test_that(
     'calculate.angles.fixed sets angle correctly', {
         test.tree <- data.frame(
             parent = c(-1, 1, 1)
@@ -175,4 +202,32 @@ test_that(
 
         expect_equal(result[angles.to.override], override.values);
         }
-);
+    );
+
+test_that(
+    'calculate.angles.fixed handles children of overriden angle', {
+        num.children <- 2;
+        test.tree <- data.frame(
+            parent = c(-1, rep(1, num.children))
+            );
+        test.tree$tip <- rownames(test.tree)
+
+        test.v <- data.frame(
+            id = test.tree$tip,
+            parent = test.tree$parent,
+            angle = NA
+            );
+        new.angle <- 15;
+        test.v[1, 'angle'] <- new.angle;
+
+        fixed.angle <- pi / 4;
+        result <- calculate.angles.fixed(
+            test.v,
+            test.tree,
+            fixed.angle = fixed.angle
+            );
+        expected.angles <- c(new.angle, new.angle - fixed.angle, new.angle + fixed.angle);
+
+        expect_equal(result, expected.angles);
+        }
+    );
