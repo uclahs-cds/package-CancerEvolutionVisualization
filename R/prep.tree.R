@@ -246,6 +246,7 @@ prep.tree <- function(
         border.width = c(NA, tree.df$border.width),
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
+        x.length = c(NA, tree.df$x.length),
         edge.colour.1 = c(NA, tree.df[, paste0('edge.col.', branch.names[1])]),
         edge.type.1 = c(NA, tree.df[, paste0('edge.type.', branch.names[1])]),
         edge.width.1 = c(NA, tree.df[, paste0('edge.width.', branch.names[1])]),
