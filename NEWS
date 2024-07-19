@@ -1,4 +1,4 @@
-CancerEvolutionVisualization 2.1.0 2024-05-07 (Helena Winata, Dan Knight)
+CancerEvolutionVisualization 2.1.0 2024-07-19 (Helena Winata, Dan Knight)
 
 ADDED
 * Optional "spread" column to control node/branch spacing
@@ -9,6 +9,7 @@ UPDATE
   their parent angle, instead moving "downward" at 0 degrees.
 * Updated package metadata and README
 * Set default parameters for heatmaps, defaulting too BPG defaults unless necessary
+* Fixed bug where horizontal tree segments rendered as zero-length segments
 
 --------------------------------------------------------------------------
 CancerEvolutionVisualization 2.0.1 2023-11-17 (Helena Winata, Dan Knight)
