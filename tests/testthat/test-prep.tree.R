@@ -644,7 +644,53 @@ test_that(
     'prep.draw.node.setting warns on non-logical values', {
         tree.df <- data.frame(draw.node = c(TRUE, FALSE, 'invalid', TRUE));
         expect_warning(
-            {prep.draw.node.setting(tree.df);},
+            prep.draw.node.setting(tree.df),
             regexp = 'draw.node'
+            );
+    });
+
+test_that(
+    'prep.tree.spread result is numeric', {
+        tree.df <- data.frame(
+            spread = 1:7
+            );
+        result <- prep.tree.spread(tree.df);
+
+        expect_true(all(is.numeric(result$spread)));
+    });
+
+test_that(
+    'prep.tree.spread replaces NAs with 1', {
+        tree.df <- data.frame(
+            spread = 1:10
+            );
+        na.indices <- 3:5;
+        tree.df$spread[na.indices] <- NA;
+
+        result <- prep.tree.spread(tree.df);
+        expect_equal(result$spread[na.indices], rep(1, length(na.indices)));
+    });
+
+test_that(
+    'prep.tree.spread warns on non-numeric values', {
+        tree.df <- data.frame(
+            spread = c(1:3, 'test')
+            );
+
+        expect_warning(
+            prep.tree.spread(tree.df),
+            regexp = 'spread'
+            );
+    });
+
+test_that(
+    'prep.tree.spread errors on negative values', {
+        tree.df <- data.frame(
+            spread = c(1:3, -2)
+            );
+
+        expect_error(
+            prep.tree.spread(tree.df),
+            regexp = 'spread'
             );
     });
