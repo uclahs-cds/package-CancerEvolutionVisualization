@@ -19,7 +19,7 @@ get.default.branch.lengths <- function(num.rows, num.cols) {
     }
 
 validate.branch.colname <- function(column.name) {
-    grepl('length', column.name);
+    grepl('^length', column.name);
     }
 
 get.branch.length.colnames <- function(col.names) {

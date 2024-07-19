@@ -1,6 +1,7 @@
-CancerEvolutionVisualization 2.1.0 2024-05-07 (Helena Winata, Dan Knight)
+CancerEvolutionVisualization 3.0.0 2024-05-07 (Dan Knight)
 
 ADDED
+* Dendrogram mode with node-by-node control
 * Optional "spread" column to control node/branch spacing
 * Plotting functions to visualize the distribution of clones across the genome.
   

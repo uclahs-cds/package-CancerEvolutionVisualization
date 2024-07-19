@@ -39,15 +39,25 @@ position.nodes <- function(v, tree, extra.len) {
 
 	preorder.traversal <- function(node, tree) {
 		vi <- v[v$id == node, ];
-		d <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
+		distance <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
+		angle <- tree$angle[tree$tip == vi$id & tree$parent == vi$parent];
+
+		if (vi$mode == 'radial') {
+		    dx <- distance * sin(angle);
+		    dy <- distance * cos(angle);
+		} else {
+		    # Dendrogram
+		    x.length <- vi$x.length;
+		    dx <- if (is.na(x.length)) distance * tan(angle) else x.length;
+		    dy <- distance;
+	        }
 
 		if (vi$parent != -1) {
-		    angle <- tree$angle[tree$tip == vi$id & tree$parent == vi$parent];
-			v$x[v$id == vi$id] <<- v$x[v$id == vi$parent] + d * sin(angle);
-			v$y[v$id == vi$id] <<- v$y[v$id == vi$parent] + d * cos(angle);
+			v$x[v$id == vi$id] <<- v$x[v$id == vi$parent] + dx;
+			v$y[v$id == vi$id] <<- v$y[v$id == vi$parent] + dy;
 		} else {
 		    v$x[v$id == vi$id] <<- 0;
-			v$y[v$id == vi$id] <<- d;
+			v$y[v$id == vi$id] <<- distance;
 		    }
 
 		for (child in v$id[v$parent == vi$id]) {
@@ -57,7 +67,7 @@ position.nodes <- function(v, tree, extra.len) {
 
 	preorder.traversal(node = 1, tree = tree);
 
-	v <- reposition.clones(tree, v);
+	# v <- reposition.clones(tree, v);
 
 	v$len <- sapply(
 	    v$y,
