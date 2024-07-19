@@ -10,7 +10,7 @@ create.clone.genome.distribution.plot(
     genome.build = 'GRCh37',
     clone.order = NULL,
     clone.colours = NULL,
-    save.plt = NULL,
+    filename = NULL,
     multi.sample = FALSE,
     ...
     )
