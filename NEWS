@@ -1,12 +1,13 @@
-CancerEvolutionVisualization 3.0.0 2024-02-21 (Dan Knight)
+CancerEvolutionVisualization 3.0.0 2024-05-07 (Dan Knight)
 
 ADDED
 * Dendrogram mode with node-by-node control
-
---------------------------------------------------------------------------
-CancerEvolutionVisualization 2.0.2 2023-12-15 (Dan Knight)
-
+* Optional "spread" column to control node/branch spacing
+* Plotting functions to visualize the distribution of clones across the genome.
+  
 UPDATE
+* Fixed angle calculation bug where child angles do not follow
+  their parent angle, instead moving "downward" at 0 degrees.
 * Updated package metadata and README
 
 CancerEvolutionVisualization 2.0.2 2024-04-09 (Dan Knight)
@@ -14,6 +15,7 @@ CancerEvolutionVisualization 2.0.2 2024-04-09 (Dan Knight)
 BUG
 * Fixed angle calculation bug where child angles do not follow
   their parent angle, instead moving "downward" at 0 degrees.
+* Set default parameters for heatmaps, defaulting too BPG defaults unless necessary
 
 --------------------------------------------------------------------------
 CancerEvolutionVisualization 2.0.1 2023-11-17 (Helena Winata, Dan Knight)

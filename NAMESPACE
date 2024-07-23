@@ -12,3 +12,10 @@ importFrom("stats", "setNames", "aggregate", "reshape")
 importFrom("grDevices", "col2rgb")
 
 export(SRCGrob)
+
+export(create.ccf.heatmap)
+export(create.cluster.heatmap)
+export(create.ccf.summary.heatmap)
+
+
+export(create.clone.genome.distribution.plot)

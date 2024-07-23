@@ -29,7 +29,7 @@ count.leaves.per.node <- function(v) {
 	}
 
 assign.weight <- function(node,v, extra.len, spread) {
-	node.weight <- v$leaves[v$id == node] / v$leaves[v$parent == -1];
+	node.weight <- (v$leaves[v$id == node] - 1) / v$leaves[v$parent == -1];
 	return(node.weight);
     }
 
@@ -46,7 +46,9 @@ position.nodes <- function(v, tree, extra.len) {
 		    dx <- distance * sin(angle);
 		    dy <- distance * cos(angle);
 		} else {
-		    dx <- distance * tan(angle);
+		    # Dendrogram
+		    x.length <- vi$x.length;
+		    dx <- if (is.na(x.length)) distance * tan(angle) else x.length;
 		    dy <- distance;
 	        }
 

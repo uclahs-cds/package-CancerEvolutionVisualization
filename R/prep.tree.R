@@ -47,6 +47,7 @@ prep.tree <- function(
         default.values = NA,
         conversion.fun = as.numeric
         );
+    tree.df <- prep.tree.spread(tree.df);
 
     tree.df$parent <- prep.tree.parent(tree.df$parent);
 
@@ -239,6 +240,7 @@ prep.tree <- function(
         ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         angle = c(NA, tree.df$angle),
+        spread = c(NA, tree.df$spread),
         node.colour = c(NA, tree.df$node.col),
         node.label.colour = c(NA, tree.df$node.label.col),
         border.colour = c(NA, tree.df$border.col),
@@ -246,6 +248,7 @@ prep.tree <- function(
         border.width = c(NA, tree.df$border.width),
         parent = as.numeric(c(NA,tree.df$parent)),
         excluded = c(TRUE, rep(FALSE, nrow(tree.df))),
+        x.length = c(NA, tree.df$x.length),
         edge.colour.1 = c(NA, tree.df[, paste0('edge.col.', branch.names[1])]),
         edge.type.1 = c(NA, tree.df[, paste0('edge.type.', branch.names[1])]),
         edge.width.1 = c(NA, tree.df[, paste0('edge.width.', branch.names[1])]),
@@ -399,6 +402,29 @@ prep.branch.mode <- function(tree.df) {
         }
 
     tree.df$mode[is.na(tree.df$mode)] <- radial.mode.name;
+    return(tree.df);
+    }
+
+prep.tree.spread <- function(tree.df) {
+    default.spread <- 1;
+    if ('spread' %in% colnames(tree.df)) {
+        tree.df$spread[is.na(tree.df$spread)] <- default.spread;
+        tree.df$spread <- as.numeric(tree.df$spread);
+
+        non.numeric <- is.na(tree.df$spread);
+        if (any(non.numeric)) {
+            warning('Non-numeric values found in tree input "spread" column.');
+            tree.df$spread[non.numeric] <- default.spread;
+            }
+        if (any(tree.df$spread < 0, na.rm = TRUE)) {
+            stop(paste(
+                'Tree input "spread" column values must be positive.',
+                'See documentation and User Guide vignette for more information on "spread".'
+                ));
+            }
+    } else {
+        tree.df$spread <- default.spread;
+        }
     return(tree.df);
     }
 
