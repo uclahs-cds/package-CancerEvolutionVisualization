@@ -94,6 +94,23 @@ add.segs3 <- function(
     return(tree.out);
     }
 
+######################################################################
+# calculate.coords.radial
+#
+# Description:
+# - Calculates the coordinates for a radial layout of a tree or dendrogram.
+#
+# Arguments:
+#  - x              A data frame or matrix containing the tree or dendrogram data.
+#  - v              A data frame or matrix containing additional vertex information.
+#  - length.colname The name of the column in x that contains the branch lengths.
+#  - parent.id      The ID of the parent node.
+#  - offset         The offset value for positioning the nodes.
+#  - side           The side of the tree or dendrogram ("left" or "right").
+#
+# Returns:
+#  - A data frame with the calculated base and tip coordinates (basex, basey, tipx, tipy).
+
 calculate.coords.radial <- function(
     x,
     v,
@@ -150,6 +167,28 @@ calculate.coords.radial <- function(
         ));
     }
 
+######################################################################
+# calculate.coords.dendrogram
+#
+# Description:
+# - Calculates the coordinates for a dendrogram layout of a tree.
+#
+# Arguments:
+#  - x               A data frame or matrix containing the tree data.
+#  - v               A data frame or matrix containing additional vertex information.
+#  - length.colname  The name of the column in x that contains the branch lengths.
+#  - parent.id       The ID of the parent node.
+#  - offset          The offset value for positioning the nodes.
+#  - side            The side of the dendrogram ("left" or "right").
+#
+# Returns:
+#  - A data frame with the calculated base and tip coordinates (basex, basey, tipx, tipy).
+#
+# Note:
+#  - The function assumes that the tree or dendrogram has a binary structure.
+#  - The function uses the branch lengths and angles to calculate the coordinates.
+#  - If the "x.length" value is available in v, it will be used instead of calculating dx from the branch length and angle.
+
 calculate.coords.dendrogram <- function(
     x,
     v,
@@ -187,7 +226,8 @@ calculate.coords.dendrogram <- function(
         }
 
     dy <- x[, length.colname];
-    x.length <- v[x$tip, 'x.length']
+    # x.length <- v[x$tip, 'x.length'];
+    x.length <- v[x$tip, 'x'];
     dx <- if (is.na(x.length)) x[, 'length'] * tan(angle) else x.length;
 
     offset.x <- offset * offset.x.modifier;
@@ -206,6 +246,19 @@ calculate.coords.dendrogram <- function(
         tipy
         ));
     }
+
+###################################################################################################
+# calculate.seg.coords
+#
+# Description:
+#  - Calculates the coordinates of segments in a tree structure for plotting purposes. The 'calculate.seg.coords' function calculates the coordinates of segments in a tree structure based on the provided tree data frame and additional node information in 'v'. The function supports two modes of coordinate calculation: 'radial' and 'dendrogram'.
+
+# Arguments:
+#  - tree          A data frame representing the tree structure. Each row corresponds to a segment in the tree.
+#  - v             A data frame or matrix containing additional information about the nodes in the tree.
+#  - length.colname   A character string specifying the column name in 'v' that contains the length information for each node.
+#  - offset        A numeric value specifying the offset to be applied to the coordinates.
+#  - side          A character string specifying the side of the tree on which the segments should be plotted.
 
 calculate.seg.coords <- function(
     tree,
