@@ -130,7 +130,7 @@ prep.tree <- function(
             edge.col.column <- paste0('edge.col.', branch);
             tree.df[, edge.col.column] <- NA;
             }
-        
+
         default.edge.col <- 'black';
         tree.df[, edge.col.column] <- prep.column.values(
             tree.df[, edge.col.column],
@@ -397,6 +397,17 @@ prep.branch.mode <- function(tree.df) {
                 ));
             }
         tree.df$mode[invalid.mode] <- NA;
+
+        # check all children of the same parent is specified the same mode
+        split.df <- split(tree.df, tree.df$parent);
+        n.mode <- sapply(split.df, function(x) length(unique(x$mode)))
+
+        if (any(n.mode > 1)){
+            invalid.parent.str <- paste(names(n.mode[n.mode > 1]), collapse = ' ')
+            stop(paste('"mode" must be consistent across children sharing a parent.',
+                'Multiple modes specified for children of:', invalid.parent.str
+                ));
+            }
     } else {
         tree.df$mode <- NA;
         }
