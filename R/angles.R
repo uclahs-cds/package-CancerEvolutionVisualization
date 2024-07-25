@@ -3,6 +3,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
     node.ids <- c(root.node.id);
 
     angles <- v$angle;
+    x <- numeric(nrow(v));
     # child.weights <- sapply(
     #     v$id,
     #     function(node.id) assign.weight(node.id, v),
@@ -59,36 +60,37 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
                     previous.angle <- angle;
                     }
             } else {
-                num.slices <- v$leaves[v$id == current.node.id];
-                print(num.slices);
-                x.pos <- 1:num.slices - num.slices %/% 2;
-                if (num.slices %% 2 == 0) { # if even
+                parent.leaves <- v$leaves[v$id == current.node.id];
+                x.pos <- 1:num.children - num.children %/% 2;
+                if (parent.leaves %% 2 == 0) { # if even
                     x.pos <- x.pos - 0.5
                 } else {
                    x.pos <- x.pos - 1
                 }
-                start.idx <- 1;
+                x.pos <- x.pos * (parent.leaves / num.children);
+                # start.idx <- 1;
                 for (i in seq_along(child.ids)) {
                     child.id <- child.ids[i];
-                    n.leaves <- v$leaves[v$id == child.id];
-                    n <- start.idx + (n.leaves %/% 2);
-                    if (n.leaves %% 2 == 0) { # if even
-                        current.pos <- x.pos[n] - 0.5
-                    } else {
-                        current.pos <- x.pos[n]
-                    }
+                    # n.leaves <- v$leaves[v$id == child.id];
+                    # n <- start.idx + (n.leaves %/% 2);
+                    # if (n.leaves %% 2 == 0) { # if even
+                    #     current.pos <- x.pos[n] - 0.5
+                    # } else {
+                    #     current.pos <- x.pos[n]
+                    # }
+                    current.pos <- x.pos[i]
                     print(paste('position for', child.id, ':', current.pos))
                     if (0 == current.pos) {
                         angles[tree$tip == child.id] <- 0;
                         }
-                    random.scale <- 5;
+                    random.scale <- 35;
                     angle <- angles[tree$tip == child.id];
                     if (is.na(angle)) {
                         y <- tree$length[tree$tip == child.id];
                         angle <- atan(y / (current.pos * random.scale));
                         angles[tree$tip == child.id] <- angle;
                         }
-                    start.idx <- start.idx + n.leaves;
+                    # start.idx <- start.idx + n.leaves;
                     }
                 }
             # Appending to end of queue for breadth-first traversal
