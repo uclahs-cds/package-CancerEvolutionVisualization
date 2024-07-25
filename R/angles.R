@@ -3,13 +3,13 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
     node.ids <- c(root.node.id);
 
     angles <- v$angle;
-    child.weights <- sapply(
-        v$id,
-        function(node.id) assign.weight(node.id, v),
-        USE.NAMES = FALSE
-        );
+    # child.weights <- sapply(
+    #     v$id,
+    #     function(node.id) assign.weight(node.id, v),
+    #     USE.NAMES = FALSE
+    #     );
 
-    while (length(node.ids) > 0) {
+    while (length(node.ids) > 0) { # each iteration assigns an angle to the children of the current node
         # "Pops" next element in FIFO queue node.ids
         current.node.id <- as.numeric(node.ids[1]);
         node.ids <- node.ids[-1];
@@ -31,38 +31,71 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
                 parent.angle <- 0;
                 angles[current.node.id] <- parent.angle;
                 }
-            child.weight <- assign.weight(current.node.id, v);
+            # child.weight <- assign.weight(current.node.id, v);
 
             level.spread <- calculate.level.spread(v$spread[v$id %in% child.ids]);
             level.total.angle <- total.angle * level.spread;
-            start.angle <- parent.angle - (level.total.angle) * (num.children > 1) / 2;
-            num.slices <- max(num.children - 1, 1);
-            angle.increment <- total.angle / num.slices;
+            # start.angle <- parent.angle - (level.total.angle) * (num.children > 1) / 2;
+            # start.angle <- - (level.total.angle) * (num.children > 1) / 2;
+            if (v$mode[v$id == current.node.id] == 'radial' ) {
+                num.slices <- max(num.children - 1, 1);
+                angle.increment <- total.angle / num.slices;
+                start.angle <- parent.angle - (level.total.angle) * (num.children > 1) / 2;
 
-            previous.angle <- start.angle;
-            for (i in seq_along(child.ids)) {
-                child.id <- child.ids[i];
+                previous.angle <- start.angle;
+                for (i in seq_along(child.ids)) {
+                    child.id <- child.ids[i];
 
-                angle <- angles[tree$tip == child.id];
-                if (is.na(angle)) {
-                    if (i == 1) {
-                        angle <- start.angle;
-                    } else {
-                        pair.spread <- v$spread[v$id %in% child.ids[c(i - 1, i)]];
-                        angle <- previous.angle + angle.increment * mean(pair.spread);
+                    angle <- angles[tree$tip == child.id];
+                    if (is.na(angle)) {
+                        if (i == 1) {
+                            angle <- start.angle;
+                        } else {
+                            pair.spread <- v$spread[v$id %in% child.ids[c(i - 1, i)]];
+                            angle <- previous.angle + angle.increment * mean(pair.spread);
+                            }
+                        angles[tree$tip == child.id] <- angle;
                         }
-
-                    angles[tree$tip == child.id] <- angle;
+                    previous.angle <- angle;
                     }
-
-                previous.angle <- angle;
+            } else {
+                num.slices <- v$leaves[v$id == current.node.id];
+                print(num.slices);
+                x.pos <- 1:num.slices - num.slices %/% 2;
+                if (num.slices %% 2 == 0) { # if even
+                    x.pos <- x.pos - 0.5
+                } else {
+                   x.pos <- x.pos - 1
                 }
-
+                start.idx <- 1;
+                for (i in seq_along(child.ids)) {
+                    child.id <- child.ids[i];
+                    n.leaves <- v$leaves[v$id == child.id];
+                    n <- start.idx + (n.leaves %/% 2);
+                    if (n.leaves %% 2 == 0) { # if even
+                        current.pos <- x.pos[n] - 0.5
+                    } else {
+                        current.pos <- x.pos[n]
+                    }
+                    print(paste('position for', child.id, ':', current.pos))
+                    if (0 == current.pos) {
+                        angles[tree$tip == child.id] <- 0;
+                        }
+                    random.scale <- 5;
+                    angle <- angles[tree$tip == child.id];
+                    if (is.na(angle)) {
+                        y <- tree$length[tree$tip == child.id];
+                        angle <- atan(y / (current.pos * random.scale));
+                        angles[tree$tip == child.id] <- angle;
+                        }
+                    start.idx <- start.idx + n.leaves;
+                    }
+                }
             # Appending to end of queue for breadth-first traversal
             node.ids <- append(node.ids, child.ids);
             }
         }
-
+    print(cbind(v[, c('id', 'parent', 'label.text', 'leaves')], angles[as.numeric(v$id)]))
     return(angles);
     }
 
@@ -153,3 +186,4 @@ calculate.level.spread <- function(level.spread.values) {
         );
     return(level.spread / (n - 1));
     }
+
