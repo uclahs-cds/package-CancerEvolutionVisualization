@@ -226,7 +226,7 @@ calculate.coords.dendrogram <- function(
         }
 
     dy <- x[, length.colname];
-    x.length <- v[x$tip, 'x'];
+    x.length <- v[x$tip, 'x.length'];
     dx <- if (is.na(x.length)) x[, 'length'] * tan(angle) else x.length;
 
     offset.x <- offset * offset.x.modifier;

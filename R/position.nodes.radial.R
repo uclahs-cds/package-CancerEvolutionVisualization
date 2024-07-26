@@ -47,7 +47,7 @@ position.nodes <- function(v, tree, extra.len) {
 		    dy <- distance * cos(angle);
 		} else {
 		    # Dendrogram
-		    x.length <- if (0 == angle) 0 else vi$x.length;
+		    x.length <- vi$x.length;
 		    dx <- if (is.na(x.length)) distance * tan(angle) else x.length;
 		    dy <- distance;
 	        }
