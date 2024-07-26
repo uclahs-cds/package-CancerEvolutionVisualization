@@ -226,18 +226,14 @@ calculate.coords.dendrogram <- function(
         }
 
     dy <- x[, length.colname];
-    # x.length <- v[x$tip, 'x'];
-    x.length <- if (0 == angle) 0 else v[x$tip, 'x.length'];
-    dx <- if (is.na(x.length)) x[, 'length'] / tan(angle) else x.length;
-    # dx <- if (is.na(x.length)) x[, length.colname] * tan(angle) else x.length;
+    x.length <- v[x$tip, 'x'];
+    dx <- if (is.na(x.length)) x[, 'length'] * tan(angle) else x.length;
 
     offset.x <- offset * offset.x.modifier;
     basex <- basex + dx + offset.x;
     # basex <- basex + offset.x;
     tipx <- basex;
     tipy <- basey + dy;
-
-
 
     return(data.frame(
         basex,
