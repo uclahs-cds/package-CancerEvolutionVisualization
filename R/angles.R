@@ -2,7 +2,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
     root.node.id <- v$id[[1]];
     node.ids <- c(root.node.id);
 
-    random.scale <- median(tree$length1);
+    random.scale <- median(tree$length1) * spread;
     angles <- v$angle;
     x <- numeric(nrow(v));
 
@@ -63,7 +63,6 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
             node.ids <- append(node.ids, child.ids);
             }
         }
-    print(cbind(v[, c('id', 'parent', 'label.text', 'leaves')], angles[as.numeric(v$id)]))
     return(angles);
     }
 
@@ -127,10 +126,6 @@ split.equal.x.dist <- function(
         } else {
             current.pos <- x.pos[j]
             }
-
-        # if (0 == current.pos) {
-        #     angles[tree$tip == child.id] <- 0;
-        #     }
 
         angle <- angles[tree$tip == child.id];
         if (is.na(angle)) {
