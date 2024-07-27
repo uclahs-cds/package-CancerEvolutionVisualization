@@ -24,7 +24,7 @@ prep.tree <- function(
             ));
         branch.names <- branch.names[1:2];
     } else if (length(branch.names) == 0) {
-        branch.names <- c("1");
+        branch.names <- c('1');
         }
 
     if (!('angle' %in% colnames(tree.df))) {
@@ -513,8 +513,8 @@ prep.connector.line.width <- function(
     check.lengths(
         connector.line.width,
         branch.line.width,
-        a.name = "connector.line.width",
-        b.name = "branch.line.width",
+        a.name = 'connector.line.width',
+        b.name = 'branch.line.width',
         );
     NA.indices <- is.na(branch.line.width)
     connector.line.width[NA.indices] <- branch.line.width[NA.indices];
@@ -523,7 +523,7 @@ prep.connector.line.width <- function(
     non.numeric.indices <- is.na(connector.line.width);
     if (any(non.numeric.indices)) {
         warning(
-            non.numeric.warning.message("connector.width", "branch line width values")
+            non.numeric.warning.message('connector.width', 'branch line width values')
             );
         connector.line.width[non.numeric.indices] <- branch.line.width[non.numeric.indices];
         }
@@ -574,7 +574,8 @@ prep.column.values <- function(
     default.values,
     conversion.fun = NULL
     ) {
-    if(!is.null(conversion.fun)) {
+
+    if (!is.null(conversion.fun)) {
         original.default.NAs <- is.na(default.values);
         default.values <- suppressWarnings(conversion.fun(default.values));
         if (any(is.na(default.values) & !original.default.NAs)) {
@@ -587,7 +588,7 @@ prep.column.values <- function(
     if (default.values.n != 1 && default.values.n != n) {
         stop('"default.values" must be either length 1 or the same length as "column.values".');
         }
-    
+
     replace.with.default <- function(x, NA.indices) {
         if (default.values.n == 1) {
             x[NA.indices] <- default.values;
@@ -605,7 +606,7 @@ prep.column.values <- function(
         if (converted.n != n) {
             stop(paste(
                 'Conversion function changed length of column values',
-                paste0("(", "expected ", n, ", ", "received ", converted.n, ")")
+                paste0('(', 'expected ', n, ', ', 'received ', converted.n, ')')
                 ));
             }
         converted.NAs <- is.na(column.values);

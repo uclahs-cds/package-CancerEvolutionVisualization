@@ -1,4 +1,4 @@
-CancerEvolutionVisualization 3.0.0 2024-05-07 (Dan Knight)
+CancerEvolutionVisualization 3.0.0 2024-07-26 (Helena Winata, Dan Knight)
 
 ADDED
 * Dendrogram mode with node-by-node control
@@ -9,7 +9,10 @@ UPDATE
 * Fixed angle calculation bug where child angles do not follow
   their parent angle, instead moving "downward" at 0 degrees.
 * Updated package metadata and README
+* Split angle handling for `radial` and `dendrogram` modes to optimized each
+  independently.
 
+--------------------------------------------------------------------------
 CancerEvolutionVisualization 2.0.2 2024-04-09 (Dan Knight)
 
 BUG

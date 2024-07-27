@@ -225,4 +225,3 @@ calculate.level.spread <- function(level.spread.values) {
         );
     return(level.spread / (n - 1));
     }
-
