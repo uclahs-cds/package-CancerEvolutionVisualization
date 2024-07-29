@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 2.1.0 (2024-05-07)
+# CancerEvolutionVisualization 2.1.0 (2024-07-29)
 
 ## Added
 * Optional "spread" column to control node/branch spacing
@@ -9,6 +9,7 @@
   their parent angle, instead moving "downward" at 0 degrees.
 * Updated package metadata and README
 * Set default parameters for heatmaps, defaulting too BPG defaults unless necessary
+* Updated changelog format to NEWS.md Markdown format
 
 
 # CancerEvolutionVisualization 2.0.1 (2023-11-17)
@@ -180,13 +181,11 @@
 * Allow tree input without CP and validate CP input values
 
 
-
 # CancerEvolutionVisualization 0.2.0 (2022-04-12)
 
 ## Update
 * Include tree preparation in SRCGrob to simplify use and improve
   consistency. 
-
 
 
 # CancerEvolutionVisualization 0.1.1 (2022-02-23)
@@ -195,13 +194,11 @@
 * Remove input sampling (assume that data has been prepared properly)
 
 
-
 # CancerEvolutionVisualization 0.1.0 (2021-11-08)
 
 ## Update
 * Add functions for deep comparison of plot Grobs.
 * Update tests to use new comparisons and add test cases.
-
 
 
 # CancerEvolutionVisualization 0.0.0 (2021-09-13)
