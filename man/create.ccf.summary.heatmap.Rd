@@ -6,9 +6,9 @@ Creates a heatmap of cancer cell fraction (CCF) distribution across tumour sampl
 }
 
 \usage{
-create.ccf.summary.heatmap <- function(
+create.ccf.summary.heatmap(
     DF,
-    ccf.thres = 0,
+    ccf.thres = NULL,
     median.col = 'median.ccf.per.sample',
     clone.order = NULL,
     sample.order = NULL,
@@ -25,7 +25,7 @@ create.ccf.summary.heatmap <- function(
     legend.title.cex = 1.2,
     legend.label.cex = 1,
     ...
-    )
+    );
 }
 \arguments{
     \item{DF}{A data-frame with the following column names: 'ID', 'SNV.id', 'clone.id', 'CCF'.}

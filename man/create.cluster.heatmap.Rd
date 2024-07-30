@@ -5,7 +5,7 @@
 Creates a heatmap of cancer cell fraction (CCF) distribution across tumour samples with clone IDs as a covariate beneath the heatmap.
 }
 \usage{
-create.cluster.heatmap <- function(
+create.cluster.heatmap(
     DF,
     clone.colours = NULL,
     height = 6,
@@ -21,13 +21,13 @@ create.cluster.heatmap <- function(
     y.spacing = 1,
     colour.scheme = c('white', 'blue'),
     ...
-    )
+    );
 }
 \arguments{
     \item{DF}{A data-frame with the following column names: 'ID', 'SNV.id', 'clone.id', 'CCF'.}
     \item{clone.colours}{Named list to provide a colour scheme for the clone ID covariate bar. If NULL, colours will be randomly generated. Defaults to \code{NULL}.}
-    \item{plt.height}{Defaults to 6}
-    \item{plt.width}{Defaults to 11}
+    \item{height}{Defaults to 6}
+    \item{width}{Defaults to 11}
     \item{xaxis.col}{Column in DF to extract x-axis labels from. Defaults to \code{NULL}.}
     \item{legend.size}{Width of the legend boxes in 'character' units. Defaults to 3}
     \item{legend.title.cex}{Size of titles in the legends. Defaults to 1.2}
