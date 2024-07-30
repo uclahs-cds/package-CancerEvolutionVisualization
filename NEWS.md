@@ -1,8 +1,9 @@
-# CancerEvolutionVisualization 2.1.0 (2024-07-29)
+# CancerEvolutionVisualization 2.1.0 (2024-07-30)
 
 ## Added
 * Optional "spread" column to control node/branch spacing
 * Plotting functions to visualize the distribution of clones across the genome.
+* Documentation for heatmaps and clone-genome distirbution plor
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow
