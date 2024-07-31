@@ -20,7 +20,6 @@ Depends:
 Imports:
     grDevices,
     utils,
-    stringr,
     BoutrosLab.plotting.general
 Suggests:
     testthat,
