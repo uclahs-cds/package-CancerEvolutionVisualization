@@ -1,99 +1,3 @@
-add.segs3 <- function(
-    tree,
-    v,
-    offset = 0,
-    node.radius = 0,
-    scale.x.real = NULL
-    ) {
-
-    # Calculate offset based on line width
-    offset <- offset / scale.x.real / 2;
-
-    tree.segs.adjusted <- tree.segs <- adply(
-        tree,
-        .margins = 1,
-        .fun = function(x) {
-            if (x$parent == -1) {
-                basey <- 0;
-                basex <- 0;
-            } else {
-                basey <- v$y[v$id == x$parent];
-                basex <- v$x[v$id == x$parent];
-                }
-
-            tipy <- basey + x$length1 * cos(x$angle);
-            tipx <- basex + x$length1 * sin(x$angle);
-
-            return(data.frame(basex, basey, tipx, tipy));
-            }
-        );
-
-    tree.out <- list();
-
-    second.tree.segs.adjusted <- NULL;
-
-    if (length(grep('length', colnames(tree))) == 4) {
-        tree.segs.adjusted <- adply(
-            tree.segs,
-            .margins = 1,
-            .fun = function(r) {
-                offset.x <- offset * cos(r$angle);
-                offset.y <- offset * sin(r$angle);
-
-                if (r$angle > 0) {
-                    basey <- r$basey + offset.y;
-                    tipy <- r$tipy + offset.y;
-                } else {
-                    basey <- r$basey + offset.y;
-                    tipy <- r$tipy + offset.y;
-                    }
-
-                basex <- r$basex - offset.x;
-                tipx <- r$tipx - offset.x;
-
-                return(data.frame(basex, basey, tipx, tipy));
-                }
-            );
-
-        tree.segs.adjusted <- tree.segs.adjusted[which(!(tree.segs.adjusted$basey == tree.segs.adjusted$tipy & tree.segs.adjusted$basex == tree.segs.adjusted$tipx)), ]
-
-        second.tree.segs <- tree.segs;
-        second.tree.segs$tipy <- second.tree.segs$basey + second.tree.segs$length2.c * cos(second.tree.segs$angle);
-        second.tree.segs$tipx <- second.tree.segs$basex + second.tree.segs$length2.c * sin(second.tree.segs$angle);
-
-        second.tree.segs.adjusted <- adply(
-            second.tree.segs,
-            .margins = 1,
-            .fun = function(r) {
-                offset.x  <- offset * cos(r$angle);
-                offset.y  <- offset * sin(r$angle);
-
-                if (r$angle > 0) {
-                    basey <- r$basey - offset.y;
-                    tipy <- r$tipy - offset.y;
-                } else {
-                    basey <- r$basey - offset.y;
-                    tipy <- r$tipy - offset.y;
-                    }
-
-                basex <- r$basex + offset.x;
-                tipx <- r$tipx + offset.x;
-
-                return(data.frame(basex, basey, tipx, tipy));
-                }
-            );
-
-        second.tree.segs.adjusted <- second.tree.segs.adjusted[which(!(second.tree.segs.adjusted$basey == second.tree.segs.adjusted$tipy & second.tree.segs.adjusted$basex == second.tree.segs.adjusted$tipx)),]
-        }
-
-    tree.out <- list(
-        tree.segs = tree.segs.adjusted,
-        tree.segs2 = second.tree.segs.adjusted
-        );
-
-    return(tree.out);
-    }
-
 get.seg.coords <- function(
     tree,
     v,
@@ -105,77 +9,61 @@ get.seg.coords <- function(
     # Calculate offset based on the line width
     offset <- offset / scale1 / 2;
 
-    tree.segs <- adply(
+    tree.segs <- apply(
         tree,
-        .margins = 1,
-        .fun = function(x) {
-            if (x$parent == -1) {
+        MARGIN = 1,
+        FUN = function(x) {
+            if (x['parent'] == -1) {
                 basey <- 0;
                 basex <- 0;
             } else {
-                basey <- v$y[v$id == x$parent];
-                basex <- v$x[v$id == x$parent];
+                basey <- v$y[v$id == x['parent']];
+                basex <- v$x[v$id == x['parent']];
                 }
 
-            tipy <- basey + x$length1 * cos(x$angle);
-            tipx <- basex + x$length1 * sin(x$angle);
+            tipy <- basey + x['length1'] * cos(x['angle']);
+            tipx <- basex + x['length1'] * sin(x['angle']);
 
-            return(data.frame(basex, basey, tipx, tipy));
+            data.frame(
+                basex = basex,
+                basey = basey,
+                tipx = tipx,
+                tipy = tipy
+                );
             }
         );
+    tree.segs <- as.data.frame(do.call('rbind', tree.segs));
+    rownames(tree.segs) <- rownames(tree);
+    tree.segs <- cbind(tree, tree.segs);
 
-    tree.out <- list();
     second.tree.segs.adjusted <- NULL;
 
-    tree.segs.adjusted <- adply(
-        tree.segs,
-        .margins = 1,
-        .fun = function(r) {
-            offset.x <- offset * cos(r$angle);
-            offset.y  <- offset * sin(r$angle);
+    tree.segs.adjusted <- tree.segs;
+    offset.x <- offset * cos(tree.segs.adjusted$angle);
+    offset.y <- offset * sin(tree.segs.adjusted$angle);
 
-            if (r$angle > 0) {
-                basey <- r$basey + offset.y;
-                tipy <- r$tipy + offset.y;
-            } else {
-                basey <- r$basey + offset.y;
-                tipy <- r$tipy + offset.y;
-                }
-
-            basex <- r$basex - offset.x;
-            tipx <- r$tipx - offset.x;
-
-            return(data.frame(basex, basey, tipx, tipy));
-            }
-        );
+    tree.segs.adjusted$basey <- tree.segs.adjusted$basey + offset.y;
+    tree.segs.adjusted$tipy <- tree.segs.adjusted$tipy + offset.y;
+    tree.segs.adjusted$basex <- tree.segs.adjusted$basex - offset.x;
+    tree.segs.adjusted$tipx <- tree.segs.adjusted$tipx - offset.x;
 
     if (length(grep('length',colnames(tree))) == 4) {
-        second.tree.segs <- tree.segs;
-        second.tree.segs$tipy <- second.tree.segs$basey + second.tree.segs$length2.c * cos(second.tree.segs$angle);
-        second.tree.segs$tipx <- second.tree.segs$basex + second.tree.segs$length2.c * sin(second.tree.segs$angle);
-
-
-        second.tree.segs.adjusted <- adply(
-            second.tree.segs,
-            .margins = 1,
-            .fun = function(r) {
-                offset.x  <- offset * cos(r$angle);
-                offset.y  <- offset * sin(r$angle);
-
-                if (r$angle > 0) {
-                    basey <- r$basey - offset.y;
-                    tipy <- r$tipy - offset.y;
-                } else {
-                    basey <- r$basey - offset.y;
-                    tipy <- r$tipy - offset.y;
-                    }
-
-                basex <- r$basex + offset.x;
-                tipx <- r$tipx + offset.x;
-
-                return(data.frame(basex, basey, tipx, tipy));
-                }
+        second.tree.segs.adjusted <- tree.segs;
+        second.tree.segs.adjusted$tipy <- (
+            second.tree.segs.adjusted$basey
+            + second.tree.segs.adjusted$length2.c
+            * cos(second.tree.segs.adjusted$angle)
             );
+        second.tree.segs.adjusted$tipx <- (
+            second.tree.segs.adjusted$basex
+            + second.tree.segs.adjusted$length2.c
+            * sin(second.tree.segs.adjusted$angle)
+            );
+
+        second.tree.segs.adjusted$basey <- second.tree.segs.adjusted$basey - offset.y;
+        second.tree.segs.adjusted$tipy <- second.tree.segs.adjusted$tipy - offset.y;
+        second.tree.segs.adjusted$basex <- second.tree.segs.adjusted$basex + offset.x;
+        second.tree.segs.adjusted$tipx <- second.tree.segs.adjusted$tipx + offset.x;
 
         second.tree.segs.adjusted <- second.tree.segs.adjusted[
             which(second.tree.segs.adjusted$basey != second.tree.segs.adjusted$tipy), ];
