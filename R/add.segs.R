@@ -149,11 +149,17 @@ get.seg.coords <- function(
             }
         );
 
-    if (length(grep('length',colnames(tree))) == 4) {
+    filter.zero.length.segs <- function(segs) {
+        seg.lengths <- sqrt(
+            (segs$tipx - segs$basex)^2 + (segs$tipy - segs$basey)^2
+            );
+        return(segs[seg.lengths > 0, ]);
+        }
+
+    if (length(grep('^length', colnames(tree))) == 4) {
         second.tree.segs <- tree.segs;
         second.tree.segs$tipy <- second.tree.segs$basey + second.tree.segs$length2.c * cos(second.tree.segs$angle);
         second.tree.segs$tipx <- second.tree.segs$basex + second.tree.segs$length2.c * sin(second.tree.segs$angle);
-
 
         second.tree.segs.adjusted <- adply(
             second.tree.segs,
@@ -176,10 +182,10 @@ get.seg.coords <- function(
                 return(data.frame(basex, basey, tipx, tipy));
                 }
             );
-
-        second.tree.segs.adjusted <- second.tree.segs.adjusted[
-            which(second.tree.segs.adjusted$basey != second.tree.segs.adjusted$tipy), ];
         }
+
+    tree.segs.adjusted <- filter.zero.length.segs(tree.segs.adjusted);
+    second.tree.segs.adjusted <- filter.zero.length.segs(second.tree.segs.adjusted);
 
     tree.out <- list(
         tree.segs = tree.segs.adjusted,
@@ -225,24 +231,20 @@ add.tree.segs <- function(
             )
         );
 
-    if (!is.null(tree.segs2)) {
-        tree.segs2 <- tree.segs2[which(tree.segs2$basey != tree.segs2$tipy), ];
-
-        if (nrow(tree.segs2) > 0) {
-            out$tree.segs2 <- segmentsGrob(
-                name = 'tree.segs.2',
-                x0 = tree.segs2$basex,
-                y0 = tree.segs2$basey,
-                x1 = tree.segs2$tipx,
-                y1 = tree.segs2$tipy,
-                default.units = 'native',
-                gp = gpar(
-                    col = clone.out$v$edge.colour.2,
-                    lwd = clone.out$v$edge.width.2,
-                    lty = clone.out$v$edge.type.2
-                    )
-                );
-            }
+    if (!is.null(tree.segs2) && nrow(tree.segs2) > 0) {
+        out$tree.segs2 <- segmentsGrob(
+            name = 'tree.segs.2',
+            x0 = tree.segs2$basex,
+            y0 = tree.segs2$basey,
+            x1 = tree.segs2$tipx,
+            y1 = tree.segs2$tipy,
+            default.units = 'native',
+            gp = gpar(
+                col = clone.out$v$edge.colour.2,
+                lwd = clone.out$v$edge.width.2,
+                lty = clone.out$v$edge.type.2
+                )
+            );
         }
 
     clone.out$grobs <- c(clone.out$grobs, out)
