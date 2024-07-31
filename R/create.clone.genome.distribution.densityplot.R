@@ -25,11 +25,10 @@ create.clone.genome.distribution.densityplot <- function(
         ));
     }
 
-calculate.density.and.scale <- function(cluster.df, total.nsnv) {
+calculate.density.and.scale <- function(cluster.df) {
     density <- density(x = cluster.df$genome.pos, bw = 'nrd', adjust = 0.05, na.rm = TRUE);
     density.df <- as.data.frame(density[c('x','y')]);
     density.df$clone.id <- unique(cluster.df$clone.id);
-    # density.df$scaled.y <- density.df$y * nrow(cluster.df) / total.nsnv;
     density.df$count <- nrow(cluster.df) / sum(density.df$y) * density.df$y;
 
     return(density.df)
