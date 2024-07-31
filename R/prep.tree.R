@@ -109,7 +109,7 @@ prep.tree <- function(
         );
 
     tree.df$node.label.col <- prep.node.label.colours(tree.df);
-    
+
     tree.df <- prep.node.border.colours(tree.df);
     tree.df <- prep.node.border.type(tree.df);
     tree.df <- prep.node.border.width(tree.df);
@@ -363,7 +363,7 @@ prep.node.border.type <- function(tree.df) {
             'longdash',
             'twodash'
             );
-        
+
         border.type.is.valid <- tree.df$border.type %in% valid.border.types | is.na(tree.df$border.type);
 
         if (!all(border.type.is.valid)) {
