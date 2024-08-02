@@ -179,5 +179,5 @@ nodeless.tree <- data.frame(
     draw.node = c(TRUE, FALSE, TRUE, TRUE)
     );
 
-SRCGrob(nodeless);
+SRCGrob(nodeless.tree);
 }
