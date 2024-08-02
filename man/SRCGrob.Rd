@@ -171,4 +171,13 @@ SRCGrob(
     simple.tree,
     add.normal = TRUE
     );
+
+
+# Nodeless Mode
+nodeless.tree <- data.frame(
+    parent = c(NA, 1, 2, 2),
+    draw.node = c(TRUE, FALSE, TRUE, TRUE)
+    );
+
+SRCGrob(nodeless);
 }
