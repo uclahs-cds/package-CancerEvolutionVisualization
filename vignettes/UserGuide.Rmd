@@ -218,9 +218,9 @@ Complex trees may benefit from simpler visual styles. For example, there may not
 ```{r echo=F}
 nodeless <- data.frame(
     parent = c(
-        NA, 1, 2, 2, 2, 
-        3, 3, 3, 
-        4, 4, 4, 4, 4, 
+        NA, 1, 2, 2, 2,
+        3, 3, 3,
+        4, 4, 4, 4, 4,
         5, 5, 5, 5
         ),
     draw.node = TRUE,
@@ -230,7 +230,7 @@ nodeless$spread[6:nrow(nodeless)] <- 0.6;
 nodeless$draw.node[c(2, 6:nrow(nodeless))] <- FALSE;
 
 knitr::kable(
-    nodeless[, c("parent", "draw.node")],
+    nodeless[, c('parent', 'draw.node')],
     row.names = TRUE
     );
 ```
