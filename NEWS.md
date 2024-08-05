@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 2.1.0 (2024-07-31)
+# CancerEvolutionVisualization 2.1.0 (2024-08-05)
 
 ## Added
 * Optional "spread" column to control node/branch spacing
