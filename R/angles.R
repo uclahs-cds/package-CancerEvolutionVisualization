@@ -35,11 +35,12 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
                 level.total.angle <- total.angle * level.spread;
 
                 angles <- split.equal.angle(
-                    level.total.angle,
-                    child.ids,
-                    angles,
-                    tree,
-                    v
+                    base.total.angle = total.angle,
+                    level.total.angle = level.total.angle,
+                    child.ids = child.ids,
+                    angles = angles,
+                    tree = tree,
+                    v = v
                     );
                 if (v$mode[v$id == current.node.id] == 'radial') {
                     #if parent is 'radial' angjust starting angle
@@ -67,6 +68,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
     }
 
 split.equal.angle <- function(
+    base.total.angle,
     level.total.angle,
     child.ids,
     angles,
@@ -76,7 +78,7 @@ split.equal.angle <- function(
 
     num.children <- length(child.ids);
     num.slices <- max(num.children - 1, 1);
-    angle.increment <- level.total.angle / num.slices;
+    angle.increment <- base.total.angle / num.slices;
     start.angle <- - (level.total.angle) * (num.children > 1) / 2;
 
     previous.angle <- start.angle;
