@@ -28,7 +28,6 @@ SRCGrob(
     node.radius = 0.1,
     node.text.line.dist = 0.1,
     colour.scheme = CancerEvolutionVisualization::colours,
-    draw.nodes = TRUE,
     add.normal = FALSE,
     use.radians = FALSE,
     normal.cex = 1,
@@ -73,7 +72,6 @@ SRCGrob(
   Distance between node text and tree branches (as a value between 0 and 1)
   }
   \item{colour.scheme}{Vector of colour values to be used for CP polygons}
-  \item{draw.nodes}{Enable or disable drawing tree nodes}
   \item{add.normal}{Adds a normal}
   \item{use.radians}{Unit to be used for "angle" column (degrees or radians)}
   \item{normal.cex}{Font size within the normal "box"}
@@ -173,4 +171,13 @@ SRCGrob(
     simple.tree,
     add.normal = TRUE
     );
+
+
+# Nodeless Mode
+nodeless.tree <- data.frame(
+    parent = c(NA, 1, 2, 2),
+    draw.node = c(TRUE, FALSE, TRUE, TRUE)
+    );
+
+SRCGrob(nodeless.tree);
 }

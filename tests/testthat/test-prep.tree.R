@@ -599,12 +599,53 @@ test_that(
     });
 
 test_that(
-    'prep.node.label.colours errors if "node.col" columb contains NAs', {
+    'prep.node.label.colours errors if "node.col" column contains NAs', {
         tree.df <- data.frame(node.col = c(NA, 1:3));
 
         expect_error(
             prep.node.label.colours(tree.df),
             regexp = '"node.col"'
+            );
+    });
+
+test_that(
+    'prep.draw.node.setting uses valid values', {
+        tree.df <- data.frame(draw.node = c(TRUE, FALSE, TRUE, FALSE, FALSE));
+        result <- prep.draw.node.setting(tree.df);
+        expect_equal(result$draw.node, tree.df$draw.node);
+    });
+
+test_that(
+    'prep.draw.node.setting uses default if no column included', {
+        tree.df <- data.frame(parent = c(NA, 1, 2, 3));
+
+        result <- prep.draw.node.setting(tree.df);
+        expected.result <- rep(TRUE, nrow(tree.df));
+
+        expect_equal(result$draw.node, expected.result);
+    });
+
+test_that(
+    'prep.draw.node.setting fills NA values with default', {
+        tree.df <- data.frame(draw.node = c(TRUE, FALSE, TRUE, FALSE, FALSE));
+        NA.indices <- c(2, 3, 5);
+        tree.df[NA.indices, 'draw.node'] <- NA;
+
+        result <- prep.draw.node.setting(tree.df);
+
+        default.value <- TRUE;
+        expected.result <- tree.df$draw.node;
+        expected.result[NA.indices] <- default.value;
+
+        expect_equal(result$draw.node, expected.result);
+    });
+
+test_that(
+    'prep.draw.node.setting warns on non-logical values', {
+        tree.df <- data.frame(draw.node = c(TRUE, FALSE, 'invalid', TRUE));
+        expect_warning(
+            prep.draw.node.setting(tree.df),
+            regexp = 'draw.node'
             );
     });
 

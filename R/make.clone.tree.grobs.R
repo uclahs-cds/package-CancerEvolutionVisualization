@@ -27,7 +27,6 @@ make.clone.tree.grobs <- function(
     axis.cex,
     xaxis.label,
     min.width,
-    draw.nodes,
     node.radius,
     label.nodes,
     node.col,
@@ -87,7 +86,7 @@ make.clone.tree.grobs <- function(
 	    tree$length <- tree$length1;
 	    }
 
-	if (draw.nodes != 'none' && length.from.node.edge == TRUE) {
+	if (length.from.node.edge == TRUE) {
 	    tree <- adjust.branch.lengths(v, tree, node.radius, scale1);
     	}
 
@@ -119,7 +118,7 @@ make.clone.tree.grobs <- function(
 
 	if (!no.ccf) {
 		get.CP.polygons(clone.out);
-	}
+    	}
 
 	add.tree.segs(clone.out, node.radius, default.branch.width, scale1, seg1.col, seg2.col);
 
@@ -132,9 +131,7 @@ make.clone.tree.grobs <- function(
 		# add.pie.nodes(clone.out, node.radius, cluster.list);
     	}
 
-	if (draw.nodes) {
-	    add.node.ellipse(clone.out,node.radius, label.nodes, label.cex, scale1);
-	    }
+    add.node.ellipse(clone.out,node.radius, label.nodes, label.cex, scale1);
 
 	if (add.normal == TRUE) {
 		add.normal(clone.out,node.radius,label.cex, normal.cex)

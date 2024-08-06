@@ -1,22 +1,18 @@
-# CancerEvolutionVisualization 2.1.0 (2024-07-31)
+# CancerEvolutionVisualization 2.1.0 (2024-08-05)
 
 ## Added
 * Optional "spread" column to control node/branch spacing
 * Plotting functions to visualize the distribution of clones across the genome.
 * Documentation for heatmaps and clone-genome distirbution plor
+* Option to disable node drawing with node-by-node control 
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow
   their parent angle, instead moving "downward" at 0 degrees.
 * Updated package metadata and README
-<<<<<<< HEAD:NEWS.md
 * Set default parameters for heatmaps, defaulting too BPG defaults unless necessary
 * Updated changelog format to NEWS.md Markdown format
-=======
 * Refactored use of plyr/dplyr and stringr functions to remove dependencies
-* Set default parameters for heatmaps, defaulting to BPG defaults unless necessary
-
->>>>>>> 2424b7934e815dcc02cce5482c1b1c16bf319a09:NEWS
 
 
 # CancerEvolutionVisualization 2.0.1 (2023-11-17)
