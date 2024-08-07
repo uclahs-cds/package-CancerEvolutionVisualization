@@ -24,7 +24,7 @@ calculate.coords.radial <- function(
     side
     ) {
 
-    angle <- x$angle;
+    angle <- x['angle'];
     offset.x.modifier <- offset.y.modifier <- 1;
 
     if (side == 'left') {
@@ -43,16 +43,16 @@ calculate.coords.radial <- function(
             ));
         }
 
-    if (x$parent == -1) {
+    if (x['parent'] == -1) {
         basey <- 0;
         basex <- 0;
     } else {
-        basey <- v$y[parent.id];
-        basex <- v$x[parent.id];
+        basey <- v[parent.id, 'y'];
+        basex <- v[parent.id, 'x'];
         }
 
-    dy <- x[, length.colname] * cos(angle);
-    dx <- x[, length.colname] * sin(angle);
+    dy <- x[length.colname] * cos(angle);
+    dx <- x[length.colname] * sin(angle);
 
     offset.x <- offset * cos(angle) * offset.x.modifier;
     offset.y <- offset * sin(angle) * offset.y.modifier;
@@ -102,7 +102,7 @@ calculate.coords.dendrogram <- function(
     side
     ) {
 
-    angle <- x$angle;
+    angle <- x['angle'];
     offset.x.modifier <- offset.y.modifier <- 1;
 
     if (side == 'left') {
@@ -121,17 +121,17 @@ calculate.coords.dendrogram <- function(
             ));
         }
 
-    if (x$parent == -1) {
+    if (x['parent'] == -1) {
         basey <- 0;
         basex <- 0;
     } else {
-        basey <- v$y[parent.id];
-        basex <- v$x[parent.id];
+        basey <- v[parent.id, 'y'];
+        basex <- v[parent.id, 'x'];
         }
 
     dy <- x[, length.colname];
-    x.length <- v[x$tip, 'x.length'];
-    dx <- if (is.na(x.length)) x[, 'length'] * tan(angle) else x.length;
+    x.length <- v[v$tip == x['tip'], 'x.length'];
+    dx <- if (is.na(x.length)) x['length'] * tan(angle) else x.length;
 
     offset.x <- offset * offset.x.modifier;
     basex <- basex + dx + offset.x;
@@ -168,12 +168,12 @@ calculate.seg.coords <- function(
     side
     ) {
 
-    segs <- adply(
+    segs <- apply(
         tree,
-        .margins = 1,
-        .fun = function(x) {
-            node.id <- which(v$id == x$tip);
-            parent.id <- which(v$id == x$parent);
+        MARGIN = 1,
+        FUN = function(x) {
+            node.id <- which(v$id == x['tip']);
+            parent.id <- which(v$id == x['parent']);
 
             coords <- if (v[node.id, 'mode'] == 'radial') {
                 calculate.coords.radial(
@@ -198,6 +198,10 @@ calculate.seg.coords <- function(
             return(coords);
             }
         );
+
+    segs <- do.call('rbind', segs);
+    rownames(segs) <- rownames(tree);
+    segs <- cbind(tree, segs);
     return(segs);
     }
 
