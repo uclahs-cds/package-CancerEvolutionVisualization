@@ -514,7 +514,7 @@ prep.connector.line.width <- function(
         connector.line.width,
         branch.line.width,
         a.name = 'connector.line.width',
-        b.name = 'branch.line.width',
+        b.name = 'branch.line.width'
         );
     NA.indices <- is.na(branch.line.width)
     connector.line.width[NA.indices] <- branch.line.width[NA.indices];
