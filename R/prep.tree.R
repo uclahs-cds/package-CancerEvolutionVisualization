@@ -402,7 +402,7 @@ prep.branch.mode <- function(tree.df) {
         split.df <- split(tree.df, tree.df$parent);
         n.mode <- sapply(split.df, function(x) length(unique(x$mode)))
 
-        if (any(n.mode > 1)){
+        if (any(n.mode > 1)) {
             invalid.parent.str <- paste(names(n.mode[n.mode > 1]), collapse = ' ')
             stop(paste('"mode" must be consistent across children sharing a parent.',
                 'Multiple modes specified for children of:', invalid.parent.str
