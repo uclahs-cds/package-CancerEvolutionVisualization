@@ -3,9 +3,9 @@ check.lengths <- function(a, b, a.name, b.name) {
     b.length <- length(b);
     if (a.length != b.length) {
         error.message <- paste(
-            shQuote(a.name, type = 'cmd'), "and",
-            shQuote(b.name, type = 'cmd'), "have differing lengths",
-            paste0("(", paste(a.length, "and", b.length), ").")
+            shQuote(a.name, type = 'cmd'), 'and',
+            shQuote(b.name, type = 'cmd'), 'have differing lengths',
+            paste0('(', paste(a.length, 'and', b.length), ').')
             );
         stop(error.message);
         }

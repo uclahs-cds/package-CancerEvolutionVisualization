@@ -9,7 +9,8 @@ test_that(
         test.v <- data.frame(
             id = test.tree$tip,
             parent = test.tree$parent,
-            spread = 1
+            spread = 1,
+            mode = 'radial'
             );
 
         total.angle <- pi / 2;
@@ -39,7 +40,8 @@ test_that(
         test.v <- data.frame(
             id = test.tree$tip,
             parent = test.tree$parent,
-            spread = 1
+            spread = 1,
+            mode = 'radial'
             );
 
         total.angle <- pi / 2;
@@ -81,7 +83,8 @@ test_that(
         test.v <- data.frame(
             id = test.tree$tip,
             parent = test.tree$parent,
-            spread = spread
+            spread = spread,
+            mode = 'radial'
             );
 
         total.angle <- pi / 4;
@@ -115,7 +118,8 @@ test_that(
             id = test.tree$tip,
             parent = test.tree$parent,
             angle = NA,
-            spread = 1
+            spread = 1,
+            mode = 'radial'
             );
         test.v[angles.to.override, 'angle'] <- override.values;
 
@@ -142,7 +146,8 @@ test_that(
             id = test.tree$tip,
             parent = test.tree$parent,
             angle = NA,
-            spread = 1
+            spread = 1,
+            mode = 'radial'
             );
         new.angle <- degrees.to.radians(15);
         test.v[1, 'angle'] <- new.angle;
@@ -174,7 +179,8 @@ test_that(
         test.v <- data.frame(
             id = test.tree$tip,
             parent = test.tree$parent,
-            spread = 1
+            spread = 1,
+            mode = 'radial'
             );
         test.v$spread[2] <- spread;
 
@@ -216,7 +222,8 @@ test_that(
         test.v <- data.frame(
             id = test.tree$tip,
             parent = test.tree$parent,
-            spread = 1
+            spread = 1,
+            mode = 'radial'
             );
         test.v$spread[4] <- spread;
 

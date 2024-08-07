@@ -619,7 +619,7 @@ test_that(
 
         expect_error(
             prep.column.values(column.values, default.values),
-            regexp = "default"
+            regexp = 'default'
             );
     });
 
@@ -685,14 +685,14 @@ test_that(
 
         expect_error(
             prep.column.values(column.values, 2, conversion.fun = conversion.fun),
-            regexp = "length"
+            regexp = 'length'
             );
     });
 
 test_that(
-    'prep.column.values errors if "conversion.fun" introduces NAs in "default.values" ', {
+    'prep.column.values errors if "conversion.fun" introduces NAs in "default.values"', {
         column.values <- rep(1, 5);
-        default.values <- "test";
+        default.values <- 'test';
         conversion.fun <- as.numeric;
 
         expect_error(
@@ -701,13 +701,13 @@ test_that(
                 default.values,
                 conversion.fun = conversion.fun
                 ),
-            regexp = "conversion"
+            regexp = 'conversion'
             );
     });
 
 test_that(
     'prep.column.values warns if "conversion.fun" introduces NAs in "column.values"', {
-        column.values <- rep("hello", 5);
+        column.values <- rep('hello', 5);
         default.values <- 1;
         conversion.fun <- as.numeric;
 
@@ -717,13 +717,13 @@ test_that(
                 default.values,
                 conversion.fun = conversion.fun
                 ),
-            regexp = "conversion"
+            regexp = 'conversion'
             );
     });
 
 test_that(
     'prep.column.values applies conversion function', {
-        column.values <- rep("10", 5);
+        column.values <- rep('10', 5);
         default.values <- 1;
         conversion.fun <- as.numeric;
 
@@ -739,7 +739,7 @@ test_that(
     'prep.column.values replaces NA values after conversion with default', {
         column.values <- rep(4, 5);
         non.numeric.indices <- c(2, 3);
-        column.values[non.numeric.indices] <- "test";
+        column.values[non.numeric.indices] <- 'test';
         default.values <- 1;
         conversion.fun <- as.numeric;
 

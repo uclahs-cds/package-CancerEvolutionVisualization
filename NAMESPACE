@@ -1,14 +1,12 @@
 import(grid)
 import(gridExtra)
 import(gtable)
-import(plyr)
 import(BoutrosLab.plotting.general)
 
 importFrom("graphics", "par", "strheight", "strwidth")
 importFrom("grDevices", "dev.list", "rainbow")
 importFrom("utils", "read.table", "vi", "head")
-importFrom("stringr", "str_replace_all")
-importFrom("stats", "setNames", "aggregate", "reshape")
+importFrom("stats", "median", "setNames", "aggregate", "reshape")
 importFrom("grDevices", "col2rgb")
 
 export(SRCGrob)
@@ -16,6 +14,5 @@ export(SRCGrob)
 export(create.ccf.heatmap)
 export(create.cluster.heatmap)
 export(create.ccf.summary.heatmap)
-
 
 export(create.clone.genome.distribution.plot)

@@ -13,7 +13,7 @@ compare.trees <- function(example, test) {
         }
 
     get.axis.keys <- function(x) {
-        stringr::str_subset(x$childrenOrder, 'axis');
+        x$childrenOrder[grepl('axis', x$childrenOrder)];
         }
 
     # Grob comparisons
@@ -172,7 +172,7 @@ compare.trees <- function(example, test) {
 
     test.polygon.grobs <- function(example, test) {
         get.polygon.keys <- function(x) {
-            stringr::str_subset(x$childrenOrder, 'polygon')
+            x$childrenOrder[grepl('polygon', x$childrenOrder)];
             }
 
         compare.polygons <- function(x, y) {

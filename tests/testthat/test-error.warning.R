@@ -12,7 +12,7 @@ test_that(
     'check.lengths errors if lengths are not equal', {
         a <- rep('1', 5);
         b <- rep('2', length(a) + 2);
-    
+
         expect_error({
             check.lengths(a, b, a.name = 'a', b.name = 'b');
             },

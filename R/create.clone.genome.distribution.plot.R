@@ -2,8 +2,8 @@ create.clone.genome.distribution.plot <- function(
     snv.df,
     genome.build = 'GRCh37',
     clone.order = NULL,
-    cluster.colours = NULL,
-    save.plt.dir = NULL,
+    clone.colours = NULL,
+    filename = NULL,
     multi.sample = FALSE,
     ...
     ) {
@@ -15,16 +15,29 @@ create.clone.genome.distribution.plot <- function(
     if (is.null(clone.order)) {
         clone.order <- sort(unique(snv.df$clone.id));
         }
-    if (multi.sample) { # if multi-sample is true, check for sample ids in 'ID' column
-        if (is.null(snv.df$ID)) {
-            stop('ID column must contain sample ID if multi.sample is TRUE')
+
+    if (!is.null(filename)) {
+        save.plt <- filename;
         }
+
+    if (multi.sample) {
+        # if multi-sample is true, check for sample ids in 'ID' column
+        if (is.null(snv.df$ID)) {
+            stop('ID column must contain sample ID if multi.sample is TRUE');
+            }
+        # filename must be a directory
+        if (!dir.exists(save.plt)) {
+            stop('filename must be a directory if multi.sample is TRUE');
+            }
     } else {
+        if (dir.exists(save.plt)) {
+            stop('filename must be a path (not a directory) if multi.sample is FALSE');
+            }
         snv.df$ID <- 'all';
         }
 
-    if (is.null(cluster.colours)) {
-        cluster.colours <- get.colours(clone.order, return.names = TRUE);
+    if (is.null(clone.colours)) {
+        clone.colours <- get.colours(clone.order, return.names = TRUE);
         }
     snv.df$clone.id <- factor(snv.df$clone.id, levels = clone.order);
     genome.pos.df   <- get.genome.pos(snv.df, genome.build);
@@ -36,17 +49,18 @@ create.clone.genome.distribution.plot <- function(
 
     for (s in unique(snv.df$ID)) {
         # Iterate through each sample -------------------------------------------------------------
-        sample.df <- droplevels(snv.df[snv.df$ID == s, ])
         print(paste('Plotting clone distribution across the genome for sample:', s));
+
+        sample.df <- droplevels(snv.df[snv.df$ID == s, ])
+        if (multi.sample & !is.null(filename)) {
+            save.plt <- file.path(save.plt, paste0(s, '.png'));
+            }
+
         plt <- create.clone.genome.distribution.plot.per.sample(
             sample.df,
-            cluster.colours[levels(sample.df$clone.id)],
+            clone.colours[levels(sample.df$clone.id)],
             chr.info,
-            save.plt = ifelse(
-                is.null(save.plt.dir),
-                NULL,
-                file.path(save.plt.dir, paste0(s, '_clone-genome-dist.png'))
-                ),
+            save.plt = ifelse(is.null(filename), NULL, save.plt),
             ...
             );
         }
@@ -54,7 +68,7 @@ create.clone.genome.distribution.plot <- function(
 
 create.clone.genome.distribution.plot.per.sample <- function(
     sample.df,
-    cluster.colours,
+    clone.colours,
     chr.info,
     save.plt = NULL,
     width = 18,
@@ -75,26 +89,25 @@ create.clone.genome.distribution.plot.per.sample <- function(
 
     # calculate densities for each cluster --------------------------------------------------------
     density.list <- list();
-    for (c in unique(sample.df$clone.id)) {
-        if (sum(sample.df$clone.id == c) <= 1) {
-            warning(paste('Skipping clone', c, 'in sample', unique(sample.df$ID), 'since there is only one SNV'));
+    for (k in unique(sample.df$clone.id)) {
+        if (sum(sample.df$clone.id == k) <= 1) {
+            warning(paste('Skipping clone', k, 'in sample', unique(sample.df$ID), 'since there is only one SNV'));
             next;
         }
-        density.list[[c]] <- calculate.density.and.scale(
-            cluster.df = sample.df[sample.df$clone.id == c, ],
-            total.nsnv = nrow(sample.df)
+        density.list[[k]] <- calculate.density.and.scale(
+            cluster.df = sample.df[sample.df$clone.id == k, ]
             );
         }
     density.df <- do.call(rbind, density.list);
 
     # get plot legend -----------------------------------------------------------------------------
-    cluster.colours <- cluster.colours[levels(sample.df$clone.id)];
+    clone.colours <- clone.colours[levels(sample.df$clone.id)];
     cluster.legend <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
                 title = 'Clones',
-                labels = names(cluster.colours),
-                colours = c(cluster.colours),
+                labels = names(clone.colours),
+                colours = c(clone.colours),
                 border = 'black'
                 )
             ),
@@ -104,7 +117,7 @@ create.clone.genome.distribution.plot.per.sample <- function(
         );
 
     # create individual plot ----------------------------------------------------------------------
-    sample.df$colour <- cluster.colours[sample.df$clone.id];
+    sample.df$colour <- clone.colours[sample.df$clone.id];
     scatter.plt <- create.clone.genome.distribution.scatterplot(
         scatter.df = sample.df,
         nsnv = nrow(sample.df),
@@ -122,7 +135,7 @@ create.clone.genome.distribution.plot.per.sample <- function(
 
     density.plt <- create.clone.genome.distribution.densityplot(
         density.df,
-        cluster.colours,
+        clone.colours,
         chr.info = chr.info,
         xaxis.tck = xaxis.tck,
         yaxis.tck = yaxis.tck,
