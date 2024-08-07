@@ -129,8 +129,8 @@ calculate.coords.dendrogram <- function(
         basex <- v[parent.id, 'x'];
         }
 
-    dy <- x[, length.colname];
-    x.length <- v[v$tip == x['tip'], 'x.length'];
+    dy <- x[length.colname];
+    x.length <- v[v$id == x['tip'], 'x.length'];
     dx <- if (is.na(x.length)) x['length'] * tan(angle) else x.length;
 
     offset.x <- offset * offset.x.modifier;
@@ -238,8 +238,6 @@ add.tree.segs <- function(
             side = 'right'
             );
 
-        valid.segs <- tree.segs2$basey != tree.segs2$tipy & tree.segs2$basex == tree.segs2$tipx;
-        tree.segs2 <- tree.segs2[valid.segs, ];
     } else {
         tree.segs2 <- NULL;
         }
