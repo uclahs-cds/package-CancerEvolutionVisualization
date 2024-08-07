@@ -57,11 +57,11 @@ calculate.coords.radial <- function(
     offset.x <- offset * cos(angle) * offset.x.modifier;
     offset.y <- offset * sin(angle) * offset.y.modifier;
 
-    tipx <- basex + dx + offset.x;
-    tipy <- basey + dy + offset.y;
+    tipx <- as.numeric(basex + dx + offset.x);
+    tipy <- as.numeric(basey + dy + offset.y);
 
-    basex <- basex + offset.x;
-    basey <- basey + offset.y;
+    basex <- as.numeric(basex + offset.x);
+    basey <- as.numeric(basey + offset.y);
 
     return(data.frame(
         basex,
@@ -97,7 +97,6 @@ calculate.coords.dendrogram <- function(
     x,
     v,
     length.colname,
-    parent.id,
     offset,
     side
     ) {
@@ -134,10 +133,10 @@ calculate.coords.dendrogram <- function(
     dx <- if (is.na(x.length)) x['length'] * tan(angle) else x.length;
 
     offset.x <- offset * offset.x.modifier;
-    basex <- basex + dx + offset.x;
+    basex <- as.numeric(basex + dx + offset.x);
 
     tipx <- basex;
-    tipy <- basey + dy;
+    tipy <- as.numeric(basey + dy);
 
     return(data.frame(
         basex,
