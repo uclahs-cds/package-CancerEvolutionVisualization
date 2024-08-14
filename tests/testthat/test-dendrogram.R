@@ -1,5 +1,5 @@
 test_that(
-    'Fixed branching case values', {
+    'Dendrogram case values', {
         load('data/branching.dendrogram.plots.Rda');
         load('data/branching.dendrogram.data.Rda')
 
