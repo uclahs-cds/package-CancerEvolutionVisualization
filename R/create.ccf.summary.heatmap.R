@@ -17,6 +17,8 @@ create.ccf.summary.heatmap <- function(
     legend.size = 3,
     legend.title.cex = 1.2,
     legend.label.cex = 1,
+    legend.x = 0.9,
+    legend.y = 0.8,
     ...
     ) {
 
@@ -40,17 +42,6 @@ create.ccf.summary.heatmap <- function(
         sample.df$ID        <- factor(sample.df$ID, levels = sample.order);
         }
 
-    if (!is.null(clone.colours)) {
-        clone.covariate <- list(
-            rect = list(
-                fill = clone.colours[clone.df$clone.id],
-                lwd = 1.5
-                )
-            );
-    } else {
-        clone.covariate <- NULL;
-        }
-
     clone.bar <- BoutrosLab.plotting.general::create.barplot(
         formula = nsnv ~ clone.id,
         data = clone.df,
@@ -61,30 +52,37 @@ create.ccf.summary.heatmap <- function(
         ylab.cex = subplot.ylab.cex,
         yaxis.cex = subplot.yaxis.cex,
         yaxis.fontface = subplot.yaxis.fontface,
-        ylimits = c( - max(clone.df$nsnv) * 0.05, max(clone.df$nsnv) * 1.05)
+        ylimits = c( - 0.05, 1.05) * max(clone.df$nsnv)
         );
 
+    # restrict number of ticks in the SNV per sample barplot
+    sample.xaxis <- auto.axis(
+        x = sample.df$nsnv,
+        log.scaled = FALSE,
+        num.labels = 3
+        );
     sample.bar <- BoutrosLab.plotting.general::create.barplot(
         formula = ID ~ nsnv,
         data = sample.df,
-        xlab.label = 'SNV per sample',
+        xlab.label = 'SNV\nper sample',
         xlab.cex = subplot.xlab.cex,
         xaxis.cex = subplot.xaxis.cex,
         xaxis.fontface = subplot.xaxis.fontface,
-        xlimits = c( - max(sample.df$nsnv) * 0.05, max(sample.df$nsnv) * 1.05),
+        xlimits = c( - 0.05, 1.05) * max(sample.xaxis$at),
         yaxis.cex = 0,
         yaxis.tck = 0,
         ylab.label = NULL,
-        plot.horizontal = TRUE
+        plot.horizontal = TRUE,
+        xat = sample.xaxis$at
         );
 
     hm <- BoutrosLab.plotting.general::create.heatmap(
         x = arr,
         cluster.dimensions = 'none',
         xlab.label = 'Clone ID',
-        xlab.cex = subplot.xlab.cex,
+        xlab.cex = ifelse(is.null(clone.colours), subplot.xlab.cex, 0),
         xaxis.lab = rownames(arr),
-        xaxis.cex = subplot.xaxis.cex,
+        xaxis.cex = ifelse(is.null(clone.colours), subplot.xaxis.cex, 0),
         xaxis.fontface = subplot.xaxis.fontface,
         xaxis.rot = hm.xaxis.rot,
         ylab.label = 'Sample ID',
@@ -93,11 +91,7 @@ create.ccf.summary.heatmap <- function(
         yaxis.cex = subplot.yaxis.cex,
         yaxis.fontface = subplot.yaxis.fontface,
         print.colour.key = FALSE,
-        colour.scheme = hm.col.scheme,
-        xaxis.covariates = clone.covariate,
-        xaxis.covariates.y = if (is.null(clone.covariate)) NULL else -0.02,
-        # axis.xlab.padding = if (is.null(clone.covariate)) NULL else 3,
-        xaxis.tck = if (is.null(clone.covariate)) NULL else 4
+        colour.scheme = hm.col.scheme
         );
 
     legend.ccf <- BoutrosLab.plotting.general::legend.grob(
@@ -116,17 +110,43 @@ create.ccf.summary.heatmap <- function(
         label.cex = legend.label.cex
         );
 
+    if (!is.null(clone.colours)) {
+        clone.cov <- BoutrosLab.plotting.general::create.heatmap(
+            x = t(clone.colours[rownames(arr)]),
+            xlab.label = 'Clone ID',
+            xlab.cex = subplot.xlab.cex,
+            xaxis.lab = rownames(arr),
+            xaxis.cex = subplot.xaxis.cex,
+            xaxis.fontface = subplot.xaxis.fontface,
+            xaxis.rot = hm.xaxis.rot,
+            input.colours = TRUE,
+            clustering.method = 'none',
+            grid.col = FALSE,
+            print.colour.key = FALSE,
+            yaxis.tck = 0
+            );
+        plot.list <- list(clone.bar, hm, sample.bar, clone.cov);
+        layout.skip <- c(FALSE, TRUE, FALSE, FALSE, FALSE, TRUE);
+        layout.height <- 3;
+        plot.objects.heights <- c(0.3, 0.9, 0.2);
+    } else {
+        plot.list <- list(clone.bar, hm,sample.bar);
+        layout.skip <- c(FALSE, TRUE, FALSE, FALSE);
+        layout.height <- 2;
+        plot.objects.heights <- c(0.3, 1);
+        }
+
     return(BoutrosLab.plotting.general::create.multipanelplot(
-        plot.objects = list(clone.bar, hm, sample.bar),
+        plot.objects = plot.list,
         layout.width = 2,
-        layout.height = 2,
-        plot.objects.heights = c(0.3, 1),
+        layout.height = layout.height,
+        plot.objects.heights = plot.objects.heights,
         plot.objects.widths = c(1, 0.2),
-        layout.skip = c(FALSE, TRUE, FALSE, FALSE),
+        layout.skip = layout.skip ,
         legend = list(inside = list(
             fun = legend.ccf,
-            x = 0.9,
-            y = 0.8
+            x = legend.x,
+            y = legend.y
             )),
         ...
         ));
