@@ -16,21 +16,17 @@ create.clone.genome.distribution.plot <- function(
         clone.order <- sort(unique(snv.df$clone.id));
         }
 
-    if (!is.null(filename)) {
-        save.plt <- filename;
-        }
-
     if (multi.sample) {
         # if multi-sample is true, check for sample ids in 'ID' column
         if (is.null(snv.df$ID)) {
             stop('ID column must contain sample ID if multi.sample is TRUE');
             }
         # filename must be a directory
-        if (!dir.exists(save.plt)) {
+        if (!dir.exists(filename)) {
             stop('filename must be a directory if multi.sample is TRUE');
             }
     } else {
-        if (dir.exists(save.plt)) {
+        if (dir.exists(filename)) {
             stop('filename must be a path (not a directory) if multi.sample is FALSE');
             }
         snv.df$ID <- 'all';
@@ -53,7 +49,9 @@ create.clone.genome.distribution.plot <- function(
 
         sample.df <- droplevels(snv.df[snv.df$ID == s, ])
         if (multi.sample & !is.null(filename)) {
-            save.plt <- file.path(save.plt, paste0(s, '.png'));
+            save.plt <- file.path(filename, paste0(s, '.png'));
+        } else {
+            save.plt <- filename;
             }
 
         plt <- create.clone.genome.distribution.plot.per.sample(
