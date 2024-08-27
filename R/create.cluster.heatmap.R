@@ -62,14 +62,16 @@ create.cluster.heatmap <- function(
                 title = 'Clones',
                 labels = names(clone.colours),
                 colours = clone.colours,
-                border = 'black'
+                border = 'black',
+                cex = legend.label.cex
                 ),
             legend = list(
                 title = 'CCF',
-                labels = c(min(arr), max(arr)),
+                labels = c(min(arr), rep('', legend.size), max(arr)),
                 colours = colour.scheme,
                 border = 'black',
-                continuous = TRUE
+                continuous = TRUE,
+                cex = legend.label.cex
                 )
             ),
         size = legend.size,
