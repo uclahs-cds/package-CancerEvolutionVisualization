@@ -82,6 +82,8 @@ create.clone.genome.distribution.plot.per.sample <- function(
     legend.size = 3,
     legend.title.cex = 1.2,
     legend.label.cex = 1,
+    legend.x = 0.1,
+    legend.y = 0.55,
     ...
     ) {
 
@@ -159,8 +161,10 @@ create.clone.genome.distribution.plot.per.sample <- function(
         layout.width = 1,
         layout.height = 2,
         plot.objects.heights = c(height.scatter, 5) / total.height,
-        legend = list(right = list(
-                fun = cluster.legend
+        legend = list(inside = list(
+                fun = cluster.legend,
+                x = legend.x,
+                y = legend.y
                 )),
         height = total.height,
         width = width,
