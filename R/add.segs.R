@@ -97,6 +97,7 @@ calculate.coords.dendrogram <- function(
     x,
     v,
     length.colname,
+    parent.id,
     offset,
     side
     ) {
@@ -163,6 +164,7 @@ calculate.seg.coords <- function(
     tree,
     v,
     length.colname,
+    parent.id,
     offset,
     side
     ) {

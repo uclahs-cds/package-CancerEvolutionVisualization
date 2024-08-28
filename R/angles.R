@@ -2,7 +2,6 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
     root.node.id <- v$id[[1]];
     node.ids <- c(root.node.id);
 
-    random.scale <- median(tree$length1) * spread;
     angles <- v$angle;
     x <- numeric(nrow(v));
 
@@ -43,7 +42,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
                     v = v
                     );
                 if (v$mode[v$id == current.node.id] == 'radial') {
-                    #if parent is 'radial' angjust starting angle
+                    #if parent is 'radial' adjust starting angle
                     angles[tree$tip %in% child.ids] <- parent.angle + angles[tree$tip %in% child.ids];
                     }
             } else if (unique(v$mode[v$id %in% child.ids]) == 'dendrogram') {
@@ -51,12 +50,12 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
                 child.ids <- v$id[v$id %in% child.ids];
                 # if all children are dendrogram, spread evenly by x distance
                 angles <- split.equal.x.dist(
-                    current.node.id,
-                    child.ids,
-                    angles,
-                    tree,
-                    v,
-                    random.scale
+                    current.node.id = current.node.id,
+                    child.ids = child.ids,
+                    angles = angles,
+                    tree = tree,
+                    v = v,
+                    dx.scale = median(tree$length1)
                     );
                 }
 
@@ -106,7 +105,7 @@ split.equal.x.dist <- function(
     angles,
     tree,
     v,
-    random.scale
+    dx.scale
     ) {
 
     num.slices <- v$leaves[v$id == current.node.id];
@@ -132,7 +131,7 @@ split.equal.x.dist <- function(
         angle <- angles[tree$tip == child.id];
         if (is.na(angle)) {
             y <- tree$length[tree$tip == child.id];
-            angle <- atan((current.pos * random.scale) / y);
+            angle <- atan((current.pos * dx.scale) / y);
             angles[tree$tip == child.id] <- angle;
             }
         idx <- idx + n.leaves;
