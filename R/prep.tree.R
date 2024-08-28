@@ -82,6 +82,7 @@ prep.tree <- function(
             }
         }
 
+    tree.df <- prep.draw.node.setting(tree.df);
     tree.df <- prep.edge.colours(tree.df);
 
     for (i in 1:length(branch.names)) {
@@ -453,7 +454,6 @@ prep.draw.node.setting <- function(tree.df) {
     } else {
         tree.df$draw.node <- TRUE;
         }
-
     return(tree.df);
     }
 
