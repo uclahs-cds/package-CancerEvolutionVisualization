@@ -1,6 +1,7 @@
 # CancerEvolutionVisualization 3.0.0 (2024-08-28)
 
 ## Added
+* Dendrogram mode
 * Optional "spread" column to control node/branch spacing
 * Plotting functions to visualize the distribution of clones across the genome.
 * Documentation for heatmaps and clone-genome distirbution plor
