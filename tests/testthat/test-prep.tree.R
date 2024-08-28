@@ -602,7 +602,7 @@ test_that(
     });
 
 test_that(
-    'prep.node.label.colours errors if "node.col" columb contains NAs', {
+    'prep.node.label.colours errors if "node.col" column contains NAs', {
         tree.df <- data.frame(node.col = c(NA, 1:3));
 
         expect_error(

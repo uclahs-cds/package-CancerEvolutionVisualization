@@ -37,7 +37,7 @@ of parent and child nodes. It also provides information about the number of
 mutations at each node.
 
 
-### Ex. 1: Parent Data
+### Ex. 1.1: Parent Data
 ```{r echo=F}
 load('data/simple.example.Rda');
 load('data/complex.example.Rda');
@@ -65,7 +65,7 @@ parent.only.tree <- SRCGrob(parent.only);
 grid.draw(parent.only.tree);
 ```
 
-### Ex. 2: Branch Lengths
+### Ex. 1.2: Branch Lengths
 
 It's common to associate branch lengths with a the values of a particular variable 
 (for example, PGA or SNVs). Up to two branch lengths can be specified. Including a 
@@ -95,7 +95,7 @@ branch.lengths.tree <- SRCGrob(branch.lengths);
 grid.draw(branch.lengths.tree);
 ```
 
-### Ex. 3: Complex Trees
+### Ex. 1.3: Complex Trees
 
 CEV provides several methods for refining the spacing and arrangement of a tree's nodes. This is especially useful in complex trees, which often require more attention to avoid visual problems such as node collisions and uneven branch/level spacing. Here, we see a tree with many issues.
 
@@ -132,7 +132,7 @@ knitr::kable(spread.tree.input[!is.na(spread.tree.input$spread) | is.na(spread.t
 grid.draw(SRCGrob(spread.tree.input));
 ```
 
-### Ex. 4: Styling the Tree
+### Ex. 1.4: Styling the Tree
 
 CEV gives the user control over numerous visual aspects of the tree. By specifying optional columns and values in the tree input data.frame, the user has individual control of the colour, width, and line type of each node, label border, and edge.
 
@@ -190,7 +190,7 @@ node.style.tree <- SRCGrob(node.style);
 grid.draw(node.style.tree);
 ```
 
-### Ex. 5: Showing Cellular Prevalence
+### Ex. 1.5: Showing Cellular Prevalence
 
 A `cellular.prevalence` column can also be added. These values must range between 0 and 1, and the sum of all child nodes must not be larger than their parent node's value.
 
@@ -209,6 +209,38 @@ CP.tree <- SRCGrob(CP);
 
 ```{r, echo=F}
 grid.draw(CP.tree);
+```
+
+### Ex. 1.6: Simplifying the Tree
+
+Complex trees may benefit from simpler visual styles. For example, there may not be room to render the node ellipses. CEV provides node-by-node control with the `draw.node` column.
+
+```{r echo=F}
+nodeless <- data.frame(
+    parent = c(
+        NA, 1, 2, 2, 2,
+        3, 3, 3,
+        4, 4, 4, 4, 4,
+        5, 5, 5, 5
+        ),
+    draw.node = TRUE,
+    spread = NA
+    );
+nodeless$spread[6:nrow(nodeless)] <- 0.6;
+nodeless$draw.node[c(2, 6:nrow(nodeless))] <- FALSE;
+
+knitr::kable(
+    nodeless[, c('parent', 'draw.node')],
+    row.names = TRUE
+    );
+```
+
+```{r, fig.show='hide'}
+nodeless.tree <- SRCGrob(nodeless);
+```
+
+```{r, echo=F}
+grid.draw(nodeless.tree);
 ```
 
 ## Text Dataframe
