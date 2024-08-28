@@ -4,8 +4,8 @@
 * Dendrogram mode
 * Optional "spread" column to control node/branch spacing
 * Plotting functions to visualize the distribution of clones across the genome.
-* Documentation for heatmaps and clone-genome distirbution plor
-* Option to disable node drawing with node-by-node control 
+* Documentation for heatmaps and clone-genome distribution plot
+* Option to disable node drawing with node-by-node control
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow
