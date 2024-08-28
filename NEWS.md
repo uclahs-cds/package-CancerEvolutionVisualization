@@ -1,30 +1,32 @@
-CancerEvolutionVisualization 3.0.0 2024-05-07 (Dan Knight)
+# CancerEvolutionVisualization 2.1.0 (2024-07-31)
 
-ADDED
-* Dendrogram mode with node-by-node control
+## Added
 * Optional "spread" column to control node/branch spacing
 * Plotting functions to visualize the distribution of clones across the genome.
+* Documentation for heatmaps and clone-genome distirbution plor
   
-UPDATE
+## Update
 * Fixed angle calculation bug where child angles do not follow
   their parent angle, instead moving "downward" at 0 degrees.
 * Updated package metadata and README
+* Split angle handling for `radial` and `dendrogram` modes to optimized each
 * Set default parameters for heatmaps, defaulting too BPG defaults unless necessary
+* Updated changelog format to NEWS.md Markdown format
+* Refactored use of plyr/dplyr and stringr functions to remove dependencies
+* Set default parameters for heatmaps, defaulting to BPG defaults unless necessary
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 2.0.1 2023-11-17 (Helena Winata, Dan Knight)
+# CancerEvolutionVisualization 2.0.1 (2023-11-17)
 
-ADDED
+## Added
 * GitHub links for code and bug reports
 
-BUG
+## Bug
 * Fixed S3 naming conflict in heatmap functions, using safe "create." prefix
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 2.0.0 2023-11-16 (Helena Winata, Dan Knight)
+# CancerEvolutionVisualization 2.0.0 (2023-11-16)
 
-ADDED
+## Added
 * Option to specify edge colour with "edge.col.1" and "edge.col.2" 
   columns in tree input dataframe
 * Option to specify edge width using "edge.width.1" and "edge.width.2" 
@@ -39,32 +41,30 @@ ADDED
   "border.col", "border.width", and "border.type" columns
 * Option ot specify tree node label colour with "node.label.col" column
 
-UPDATE
+## Update
 * Reimplemented tree angle calculations
 * Fixed lopsided radial tree bug
 
-REMOVED
+## Removed
 * "seg1.col" and "seg2.col" parameters (replaced by tree input columns).
 * "node.col" parameter to SRCGrob. (Node colour only customizable through tree input data.frame.)
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 1.0.1 2022-10-03 (Dan Knight)
+# CancerEvolutionVisualization 1.0.1 (2022-10-03)
 
-UPDATE
+## Update
 * Package title change for CRAN submission
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 1.0.0 2022-09-28 (Dan Knight)
+# CancerEvolutionVisualization 1.0.0 (2022-09-28)
 
-ADDED
+## Added
 * Documentation for default colour scheme
 * Checks for valid tree structure
   - Valid root node
   - Circular node references
 
-UPDATE
+## Update
 * Changed gene input to a generic node text input, where
   style and colour are specified directly (not through
   SNV or CNA values).
@@ -76,64 +76,59 @@ UPDATE
 * Remove README from build
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.10.0 2022-08-01 (Dan Knight)
+# CancerEvolutionVisualization 0.10.0 (2022-08-01)
 
-ADDED
+## Added
 * Optional SNV column in gene input data to italicize gene text
 * Validates gene.line dist input value
 
-UPDATE
+## Update
 * Changed gene input "gene" column to more generic "name"
 
-REMOVED
+## Removed
 * Removed extra.len parameter to allow the value to be inferred by the
   presence/absence of CP values.
 * Removed spread parameter until radial nodes are supported.
 * Removed wid parameter, as it is no longer needed with horizontal.padding
 * Removed cluster.list parameter until (pie nodes are implemented)
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.9.0 2022-07-20 (Dan Knight)
 
-REMOVED
+# CancerEvolutionVisualization 0.9.0 (2022-07-20)
+
+## Removed
 * Removed ylimits and yaxis.interval parameters.
   (yat can be used instead.)
 * Removed filename parameter from SRCGrob to follow grid patterns.
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.8.0 2022-07-14 (Dan Knight)
+# CancerEvolutionVisualization 0.8.0 (2022-07-14)
 
-UPDATE
+## Update
 * Added "smart" branch length scaling based on the branch lengths and
   tree depth.
 * The user can still scale the lengths proportionally with the scale1
   and scale2 arguments.
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.7.0 2022-06-28 (Dan Knight)
+# CancerEvolutionVisualization 0.7.0 (2022-06-28)
 
-UPDATE
+## Update
 * Added yat parameter to allow specific Y axis tick values
 
-REMOVED
+## Removed
 * Removed yaxis.interval parameters (replaced with yat) 
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.6.0 2022-06-24 (Dan Knight)
+# CancerEvolutionVisualization 0.6.0 (2022-06-24)
 
-UPDATE
+## Update
 * Changed output format to only return the tree grob itself
   (no longer including intermediate values)
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.5.0 2022-06-24 (Dan Knight)
+# CancerEvolutionVisualization 0.5.0 (2022-06-24)
 
-UPDATE
+## Update
 * Automatically sets the branch angle to pi / 6
 * Infers whether to draw polygons based on existence and changed
   parameter to optionally disable polygons
@@ -148,7 +143,7 @@ UPDATE
 * Changed "nodes" parameter to boolean "draw.nodes" to enable/disable
   node circles
 
-REMOVED
+## Removed
 * Removed the fixed_angle argument (to be replaced by an angle column
   in the tree input data.frame)
 * Removed add.genes parameter
@@ -158,67 +153,58 @@ REMOVED
 * Disabled genes.on.nodes mode
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.4.1 2022-05-05 (Dan Knight)
+# CancerEvolutionVisualization 0.4.1 (2022-05-05)
 
-UPDATE
+## Update
 * Automatically adjusts node size, shape, and text size based on the
   length of the label text
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.4.0 2022-05-03 (Dan Knight)
+# CancerEvolutionVisualization 0.4.0 (2022-05-03)
 
-UPDATE
+## Update
 * Combined gene input dataframes into one
 
-BUG
+## Bug
 * Fixed issue when trunk node is not positioned first in the input tree
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.3.0 2022-04-29 (Dan Knight)
+# CancerEvolutionVisualization 0.3.0 (2022-04-29)
 
-UPDATE
+## Update
 * Allow node labels to be specified separately
 
-BUG
+## Bug
 * Fixed issue when creating ellipse nodes for longer labels
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.2.1 2022-04-14 (Dan Knight)
+# CancerEvolutionVisualization 0.2.1 (2022-04-14)
 
-UPDATE
+## Update
 * Allow tree input without CP and validate CP input values
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.2.0 2022-04-12 (Dan Knight)
+# CancerEvolutionVisualization 0.2.0 (2022-04-12)
 
-UPDATE
+## Update
 * Include tree preparation in SRCGrob to simplify use and improve
   consistency. 
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.1.1 2022-02-23 (Dan Knight)
+# CancerEvolutionVisualization 0.1.1 (2022-02-23)
 
-UPDATE
+## Update
 * Remove input sampling (assume that data has been prepared properly)
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.1.0 2021-11-08 (Dan Knight)
+# CancerEvolutionVisualization 0.1.0 (2021-11-08)
 
-UPDATE
+## Update
 * Add functions for deep comparison of plot Grobs.
 * Update tests to use new comparisons and add test cases.
 
 
---------------------------------------------------------------------------
-CancerEvolutionVisualization 0.0.0 2021-09-13 (Adriana Salcedo)
+# CancerEvolutionVisualization 0.0.0 (2021-09-13)
 
 INITIAL FEATURES
-
-- Tree, CNA, and SNV input sampling
+* Tree, CNA, and SNV input sampling

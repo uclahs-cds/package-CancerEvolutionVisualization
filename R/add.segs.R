@@ -1,98 +1,19 @@
-add.segs3 <- function(
-    tree,
-    v,
-    offset = 0,
-    node.radius = 0,
-    scale.x.real = NULL
-    ) {
-
-    # Calculate offset based on line width
-    offset <- offset / scale.x.real / 2;
-
-    tree.segs.adjusted <- tree.segs <- adply(
-        tree,
-        .margins = 1,
-        .fun = function(x) {
-            if (x$parent == -1) {
-                basey <- 0;
-                basex <- 0;
-            } else {
-                basey <- v$y[v$id == x$parent];
-                basex <- v$x[v$id == x$parent];
-                }
-
-            tipy <- basey + x$length1 * cos(x$angle);
-            tipx <- basex + x$length1 * sin(x$angle);
-
-            return(data.frame(basex, basey, tipx, tipy));
-            }
-        );
-
-    tree.out <- list();
-
-    second.tree.segs.adjusted <- NULL;
-
-    if (length(grep('length', colnames(tree))) == 4) {
-        tree.segs.adjusted <- adply(
-            tree.segs,
-            .margins = 1,
-            .fun = function(r) {
-                offset.x <- offset * cos(r$angle);
-                offset.y <- offset * sin(r$angle);
-
-                if (r$angle > 0) {
-                    basey <- r$basey + offset.y;
-                    tipy <- r$tipy + offset.y;
-                } else {
-                    basey <- r$basey + offset.y;
-                    tipy <- r$tipy + offset.y;
-                    }
-
-                basex <- r$basex - offset.x;
-                tipx <- r$tipx - offset.x;
-
-                return(data.frame(basex, basey, tipx, tipy));
-                }
-            );
-
-        tree.segs.adjusted <- tree.segs.adjusted[which(!(tree.segs.adjusted$basey == tree.segs.adjusted$tipy & tree.segs.adjusted$basex == tree.segs.adjusted$tipx)), ]
-
-        second.tree.segs <- tree.segs;
-        second.tree.segs$tipy <- second.tree.segs$basey + second.tree.segs$length2.c * cos(second.tree.segs$angle);
-        second.tree.segs$tipx <- second.tree.segs$basex + second.tree.segs$length2.c * sin(second.tree.segs$angle);
-
-        second.tree.segs.adjusted <- adply(
-            second.tree.segs,
-            .margins = 1,
-            .fun = function(r) {
-                offset.x  <- offset * cos(r$angle);
-                offset.y  <- offset * sin(r$angle);
-
-                if (r$angle > 0) {
-                    basey <- r$basey - offset.y;
-                    tipy <- r$tipy - offset.y;
-                } else {
-                    basey <- r$basey - offset.y;
-                    tipy <- r$tipy - offset.y;
-                    }
-
-                basex <- r$basex + offset.x;
-                tipx <- r$tipx + offset.x;
-
-                return(data.frame(basex, basey, tipx, tipy));
-                }
-            );
-
-        second.tree.segs.adjusted <- second.tree.segs.adjusted[which(!(second.tree.segs.adjusted$basey == second.tree.segs.adjusted$tipy & second.tree.segs.adjusted$basex == second.tree.segs.adjusted$tipx)),]
-        }
-
-    tree.out <- list(
-        tree.segs = tree.segs.adjusted,
-        tree.segs2 = second.tree.segs.adjusted
-        );
-
-    return(tree.out);
-    }
+######################################################################
+# calculate.coords.radial
+#
+# Description:
+# - Calculates the coordinates for a radial layout of a tree or dendrogram.
+#
+# Arguments:
+#  - x              A data frame or matrix containing the tree or dendrogram data.
+#  - v              A data frame or matrix containing additional vertex information.
+#  - length.colname The name of the column in x that contains the branch lengths.
+#  - parent.id      The ID of the parent node.
+#  - offset         The offset value for positioning the nodes.
+#  - side           The side of the tree or dendrogram ("left" or "right").
+#
+# Returns:
+#  - A data frame with the calculated base and tip coordinates (basex, basey, tipx, tipy).
 
 calculate.coords.radial <- function(
     x,
@@ -103,7 +24,7 @@ calculate.coords.radial <- function(
     side
     ) {
 
-    angle <- x$angle;
+    angle <- x['angle'];
     offset.x.modifier <- offset.y.modifier <- 1;
 
     if (side == 'left') {
@@ -122,25 +43,25 @@ calculate.coords.radial <- function(
             ));
         }
 
-    if (x$parent == -1) {
+    if (x['parent'] == -1) {
         basey <- 0;
         basex <- 0;
     } else {
-        basey <- v$y[parent.id];
-        basex <- v$x[parent.id];
+        basey <- v[parent.id, 'y'];
+        basex <- v[parent.id, 'x'];
         }
 
-    dy <- x[, length.colname] * cos(angle);
-    dx <- x[, length.colname] * sin(angle);
+    dy <- x[length.colname] * cos(angle);
+    dx <- x[length.colname] * sin(angle);
 
     offset.x <- offset * cos(angle) * offset.x.modifier;
     offset.y <- offset * sin(angle) * offset.y.modifier;
 
-    tipx <- basex + dx + offset.x;
-    tipy <- basey + dy + offset.y;
+    tipx <- as.numeric(basex + dx + offset.x);
+    tipy <- as.numeric(basey + dy + offset.y);
 
-    basex <- basex + offset.x;
-    basey <- basey + offset.y;
+    basex <- as.numeric(basex + offset.x);
+    basey <- as.numeric(basey + offset.y);
 
     return(data.frame(
         basex,
@@ -149,6 +70,28 @@ calculate.coords.radial <- function(
         tipy
         ));
     }
+
+######################################################################
+# calculate.coords.dendrogram
+#
+# Description:
+# - Calculates the coordinates for a dendrogram layout of a tree.
+#
+# Arguments:
+#  - x               A data frame or matrix containing the tree data.
+#  - v               A data frame or matrix containing additional vertex information.
+#  - length.colname  The name of the column in x that contains the branch lengths.
+#  - parent.id       The ID of the parent node.
+#  - offset          The offset value for positioning the nodes.
+#  - side            The side of the dendrogram ("left" or "right").
+#
+# Returns:
+#  - A data frame with the calculated base and tip coordinates (basex, basey, tipx, tipy).
+#
+# Note:
+#  - The function assumes that the tree or dendrogram has a binary structure.
+#  - The function uses the branch lengths and angles to calculate the coordinates.
+#  - If the "x.length" value is available in v, it will be used instead of calculating dx from the branch length and angle.
 
 calculate.coords.dendrogram <- function(
     x,
@@ -159,7 +102,7 @@ calculate.coords.dendrogram <- function(
     side
     ) {
 
-    angle <- x$angle;
+    angle <- x['angle'];
     offset.x.modifier <- offset.y.modifier <- 1;
 
     if (side == 'left') {
@@ -178,26 +121,23 @@ calculate.coords.dendrogram <- function(
             ));
         }
 
-    if (x$parent == -1) {
+    if (x['parent'] == -1) {
         basey <- 0;
         basex <- 0;
     } else {
-        basey <- v$y[parent.id];
-        basex <- v$x[parent.id];
+        basey <- v[parent.id, 'y'];
+        basex <- v[parent.id, 'x'];
         }
 
-    dy <- x[, length.colname];
-    x.length <- v[x$tip, 'x.length']
-    dx <- if (is.na(x.length)) x[, 'length'] * tan(angle) else x.length;
+    dy <- x[length.colname];
+    x.length <- v[v$id == x['tip'], 'x.length'];
+    dx <- if (is.na(x.length)) x['length'] * tan(angle) else x.length;
 
     offset.x <- offset * offset.x.modifier;
+    basex <- as.numeric(basex + dx + offset.x);
 
-    basex <- basex + dx + offset.x;
     tipx <- basex;
-
-    tipy <- basey + dy;
-
-
+    tipy <- as.numeric(basey + dy);
 
     return(data.frame(
         basex,
@@ -207,20 +147,34 @@ calculate.coords.dendrogram <- function(
         ));
     }
 
+###################################################################################################
+# calculate.seg.coords
+#
+# Description:
+#  - Calculates the coordinates of segments in a tree structure for plotting purposes. The 'calculate.seg.coords' function calculates the coordinates of segments in a tree structure based on the provided tree data frame and additional node information in 'v'. The function supports two modes of coordinate calculation: 'radial' and 'dendrogram'.
+
+# Arguments:
+#  - tree          A data frame representing the tree structure. Each row corresponds to a segment in the tree.
+#  - v             A data frame or matrix containing additional information about the nodes in the tree.
+#  - length.colname   A character string specifying the column name in 'v' that contains the length information for each node.
+#  - offset        A numeric value specifying the offset to be applied to the coordinates.
+#  - side          A character string specifying the side of the tree on which the segments should be plotted.
+
 calculate.seg.coords <- function(
     tree,
     v,
     length.colname,
+    parent.id,
     offset,
     side
     ) {
 
-    segs <- adply(
+    segs <- apply(
         tree,
-        .margins = 1,
-        .fun = function(x) {
-            node.id <- which(v$id == x$tip);
-            parent.id <- which(v$id == x$parent);
+        MARGIN = 1,
+        FUN = function(x) {
+            node.id <- which(v$id == x['tip']);
+            parent.id <- which(v$id == x['parent']);
 
             coords <- if (v[node.id, 'mode'] == 'radial') {
                 calculate.coords.radial(
@@ -245,6 +199,10 @@ calculate.seg.coords <- function(
             return(coords);
             }
         );
+
+    segs <- do.call('rbind', segs);
+    rownames(segs) <- rownames(tree);
+    segs <- cbind(tree, segs);
     return(segs);
     }
 
@@ -281,8 +239,6 @@ add.tree.segs <- function(
             side = 'right'
             );
 
-        valid.segs <- tree.segs2$basey != tree.segs2$tipy & tree.segs2$basex == tree.segs2$tipx;
-        tree.segs2 <- tree.segs2[valid.segs, ];
     } else {
         tree.segs2 <- NULL;
         }
