@@ -107,9 +107,9 @@ add.tree.segs <- function(
         y1 = tree.segs1$tipy,
         default.units = 'native',
         gp = gpar(
-            col = clone.out$v$edge.colour.1,
-            lwd = clone.out$v$edge.width.1,
-            lty = clone.out$v$edge.type.1
+            col = clone.out$v$edge.colour.1[match(tree.segs1$tip, clone.out$v$id)],
+            lwd = clone.out$v$edge.width.1[match(tree.segs1$tip, clone.out$v$id)],
+            lty = clone.out$v$edge.type.1[match(tree.segs1$tip, clone.out$v$id)]
             )
         );
 
@@ -125,9 +125,9 @@ add.tree.segs <- function(
                 y1 = tree.segs2$tipy,
                 default.units = 'native',
                 gp = gpar(
-                    col = clone.out$v$edge.colour.2,
-                    lwd = clone.out$v$edge.width.2,
-                    lty = clone.out$v$edge.type.2
+                    col = clone.out$v$edge.colour.2[match(tree.segs2$tip, clone.out$v$id)],
+                    lwd = clone.out$v$edge.width.2[match(tree.segs2$tip, clone.out$v$id)],
+                    lty = clone.out$v$edge.type.2[match(tree.segs2$tip, clone.out$v$id)]
                     )
                 );
             }
