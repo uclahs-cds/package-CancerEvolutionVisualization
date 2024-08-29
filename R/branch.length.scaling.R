@@ -1,3 +1,6 @@
+
+# scale = 1 / (mean(branch.lengths) * log2(tree.depth)) * scale.input
+
 get.branch.length.scale <- function(branch.lengths, tree.depth, user.scale) {
     smart.scale <- get.smart.branch.length.scale(branch.lengths, tree.depth);
 

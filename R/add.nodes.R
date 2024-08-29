@@ -85,7 +85,7 @@ add.normal <- function(clone.out, node.radius, label.cex, normal.cex = 1) {
         'N',
         x = unit(0.5, 'npc'),
         y = unit(0.5, 'npc'),
-        name = 'ormal.label',
+        name = 'normal.label',
         just = 'center',
         gp = gpar(
             col = 'black',
