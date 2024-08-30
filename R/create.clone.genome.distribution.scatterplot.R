@@ -4,7 +4,6 @@ create.clone.genome.distribution.scatterplot <- function(
     nclone,
     chr.info,
     save.plt = NULL,
-    alpha = 0.25,
     ...
     ) {
 
@@ -21,8 +20,6 @@ create.clone.genome.distribution.scatterplot <- function(
         yat = seq(1, nclone, 1),
         xlimits = c(0, sum(chr.info$length)),
         col = scatter.df$colour,
-        # col.border = rep(NULL, nsnv),
-        alpha = alpha,
         abline.v = chr.info$start,
         ...
         ));

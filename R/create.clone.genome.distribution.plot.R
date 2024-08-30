@@ -84,6 +84,7 @@ create.clone.genome.distribution.plot.per.sample <- function(
     legend.label.cex = 1,
     legend.x = 0.1,
     legend.y = 0.55,
+    alpha = 0.25,
     ...
     ) {
 
@@ -130,7 +131,8 @@ create.clone.genome.distribution.plot.per.sample <- function(
         xlab.cex = 0,
         ylab.cex = ylab.cex,
         xaxis.cex = 0,
-        yaxis.cex = yaxis.cex
+        yaxis.cex = yaxis.cex,
+        alpha = alpha
         );
 
     density.plt <- create.clone.genome.distribution.densityplot(
