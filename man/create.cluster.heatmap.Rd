@@ -42,4 +42,4 @@ create.cluster.heatmap(
 }
 \value{A `grob` object of the heatmap.}
 \author{Helena Winata}
-\seealso{\code{\link{create.ccf.heatmap}}}
+\seealso{\code{\link{create.ccf.heatmap}}, \seealso{\code{\link[BoutrosLab.plotting.general]{create.heatmap}}}}

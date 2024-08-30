@@ -32,3 +32,4 @@ create.ccf.heatmap(
 }
 \value{A `grob` object of the heatmap.}
 \author{Helena Winata}
+\seealso{\code{\link[BoutrosLab.plotting.general]{create.heatmap}}}

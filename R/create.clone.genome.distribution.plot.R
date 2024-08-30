@@ -5,6 +5,9 @@ create.clone.genome.distribution.plot <- function(
     clone.colours = NULL,
     filename = NULL,
     multi.sample = FALSE,
+    alpha = 0.25,
+    legend.x = 0.1,
+    legend.y = 0.55,
     ...
     ) {
 
@@ -59,6 +62,9 @@ create.clone.genome.distribution.plot <- function(
             clone.colours[levels(sample.df$clone.id)],
             chr.info,
             save.plt = ifelse(is.null(filename), NULL, save.plt),
+            alpha = alpha,
+            legend.x = legend.x,
+            legend.y = legend.y,
             ...
             );
         }

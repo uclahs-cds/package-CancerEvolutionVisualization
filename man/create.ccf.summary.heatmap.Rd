@@ -13,6 +13,7 @@ create.ccf.summary.heatmap(
     clone.order = NULL,
     sample.order = NULL,
     hm.col.scheme = c('white', 'blue'),
+    clone.colours = NULL,
     subplot.xlab.cex = 1.2,
     subplot.xaxis.cex = 1,
     subplot.xaxis.fontface = 'bold',
@@ -24,6 +25,8 @@ create.ccf.summary.heatmap(
     legend.size = 3,
     legend.title.cex = 1.2,
     legend.label.cex = 1,
+    legend.x = 0.9,
+    legend.y = 0.8,
     ...
     );
 }
@@ -34,6 +37,7 @@ create.ccf.summary.heatmap(
     \item{clone.order}{Defaults to \code{NULL}}
     \item{sample.order}{Defaults to \code{NULL}}
     \item{hm.col.scheme}{Heatmap colour scheme. Defaults to \code{c('white', 'blue')}}
+    \item{clone.colours}{A named vector specifying the color to use for each clone to generate a covariate heatmap. If \code{NULL}, no covariates will be added.}
     \item{subplot.xlab.cex}{Subplot parameter. Defaults to 1.2}
     \item{subplot.xaxis.cex}{Subplot parameter. Defaults to 1}
     \item{subplot.xaxis.fontface}{Subplot parameter. Defaults to \dQuote{bold}}
@@ -45,8 +49,11 @@ create.ccf.summary.heatmap(
     \item{legend.size}{Legend parameter. Defaults to 3}
     \item{legend.title.cex}{Legend parameter. Defaults to 1.2}
     \item{legend.label.cex}{Legend parameter. Defaults to 1}
+    \item{legend.x}{Legend parameter. Defaults to 0.9}
+    \item{legend.y}{Legend parameter. Defaults to 0.8}
     \item{...}{Pass through argument. See BoutrosLab.plotting.general::create.multipanelplot() for further details.}
 
 }
 \value{A `grob` object of the summary plot.}
 \author{Helena Winata}
+\seealso{\code{\link[BoutrosLab.plotting.general]{legend.grob}}, \code{\link[BoutrosLab.plotting.general]{create.multipanelplot}}, \code{\link[BoutrosLab.plotting.general]{create.heatmap}}}
