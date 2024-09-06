@@ -82,6 +82,15 @@ prep.tree <- function(
             }
         }
 
+    if (!('node.size' %in% colnames(tree.df))) {
+        tree.df$node.size <- NA;
+        }
+    tree.df$node.size <- prep.column.values(
+        tree.df$node.size,
+        default.values = 1,
+        conversion.fun = as.numeric
+        );
+
     tree.df <- prep.draw.node.setting(tree.df);
     tree.df <- prep.edge.colours(tree.df);
 
@@ -206,6 +215,7 @@ prep.tree <- function(
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         angle = c(NA, tree.df$angle),
         draw.node = c(NA, tree.df$draw.node),
+        node.size = c(NA, tree.df$node.size),
         spread = c(NA, tree.df$spread),
         node.colour = c(NA, tree.df$node.col),
         node.label.colour = c(NA, tree.df$node.label.col),

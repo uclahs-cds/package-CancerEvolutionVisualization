@@ -36,7 +36,7 @@ add.node.ellipse <- function(
 	    name = node.grob.name,
 	    x = unit(circle.nodes$x, 'native'),
 	    y = unit(circle.nodes$y, 'native'),
-	    size = node.radius * (1 + 0.2 * nchar(circle.nodes$plot.lab)),
+	    size = node.radius * clone.out$v$node.size * (1 + 0.2 * nchar(circle.nodes$plot.lab)),
 	    ar = 1 - log2(nchar(circle.nodes$plot.lab)) / 10,
 	    gp = gpar(
 	        fill = circle.nodes$node.colour,
