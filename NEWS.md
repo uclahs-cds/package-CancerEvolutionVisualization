@@ -6,6 +6,7 @@
 * Plotting functions to visualize the distribution of clones across the genome.
 * Documentation for heatmaps and clone-genome distribution plot
 * Option to disable node drawing with node-by-node control
+* Node-by-node control of node size
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow
