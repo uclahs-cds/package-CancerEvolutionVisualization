@@ -32,8 +32,12 @@ create.ccf.summary.heatmap <- function(
         arr[arr <= ccf.thres] <- 0;
         }
 
-    clone.df  <- aggregate(CCF ~ clone.id, data = DF[DF$CCF > 0, ], FUN = length);
-    sample.df <- aggregate(CCF ~ ID, data = DF[DF$CCF > 0, ], FUN = length);
+    clone.df  <- aggregate(
+        SNV.id ~ clone.id,
+        data = DF[DF$CCF > 0, ],
+        FUN = function(x) length(unique(x))
+        );
+    sample.df <- aggregate(SNV.id ~ ID, data = DF[DF$CCF > 0, ], FUN = length);
     names(sample.df)[2] <- names(clone.df)[2] <- 'nsnv';
 
     if (!is.null(clone.order) & !is.null(sample.order)) {
