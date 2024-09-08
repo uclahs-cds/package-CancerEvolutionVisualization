@@ -50,7 +50,8 @@ create.clone.genome.distribution.plot <- function(
         # Iterate through each sample -------------------------------------------------------------
         print(paste('Plotting clone distribution across the genome for sample:', s));
 
-        sample.df <- droplevels(snv.df[snv.df$ID == s, ])
+        sample.df <- droplevels(snv.df[snv.df$ID == s, ]);
+        sample.df <- unique(sample.df[, c('clone.id', 'genome.pos', 'SNV.id', 'ID')]);
         if (multi.sample & !is.null(filename)) {
             save.plt <- file.path(filename, paste0(s, '.png'));
         } else {
