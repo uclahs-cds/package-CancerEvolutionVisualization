@@ -71,6 +71,7 @@ test_that(
     'prep.tree passes valid edge 2 colour values', {
         tree.df <- data.frame(
             parent = c(NA, 1:3),
+            edge.col.1 = 'black',
             edge.col.2 = 'red'
             );
 
@@ -110,6 +111,7 @@ test_that(
     'prep.tree passes valid edge 2 width values', {
         tree.df <- data.frame(
             parent = c(NA, 1:3),
+            edge.width.1 = 3,
             edge.width.2 = 1:4
             );
 
@@ -149,6 +151,7 @@ test_that(
     'prep.tree passes valid edge 2 linetype values', {
         tree.df <- data.frame(
             parent = c(NA, 1:3),
+            length1 = 5,
             edge.type.2 = 'solid'
             );
 
@@ -609,43 +612,324 @@ test_that(
     });
 
 test_that(
-    'prep.draw.node.setting uses valid values', {
-        tree.df <- data.frame(draw.node = c(TRUE, FALSE, TRUE, FALSE, FALSE));
-        result <- prep.draw.node.setting(tree.df);
-        expect_equal(result$draw.node, tree.df$draw.node);
+    'prep.column.values errors if "default.values" vector length does not match "column.values"', {
+        n <- 5;
+        column.values <- rep(1, n);
+        default.values <- rep(2, n + 2);
+
+        expect_error(
+            prep.column.values(column.values, default.values),
+            regexp = 'default'
+            );
     });
 
 test_that(
-    'prep.draw.node.setting uses default if no column included', {
-        tree.df <- data.frame(parent = c(NA, 1, 2, 3));
+    'prep.column.values replaces NAs with scalar default value', {
+        NA.indices <- c(1, 4);
+        column.values <- rep(1, 5);
+        column.values[NA.indices] <- NA;
 
-        result <- prep.draw.node.setting(tree.df);
-        expected.result <- rep(TRUE, nrow(tree.df));
+        default.value <- 2;
 
-        expect_equal(result$draw.node, expected.result);
+        result <- prep.column.values(column.values, default.value);
+        expect_equal(
+            result[NA.indices],
+            rep(default.value, length(NA.indices))
+            );
     });
 
 test_that(
-    'prep.draw.node.setting fills NA values with default', {
-        tree.df <- data.frame(draw.node = c(TRUE, FALSE, TRUE, FALSE, FALSE));
-        NA.indices <- c(2, 3, 5);
-        tree.df[NA.indices, 'draw.node'] <- NA;
+    'prep.column.values replaces NAs with scalar default value', {
+        n <- 5;
+        column.values <- rep(1, n);
+        NA.indices <- c(1, 4);
+        column.values[NA.indices] <- NA;
 
-        result <- prep.draw.node.setting(tree.df);
+        default.values <- 1:n;
 
-        default.value <- TRUE;
-        expected.result <- tree.df$draw.node;
-        expected.result[NA.indices] <- default.value;
-
-        expect_equal(result$draw.node, expected.result);
+        result <- prep.column.values(column.values, default.values);
+        expect_equal(
+            result[NA.indices],
+            NA.indices
+            );
     });
 
 test_that(
-    'prep.draw.node.setting warns on non-logical values', {
-        tree.df <- data.frame(draw.node = c(TRUE, FALSE, 'invalid', TRUE));
+    'prep.column.values leaves non-NA values unchanged', {
+        valid.indices <- c(1, 2, 4);
+        value <- 3;
+        column.values <- rep(NA, 5);
+        column.values[valid.indices] <- value;
+
+        result <- prep.column.values(column.values, default.value = 2);
+        expect_equal(
+            result[valid.indices],
+            rep(value, length(valid.indices))
+            );
+    });
+
+test_that(
+    'prep.column.values allows "default.values" to contains NAs', {
+        n <- 5;
+        column.values <- rep(1, n);
+        default.values <- rep(2, n);
+        default.values[3] <- NA;
+
+        expect_no_error(prep.column.values(column.values, default.values));
+    });
+
+test_that(
+    'prep.column.values errors if "conversion.fun" changes column length', {
+        column.values <- rep(1, 5);
+        conversion.fun <- function(x) rep(x, 2);
+
+        expect_error(
+            prep.column.values(column.values, 2, conversion.fun = conversion.fun),
+            regexp = 'length'
+            );
+    });
+
+test_that(
+    'prep.column.values errors if "conversion.fun" introduces NAs in "default.values"', {
+        column.values <- rep(1, 5);
+        default.values <- 'test';
+        conversion.fun <- as.numeric;
+
+        expect_error(
+            prep.column.values(
+                column.values,
+                default.values,
+                conversion.fun = conversion.fun
+                ),
+            regexp = 'conversion'
+            );
+    });
+
+test_that(
+    'prep.column.values warns if "conversion.fun" introduces NAs in "column.values"', {
+        column.values <- rep('hello', 5);
+        default.values <- 1;
+        conversion.fun <- as.numeric;
+
         expect_warning(
-            prep.draw.node.setting(tree.df),
-            regexp = 'draw.node'
+            prep.column.values(
+                column.values,
+                default.values,
+                conversion.fun = conversion.fun
+                ),
+            regexp = 'conversion'
+            );
+    });
+
+test_that(
+    'prep.column.values applies conversion function', {
+        column.values <- rep('10', 5);
+        default.values <- 1;
+        conversion.fun <- as.numeric;
+
+        result <- prep.column.values(
+            column.values,
+            default.values,
+            conversion.fun = conversion.fun
+            );
+        expect_true(is.numeric(result));
+    });
+
+test_that(
+    'prep.column.values replaces NA values after conversion with default', {
+        column.values <- rep(4, 5);
+        non.numeric.indices <- c(2, 3);
+        column.values[non.numeric.indices] <- 'test';
+        default.values <- 1;
+        conversion.fun <- as.numeric;
+
+        result <- suppressWarnings(prep.column.values(
+            column.values,
+            default.values,
+            conversion.fun = conversion.fun
+            ));
+        expect_equal(
+            result[non.numeric.indices],
+            rep(default.values, length(non.numeric.indices))
+            );
+        expect_true(is.numeric(result));
+    });
+
+test_that(
+    'get.branch.names handles "length" columns', {
+        branch.names <- c('test', 'CEV');
+
+        tree.df <- data.frame(lapply(1:length(branch.names), function(i) 1:10));
+        colnames(tree.df) <- paste('length', branch.names, sep = '');
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'get.branch.names handles "edge.col" columns', {
+        branch.names <- c('test', 'SRC');
+
+        tree.df <- data.frame(lapply(1:length(branch.names), function(i) 1:10));
+        colnames(tree.df) <- paste('edge.col', branch.names, sep = '.');
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'get.branch.names handles "edge.type" columns', {
+        branch.names <- c('test', 'SRC');
+
+        tree.df <- data.frame(lapply(1:length(branch.names), function(i) 1:10));
+        colnames(tree.df) <- paste('edge.type', branch.names, sep = '.');
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'get.branch.names handles "edge.width" columns', {
+        branch.names <- c('test', 'SRC');
+
+        tree.df <- data.frame(lapply(1:length(branch.names), function(i) 1:10));
+        colnames(tree.df) <- paste('edge.width', branch.names, sep = '.');
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'get.branch.names handles different edge columns', {
+        branch.names <- c('test', 'SRC');
+
+        tree.df <- data.frame(lapply(1:length(branch.names), function(i) 1:10));
+        colnames(tree.df) <- paste(c('edge.type', 'length'), branch.names, sep = '.');
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'get.branch.names returns unique values', {
+        branch.names <- c('test', 'SRC');
+        branch.columns <- paste(
+            c('edge.type', 'length', 'length'),
+            c(rep(branch.names[1], 2), branch.names[2]),
+            sep = '.'
+            );
+
+        tree.df <- data.frame(lapply(1:length(branch.columns), function(i) 1:10));
+        colnames(tree.df) <- branch.columns;
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'get.branch.names returns unique values', {
+        branch.names <- c('test', 'SRC');
+        branch.columns <- paste(
+            c('edge.type', 'length', 'length'),
+            c(rep(branch.names[1], 2), branch.names[2]),
+            sep = '.'
+            );
+
+        tree.df <- data.frame(lapply(1:length(branch.columns), function(i) 1:10));
+        colnames(tree.df) <- branch.columns;
+
+        result <- get.branch.names(tree.df);
+        expect_equal(result, branch.names);
+    });
+
+test_that(
+    'check.radial.x.conflicts does not warn when "x" present in dendrogram mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            mode = 'dendrogram'
+            );
+        expect_no_warning(check.radial.x.conflicts(tree.df));
+    });
+
+test_that(
+    'check.radial.x.conflicts does not warn when "x" is NA in radial mode', {
+        tree.df <- data.frame(
+            parent = c(NA, 1, 2),
+            mode = 'radial',
+            x = NA
+            );
+        expect_no_warning(check.radial.x.conflicts(tree.df));
+    });
+
+test_that(
+    'check.radial.x.conflicts does not warn when "x" is NA in dendrogram mode', {
+        tree.df <- data.frame(
+            parent = c(NA, 1, 2),
+            mode = 'dendrogram',
+            x = NA
+            );
+        expect_no_warning(check.radial.x.conflicts(tree.df));
+    });
+
+test_that(
+    'check.radial.x.conflicts warns when "x" is present in radial mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            mode = 'radial'
+            );
+        expect_warning(
+            check.radial.x.conflicts(tree.df),
+            regexp = 'dendrogram'
+            );
+    });
+
+test_that(
+    'check.dendrogram.angle.conflicts warns when "x" is present with "angle" in dendrogram mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            angle = 4,
+            mode = 'dendrogram',
+            spread = NA
+            );
+        expect_warning(
+            check.dendrogram.angle.conflicts(tree.df),
+            regexp = 'angle'
+            );
+    });
+
+test_that(
+    'check.dendrogram.angle.conflicts does not warn when "x" is present with "angle" in radial mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            angle = 15,
+            mode = 'radial',
+            spread = NA
+            );
+        expect_no_warning(check.dendrogram.angle.conflicts(tree.df));
+    });
+
+test_that(
+    'check.dendrogram.angle.conflicts does not warn when "x" is present with "spread" in radial mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            spread = 1.5,
+            mode = 'radial',
+            angle = NA
+            );
+        expect_no_warning(check.dendrogram.angle.conflicts(tree.df));
+    });
+
+test_that(
+    'check.dendrogram.angle.conflicts warns when "x" is present with "angle" in dendrogram mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            angle = 15,
+            mode = 'dendrogram',
+            spread = NA
+            );
+        expect_warning(
+            check.dendrogram.angle.conflicts(tree.df),
+            regexp = 'angle'
             );
     });
 
@@ -681,6 +965,20 @@ test_that(
             prep.tree.spread(tree.df),
             regexp = 'spread'
             );
+    });
+
+test_that(
+    'check.dendrogram.angle.conflicts warns when "x" is present with "spread" in dendrogram mode', {
+        tree.df <- data.frame(
+            x = 1:10,
+            spread = 1.5,
+            mode = 'dendrogram',
+            angle = NA
+            );
+        expect_warning(
+            check.dendrogram.angle.conflicts(tree.df),
+            regexp = 'spread'
+        );
     });
 
 test_that(

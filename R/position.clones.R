@@ -161,13 +161,13 @@ reposition.clones <- function(tree, v) {
             y0 <- tree$length[tree$parent == -1];
             len0 <- 0;
         } else {
-            par <- v[v$id == vi$parent, ];
+            parent <- v[v$id == vi$parent, ];
 
             r <- tree$length[tree$tip == vi$id];
             x.shift <- r * sin(angle);
-            x0 <- par$x + x.shift;
+            x0 <- parent$x + x.shift;
             y.shift <- r * cos(angle);
-            y0 <- par$y + y.shift;
+            y0 <- parent$y + y.shift;
             len0 <- par$len + y.shift;
             }
 
