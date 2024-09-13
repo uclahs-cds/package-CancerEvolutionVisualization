@@ -32,12 +32,13 @@ add.node.ellipse <- function(
     circle.nodes <- clone.out$v[clone.out$v$draw.node, ];
 
 	# More precise than circleGrob
+	nchar.lab <- max(nchar(circle.nodes$plot.lab), 1);
 	circle.grobs <- ellipseGrob(
 	    name = node.grob.name,
 	    x = unit(circle.nodes$x, 'native'),
 	    y = unit(circle.nodes$y, 'native'),
-	    size = node.radius * circle.nodes$node.size * (1 + 0.2 * nchar(circle.nodes$plot.lab)),
-	    ar = 1 - log2(nchar(circle.nodes$plot.lab)) / 10,
+	    size = node.radius * circle.nodes$node.size * (1 + 0.2 * nchar.lab),
+	    ar = 1 - log2(nchar.lab) / 10,
 	    gp = gpar(
 	        fill = circle.nodes$node.colour,
 	        col = circle.nodes$border.colour,
