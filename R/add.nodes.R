@@ -32,7 +32,7 @@ add.node.ellipse <- function(
     circle.nodes <- clone.out$v[clone.out$v$draw.node, ];
 
 	# More precise than circleGrob
-	nchar.lab <- max(nchar(circle.nodes$plot.lab), 1);
+	nchar.lab <- sapply(circle.nodes$plot.lab, function(x) max(nchar(x), 1));
 	circle.grobs <- ellipseGrob(
 	    name = node.grob.name,
 	    x = unit(circle.nodes$x, 'native'),
