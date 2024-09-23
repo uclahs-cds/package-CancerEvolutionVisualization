@@ -1016,13 +1016,13 @@ test_that(
             node.size = rep(2, 4),
             draw.node = TRUE
         );
-        
+
         hidden.nodes <- 2:3;
         tree.df$draw.node[hidden.nodes] <- FALSE;
-        
+
         result <- prep.node.size(tree.df);
         expected.result <- tree.df$node.size;
         expected.result[hidden.nodes] <- 0;
-        
+
         expect_equal(result, expected.result);
     });
