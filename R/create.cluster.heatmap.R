@@ -59,18 +59,18 @@ create.cluster.heatmap <- function(
     legend.clone <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
-                title = 'Clones',
-                labels = names(clone.colours),
-                colours = clone.colours,
-                border = 'black',
-                cex = legend.label.cex
-                ),
-            legend = list(
                 title = 'CCF',
                 labels = c(min(arr), rep('', legend.size), max(arr)),
                 colours = colour.scheme,
                 border = 'black',
                 continuous = TRUE,
+                cex = legend.label.cex
+                ),
+            legend = list(
+                title = 'Clones',
+                labels = names(clone.colours),
+                colours = clone.colours,
+                border = 'black',
                 cex = legend.label.cex
                 )
             ),
