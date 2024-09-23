@@ -1,19 +1,21 @@
-# CancerEvolutionVisualization 2.1.0 (2024-08-05)
+# CancerEvolutionVisualization 3.0.0 (2024-08-28)
 
 ## Added
+* Dendrogram mode
 * Optional "spread" column to control node/branch spacing
 * Plotting functions to visualize the distribution of clones across the genome.
-* Documentation for heatmaps and clone-genome distirbution plor
-* Option to disable node drawing with node-by-node control 
+* Documentation for heatmaps and clone-genome distribution plot
+* Option to disable node drawing with node-by-node control
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow
   their parent angle, instead moving "downward" at 0 degrees.
 * Updated package metadata and README
+* Split angle handling for `radial` and `dendrogram` modes to optimized each
 * Set default parameters for heatmaps, defaulting too BPG defaults unless necessary
 * Updated changelog format to NEWS.md Markdown format
 * Refactored use of plyr/dplyr and stringr functions to remove dependencies
-
+* Set default parameters for heatmaps, defaulting to BPG defaults unless necessary
 
 # CancerEvolutionVisualization 2.0.1 (2023-11-17)
 
@@ -207,5 +209,4 @@
 # CancerEvolutionVisualization 0.0.0 (2021-09-13)
 
 INITIAL FEATURES
-
-- Tree, CNA, and SNV input sampling
+* Tree, CNA, and SNV input sampling
