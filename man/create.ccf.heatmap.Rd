@@ -7,7 +7,6 @@ Creates a heatmap of cancer cell fraction (CCF) distribution across tumour sampl
 \usage{
 create.ccf.heatmap(
     x,
-    ccf.thres = NULL,
     cluster.dimensions = 'both',
     clustering.method = 'complete',
     distance.method = 'euclidean',
@@ -20,7 +19,6 @@ create.ccf.heatmap(
 }
 \arguments{
     \item{x}{Either a data-frame or a matrix from which the heatmap is to created}
-    \item{ccf.thres}{CCF threshold to be applied to the heatmap. Values below the threshold will be set to 0. Defaults to \code{NULL}}
     \item{cluster.dimensions}{Defaults to \dQuote{both}.}
     \item{clustering.method}{Defaults to \dQuote{complete}.}
     \item{distance.method}{Defaults to \dQuote{euclidean}.}

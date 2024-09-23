@@ -8,7 +8,7 @@ Creates a heatmap of cancer cell fraction (CCF) distribution across tumour sampl
 \usage{
 create.ccf.summary.heatmap(
     DF,
-    ccf.thres = NULL,
+    ccf.limits = NULL,
     median.col = 'median.ccf.per.sample',
     clone.order = NULL,
     sample.order = NULL,
@@ -32,7 +32,7 @@ create.ccf.summary.heatmap(
 }
 \arguments{
     \item{DF}{A data-frame with the following column names: 'ID', 'SNV.id', 'clone.id', 'CCF'.}
-    \item{ccf.thres}{CCF threshold to be applied to the heatmap. Values below the threshold will be set to 0. Defaults to \code{NULL}}
+    \item{ccf.limits}{CCF limits to be applied to the heatmap. Must be a vector of length 2 for min and max thresholds. Defaults to \code{NULL}}
     \item{median.col}{Defaults to \dQuote{median.ccf.per.sample}}
     \item{clone.order}{Defaults to \code{NULL}}
     \item{sample.order}{Defaults to \code{NULL}}
