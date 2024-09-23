@@ -7,6 +7,7 @@ Creates a heatmap of cancer cell fraction (CCF) distribution across tumour sampl
 \usage{
 create.cluster.heatmap(
     DF,
+    ccf.limits = NULL,
     clone.colours = NULL,
     height = 6,
     width = 11,
@@ -25,6 +26,7 @@ create.cluster.heatmap(
 }
 \arguments{
     \item{DF}{A data-frame with the following column names: 'ID', 'SNV.id', 'clone.id', 'CCF'.}
+    \item{ccf.limits}{CCF limits to be applied to the heatmap. Must be a vector of length 2 for min and max thresholds. Defaults to \code{NULL}}
     \item{clone.colours}{Named list to provide a colour scheme for the clone ID covariate bar. If NULL, colours will be randomly generated. Defaults to \code{NULL}.}
     \item{height}{Defaults to 6}
     \item{width}{Defaults to 11}

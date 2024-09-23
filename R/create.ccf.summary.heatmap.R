@@ -1,6 +1,6 @@
 create.ccf.summary.heatmap <- function(
     DF,
-    ccf.thres = NULL,
+    ccf.limits = NULL,
     median.col = 'median.ccf.per.sample',
     clone.order = NULL,
     sample.order = NULL,
@@ -28,8 +28,12 @@ create.ccf.summary.heatmap <- function(
         x.axis = 'clone.id'
         );
 
-    if (!is.null(ccf.thres)) {
-        arr[arr <= ccf.thres] <- 0;
+    if (!is.null(ccf.limits)) {
+        if (length(ccf.limits) != 2) {
+            stop('ccf.limits must be a vector of length 2');
+            }
+        arr[arr < ccf.limits[1]] <- ccf.limits[1];
+        arr[arr > ccf.limits[2]] <- ccf.limits[2];
         }
 
     clone.df  <- aggregate(
@@ -46,6 +50,11 @@ create.ccf.summary.heatmap <- function(
         sample.df$ID        <- factor(sample.df$ID, levels = sample.order);
         }
 
+    clone.yaxis <- auto.axis(
+        x = clone.df$nsnv,
+        log.scaled = FALSE,
+        num.labels = 3
+        );
     clone.bar <- BoutrosLab.plotting.general::create.barplot(
         formula = nsnv ~ clone.id,
         data = clone.df,
@@ -56,7 +65,8 @@ create.ccf.summary.heatmap <- function(
         ylab.cex = subplot.ylab.cex,
         yaxis.cex = subplot.yaxis.cex,
         yaxis.fontface = subplot.yaxis.fontface,
-        ylimits = c( - 0.05, 1.05) * max(clone.df$nsnv)
+        ylimits = c( - 0.05, 1.05) * max(clone.yaxis$at),
+        yat = clone.yaxis$at
         );
 
     # restrict number of ticks in the SNV per sample barplot
