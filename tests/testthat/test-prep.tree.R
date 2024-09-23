@@ -992,3 +992,37 @@ test_that(
             regexp = 'spread'
             );
     });
+
+test_that(
+    'prep.node.size replaces NAs with 1', {
+        tree.df <- data.frame(
+            node.size = rep(2, 4),
+            draw.node = TRUE
+            );
+
+        NA.indices <- 2:3;
+        tree.df$node.size[NA.indices] <- NA;
+
+        result <- prep.node.size(tree.df);
+        expected.result <- tree.df$node.size;
+        expected.result[NA.indices] <- 1;
+
+        expect_equal(result, expected.result);
+    });
+
+test_that(
+    'prep.node.size sets node size to 0 when node is not drawn', {
+        tree.df <- data.frame(
+            node.size = rep(2, 4),
+            draw.node = TRUE
+        );
+
+        hidden.nodes <- 2:3;
+        tree.df$draw.node[hidden.nodes] <- FALSE;
+
+        result <- prep.node.size(tree.df);
+        expected.result <- tree.df$node.size;
+        expected.result[hidden.nodes] <- 0;
+
+        expect_equal(result, expected.result);
+    });
