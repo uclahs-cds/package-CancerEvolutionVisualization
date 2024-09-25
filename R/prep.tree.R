@@ -82,6 +82,11 @@ prep.tree <- function(
             }
         }
 
+    if (!('node.size' %in% colnames(tree.df))) {
+        tree.df$node.size <- NA;
+        }
+    tree.df$node.size <- prep.node.size(tree.df);
+
     tree.df <- prep.draw.node.setting(tree.df);
     tree.df <- prep.edge.colours(tree.df);
 
@@ -206,6 +211,7 @@ prep.tree <- function(
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         angle = c(NA, tree.df$angle),
         draw.node = c(NA, tree.df$draw.node),
+        node.size = c(NA, tree.df$node.size),
         spread = c(NA, tree.df$spread),
         node.colour = c(NA, tree.df$node.col),
         node.label.colour = c(NA, tree.df$node.label.col),
@@ -607,6 +613,17 @@ check.dendrogram.angle.conflicts <- function(tree.df) {
     if (any(conflicts)) {
         warning('"x" values override "angle" and "spread" values in dendrogram mode.')
         }
+    }
+
+prep.node.size <- function(tree.df) {
+    node.size <- prep.column.values(
+        tree.df$node.size,
+        default.values = 1,
+        conversion.fun = as.numeric
+        );
+    node.size[tree.df$draw.node == FALSE] <- 0;
+
+    return(node.size);
     }
 
 # default.values must be either a scalar or matching length of column.values.

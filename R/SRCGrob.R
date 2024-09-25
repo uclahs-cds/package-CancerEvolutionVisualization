@@ -17,7 +17,6 @@ SRCGrob <- function(
     node.text.cex = 0.85,
     main.y = NULL,
     main.cex = 1.7,
-    node.radius = 0.1,
     node.text.line.dist = 0.1,
     colour.scheme = CancerEvolutionVisualization::colours,
     add.normal = FALSE,
@@ -53,6 +52,7 @@ SRCGrob <- function(
     wid <- 1.2;
     spread <- 1;
     cluster.list <- NULL;
+    node.radius <- 0.1;
 
     axis.cex <- list(
         x = xaxis.cex,
