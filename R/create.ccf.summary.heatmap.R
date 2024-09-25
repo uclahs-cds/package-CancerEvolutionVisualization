@@ -47,7 +47,7 @@ create.ccf.summary.heatmap <- function(
     if (!is.null(clone.order) & !is.null(sample.order)) {
         arr                 <- arr[clone.order, sample.order];
         clone.df$clone.id   <- factor(clone.df$clone.id, levels = clone.order);
-        sample.df$ID        <- factor(sample.df$ID, levels = sample.order);
+        sample.df$ID        <- factor(sample.df$ID, levels = rev(sample.order));
         }
 
     clone.yaxis <- auto.axis(

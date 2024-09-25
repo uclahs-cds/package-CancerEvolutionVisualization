@@ -113,7 +113,7 @@ create.clone.genome.distribution.plot.per.sample <- function(
     cluster.legend <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
-                title = 'Clones',
+                title = 'Clone ID',
                 labels = names(clone.colours),
                 colours = c(clone.colours),
                 border = 'black'
