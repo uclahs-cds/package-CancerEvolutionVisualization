@@ -45,7 +45,7 @@ create.ccf.summary.heatmap <- function(
     names(sample.df)[2] <- names(clone.df)[2] <- 'nsnv';
 
     if (!is.null(clone.order) & !is.null(sample.order)) {
-        arr                 <- arr[clone.order, sample.order];
+        arr                 <- arr[clone.order, rev(sample.order)];
         clone.df$clone.id   <- factor(clone.df$clone.id, levels = clone.order);
         sample.df$ID        <- factor(sample.df$ID, levels = rev(sample.order));
         }
