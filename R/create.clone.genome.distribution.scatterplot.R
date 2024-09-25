@@ -7,7 +7,7 @@ create.clone.genome.distribution.scatterplot <- function(
     ...
     ) {
 
-    scatter.df[, clone.id := factor(clone.id, levels = rev(levels(clone.id)))];
+    scatter.df$clone.id <- factor(scatter.df$clone.id, levels = rev(levels(scatter.df$clone.id)));
     return(BoutrosLab.plotting.general::create.scatterplot(
         filename = save.plt,
         formula = clone.id ~ genome.pos,
