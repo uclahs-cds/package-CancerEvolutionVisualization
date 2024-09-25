@@ -27,7 +27,7 @@ create.cluster.heatmap <- function(
     DF              <- droplevels(DF)[order(DF$clone.id, -abs(DF$CCF)), ];
     snv.order       <- unique(DF[, c('SNV.id', 'clone.id')]);
     arr             <- data.frame.to.array(DF);
-    arr             <- arr[snv.order$SNV.id, levels(DF$ID)];
+    arr             <- arr[snv.order$SNV.id, rev(levels(DF$ID))];
 
     if (!is.null(xaxis.col)) {
         xaxis.label <- unique(DF[DF$SNV.id %in% rownames(arr), xaxis.col]);
@@ -76,7 +76,7 @@ create.cluster.heatmap <- function(
                 cex = legend.label.cex
                 ),
             legend = list(
-                title = 'Clones',
+                title = 'Clone ID',
                 labels = names(clone.colours),
                 colours = clone.colours,
                 border = 'black',
