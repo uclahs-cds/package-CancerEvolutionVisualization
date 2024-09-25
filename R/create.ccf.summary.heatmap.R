@@ -19,6 +19,7 @@ create.ccf.summary.heatmap <- function(
     legend.label.cex = 1,
     legend.x = 0.9,
     legend.y = 0.8,
+    plot.objects.heights = c(0.3, 1),
     ...
     ) {
 
@@ -142,12 +143,13 @@ create.ccf.summary.heatmap <- function(
         plot.list <- list(clone.bar, hm, sample.bar, clone.cov);
         layout.skip <- c(FALSE, TRUE, FALSE, FALSE, FALSE, TRUE);
         layout.height <- 3;
-        plot.objects.heights <- c(0.3, 0.9, 0.2);
+        if (length(plot.opbject.heights) == 2 ) {
+            plot.objects.heights <- c(plot.object.heights, 0.2);
+            }
     } else {
         plot.list <- list(clone.bar, hm,sample.bar);
         layout.skip <- c(FALSE, TRUE, FALSE, FALSE);
         layout.height <- 2;
-        plot.objects.heights <- c(0.3, 1);
         }
 
     return(BoutrosLab.plotting.general::create.multipanelplot(

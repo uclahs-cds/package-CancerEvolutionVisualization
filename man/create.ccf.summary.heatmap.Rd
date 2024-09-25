@@ -27,6 +27,7 @@ create.ccf.summary.heatmap(
     legend.label.cex = 1,
     legend.x = 0.9,
     legend.y = 0.8,
+    plot.objects.heights = c(0.3, 1),
     ...
     );
 }
@@ -51,6 +52,7 @@ create.ccf.summary.heatmap(
     \item{legend.label.cex}{Legend parameter. Defaults to 1}
     \item{legend.x}{Legend parameter. Defaults to 0.9}
     \item{legend.y}{Legend parameter. Defaults to 0.8}
+    \item{plot.objects.heights}{If \code{clone.colours} is specified, this must be an array of length 3. Defaults to \code{c(0.3, 1)}. See BoutrosLab.plotting.general::create.multipanelplot()}
     \item{...}{Pass through argument. See BoutrosLab.plotting.general::create.multipanelplot() for further details.}
 
 }
