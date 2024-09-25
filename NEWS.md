@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2024-08-28)
+# CancerEvolutionVisualization 3.0.0 (2024-09-23)
 
 ## Added
 * Dendrogram mode
@@ -6,7 +6,7 @@
 * Plotting functions to visualize the distribution of clones across the genome.
 * Documentation for heatmaps and clone-genome distribution plot
 * Option to disable node drawing with node-by-node control
-* Aesthetic changes for heatmap and clone-genome distribution plot
+* Node-by-node control of node size
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow
