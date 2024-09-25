@@ -7,6 +7,7 @@
 * Documentation for heatmaps and clone-genome distribution plot
 * Option to disable node drawing with node-by-node control
 * Node-by-node control of node size
+* `polygon.width` and `polygon.shape` parameters to control the appearance of CP polygons
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow
