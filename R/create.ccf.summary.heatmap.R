@@ -143,7 +143,7 @@ create.ccf.summary.heatmap <- function(
         plot.list <- list(clone.bar, hm, sample.bar, clone.cov);
         layout.skip <- c(FALSE, TRUE, FALSE, FALSE, FALSE, TRUE);
         layout.height <- 3;
-        if (length(plot.opbject.heights) == 2 ) {
+        if (length(plot.object.heights) == 2 ) {
             plot.objects.heights <- c(plot.object.heights, 0.2);
             }
     } else {
