@@ -245,6 +245,7 @@ add.tree.segs <- function(
 
     seg.grobs <- list();
 
+    seg.data.1 <- clone.out$v[match(tree.segs1$tip, clone.out$v$id), ];
     seg.grobs[[1]] <- segmentsGrob(
         name = 'tree.segs.1',
         x0 = tree.segs1$basex,
@@ -253,14 +254,15 @@ add.tree.segs <- function(
         y1 = tree.segs1$tipy,
         default.units = 'native',
         gp = gpar(
-            col = clone.out$v$edge.colour.1[match(tree.segs1$tip, clone.out$v$id)],
-            lwd = clone.out$v$edge.width.1[match(tree.segs1$tip, clone.out$v$id)],
-            lty = clone.out$v$edge.type.1[match(tree.segs1$tip, clone.out$v$id)]
+            col = seg.data.1$edge.colour.1,
+            lwd = seg.data.1$edge.width.1,
+            lty = seg.data.1$edge.type.1
             )
         );
 
     if (!is.null(tree.segs2)) {
         tree.segs2 <- tree.segs2[which(tree.segs2$basey != tree.segs2$tipy), ];
+        seg.data.2 <- clone.out$v[match(tree.segs2$tip, clone.out$v$id), ];
 
         if (nrow(tree.segs2) > 0) {
             seg.grobs[[2]] <- segmentsGrob(
@@ -271,9 +273,9 @@ add.tree.segs <- function(
                 y1 = tree.segs2$tipy,
                 default.units = 'native',
                 gp = gpar(
-                    col = clone.out$v$edge.colour.2[match(tree.segs2$tip, clone.out$v$id)],
-                    lwd = clone.out$v$edge.width.2[match(tree.segs2$tip, clone.out$v$id)],
-                    lty = clone.out$v$edge.type.2[match(tree.segs2$tip, clone.out$v$id)]
+                    col = seg.data.2$edge.colour.2,
+                    lwd = seg.data.2$edge.width.2,
+                    lty = seg.data.2$edge.type.2
                     )
                 );
             }
