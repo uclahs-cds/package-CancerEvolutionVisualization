@@ -92,6 +92,8 @@ create.scale.bar <- function(
     left.x <- unit(left.x - 1, "npc");
     top.y <- unit(top.y, "npc");
     xat <- left.x + unit(c(0, scale.length$length), 'native');
+    main.size <- unit(main.cex * 12, 'points');
+    label.size <- unit(label.cex * 12, 'points');
 
     title <- textGrob(
         label = main,
@@ -104,7 +106,7 @@ create.scale.bar <- function(
             )
         );
 
-    scale.bar.y <- top.y - unit(label.cex / 10, 'npc');
+    scale.bar.y <- convertY(top.y - (label.font.size * 2), 'npc');
     scale.line <- segmentsGrob(
         x0 = xat[1],
         x1 = xat[2],
@@ -118,7 +120,7 @@ create.scale.bar <- function(
             )
         );
 
-    tick.length <- edge.width + unit(label.cex / 100, 'npc');
+    tick.length <- edge.width + (label.size / 4);
     ticks <- segmentsGrob(
         x0 = xat,
         x1 = xat,
