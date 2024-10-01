@@ -1,3 +1,27 @@
+prep.scale.length <- function(
+    tree,
+    scale.size.1,
+    scale.size.2
+    ) {
+
+    scale.lengths <- c(scale.size.1, scale.size.2);
+    tree.lengths <- c(
+        auto.scale.length(tree$length1),
+        if ('length2' %in% names(tree)) auto.scale.length(tree$length2) else NA
+        );
+
+    # if scale.length is NA, replace with tree.lengths
+    scale.lengths[is.na(scale.lengths)] <- tree.lengths[is.na(scale.lengths)];
+
+    return(scale.lengths);
+    }
+
+auto.scale.length <- function(edge.lengths) {
+    scale.length <- median(edge.lengths[edge.lengths > 0], na.rm = TRUE);
+    adjusted.length <- 10 ** floor(log10(as.numeric(scale.length)));
+    return(adjusted.length);
+    }
+
 add.scale.bar <- function(
     clone.out,
     scale.length,
@@ -12,7 +36,10 @@ add.scale.bar <- function(
     # Generate the first scale bar
     scale.bar1.glist <- create.scale.bar(
         main = yaxis1.label,
-        scale.length = get.scale.bar.length(scale.length[1]),
+        scale.length = list(
+            label = scale.length[1],
+            length = scale.length[1]
+            ),
         edge.col = most.common.value(clone.out$v$edge.colour.1),
         edge.width = most.common.value(clone.out$v$edge.width.1),
         edge.type = most.common.value(clone.out$v$edge.type.1),
@@ -26,7 +53,10 @@ add.scale.bar <- function(
     if (!is.null(yaxis2.label)) {
         scale.bar2.glist <- create.scale.bar(
             main = yaxis2.label,
-            scale.length = get.scale.bar.length(scale.length[2], scale1 / scale2),
+            scale.length = list(
+                label = scale.length[2],
+                length = scale.length[2] * scale1 / scale2
+                ),
             edge.col = most.common.value(clone.out$v$edge.colour.2),
             edge.width = most.common.value(clone.out$v$edge.width.2),
             edge.type = most.common.value(clone.out$v$edge.type.2),
@@ -36,18 +66,6 @@ add.scale.bar <- function(
             );
         clone.out$grobs <- c(clone.out$grobs, scale.bar2.glist);
         }
-    }
-
-get.scale.bar.length <- function(
-    scale.length,
-    conversion.factor = 1
-    ) {
-
-    adjusted.length <- 10 ** floor(log10(as.numeric(scale.length)));
-    return(list(
-        label = adjusted.length,
-        length = adjusted.length / conversion.factor
-        ));
     }
 
 most.common.value <- function(x) {

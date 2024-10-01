@@ -39,6 +39,8 @@ make.clone.tree.grobs <- function(
     size.units,
     scale.bar,
     scale.bar.coords,
+    scale.size.1,
+    scale.size.2,
     ...
     ) {
 
@@ -156,16 +158,19 @@ make.clone.tree.grobs <- function(
         }
 
     if (scale.bar) {
+        scale.lengths <- prep.scale.length(
+            tree,
+            scale.size.1,
+            scale.size.2
+            );
+
         add.scale.bar(
             clone.out,
             scale1,
             scale2,
             yaxis1.label = yaxis1.label,
             yaxis2.label = yaxis2.label,
-            scale.length = c(
-                median(tree$length1[tree$length1 > 0], na.rm = TRUE),
-                median(tree$length2[tree$length2 > 0], na.rm = TRUE)
-                ),
+            scale.length = scale.lengths,
             main.cex = axis.label.cex$y,
             label.cex = axis.cex$y,
             pos = scale.bar.coords
