@@ -77,7 +77,7 @@ create.scale.bar <- function(
 
     title <- textGrob(
         label = main,
-        x = xat[1],
+        x = left.x + unit(scale.length$length / 2, 'native'),
         y = top.y,
         hjust = 0.5,
         vjust = 1,
@@ -86,7 +86,7 @@ create.scale.bar <- function(
             )
         );
 
-    scale.bar.y <- top.y - unit(0.03, 'npc');
+    scale.bar.y <- top.y - unit(label.cex / 10, 'npc');
     scale.line <- segmentsGrob(
         x0 = xat[1],
         x1 = xat[2],

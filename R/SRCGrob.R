@@ -28,9 +28,7 @@ SRCGrob <- function(
     length.from.node.edge = TRUE,
     size.units = 'npc',
     scale.bar = FALSE,
-    scale.bar.coords = c(0.1, 0.9)
-    # scale.bar.padding = 0.5,
-    # scale.bar.label.padding = 0.5
+    scale.bar.coords = c(0.5, 0.9)
     ) {
 
     add.node.text <- !is.null(node.text);
