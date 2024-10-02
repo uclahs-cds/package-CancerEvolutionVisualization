@@ -106,7 +106,7 @@ create.scale.bar <- function(
             )
         );
 
-    scale.bar.y <- convertY(top.y - (label.font.size * 2), 'npc');
+    scale.bar.y <- top.y - (main.size * 2)
     scale.line <- segmentsGrob(
         x0 = xat[1],
         x1 = xat[2],

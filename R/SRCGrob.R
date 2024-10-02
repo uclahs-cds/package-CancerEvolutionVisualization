@@ -28,7 +28,7 @@ SRCGrob <- function(
     length.from.node.edge = TRUE,
     size.units = 'npc',
     scale.bar = FALSE,
-    scale.bar.coords = c(0.5, 0.9),
+    scale.bar.coords = c(0.5, 1),
     scale.size.1 = NA,
     scale.size.2 = NA
     ) {
