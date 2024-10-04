@@ -497,9 +497,9 @@ add.text2 <- function(
     node.radius <- node.radius / scale;
     node.text <- node.text[node.text$node %in% tree$tip, ];
 
-    node.list <- vector("list", nrow(tree));
-    node.text.col <- vector("list", nrow(tree));
-    node.text.fontface <- vector("list", nrow(tree));
+    node.list <- vector('list', nrow(tree));
+    node.text.col <- vector('list', nrow(tree));
+    node.text.fontface <- vector('list', nrow(tree));
 
     # Loop to assign text to nodes
     for (i in seq_len(nrow(node.text))) {
