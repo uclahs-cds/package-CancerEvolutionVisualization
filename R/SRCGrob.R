@@ -22,9 +22,10 @@ SRCGrob <- function(
     add.normal = FALSE,
     use.radians = FALSE,
     normal.cex = 1,
-    sig.shape = 3,
     label.nodes = TRUE,
     disable.polygons = FALSE,
+    polygon.shape = 3,
+    polygon.width = 1.2,
     length.from.node.edge = TRUE,
     size.units = 'npc'
     ) {
@@ -49,7 +50,6 @@ SRCGrob <- function(
 
     fixed.angle <- pi / 6;
     min.width <- get.plot.width(horizontal.padding);
-    wid <- 1.2;
     spread <- 1;
     cluster.list <- NULL;
     node.radius <- 0.1;
@@ -80,11 +80,11 @@ SRCGrob <- function(
         scale1 = scale1,
         scale2 = scale2,
         yat = yat,
-        wid = wid,
+        wid = polygon.width,
         length.from.node.edge = length.from.node.edge,
         default.branch.width = 4,
         add.polygons = add.polygons,
-        sig.shape = sig.shape,
+        sig.shape = polygon.shape,
         spread = spread,
         fixed.angle = fixed.angle,
         add.node.text = add.node.text,
