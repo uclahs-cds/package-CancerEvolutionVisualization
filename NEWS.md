@@ -19,6 +19,9 @@
 * Refactored use of plyr/dplyr and stringr functions to remove dependencies
 * Set default parameters for heatmaps, defaulting to BPG defaults unless necessary
 
+## Bug
+* Resolved issue where the spread parameter was not applied in dendrogram mode.
+
 # CancerEvolutionVisualization 2.0.1 (2023-11-17)
 
 ## Added
