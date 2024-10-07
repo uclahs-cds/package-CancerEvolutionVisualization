@@ -7,6 +7,7 @@
 * Documentation for heatmaps and clone-genome distribution plot
 * Option to disable node drawing with node-by-node control
 * Node-by-node control of node size
+* Aesthetic changes for heatmap and clone-genome distribution plot
 * Add parameters to specify polygon shape and width.
   
 ## Update
