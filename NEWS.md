@@ -26,6 +26,7 @@
 
 ## Bug
 * Fixed S3 naming conflict in heatmap functions, using safe "create." prefix
+* Fixed error when input is monoclonal
 
 
 # CancerEvolutionVisualization 2.0.0 (2023-11-16)
