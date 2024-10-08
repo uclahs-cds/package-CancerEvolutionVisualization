@@ -213,7 +213,7 @@ position.node.text <- function(
                     #back computing the x position based on the intercept and the slope
                     xpos <- ifelse(
                         is.infinite(slope),
-                        yes = tree.max.adjusted$x0[s],
+                        yes = tree.max.adjusted$x1[s],
                         no = (ypos - intercept) / slope
                         );
 
@@ -522,7 +522,7 @@ add.text2 <- function(
         node.text.fontface[[pos]] <- c(node.text.fontface[[pos]], if (!is.na(text.row$fontface)) text.row$fontface else 'plain');
         }
 
-    tree.max.adjusted <- apply(
+    tree.max <- apply(
         tree,
         MARGIN = 1,
         FUN = function(x) {
@@ -536,35 +536,36 @@ add.text2 <- function(
 
             tipx <- v$x[v$id == x['tip']];
             tipy <- v$y[v$id == x['tip']];
+            mode <- v$mode[v$id == x['tip']];
 
-            return(data.frame(basex, basey, tipx, tipy));
+            return(data.frame(basex, basey, tipx, tipy, mode));
             }
         );
-    tree.max.adjusted <- do.call('rbind', tree.max.adjusted);
-    rownames(tree.max.adjusted) <- rownames(tree);
+    tree.max <- do.call('rbind', tree.max);
+    rownames(tree.max) <- rownames(tree);
+    tree.max <- cbind(tree, tree.max);
+
+    tree.max.adjusted <- as.data.frame(do.call(rbind, lapply(
+        1:nrow(tree.max),
+        FUN = function(i) {
+            x <- tree.max[i, ];
+            if (x['mode'] == 'radial') {
+                angle <- x['angle'];
+            } else if (x['mode'] == 'dendrogram') {
+                angle <- 0;
+                x['basex'] <- x['tipx'];
+                }
+            # 1 if positive angle, -1 if negative (or 0 degrees)
+            angle.modifier <- (angle > 0) * 2 - 1;
+
+            basex <- x['basex'] + (angle.modifier * node.radius * sin(angle));
+            tipx  <- x['tipx']  - (angle.modifier * node.radius * sin(angle));
+            basey <- x['basey'] + (angle.modifier * node.radius * cos(angle));
+            tipy  <- x['tipy']  - (angle.modifier * node.radius * cos(angle));
+
+            return(data.frame(basex, basey, tipx, tipy));
+            })));
     tree.max.adjusted <- cbind(tree, tree.max.adjusted);
-    tree.max <- tree.max.adjusted;
-
-    # 1 if positive angle, -1 if negative (or 0 degrees)
-    angle.modifier <- (tree.max.adjusted$angle > 0) * 2 - 1;
-
-    # Length of the visible line segments
-    tree.max.adjusted$basex <- (
-        tree.max.adjusted$basex +
-        angle.modifier * node.radius * sin(tree.max.adjusted$angle)
-        );
-    tree.max.adjusted$tipx <- (
-        tree.max.adjusted$tipx -
-        angle.modifier * node.radius * sin(tree.max.adjusted$angle)
-        );
-    tree.max.adjusted$basey <- (
-        tree.max.adjusted$basey +
-        angle.modifier * node.radius * cos(tree.max.adjusted$angle)
-        );
-    tree.max.adjusted$tipy <- (
-        tree.max.adjusted$tipy -
-        angle.modifier * node.radius * cos(tree.max.adjusted$angle)
-        );
 
     # Push a viewport the same size as the final panel
     # to perform calculations using absolute size units
@@ -585,8 +586,8 @@ add.text2 <- function(
     tree.max.adjusted$y0 <- convertY(unit(tree.max.adjusted$basey, 'native'), 'inches', valueOnly = TRUE);
     tree.max.adjusted$y1 <- convertY(unit(tree.max.adjusted$tipy, 'native'), 'inches', valueOnly = TRUE);
 
-    tree.max.adjusted$y <- convertY(unit(tree.max.adjusted$tipy, 'native'), 'inches', valueOnly = TRUE); # Actual node positions
-    tree.max.adjusted$x <- convertX(unit(tree.max.adjusted$tipx, 'native'), 'inches', valueOnly = TRUE);
+    tree.max.adjusted$y <- convertY(unit(tree.max$tipy, 'native'), 'inches', valueOnly = TRUE); # Actual node positions
+    tree.max.adjusted$x <- convertX(unit(tree.max$tipx, 'native'), 'inches', valueOnly = TRUE);
 
     tree.max.adjusted$slope <- (tree.max.adjusted$y1 - tree.max.adjusted$y0) / (tree.max.adjusted$x1 - tree.max.adjusted$x0);
     tree.max.adjusted$intercept <- tree.max.adjusted$y1 - tree.max.adjusted$slope * tree.max.adjusted$x1;
