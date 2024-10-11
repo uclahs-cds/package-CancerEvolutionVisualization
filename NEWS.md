@@ -19,6 +19,7 @@
 * Refactored use of plyr/dplyr and stringr functions to remove dependencies
 * Set default parameters for heatmaps, defaulting to BPG defaults unless necessary
 * Improved default node style
+* Define color scheme with a single value, automatically generating other shades.
 
 # CancerEvolutionVisualization 2.0.1 (2023-11-17)
 
