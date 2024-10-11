@@ -18,7 +18,7 @@ SRCGrob <- function(
     main.y = NULL,
     main.cex = 1.7,
     node.text.line.dist = 0.1,
-    colour.scheme = CancerEvolutionVisualization::colours,
+    colour.scheme = 'grey',
     add.normal = FALSE,
     use.radians = FALSE,
     normal.cex = 1,
@@ -39,6 +39,9 @@ SRCGrob <- function(
     yaxis.position <- get.y.axis.position(colnames(tree));
 
     node.col <- 'white';
+    if (length(colour.scheme) == 1) {
+        colour.scheme <- BoutrosLab.plotting.general::colour.gradient(colour.scheme, nrow(tree));
+        }
 
     inputs <- prep.tree(
         tree,
