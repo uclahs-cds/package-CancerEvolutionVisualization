@@ -38,7 +38,7 @@ SRCGrob <- function(
     yat <- prep.yat(yat);
     yaxis.position <- get.y.axis.position(colnames(tree));
 
-    node.col <- 'grey40';
+    node.col <- 'white';
 
     inputs <- prep.tree(
         tree,

@@ -4,7 +4,7 @@ prep.tree <- function(
     bells = TRUE,
     colour.scheme,
     use.radians = FALSE,
-    default.node.colour = 'grey29'
+    default.node.colour = 'white'
     ) {
 
     if (!('parent' %in% colnames(tree.df))) {
@@ -478,7 +478,7 @@ prep.node.border.colours <- function(tree.df) {
         tree.df,
         MARGIN = 1,
         FUN = function(row) {
-            if (is.na(row['border.col'])) row['node.col'] else row['border.col'];
+            if (is.na(row['border.col'])) 'black' else row['border.col'];
             }
         );
 
