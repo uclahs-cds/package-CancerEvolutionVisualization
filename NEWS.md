@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2024-09-23)
+# CancerEvolutionVisualization 3.0.0 (2024-10-11)
 
 ## Added
 * Dendrogram mode
@@ -18,6 +18,7 @@
 * Updated changelog format to NEWS.md Markdown format
 * Refactored use of plyr/dplyr and stringr functions to remove dependencies
 * Set default parameters for heatmaps, defaulting to BPG defaults unless necessary
+* Improved default node style
 
 # CancerEvolutionVisualization 2.0.1 (2023-11-17)
 
