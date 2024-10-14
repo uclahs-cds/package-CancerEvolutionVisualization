@@ -331,7 +331,6 @@ compute.clones <- function(
 	v <- v[is.na(v$parent) | v$parent != -1, ];
 	v <- rbind(root, v);
 	v <- count.leaves.per.node(v);
-
 	if (no.ccf) {
 	    tree$angle <- if ((is.null(fixed.angle) && nrow(v) > 6) || any(table(v$parent) > 2)) {
     		tau <- -(pi / 2.5);
