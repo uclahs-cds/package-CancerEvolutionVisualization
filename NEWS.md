@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2024-10-11)
+# CancerEvolutionVisualization 3.0.0 (2024-10-14)
 
 ## Added
 * Dendrogram mode
@@ -19,6 +19,7 @@
 * Refactored use of plyr/dplyr and stringr functions to remove dependencies
 * Set default parameters for heatmaps, defaulting to BPG defaults unless necessary
 * Improved default node style
+* Define color scheme with a single value, automatically generating other shades.
 
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.
