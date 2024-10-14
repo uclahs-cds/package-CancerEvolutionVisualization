@@ -11,7 +11,7 @@ test_that(
                 'WHO003',
                 add.normal = TRUE,
                 horizontal.padding = -1,
-                colour.scheme = c(NA, "blue", "green")
+                colour.scheme = c(NA, 'blue', 'green')
                 )
             ));
         }
