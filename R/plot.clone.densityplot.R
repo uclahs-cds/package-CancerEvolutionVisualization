@@ -1,14 +1,15 @@
+## Function: plot.clone.densityplot ----------------------------------------------------------------
 plot.clone.densityplot <- function(
-    sample.df,
+    dpclust.df,
     sampleID,
     src.tool,
     output.dir
     ) {
     # Create table of densities for plotting each cluster
     density.list <- list();
-    for (clone in unique(sample.df$cluster.label)) {
+    for (clone in unique(dpclust.df$clone.id)) {
         clone.df <- calculate.density.each.clone(
-            cluster.df = sample.df[sample.df$cluster.label == clone, ],
+            cluster.df = dpclust.df[dpclust.df$clone.id == clone, ],
             cloneID = clone
             );
         density.list[[clone]] <- clone.df;
@@ -16,7 +17,7 @@ plot.clone.densityplot <- function(
     density.df <- do.call(rbind, density.list);
 
     # Calculate average CCF per cluster
-    cluster.meanCCFs <- unique(sample.df$location);
+    cluster.meanCCFs <- unique(dpclust.df$location);
 
     # Get plot legend
     clone.IDs <- unique(density.df$clone.id);
@@ -26,7 +27,7 @@ plot.clone.densityplot <- function(
         list(
             legend = list(
                 title = 'Clone',
-                labels = names(cluster.colours),
+                labels = as.character(names(cluster.colours)),
                 colours = c(cluster.colours),
                 border = 'black'
                 )
@@ -60,7 +61,7 @@ plot.clone.densityplot <- function(
             groups = density.df$clone.id,
             xlab.label = 'CCF',
             ylab.label = 'SNV Count',
-            xlab.top.label = paste('Total SNVs Clustered:', nrow(sample.df)),
+            xlab.top.label = paste('Total SNVs Clustered:', nrow(dpclust.df)),
             xlab.top.cex = 1.5,
             xlab.top.x = 0.5,
             xlab.top.y = 1,

@@ -1,10 +1,11 @@
+## Function: calculate.density.each.clone  ---------------------------------------------------------
 calculate.density.each.clone <- function(cluster.df, cloneID) {
     # Skip clusters with only one SNV
     if (nrow(cluster.df) <= 1) {
         return(NULL);
         }
     density <- density(
-        x = cluster.df$subclonal.fraction,
+        x = cluster.df$CCF,
         bw = 'nrd',
         adjust = 1.2,
         na.rm = TRUE

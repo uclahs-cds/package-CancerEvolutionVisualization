@@ -1,3 +1,4 @@
+## Function: plot.snv.histogram --------------------------------------------------------------------
 # How to automate n.breaks?
     # Use 100 if > 1000 SNVs, 50 if > 500 SNVs, 25 if > 100 SNVs, 10 if > 50 SNVs?
 # How to automate ymax?
@@ -25,7 +26,7 @@ plot.snv.histogram <- function(dpclust.df, sampleID, src.tool, output.dir) {
     }
 
     # Set y-axis max limit
-    hist.data <- hist(dpclust.df$subclonal.fraction, breaks = n.breaks, plot = FALSE);
+    hist.data <- hist(dpclust.df$CCF, breaks = n.breaks, plot = FALSE);
     ymax <- ceiling(max(hist.data$counts) / 10) * 10;
     # Set y-axis increments
     yseq <- if (ymax > 1000) {
@@ -46,7 +47,7 @@ plot.snv.histogram <- function(dpclust.df, sampleID, src.tool, output.dir) {
     return(
         BoutrosLab.plotting.general::create.histogram(
             filename = save.plt,
-            x = dpclust.df$subclonal.fraction,
+            x = dpclust.df$CCF,
             xlab.label = 'CCF',
             ylab.label = 'SNV Count',
             xlab.top.label = paste('Total SNVs Clustered:', num.snv),
