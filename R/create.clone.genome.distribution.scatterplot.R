@@ -4,10 +4,10 @@ create.clone.genome.distribution.scatterplot <- function(
     nclone,
     chr.info,
     save.plt = NULL,
-    alpha = 0.25,
     ...
     ) {
 
+    scatter.df$clone.id <- factor(scatter.df$clone.id, levels = rev(levels(scatter.df$clone.id)));
     return(BoutrosLab.plotting.general::create.scatterplot(
         filename = save.plt,
         formula = clone.id ~ genome.pos,
@@ -21,8 +21,6 @@ create.clone.genome.distribution.scatterplot <- function(
         yat = seq(1, nclone, 1),
         xlimits = c(0, sum(chr.info$length)),
         col = scatter.df$colour,
-        # col.border = rep(NULL, nsnv),
-        alpha = alpha,
         abline.v = chr.info$start,
         ...
         ));
