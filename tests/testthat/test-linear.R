@@ -10,7 +10,8 @@ test_that(
                 linear.test.data$node.text,
                 'WHO003',
                 add.normal = TRUE,
-                horizontal.padding = -1
+                horizontal.padding = -1,
+                colour.scheme = c(NA, 'blue', 'green')
                 )
             ));
         }

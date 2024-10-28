@@ -79,7 +79,7 @@ add.normal <- function(clone.out, node.radius, label.cex, normal.cex = 1) {
         width = unit(2 * node.radius * normal.cex,'inches'),
         height = unit(2 * node.radius * normal.cex, 'inches'),
         just = c('center', 'center'),
-        gp = gpar(col = 'black', fill = 'transparent', lwd = 1.5, lty = '31')
+        gp = gpar(col = 'black', fill = 'white', lwd = 1.5, lty = '31')
         );
 
     normal.label <- textGrob(
