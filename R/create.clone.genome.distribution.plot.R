@@ -25,11 +25,11 @@ create.clone.genome.distribution.plot <- function(
             stop('ID column must contain sample ID if multi.sample is TRUE');
             }
         # filename must be a directory
-        if (!dir.exists(filename)) {
+        if (!is.null(filename) && !dir.exists(filename)) {
             stop('filename must be a directory if multi.sample is TRUE');
             }
     } else {
-        if (dir.exists(filename)) {
+        if (!is.null(filename) && dir.exists(filename)) {
             stop('filename must be a path (not a directory) if multi.sample is FALSE');
             }
         snv.df$ID <- 'all';
@@ -46,29 +46,31 @@ create.clone.genome.distribution.plot <- function(
     chr.info <- genome.pos.df$chr.info;
     chr.info$xat <- (chr.info$length / 2) + chr.info$start;
 
+    plt.list <- list();
     for (s in unique(snv.df$ID)) {
         # Iterate through each sample -------------------------------------------------------------
         print(paste('Plotting clone distribution across the genome for sample:', s));
 
         sample.df <- droplevels(snv.df[snv.df$ID == s, ]);
         sample.df <- unique(sample.df[, c('clone.id', 'genome.pos', 'SNV.id', 'ID')]);
-        if (multi.sample & !is.null(filename)) {
+        if (!is.null(filename) && multi.sample) {
             save.plt <- file.path(filename, paste0(s, '.png'));
         } else {
             save.plt <- filename;
             }
 
-        plt <- create.clone.genome.distribution.plot.per.sample(
+        plt.list[[s]] <- create.clone.genome.distribution.plot.per.sample(
             sample.df,
             clone.colours[levels(sample.df$clone.id)],
             chr.info,
-            save.plt = ifelse(is.null(filename), NULL, save.plt),
+            save.plt = save.plt,
             alpha = alpha,
             legend.x = legend.x,
             legend.y = legend.y,
             ...
             );
         }
+    return(plt.list);
     }
 
 create.clone.genome.distribution.plot.per.sample <- function(
@@ -113,7 +115,7 @@ create.clone.genome.distribution.plot.per.sample <- function(
     cluster.legend <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
-                title = 'Clone ID',
+                title = 'Clone',
                 labels = names(clone.colours),
                 colours = c(clone.colours),
                 border = 'black'
