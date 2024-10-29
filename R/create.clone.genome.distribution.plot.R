@@ -111,17 +111,22 @@ create.clone.genome.distribution.plot.per.sample <- function(
     density.df <- do.call(rbind, density.list);
 
     # get plot legend -----------------------------------------------------------------------------
+    legend.label <- sapply(names(clone.colours), function(k) {
+        nsnv <- length(unique(sample.df[sample.df$clone.id == k, ]$SNV.id));
+        return(paste0(k, ' (', nsnv, ')'));
+        });
     clone.colours <- clone.colours[levels(sample.df$clone.id)];
     cluster.legend <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
-                title = 'Clone',
-                labels = names(clone.colours),
+                title = 'Clone (SNVs)',
+                labels = legend.label[names(clone.colours)],
                 colours = c(clone.colours),
                 border = 'black'
                 )
             ),
         size = legend.size,
+        title.just = 'left',
         title.cex = legend.title.cex,
         label.cex = legend.label.cex
         );

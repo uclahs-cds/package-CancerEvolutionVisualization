@@ -21,6 +21,7 @@
 * Set default parameters for heatmaps, defaulting to BPG defaults unless necessary
 * Improved default node style
 * Define color scheme with a single value, automatically generating other shades.
+* Report the number of SNVs per clone in the legend for the clone-genome distribution plot.
 
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.
