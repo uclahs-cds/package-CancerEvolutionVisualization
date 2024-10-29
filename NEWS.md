@@ -21,6 +21,7 @@
 * Set default parameters for heatmaps, defaulting to BPG defaults unless necessary
 * Improved default node style
 * Define color scheme with a single value, automatically generating other shades.
+* Allow `polygon.alpha` to be specified in the tree input data.frame to control opacity of fish plot polygons.
 
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.

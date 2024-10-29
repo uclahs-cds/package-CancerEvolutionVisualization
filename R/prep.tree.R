@@ -172,8 +172,8 @@ prep.tree <- function(
         conversion.fun = as.character
         );
 
-    if (!('alpha' %in% colnames(tree.df))) {
-        tree.df$alpha <- 0.5;
+    if (!('polygon.alpha' %in% colnames(tree.df))) {
+        tree.df$polygon.alpha <- 0.5;
         }
 
     tree.df <- reorder.nodes(tree.df);
@@ -233,7 +233,7 @@ prep.tree <- function(
         connector.type = c(NA, tree.df$connector.type),
         mode = c(NA, tree.df$mode),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
-        alpha = c(0, tree.df$alpha),
+        alpha = c(0, tree.df$polygon.alpha),
         stringsAsFactors = FALSE
         );
     if (length(branch.names) > 1) {
