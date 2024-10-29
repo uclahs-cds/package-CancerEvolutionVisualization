@@ -172,6 +172,10 @@ prep.tree <- function(
         conversion.fun = as.character
         );
 
+    if (!('alpha' %in% colnames(tree.df))) {
+        tree.df$alpha <- 0.5;
+        }
+
     tree.df <- reorder.nodes(tree.df);
 
     # Include -1 value for root node.
@@ -229,7 +233,7 @@ prep.tree <- function(
         connector.type = c(NA, tree.df$connector.type),
         mode = c(NA, tree.df$mode),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
-        alpha = rep(0.5, (nrow(tree.df) + 1)),
+        alpha = c(0, tree.df$alpha),
         stringsAsFactors = FALSE
         );
     if (length(branch.names) > 1) {
