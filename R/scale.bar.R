@@ -161,7 +161,7 @@ most.common.value <- function(x) {
 #  - top.y        The top y-coordinate of the scale bar viewport in normalized parent coordinates (npc).
 #  - edge.col     The color of the scale bar line and ticks.
 #  - edge.width   The width of the scale bar line and ticks in points.
-#  - edge.type    The line type of the scale bar line (e.g., "solid", "dashed", "dotted").
+#  - edge.type    The line type of the scale bar line (e.g., 'solid', 'dashed', 'dotted').
 #  - main.cex     The character expansion factor for the scale bar title.
 #  - label.cex    The character expansion factor for the scale bar labels.
 #
@@ -186,11 +186,11 @@ create.scale.bar <- function(
 
     # Viewport for the scale bar that centers it without scaling distortion
     scale.vp <- viewport(
-        x = unit(left.x, "npc"),    # Centered in the parent viewport
-        y = unit(top.y, "npc"),     # Adjust y-position based on parent viewport
-        width = unit(1, "native"),  # Native units for scale length
-        height = unit(1, "native"), # Matches native scaling
-        just = "center"
+        x = unit(left.x, 'npc'),    # Centered in the parent viewport
+        y = unit(top.y, 'npc'),     # Adjust y-position based on parent viewport
+        width = unit(1, 'native'),  # Native units for scale length
+        height = unit(1, 'native'), # Matches native scaling
+        just = 'center'
         );
 
     edge.width <- unit(edge.width, 'points');
@@ -198,8 +198,8 @@ create.scale.bar <- function(
     label.size <- unit(label.cex * 12, 'points');
 
     # Define coordinates within scale.vp
-    vp.x <- unit(0.5, "npc");
-    vp.y <- unit(0.5, "npc");
+    vp.x <- unit(0.5, 'npc');
+    vp.y <- unit(0.5, 'npc');
     xat <- vp.x + unit(c(-1, 1) * (scale.length$length / 2), 'native');
 
     title <- textGrob(
