@@ -31,7 +31,8 @@ SRCGrob <- function(
     scale.bar = FALSE,
     scale.bar.coords = c(0.5, 1),
     scale.size.1 = NA,
-    scale.size.2 = NA
+    scale.size.2 = NA,
+    scale.padding = 1
     ) {
 
     add.node.text <- !is.null(node.text);
@@ -118,7 +119,8 @@ SRCGrob <- function(
         scale.bar = scale.bar,
         scale.bar.coords = scale.bar.coords,
         scale.size.1 = scale.size.1,
-        scale.size.2 = scale.size.2
+        scale.size.2 = scale.size.2,
+        scale.padding = scale.padding
         );
 
     out.tree <- gTree(

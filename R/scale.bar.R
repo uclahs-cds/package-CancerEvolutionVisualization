@@ -30,6 +30,7 @@ add.scale.bar <- function(
     yaxis1.label,
     yaxis2.label,
     pos,
+    padding,
     ...
     ) {
 
@@ -68,7 +69,7 @@ add.scale.bar <- function(
             edge.width = most.common.value(clone.out$v$edge.width.2),
             edge.type = most.common.value(clone.out$v$edge.type.2),
             left.x = pos[1],
-            top.y = pos[2] + 0.1,
+            top.y = pos[2] + (padding / 10),
             ...
             );
         clone.out$grobs <- c(
@@ -153,7 +154,7 @@ create.scale.bar <- function(
     tick.labels <- textGrob(
         label = c(0, scale.length$label),
         x = xat,
-        y = vp.y - tick.length * 2,
+        y = vp.y - tick.length * 2.5,
         gp = gpar(
             cex = label.cex
             )

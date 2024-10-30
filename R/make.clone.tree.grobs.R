@@ -41,6 +41,7 @@ make.clone.tree.grobs <- function(
     scale.bar.coords,
     scale.size.1,
     scale.size.2,
+    scale.padding,
     ...
     ) {
 
@@ -173,7 +174,8 @@ make.clone.tree.grobs <- function(
             scale.length = scale.lengths,
             main.cex = axis.label.cex$y,
             label.cex = axis.cex$y,
-            pos = scale.bar.coords
+            pos = scale.bar.coords,
+            padding = scale.padding
             );
         }
 
