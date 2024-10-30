@@ -173,8 +173,13 @@ prep.tree <- function(
         );
 
     if (!('polygon.alpha' %in% colnames(tree.df))) {
-        tree.df$polygon.alpha <- 0.5;
+        tree.df$polygon.alpha <- NA;
         }
+    tree.df$polygon.alpha <- prep.column.values(
+        tree.df$polygon.alpha,
+        default.values = 0.5,
+        conversion.fun = as.numeric
+        );
 
     tree.df <- reorder.nodes(tree.df);
 
