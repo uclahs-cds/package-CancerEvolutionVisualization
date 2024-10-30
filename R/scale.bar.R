@@ -37,9 +37,8 @@ add.scale.bar <- function(
     vp.unclipped <- make.plot.viewport(clone.out, clip = 'off');
 
     # Generate the first scale bar
-    scale.bar1.glist <- create.scale.bar(
+    scale.bar1 <- create.scale.bar(
         main = yaxis1.label,
-        # vp = vp.unclipped,
         scale.length = list(
             label = scale.length[1],
             length = scale.length[1]
@@ -54,14 +53,13 @@ add.scale.bar <- function(
 
     clone.out$grobs <- c(
         clone.out$grobs,
-        list(gTree(children = gList(scale.bar1.glist), vp = vp.unclipped))
+        list(gTree(children = gList(scale.bar1), vp = vp.unclipped))
         );
 
     # Create second scalebar if specified
     if (!is.null(yaxis2.label)) {
-        scale.bar2.glist <- create.scale.bar(
+        scale.bar2 <- create.scale.bar(
             main = yaxis2.label,
-            # vp = vp.unclipped,
             scale.length = list(
                 label = scale.length[2],
                 length = scale.length[2] / scale1 * scale2
@@ -75,9 +73,8 @@ add.scale.bar <- function(
             );
         clone.out$grobs <- c(
             clone.out$grobs,
-            list(gTree(children = gList(scale.bar2.glist), vp = vp.unclipped))
+            list(gTree(children = gList(scale.bar2), vp = vp.unclipped))
             );
-        # clone.out$grobs <- c(clone.out$grobs, list(scale.bar2.glist));
         }
     }
 
@@ -91,7 +88,6 @@ most.common.value <- function(x) {
 
 create.scale.bar <- function(
     main,
-    vp = NULL,
     scale.length,
     left.x,
     top.y,
@@ -102,6 +98,7 @@ create.scale.bar <- function(
     label.cex
     ) {
 
+    # Viewport for the scale bar that centers it without scaling distortion
     scale.vp <- viewport(
         x = unit(left.x, "npc"),    # Centered in the parent viewport
         y = unit(top.y, "npc"),     # Adjust y-position based on parent viewport
@@ -114,27 +111,25 @@ create.scale.bar <- function(
     main.size <- unit(main.cex * 12, 'points');
     label.size <- unit(label.cex * 12, 'points');
 
-    x0 <- unit(0.5, "npc");
-    y0 <- unit(1, "npc");
-    xat <- x0 + unit(c(-1, 1) * (scale.length$length / 2), 'native');
+    # Define coordinates within scale.vp
+    vp.x <- unit(0.5, "npc");
+    vp.y <- unit(0.5, "npc");
+    xat <- vp.x + unit(c(-1, 1) * (scale.length$length / 2), 'native');
 
     title <- textGrob(
         label = main,
-        x = x0, #+ unit(scale.length$length / 2, 'native'),
-        y = y0,
-        hjust = 0.5,
-        vjust = 1,
+        x = vp.x,
+        y = vp.y + main.size,
         gp = gpar(
             cex = main.cex
             )
         );
 
-    scale.bar.y <- unit(1, "npc") - (main.size * 2)
     scale.line <- segmentsGrob(
         x0 = xat[1],
         x1 = xat[2],
-        y0 = scale.bar.y,
-        y1 = scale.bar.y,
+        y0 = vp.y,
+        y1 = vp.y,
         gp = gpar(
             col = edge.col,
             lwd = edge.width,
@@ -147,8 +142,8 @@ create.scale.bar <- function(
     ticks <- segmentsGrob(
         x0 = xat,
         x1 = xat,
-        y0 = scale.bar.y + (edge.width / 2.5),
-        y1 = scale.bar.y - tick.length,
+        y0 = vp.y + (edge.width / 2.5),
+        y1 = vp.y - tick.length,
         default.units = 'native',
         gp = gpar(
             lineend = 'butt'
@@ -158,18 +153,14 @@ create.scale.bar <- function(
     tick.labels <- textGrob(
         label = c(0, scale.length$label),
         x = xat,
-        y = scale.bar.y - tick.length * 2,
+        y = vp.y - tick.length * 2,
         gp = gpar(
             cex = label.cex
             )
         );
-    print('done')
-    scale.gTree <- gTree(
+
+    return(gTree(
         children = gList(title, scale.line, ticks, tick.labels),
         vp = scale.vp
-        );
-    # return(gTree(
-    #     children = gList(scale.gTree),
-    #     vp = vp
-    #     ));
+        ));
     }
