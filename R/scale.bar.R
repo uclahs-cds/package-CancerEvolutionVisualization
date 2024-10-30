@@ -55,7 +55,7 @@ add.scale.bar <- function(
             main = yaxis2.label,
             scale.length = list(
                 label = scale.length[2],
-                length = scale.length[2] * scale1 / scale2
+                length = scale.length[2] / scale1 * scale2
                 ),
             edge.col = most.common.value(clone.out$v$edge.colour.2),
             edge.width = most.common.value(clone.out$v$edge.width.2),
@@ -77,27 +77,43 @@ most.common.value <- function(x) {
     }
 
 create.scale.bar <- function(
-        main,
-        scale.length,
-        left.x,
-        top.y,
-        edge.col,
-        edge.width,
-        edge.type,
-        main.cex,
-        label.cex
-        ) {
+    main,
+    scale.length,
+    left.x,
+    top.y,
+    edge.col,
+    edge.width,
+    edge.type,
+    main.cex,
+    label.cex
+    ) {
 
-    edge.width <- unit(edge.width, "points");
-    left.x <- unit(left.x - 1, "npc");
-    top.y <- unit(top.y, "npc");
-    xat <- left.x + unit(c(0, scale.length$length), 'native');
+
+    edge.width <- unit(edge.width, 'points');
+    left.x <- unit(left.x, 'npc');
+    print(scale.length)
+    # xat <- unit(c(-1, 1) * scale.length$length, 'native');
+    # print(xat)
+    top.y <- unit(top.y, 'npc');
     main.size <- unit(main.cex * 12, 'points');
     label.size <- unit(label.cex * 12, 'points');
 
+    # left.x <- convertUnit(left.x, 'native');
+    # # Calculate the x-coordinates for the scale bar, centered around left.x
+    # xat <- left.x + unit(c(-1, 1) * (scale.length$length / 2), 'native');
+    # # xat <- convertUnit(xat, 'native'); + left.x;
+
+    # Convert scale.length$length to npc units
+    scale.length$length <- unit(scale.length$length, 'native')
+    scale.length$length <- convertUnit(scale.length$length, 'npc', valueOnly = TRUE)
+
+    # Calculate the x-coordinates for the scale bar, centered around left.x
+    xat <- left.x + unit(c(-1, 1) * (scale.length$length / 2), 'npc');
+
+    print(xat)
     title <- textGrob(
         label = main,
-        x = left.x + unit(scale.length$length / 2, 'native'),
+        x = left.x, #+ unit(scale.length$length / 2, 'native'),
         y = top.y,
         hjust = 0.5,
         vjust = 1,
@@ -116,7 +132,7 @@ create.scale.bar <- function(
             col = edge.col,
             lwd = edge.width,
             lty = edge.type,
-            lineend = "butt"
+            lineend = 'butt'
             )
         );
 
@@ -128,7 +144,7 @@ create.scale.bar <- function(
         y1 = scale.bar.y - tick.length,
         default.units = 'native',
         gp = gpar(
-            lineend = "butt"
+            lineend = 'butt'
             )
         );
 
