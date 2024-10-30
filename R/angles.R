@@ -131,7 +131,8 @@ split.equal.x.dist <- function(
         angle <- angles[tree$tip == child.id];
         if (is.na(angle)) {
             y <- tree$length[tree$tip == child.id];
-            angle <- atan((current.pos * dx.scale) / y);
+            pair.spread <- v$spread[v$id %in% child.ids[c(i - 1, i)]];
+            angle <- atan((current.pos * dx.scale * mean(pair.spread)) / y);
             angles[tree$tip == child.id] <- angle;
             }
         idx <- idx + n.leaves;

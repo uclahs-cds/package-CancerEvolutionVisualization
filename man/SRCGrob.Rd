@@ -26,13 +26,14 @@ SRCGrob(
     main.y = NULL,
     main.cex = 1.7,
     node.text.line.dist = 0.1,
-    colour.scheme = CancerEvolutionVisualization::colours,
+    colour.scheme = "grey",
     add.normal = FALSE,
     use.radians = FALSE,
     normal.cex = 1,
-    sig.shape = 3,
     label.nodes = TRUE,
     disable.polygons = FALSE,
+    polygon.shape = 3,
+    polygon.width = 1.2,
     length.from.node.edge = TRUE,
     size.units = "npc"
     );
@@ -73,12 +74,13 @@ SRCGrob(
   \item{add.normal}{Adds a normal}
   \item{use.radians}{Unit to be used for "angle" column (degrees or radians)}
   \item{normal.cex}{Font size within the normal "box"}
-  \item{sig.shape}{
+  \item{label.nodes}{Enable/disable node labels}
+  \item{disable.polygons}{Disables CP polygon drawing (even when CP values are provided)}
+  \item{polygon.shape}{
   Changes the shape of the CP shading.
   Lower values are smoother.
   }
-  \item{label.nodes}{Enable/disable node labels}
-  \item{disable.polygons}{Disables CP polygon drawing (even when CP values are provided)}
+\item{polygon.width}{Width of the CP shading}
   \item{length.from.node.edge}{
   Sets the branch length to be calculated from the edge of the node instead of the centre
   }
