@@ -1,3 +1,18 @@
+###################################################################################################
+# prep.scale.length
+#
+# Description:
+# - Prepares the scale lengths for the tree plot based on the provided tree object and scale sizes.
+#
+# Arguments:
+#  - tree          Tree data frame containing 'length1' and optionally 'length2' elements.
+#  - scale.size.1  The desireds size for the first scale bar.
+#  - scale.size.2  The desireds size for the second scale bar (optional).
+#
+# Returns:
+#  - A vector of length 2 containing the prepared scale lengths.
+#  - If 'scale.size.1' or 'scale.size.2' is NA, the corresponding tree length is used.
+
 prep.scale.length <- function(
     tree,
     scale.size.1,
@@ -16,11 +31,45 @@ prep.scale.length <- function(
     return(scale.lengths);
     }
 
+###################################################################################################
+# auto.scale.length
+#
+# Description:
+# - Automatically determines an appropriate scale length based on the provided edge lengths.
+#
+# Arguments:
+#  - edge.lengths  A vector of edge lengths.
+#
+# Returns:
+#  - The adjusted scale length, which is the median of the non-zero edge lengths rounded down to the nearest power of 10.
+
 auto.scale.length <- function(edge.lengths) {
     scale.length <- median(edge.lengths[edge.lengths > 0], na.rm = TRUE);
     adjusted.length <- 10 ** floor(log10(as.numeric(scale.length)));
     return(adjusted.length);
     }
+
+###################################################################################################
+# add.scale.bar
+#
+# Description:
+# - Adds a scale bar to the 'clone.out' object.
+# - Can add one or two scale bars based on the provided arguments.
+# - Utilizes the 'create.scale.bar' and 'most.common.value' helper functions.
+#
+# Arguments:
+#  - clone.out      The plot object to which the scale bar(s) will be added.
+#  - scale.length   A vector of length 2 specifying the scale lengths for the two scale bars.
+#  - scale1         The scale value for the first scale bar.
+#  - scale2         The scale value for the second scale bar.
+#  - yaxis1.label   The label for the first scale bar.
+#  - yaxis2.label   The label for the second scale bar (optional).
+#  - pos            A vector of length 2 specifying the position (x, y) of the scale bar(s).
+#  - padding        The padding between the two scale bars (if both are present).
+#  - ...            Additional arguments passed to 'create.scale.bar'.
+#
+# Returns:
+#  - The modified 'clone.out' object with the added scale bar(s).
 
 add.scale.bar <- function(
     clone.out,
@@ -79,6 +128,18 @@ add.scale.bar <- function(
         }
     }
 
+###################################################################################################
+# most.common.value
+#
+# Description:
+# - Finds the most common value in a vector.
+#
+# Arguments:
+#  - x    The input vector.
+#
+# Returns:
+#  - The most common value in the input vector, or NULL if the input is NULL.
+
 most.common.value <- function(x) {
     if (is.null(x)) {
         return(NULL);
@@ -86,6 +147,30 @@ most.common.value <- function(x) {
     n.table <- table(x);
     return(names(n.table)[which.max(n.table)]);
     }
+
+###################################################################################################
+# create.scale.bar
+#
+# Description:
+# - Creates a scale bar grob (graphical object) with a title, scale line, ticks, and labels.
+#
+# Arguments:
+#  - main         The title of the scale bar.
+#  - scale.length A list containing the length of the scale bar and its label.
+#  - left.x       The left x-coordinate of the scale bar viewport in normalized parent coordinates (npc).
+#  - top.y        The top y-coordinate of the scale bar viewport in normalized parent coordinates (npc).
+#  - edge.col     The color of the scale bar line and ticks.
+#  - edge.width   The width of the scale bar line and ticks in points.
+#  - edge.type    The line type of the scale bar line (e.g., "solid", "dashed", "dotted").
+#  - main.cex     The character expansion factor for the scale bar title.
+#  - label.cex    The character expansion factor for the scale bar labels.
+#
+# Returns:
+#  - A gTree object representing the scale bar and label.
+#
+# Details:
+# - The function creates a viewport (scale.vp) to place the scale bar within a parent vp without scaling distortion.
+# - It defines the coordinates and sizes of the scale bar elements (title, scale line, ticks, and labels)
 
 create.scale.bar <- function(
     main,
