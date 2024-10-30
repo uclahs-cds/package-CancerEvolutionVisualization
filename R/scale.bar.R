@@ -33,9 +33,13 @@ add.scale.bar <- function(
     ...
     ) {
 
+    # Necessary to get the right positioning
+    vp.unclipped <- make.plot.viewport(clone.out, clip = 'off');
+
     # Generate the first scale bar
     scale.bar1.glist <- create.scale.bar(
         main = yaxis1.label,
+        # vp = vp.unclipped,
         scale.length = list(
             label = scale.length[1],
             length = scale.length[1]
@@ -47,12 +51,17 @@ add.scale.bar <- function(
         top.y = pos[2],
         ...
         );
-    clone.out$grobs <- c(clone.out$grobs, scale.bar1.glist);
+
+    clone.out$grobs <- c(
+        clone.out$grobs,
+        list(gTree(children = gList(scale.bar1.glist), vp = vp.unclipped))
+        );
 
     # Create second scalebar if specified
     if (!is.null(yaxis2.label)) {
         scale.bar2.glist <- create.scale.bar(
             main = yaxis2.label,
+            # vp = vp.unclipped,
             scale.length = list(
                 label = scale.length[2],
                 length = scale.length[2] / scale1 * scale2
@@ -64,7 +73,11 @@ add.scale.bar <- function(
             top.y = pos[2] + 0.1,
             ...
             );
-        clone.out$grobs <- c(clone.out$grobs, scale.bar2.glist);
+        clone.out$grobs <- c(
+            clone.out$grobs,
+            list(gTree(children = gList(scale.bar2.glist), vp = vp.unclipped))
+            );
+        # clone.out$grobs <- c(clone.out$grobs, list(scale.bar2.glist));
         }
     }
 
@@ -78,6 +91,7 @@ most.common.value <- function(x) {
 
 create.scale.bar <- function(
     main,
+    vp = NULL,
     scale.length,
     left.x,
     top.y,
@@ -88,33 +102,26 @@ create.scale.bar <- function(
     label.cex
     ) {
 
+    scale.vp <- viewport(
+        x = unit(left.x, "npc"),    # Centered in the parent viewport
+        y = unit(top.y, "npc"),     # Adjust y-position based on parent viewport
+        width = unit(1, "native"),  # Native units for scale length
+        height = unit(1, "native"), # Matches native scaling
+        just = "center"
+        );
 
     edge.width <- unit(edge.width, 'points');
-    left.x <- unit(left.x, 'npc');
-    print(scale.length)
-    # xat <- unit(c(-1, 1) * scale.length$length, 'native');
-    # print(xat)
-    top.y <- unit(top.y, 'npc');
     main.size <- unit(main.cex * 12, 'points');
     label.size <- unit(label.cex * 12, 'points');
 
-    # left.x <- convertUnit(left.x, 'native');
-    # # Calculate the x-coordinates for the scale bar, centered around left.x
-    # xat <- left.x + unit(c(-1, 1) * (scale.length$length / 2), 'native');
-    # # xat <- convertUnit(xat, 'native'); + left.x;
+    x0 <- unit(0.5, "npc");
+    y0 <- unit(1, "npc");
+    xat <- x0 + unit(c(-1, 1) * (scale.length$length / 2), 'native');
 
-    # Convert scale.length$length to npc units
-    scale.length$length <- unit(scale.length$length, 'native')
-    scale.length$length <- convertUnit(scale.length$length, 'npc', valueOnly = TRUE)
-
-    # Calculate the x-coordinates for the scale bar, centered around left.x
-    xat <- left.x + unit(c(-1, 1) * (scale.length$length / 2), 'npc');
-
-    print(xat)
     title <- textGrob(
         label = main,
-        x = left.x, #+ unit(scale.length$length / 2, 'native'),
-        y = top.y,
+        x = x0, #+ unit(scale.length$length / 2, 'native'),
+        y = y0,
         hjust = 0.5,
         vjust = 1,
         gp = gpar(
@@ -122,7 +129,7 @@ create.scale.bar <- function(
             )
         );
 
-    scale.bar.y <- top.y - (main.size * 2)
+    scale.bar.y <- unit(1, "npc") - (main.size * 2)
     scale.line <- segmentsGrob(
         x0 = xat[1],
         x1 = xat[2],
@@ -156,11 +163,13 @@ create.scale.bar <- function(
             cex = label.cex
             )
         );
-
-    return(gList(
-        title,
-        scale.line,
-        ticks,
-        tick.labels
-        ));
+    print('done')
+    scale.gTree <- gTree(
+        children = gList(title, scale.line, ticks, tick.labels),
+        vp = scale.vp
+        );
+    # return(gTree(
+    #     children = gList(scale.gTree),
+    #     vp = vp
+    #     ));
     }
