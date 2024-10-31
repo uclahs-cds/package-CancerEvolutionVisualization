@@ -40,7 +40,7 @@ SRCGrob <- function(
 
     node.col <- 'white';
     if (length(colour.scheme) == 1) {
-        colour.scheme <- BoutrosLab.plotting.general::colour.gradient(colour.scheme, nrow(tree));
+        colour.scheme <- c(NA, BoutrosLab.plotting.general::colour.gradient(colour.scheme, nrow(tree)));
         }
 
     inputs <- prep.tree(

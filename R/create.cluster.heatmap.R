@@ -54,7 +54,7 @@ create.cluster.heatmap <- function(
 
     cov <- BoutrosLab.plotting.general::create.heatmap(
         x = t(clone.colours[snv.order$clone.id]),
-        xlab.label = 'Mutations',
+        xlab.label = 'SNVs',
         xlab.cex =  xlab.cex,
         xaxis.cex = xaxis.cex,
         xaxis.fontface = xaxis.fontface,
@@ -76,7 +76,7 @@ create.cluster.heatmap <- function(
                 cex = legend.label.cex
                 ),
             legend = list(
-                title = 'Clone ID',
+                title = 'Clone',
                 labels = names(clone.colours),
                 colours = clone.colours,
                 border = 'black',

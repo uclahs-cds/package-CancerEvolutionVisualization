@@ -94,13 +94,13 @@ create.ccf.summary.heatmap <- function(
     hm <- BoutrosLab.plotting.general::create.heatmap(
         x = arr,
         cluster.dimensions = 'none',
-        xlab.label = 'Clone ID',
+        xlab.label = 'Clone',
         xlab.cex = ifelse(is.null(clone.colours), subplot.xlab.cex, 0),
         xaxis.lab = rownames(arr),
         xaxis.cex = ifelse(is.null(clone.colours), subplot.xaxis.cex, 0),
         xaxis.fontface = subplot.xaxis.fontface,
         xaxis.rot = hm.xaxis.rot,
-        ylab.label = 'Sample ID',
+        ylab.label = 'Sample',
         ylab.cex = subplot.ylab.cex,
         yaxis.lab = colnames(arr),
         yaxis.cex = subplot.yaxis.cex,
@@ -128,7 +128,7 @@ create.ccf.summary.heatmap <- function(
     if (!is.null(clone.colours)) {
         clone.cov <- BoutrosLab.plotting.general::create.heatmap(
             x = t(clone.colours[rownames(arr)]),
-            xlab.label = 'Clone ID',
+            xlab.label = 'Clone',
             xlab.cex = subplot.xlab.cex,
             xaxis.lab = rownames(arr),
             xaxis.cex = subplot.xaxis.cex,
@@ -143,8 +143,8 @@ create.ccf.summary.heatmap <- function(
         plot.list <- list(clone.bar, hm, sample.bar, clone.cov);
         layout.skip <- c(FALSE, TRUE, FALSE, FALSE, FALSE, TRUE);
         layout.height <- 3;
-        if (length(plot.object.heights) == 2 ) {
-            plot.objects.heights <- c(plot.object.heights, 0.2);
+        if (length(plot.objects.heights) == 2 ) {
+            plot.objects.heights <- c(plot.objects.heights, 0.2);
             }
     } else {
         plot.list <- list(clone.bar, hm,sample.bar);

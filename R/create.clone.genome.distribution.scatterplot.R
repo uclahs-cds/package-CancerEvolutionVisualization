@@ -12,7 +12,7 @@ create.clone.genome.distribution.scatterplot <- function(
         filename = save.plt,
         formula = clone.id ~ genome.pos,
         data = scatter.df,
-        ylab.label = 'Clone ID',
+        ylab.label = 'Clone',
         xaxis.lab = chr.info$chr,
         yaxis.lab = levels(scatter.df$clone.id),
         xat = chr.info$xat,
