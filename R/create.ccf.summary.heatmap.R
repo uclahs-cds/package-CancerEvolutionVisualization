@@ -113,7 +113,7 @@ create.ccf.summary.heatmap <- function(
         list(
             legend = list(
                 title = 'CCF',
-                labels = c(min(arr), rep('', legend.size), max(arr)),
+                labels = c(signif(min(arr), 2), rep('', legend.size), signif(max(arr), 2)),
                 colours = c('white', 'blue'),
                 border = 'black',
                 continuous = TRUE,

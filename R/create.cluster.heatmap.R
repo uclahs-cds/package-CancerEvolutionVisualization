@@ -69,7 +69,7 @@ create.cluster.heatmap <- function(
         list(
             legend = list(
                 title = 'CCF',
-                labels = c(min(arr), rep('', legend.size), max(arr)),
+                labels = c(signif(min(arr), 2), rep('', legend.size), signif(max(arr), 2)),
                 colours = colour.scheme,
                 border = 'black',
                 continuous = TRUE,
