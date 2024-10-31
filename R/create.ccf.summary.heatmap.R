@@ -20,6 +20,7 @@ create.ccf.summary.heatmap <- function(
     legend.x = 0.9,
     legend.y = 0.8,
     plot.objects.heights = c(0.3, 1),
+    add.median.text = TRUE,
     ...
     ) {
 
@@ -91,7 +92,7 @@ create.ccf.summary.heatmap <- function(
         xat = sample.xaxis$at
         );
 
-    hm <- BoutrosLab.plotting.general::create.heatmap(
+    hm.args <- list(
         x = arr,
         cluster.dimensions = 'none',
         xlab.label = 'Clone',
@@ -108,6 +109,16 @@ create.ccf.summary.heatmap <- function(
         print.colour.key = FALSE,
         colour.scheme = hm.col.scheme
         );
+
+    if (add.median.text) {
+        contrast.thres <- (diff(range(arr)) * 0.8) + min(arr);
+        hm.args$cell.text <- round(arr[arr > 0], 2);
+        hm.args$row.pos <- which(arr > 0, arr.ind = TRUE)[,2];
+        hm.args$col.pos <- which(arr > 0, arr.ind = TRUE)[,1];
+        hm.args$text.col <- ifelse(arr > contrast.thres, 'white', 'black');
+        }
+
+    hm <- do.call(BoutrosLab.plotting.general::create.heatmap, hm.args);
 
     legend.ccf <- BoutrosLab.plotting.general::legend.grob(
         list(

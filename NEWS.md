@@ -9,6 +9,7 @@
 * Node-by-node control of node size
 * Aesthetic changes for heatmap and clone-genome distribution plot
 * Add parameters to specify polygon shape and width.
+* Add option to annotate the CCF summary heatmap with the cell values.
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow
