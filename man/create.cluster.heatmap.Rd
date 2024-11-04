@@ -16,6 +16,7 @@ create.cluster.heatmap(
     legend.title.cex = 1.2,
     legend.label.cex = 1,
     filename = NULL,
+    xlab.label = 'SNVs',
     xlab.cex = 1.2,
     xaxis.cex = 1,
     xaxis.fontface = 'bold',
@@ -35,6 +36,7 @@ create.cluster.heatmap(
     \item{legend.title.cex}{Size of titles in the legends. Defaults to 1.2}
     \item{legend.label.cex}{Size of text labels in the legends. Defaults to 1}
     \item{filename}{Filename for tiff output, or if NULL returns the trellis object itself. Defaults to \code{NULL}.}
+    \item{xlab.label}{Defaults to \dQuote{SNVs}.}
     \item{xlab.cex}{Defaults to 1.2}
     \item{xaxis.cex}{Defaults to 1}
     \item{xaxis.fontface}{Defaults to \dQuote{bold}.}
@@ -53,6 +55,6 @@ load(file.path(system.file('data', package = 'CancerEvolutionVisualization'), 'S
 create.cluster.heatmap(
     DF = snv,
     ccf.limits = c(0, 1),
-    ylab.label = 'Samples'
+    ylab.label = 'Sample'
     );
 }
