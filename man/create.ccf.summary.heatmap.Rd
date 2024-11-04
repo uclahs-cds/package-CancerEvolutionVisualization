@@ -28,6 +28,7 @@ create.ccf.summary.heatmap(
     legend.x = 0.9,
     legend.y = 0.8,
     plot.objects.heights = c(0.3, 1),
+    add.median.text = FALSE,
     ...
     );
 }
@@ -53,9 +54,23 @@ create.ccf.summary.heatmap(
     \item{legend.x}{Legend parameter. Defaults to 0.9}
     \item{legend.y}{Legend parameter. Defaults to 0.8}
     \item{plot.objects.heights}{If \code{clone.colours} is specified, this must be an array of length 3. Defaults to \code{c(0.3, 1)}. See BoutrosLab.plotting.general::create.multipanelplot()}
+    \item{add.median.text}{If \code{TRUE}, median CCF values will be added to the heatmap. Defaults to \code{FALSE}}
     \item{...}{Pass through argument. See BoutrosLab.plotting.general::create.multipanelplot() for further details.}
 
 }
 \value{A `grob` object of the summary plot.}
 \author{Helena Winata}
 \seealso{\code{\link[BoutrosLab.plotting.general]{legend.grob}}, \code{\link[BoutrosLab.plotting.general]{create.multipanelplot}}, \code{\link[BoutrosLab.plotting.general]{create.heatmap}}}
+
+\examples{
+setseed(123);
+load(file.path(system.file('data', package = 'CancerEvolutionVisualization'), 'SNV.Rda'));
+
+snv <- do.call(rbind, lapply(split(snv, list(snv$ID, snv$clone.id)), function(df) {
+    df$median.ccf.per.sample <- median(df$CCF)
+    df$total.nsnv <- length(unique(df$SNV.id))
+    df
+    }));
+
+create.ccf.summary.heatmap(snv);
+}

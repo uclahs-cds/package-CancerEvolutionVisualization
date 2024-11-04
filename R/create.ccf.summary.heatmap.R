@@ -20,7 +20,7 @@ create.ccf.summary.heatmap <- function(
     legend.x = 0.9,
     legend.y = 0.8,
     plot.objects.heights = c(0.3, 1),
-    add.median.text = TRUE,
+    add.median.text = FALSE,
     ...
     ) {
 
