@@ -41,8 +41,6 @@ This function preprocesses the input data frame, extracts chromosome information
 setseed(123);
 load(file.path(system.file('data', package = 'CancerEvolutionVisualization'), 'SNV.Rda'));
 
-\dontrun{create.clone.genome.distribution.plot(
-    snv,
-    filename = './clone-genome-dist-plot.png'
-    )};
+create.clone.genome.distribution.plot(snv);
+
 }

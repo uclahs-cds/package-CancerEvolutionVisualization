@@ -100,7 +100,7 @@ create.clone.genome.distribution.plot.per.sample <- function(
     # calculate densities for each cluster --------------------------------------------------------
     density.list <- list();
     for (k in unique(sample.df$clone.id)) {
-        if (sum(sample.df$clone.id == k) <= 1) {
+        if (sum(sample.df$clone.id == k, na.rm = TRUE) <= 1) {
             warning(paste('Skipping clone', k, 'in sample', unique(sample.df$ID), 'since there is only one SNV'));
             next;
         }
