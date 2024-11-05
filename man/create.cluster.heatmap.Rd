@@ -55,6 +55,6 @@ load(file.path(system.file('data', package = 'CancerEvolutionVisualization'), 'S
 create.cluster.heatmap(
     DF = snv,
     ccf.limits = c(0, 1),
-    ylab.label = 'Samples'
+    ylab.label = 'Sample'
     );
 }

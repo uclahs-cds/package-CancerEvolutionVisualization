@@ -12,8 +12,6 @@ create.clone.genome.distribution.scatterplot <- function(
         filename = save.plt,
         formula = clone.id ~ genome.pos,
         data = scatter.df,
-        xlab.top.lab = paste0('Total SNVs: ', nsnv),
-        xlab.top.y = 0.5,
         ylab.label = 'Clone',
         xaxis.lab = chr.info$chr,
         yaxis.lab = levels(scatter.df$clone.id),
