@@ -1,0 +1,118 @@
+---
+title: 'Reproducing Manuscript Figures'
+author:
+- name: "Helena Winata"
+  email: hwinata@mednet.ucla.edu
+date: '`r Sys.Date()`'
+output: rmarkdown::pdf_document
+vignette: > 
+  %\VignetteIndexEntry{Reproducing Manuscript Figures}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo=FALSE, message=FALSE}
+library(knitr)
+# library(CancerEvolutionVisualization);
+devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization');
+knitr::opts_chunk$set(warning = FALSE, message = FALSE);
+
+# rmarkdown::render('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization/vignettes/example.Rmd');
+
+```
+
+# Introduction
+This vignette demonstrates how to reproduce the figures presented in our manuscript 'CEV: A Tool for Standardized Cancer Evolution Visualization' using the CEV package. We will walk through the generation of each figure using example datasets provided with the package. The code snippets below show how to create customized phylogenetic trees, CCF heatmaps, and other visualizations that highlight different aspects of tumor evolution. Users can easily adapt these examples to their own datasets by following the same workflow and customization options.
+
+# Input Data
+```{r echo=FALSE}
+load('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization/data/SNV.rda');
+load('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization/data/multi.phylogeny.rda');
+load('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization/data/single.phylogeny.rda');
+```
+
+```{r echo=F}
+kable(
+    x = head(snv),
+    caption = 'Mutation-to-subclone assignment data.'
+    );
+
+kable(
+    x = single.phylogeny,
+    caption = 'Example phylogeny data for a single tumour sample.'
+    );
+```
+
+```{r plot-params, echo=F}
+clone.col <- setNames(
+    c('#a90000', '#e20000', '#f42404', '#df6b0b', '#f48004', '#f2a123', '#d7c454', '#90de3a', '#5ecf1c', '#37a400', 
+   '#158800', '#16a149', '#1ecfa9', '#05f8f2', '#00daff', '#00abff', '#007dff', '#004aff', '#1922ff', '#5703ff', 
+   '#8600ff', '#ab19ff', '#bd4cff', '#de56fc', '#f43ded', '#ff00d1'),
+   c('MRCA', 1:25)
+    );
+
+spatial.col <- setNames(
+    c('#A1D59C', '#BEA0CE', '#722A7F'),
+    c('Primary', 'Shared', 'Metastasis')
+    );
+```
+
+# Figure 1
+
+## 1B. CCF Heatmap
+```{r ccf-hm, fig.width=10, fig.height=6}
+create.cluster.heatmap(
+    DF = snv,
+    ccf.limits = c(0, 1),
+    clone.colours = clone.col,
+    ylab.label = 'Sample',
+    ylab.cex = 1.2,
+    yaxis.cex = 1,
+    y.spacing = -0.2
+    );
+```
+
+## 1C. Summary Heatmap
+```{r summary-hm, fig.width=10, fig.height=6}
+# Calculate median CCF per sample
+median.ccf <- aggregate(CCF ~ ID + clone.id, data = snv, FUN = median);
+names(median.ccf)[names(median.ccf) == 'CCF'] <- 'median.ccf.per.sample';
+
+# Calculate total unique SNV.id per sample
+total.nsnv <- aggregate(SNV.id ~ ID + clone.id, data = snv, FUN = function(x) length(unique(x)));
+names(total.nsnv)[names(total.nsnv) == 'SNV.id'] <- 'total.nsnv';
+
+
+# Merge the results back to the original data frame
+snv <- merge(snv, median.ccf, by = c('ID', 'clone.id'));
+snv <- merge(snv, total.nsnv, by = c('ID', 'clone.id'));
+
+create.ccf.summary.heatmap(
+    DF = snv,
+    ccf.limits = c(0, 1),
+    clone.colours = clone.col,
+    clone.order = levels(snv$clone.id),
+    sample.order = levels(snv$ID),
+    y.spacing = c(-1, -3),
+    xlab.axis.padding = c(0, 0, -2),
+    plot.objects.heights = c(0.3, 1, 0.25)
+    );
+```
+
+## 1D. Clone Genome Distribution Plot
+```{r clone-genome-dist, fig.width=26}
+selected.clone <- c('1', subset(multi.phylogeny, spatial %in% c('Shared', 'Metastasis'))$child)
+sub.dt <- droplevels(snv[snv$clone.id %in% selected.clone, ]);
+
+create.clone.genome.distribution.plot(
+    snv.df = sub.dt)
+    # multi.sample = FALSE,
+    # clone.order = levels(sub.dt$clone.id),
+    # clone.colours = clone.col,
+    # legend.y = 0.47,
+    # legend.x = 0.1,
+    # y.spacing = -0.5,
+    # alpha = 0.6,
+    # ylab.axis.padding = c(-1)
+    # );
+```
