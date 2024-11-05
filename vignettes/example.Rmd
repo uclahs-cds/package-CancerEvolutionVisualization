@@ -29,6 +29,16 @@ This vignette demonstrates how to reproduce the figures presented in our manuscr
 load('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization/data/SNV.rda');
 load('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization/data/multi.phylogeny.rda');
 load('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization/data/single.phylogeny.rda');
+
+# process multi phylogeny data
+rownames(multi.phylogeny) <- multi.phylogeny$label;
+multi.phylogeny$spread[multi.phylogeny$parent == which(multi.phylogeny$label == '3')] <- 1.3;
+# multi.phylogeny$spread[multi.phylogeny$parent == which(multi.phylogeny$label == '4')] <- 1.5;
+multi.phylogeny$spread[multi.phylogeny$parent == which(multi.phylogeny$label == '7')] <- 0.4;
+multi.phylogeny[c('3', '11'), ] <- multi.phylogeny[c('11', '3'), ];
+
+# process single phylogeny data
+rownames(single.phylogeny) <- single.phylogeny$label;
 ```
 
 ```{r echo=F}
@@ -57,9 +67,9 @@ spatial.col <- setNames(
     );
 ```
 
-# Figure 1
+# Multi-sample Plots
 
-## 1B. CCF Heatmap
+## CCF Heatmap
 ```{r ccf-hm, fig.width=10, fig.height=6}
 create.cluster.heatmap(
     DF = snv,
@@ -72,7 +82,7 @@ create.cluster.heatmap(
     );
 ```
 
-## 1C. Summary Heatmap
+## Summary Heatmap
 ```{r summary-hm, fig.width=10, fig.height=6}
 # Calculate median CCF per sample
 median.ccf <- aggregate(CCF ~ ID + clone.id, data = snv, FUN = median);
@@ -99,20 +109,63 @@ create.ccf.summary.heatmap(
     );
 ```
 
-## 1D. Clone Genome Distribution Plot
+## Clone Genome Distribution Plot
 ```{r clone-genome-dist, fig.width=26}
 selected.clone <- c('1', subset(multi.phylogeny, spatial %in% c('Shared', 'Metastasis'))$child)
 sub.dt <- droplevels(snv[snv$clone.id %in% selected.clone, ]);
 
 create.clone.genome.distribution.plot(
-    snv.df = sub.dt)
-    # multi.sample = FALSE,
-    # clone.order = levels(sub.dt$clone.id),
-    # clone.colours = clone.col,
-    # legend.y = 0.47,
-    # legend.x = 0.1,
-    # y.spacing = -0.5,
-    # alpha = 0.6,
-    # ylab.axis.padding = c(-1)
-    # );
+    snv.df = sub.dt,
+    clone.order = levels(sub.dt$clone.id),
+    clone.colours = clone.col,
+    legend.y = 0.47,
+    legend.x = 0.1,
+    y.spacing = -0.5,
+    alpha = 0.6,
+    ylab.axis.padding = c(-1)
+    );
+```
+
+## Multi-sample Phylogenetic Tree
+```{r phylo-tree-prep, echo=F}
+phy.dt <- multi.phylogeny;
+phy.dt$spatial <- phy.dt$length.1 <- phy.dt$length.2 <-  NULL;
+```
+
+```{r phylo-tree, fig.width=7, fig.height=5}
+kable(phy.dt);
+
+SRCGrob(
+    multi.phylogeny,
+    add.normal = TRUE
+    ) |> grid.draw();
+```
+
+### Highlighting sample-specific subclones
+```{r phylo-tree-sample, fig.width=4, fig.height=4}
+R7.dt <- subset(snv, ID == 'R7' & CCF > 0);
+cp.dt <- aggregate(CCF ~ clone.id, data = R7.dt, FUN = function(x) median(x, na.rm = TRUE))
+names(cp.dt) <- c('label', 'node.size');
+cp.dt$node.col <- clone.col[cp.dt$label];
+
+cp.dt <- merge(
+    x = phy.dt,
+    y = cp.dt,
+    all.x = TRUE
+    );
+
+rownames(cp.dt) <- cp.dt$label;
+idx <- !(cp.dt$label %in% unique(R7.dt$clone.id));
+cp.dt$edge.type.1[idx] <- 'dotted';
+cp.dt$edge.width.1[idx] <- 1;
+cp.dt$node.size[idx] <- 0.8;
+cp.dt$node.col[idx] <- 'white';
+cp.dt$node.label.col[idx] <- 'grey';
+cp.dt$border.type[idx] <- 'dotted';
+cp.dt$label[cp.dt$node.size <= 0.5] <- '';
+
+SRCGrob(
+    cp.dt,
+    add.normal = TRUE
+    ) |> grid.draw();
 ```
