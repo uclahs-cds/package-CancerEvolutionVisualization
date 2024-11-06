@@ -4,7 +4,7 @@ create.phylogenetic.tree <- function(
     ...
     ) {
 
-    if (node.id %in% colnames(tree)) {
+    if ('node.id' %in% colnames(tree)) {
         rownames(tree) <- tree$node.id;
         }
 
