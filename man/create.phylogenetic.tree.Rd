@@ -30,10 +30,10 @@ create.phylogenetic.tree(
 \author{Helena Winata}
 \seealso{
     \code{\link{SRCGrob}},
-    \code{\link[grDevices::pdf]{pdf}},
-    \code{\link[grDevices::png]{png}},
-    \code{\link[grDevices::tiff]{tiff}},
-    \code{\link[grDevices::svg]{svg}}
+    \code{\link[grDevices]{pdf}},
+    \code{\link[grDevices]{png}},
+    \code{\link[grDevices]{tiff}},
+    \code{\link[grDevices]{svg}}
     }
 
 \examples{
@@ -51,7 +51,7 @@ phy.dt <- data.frame(
 create.phylogenetic.tree(phy.dt);
 
 # Numeric disordered node.id with labels
-phy.dt <- data.table(
+phy.dt <- data.frame(
     node.id = c(1, 2, 5, 6, 4, 9, 10),
     parent = c(NA, 1, 1, 1, 5, 6, 6),
     label = c('MRCA', 'C01', 'C02', 'C03', 5:7)

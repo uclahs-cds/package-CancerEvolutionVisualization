@@ -7,7 +7,7 @@ importFrom("graphics", "par", "strheight", "strwidth")
 importFrom("grDevices", "dev.list", "rainbow")
 importFrom("utils", "read.table", "vi", "head")
 importFrom("stats", "median", "setNames", "aggregate", "reshape")
-importFrom("grDevices", "col2rgb")
+importFrom("grDevices", "col2rgb", "dev.off", "pdf", "png", "svg", "tiff")
 
 export(SRCGrob)
 export(create.phylogenetic.tree)

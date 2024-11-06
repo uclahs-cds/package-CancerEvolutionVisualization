@@ -160,4 +160,4 @@ save.plot <- function(
     grid.newpage();
     grid.draw(grob);
     dev.off();
-    };
+    }
