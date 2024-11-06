@@ -33,5 +33,5 @@ create.phylogenetic.tree <- function(
         grid.newpage();
         grid.draw(plt);
         }
-    return(tree);
+    return(plt);
     }

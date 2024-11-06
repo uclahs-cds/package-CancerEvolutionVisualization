@@ -1,6 +1,6 @@
 \name{create.ccf.summary.heatmap}
 \alias{create.ccf.summary.heatmap}
-\title{Subclone Tree Plot}
+\title{CCF Summary Heatmap}
 \description{
 Creates a heatmap of cancer cell fraction (CCF) distribution across tumour samples with clone IDs as a covariate beneath the heatmap. Subplot parameters controls the appearance of the heatmap and barplots. See \code{BoutrosLab.plotting.general::create.barplot()} or \code{BoutrosLab.plotting.general::create.heatmap()}  for parameter description. Legend parameters are passed to \code{BoutrosLab.plotting.general::legend.grob()}.
 }

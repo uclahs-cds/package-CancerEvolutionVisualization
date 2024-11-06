@@ -1,4 +1,4 @@
-test_that("check.file.extension works correctly", {
+test_that('check.file.extension works correctly', {
     supported.ext <- c('png', 'tiff')
     default.ext <- 'tiff'
 
