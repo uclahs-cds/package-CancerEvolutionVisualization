@@ -1,6 +1,6 @@
 \name{create.cluster.heatmap}
 \alias{create.cluster.heatmap}
-\title{Subclone Tree Plot}
+\title{Cluster Heatmap}
 \description{
 Creates a heatmap of cancer cell fraction (CCF) distribution across tumour samples with clone IDs as a covariate beneath the heatmap.
 }
