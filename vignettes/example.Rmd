@@ -7,7 +7,7 @@ author:
 output: rmarkdown::html_vignette
 vignette: > 
   %\VignetteIndexEntry{Reproducing Manuscript Figures}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 
@@ -18,7 +18,7 @@ library(knitr)
 # library(CancerEvolutionVisualization);
 devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization');
 # devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/cev-temp');
-knitr::opts_chunk$set(warning = FALSE, message = FALSE);
+opts_chunk$set(warning = FALSE, message = FALSE, fig.align='center');
 
 if (!dir.exists('figures')) dir.create('figures');
 ```
@@ -90,7 +90,7 @@ create.cluster.heatmap(
 ```
 
 ```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('figures/1B_CCF-heatmap.png');
+include_graphics('figures/1B_CCF-heatmap.png');
 ```
 
 \pagebreak
@@ -130,7 +130,7 @@ create.ccf.summary.heatmap(
 ```
 
 ```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('figures/1C_CCF-summary-heatmap.png');
+include_graphics('figures/1C_CCF-summary-heatmap.png');
 ```
 
 \pagebreak
@@ -154,7 +154,7 @@ create.clone.genome.distribution.plot(
     );
 ```
 ```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('figures/1D_clone-genome-distribution.png');
+include_graphics('figures/1D_clone-genome-distribution.png');
 ```
 
 ## Multi-sample Phylogenetic Tree
@@ -163,13 +163,7 @@ phy.dt <- multi.phylogeny;
 phy.dt$spatial <- phy.dt$length.1 <- phy.dt$length.2 <-  NULL;
 ```
 
-```{r phylo-tree, fig.dim=c(5, 5)}
-# SRCGrob(
-#     phy.dt,
-#     add.normal = TRUE,
-#     scale1 = 2,
-#     horizontal.padding = 1,
-#     ) |> grid.draw();
+```{r phylo-tree}
 create.phylogenetic.tree(
     filename = 'figures/1G_multi-sample-phylogeny.png',
     phy.dt,
@@ -181,10 +175,11 @@ create.phylogenetic.tree(
     );
 ```
 ```{r echo=FALSE, out.width='50%'}
-knitr::include_graphics('figures/1G_multi-sample-phylogeny.png');
+include_graphics('figures/1G_multi-sample-phylogeny.png');
 ```
 
 ### Highlighting sample-specific subclones
+
 ```{r phylo-tree-sample, fig.width=4, fig.height=4}
 R7.dt <- subset(snv, ID == 'R7' & CCF > 0);
 cp.dt <- aggregate(CCF ~ clone.id, data = R7.dt, FUN = function(x) median(x, na.rm = TRUE))
@@ -207,11 +202,20 @@ cp.dt$node.label.col[idx] <- 'grey';
 cp.dt$border.type[idx] <- 'dotted';
 cp.dt$label[cp.dt$node.size <= 0.5] <- '';
 
-kable(cp.dt);
-
-SRCGrob(
+create.phylogenetic.tree(
+    filename = 'figures/2A_sample-specfic-phylogeny.png',
     cp.dt,
+    add.normal = TRUE,
     scale1 = 2,
-    add.normal = TRUE
-    ) |> grid.draw();
+    height = 7,
+    width = 5
+    );
 ```
+```{r echo=FALSE, out.width='50%'}
+kable(cp.dt);
+include_graphics('figures/2A_sample-specfic-phylogeny.png');
+```
+
+### Different tree modes
+
+# Single-sample Phylogenetic Trees
