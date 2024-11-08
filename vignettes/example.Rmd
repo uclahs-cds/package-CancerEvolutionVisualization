@@ -4,7 +4,7 @@ date: '`r Sys.Date()`'
 author:
 - name: 'Helena Winata'
   email: 'hwinata@mednet.ucla.edu'
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: > 
   %\VignetteIndexEntry{Reproducing Manuscript Figures}
   %\VignetteEngine{rmarkdown}
@@ -17,42 +17,9 @@ vignette: >
 library(knitr)
 # library(CancerEvolutionVisualization);
 devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization');
-# devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/cev-temp');
-opts_chunk$set(warning = FALSE, message = FALSE, fig.align='center');
+opts_chunk$set(warning = FALSE, message = FALSE, fig.align = 'center');
 
 if (!dir.exists('figures')) dir.create('figures');
-```
-
-# Introduction
-This vignette demonstrates how to reproduce the figures presented in our manuscript 'CEV: A Tool for Standardized Cancer Evolution Visualization' using the CEV package. We will walk through the generation of each figure using example datasets provided with the package. The code snippets below show how to create customized phylogenetic trees, CCF heatmaps, and other visualizations that highlight different aspects of tumor evolution. Users can easily adapt these examples to their own datasets by following the same workflow and customization options.
-
-# Input Data
-```{r echo=FALSE}
-load('data/SNV.rda');
-load('data/multi.phylogeny.rda');
-load('data/single.phylogeny.rda');
-
-# process multi phylogeny data
-rownames(multi.phylogeny) <- multi.phylogeny$label;
-multi.phylogeny[c('3', '11'), ] <- multi.phylogeny[c('11', '3'), ];
-multi.phylogeny$spread[multi.phylogeny$parent == which(multi.phylogeny$label == '3')] <- 1.3;
-multi.phylogeny$spread[multi.phylogeny$parent == which(multi.phylogeny$label == '7')] <- 0.4;
-rownames(multi.phylogeny) <- multi.phylogeny$label;
-
-# process single phylogeny data
-rownames(single.phylogeny) <- single.phylogeny$node.id <- single.phylogeny$label;
-```
-
-```{r echo=F}
-kable(
-    x = head(snv),
-    caption = 'Mutation-to-subclone assignment data.'
-    );
-
-kable(
-    x = single.phylogeny,
-    caption = 'Example phylogeny data for a single tumour sample.'
-    );
 ```
 
 ```{r plot-params, echo=F}
@@ -69,11 +36,49 @@ spatial.col <- setNames(
     );
 ```
 
+
+```{r echo=FALSE}
+load('data/SNV.rda');
+load('data/multi.phylogeny.rda');
+load('data/single.phylogeny.rda');
+load('data/phylogeny.500.rda');
+
+phy.500 <- phylogeny.500;
+
+# process multi phylogeny data
+rownames(multi.phylogeny) <- multi.phylogeny$label;
+multi.phylogeny[c('3', '11'), ] <- multi.phylogeny[c('11', '3'), ];
+multi.phylogeny$spread[multi.phylogeny$parent == '3'] <- 1.3;
+multi.phylogeny$spread[multi.phylogeny$parent == '7'] <- 0.4;
+rownames(multi.phylogeny) <- multi.phylogeny$label;
+multi.phylogeny$node.col <- clone.col[multi.phylogeny$label];
+
+# process single phylogeny data
+rownames(single.phylogeny) <- single.phylogeny$node.id <- single.phylogeny$label;
+colnames(single.phylogeny)[colnames(single.phylogeny) == 'CCF'] <- 'CP';
+single.phylogeny$node.col <- clone.col[single.phylogeny$label];
+```
+
+# Introduction
+This vignette demonstrates how to reproduce the figures presented in our manuscript 'CEV: A Tool for Standardized Cancer Evolution Visualization' using the CEV package. We will walk through the generation of each figure using example datasets provided with the package. The code snippets below show how to create customized phylogenetic trees, CCF heatmaps, and other visualizations that highlight different aspects of tumor evolution. Users can easily adapt these examples to their own datasets by following the same workflow and customization options.
+
+# Figure 1: Multi-sample Analysis
+
+```{r echo=F}
+kable(
+    x = head(snv),
+    caption = 'Mutation-to-subclone assignment data.'
+    );
+
+kable(
+    x = single.phylogeny,
+    caption = 'Example phylogeny data for a single tumour sample.'
+    );
+```
+
 \pagebreak
 
-# Multi-sample Plots
-
-## CCF Heatmap
+## 1B. CCF Heatmap
 ```{r ccf-hm}
 create.cluster.heatmap(
     filename = 'figures/1B_CCF-heatmap.png',
@@ -95,7 +100,7 @@ include_graphics('figures/1B_CCF-heatmap.png');
 
 \pagebreak
 
-## Summary Heatmap
+## 1C. CCF Summary Heatmap
 ```{r summary-hm}
 # Calculate median CCF per sample
 median.ccf <- aggregate(CCF ~ ID + clone.id, data = snv, FUN = median);
@@ -108,7 +113,6 @@ total.nsnv <- aggregate(
     FUN = function(x) length(unique(x))
     );
 names(total.nsnv)[names(total.nsnv) == 'SNV.id'] <- 'total.nsnv';
-
 
 # Merge the results back to the original data frame
 snv <- merge(snv, median.ccf, by = c('ID', 'clone.id'));
@@ -129,13 +133,13 @@ create.ccf.summary.heatmap(
     );
 ```
 
-```{r echo=FALSE, out.width='100%'}
+```{r echo=FALSE, out.width='90%'}
 include_graphics('figures/1C_CCF-summary-heatmap.png');
 ```
 
 \pagebreak
 
-## Clone Genome Distribution Plot
+## 1D. Clone Genome Distribution Plot
 ```{r clone-genome-dist, message=FALSE}
 selected.clone <- c('1', subset(multi.phylogeny, spatial %in% c('Shared', 'Metastasis'))$label)
 sub.dt <- droplevels(snv[snv$clone.id %in% selected.clone, ]);
@@ -157,13 +161,15 @@ create.clone.genome.distribution.plot(
 include_graphics('figures/1D_clone-genome-distribution.png');
 ```
 
-## Multi-sample Phylogenetic Tree
-```{r phylo-tree-prep, echo=F}
+\pagebreak
+
+## 1G. Multi-sample Phylogenetic Tree
+```{r multi-tree-prep, echo=F}
 phy.dt <- multi.phylogeny;
 phy.dt$spatial <- phy.dt$length.1 <- phy.dt$length.2 <-  NULL;
 ```
 
-```{r phylo-tree}
+```{r multi-tree}
 create.phylogenetic.tree(
     filename = 'figures/1G_multi-sample-phylogeny.png',
     phy.dt,
@@ -174,48 +180,286 @@ create.phylogenetic.tree(
     width = 7
     );
 ```
-```{r echo=FALSE, out.width='50%'}
+```{r echo=FALSE, out.width='80%'}
 include_graphics('figures/1G_multi-sample-phylogeny.png');
 ```
 
-### Highlighting sample-specific subclones
+## 1G. Single-sample Phylogenetic Tree
+```{r single-prep, echo=F}
+single.dt <- single.phylogeny;
+single.dt$spatial <- single.dt$length.2 <-  NULL;
+single.dt$length.1 <- 5;
+```
 
-```{r phylo-tree-sample, fig.width=4, fig.height=4}
-R7.dt <- subset(snv, ID == 'R7' & CCF > 0);
-cp.dt <- aggregate(CCF ~ clone.id, data = R7.dt, FUN = function(x) median(x, na.rm = TRUE))
-names(cp.dt) <- c('label', 'node.size');
-cp.dt$node.col <- clone.col[cp.dt$label];
+```{r single-tree}
+create.phylogenetic.tree(
+    filename = 'figures/1H_single-sample-phylogeny.png',
+    single.dt,
+    add.normal = TRUE,
+    polygon.width = 3,
+    height = 5,
+    width = 3
+    );
+```
+```{r echo=FALSE, out.width='30%'}
+include_graphics('figures/1H_single-sample-phylogeny.png');
+```
 
-cp.dt <- merge(
-    x = phy.dt,
-    y = cp.dt,
-    all.x = TRUE
+\pagebreak
+
+# Figure 2: Phylogenetic tree features
+
+## 2A. Sample-specific subclones
+```{r}
+sample.list <- c('LN1', 'LN2', 'R2', 'R7');
+cp.dt <- aggregate(CCF ~ clone.id + ID, data = snv, FUN = function(x) median(x, na.rm = TRUE))
+names(cp.dt) <- c('label', 'ID', 'node.size');
+
+for (s in sample.list) {
+    temp.dt <- merge(
+        x = phy.dt,
+        y = cp.dt[cp.dt$ID == s, ],
+        by = 'label',
+        all.x = TRUE
+        );
+    temp.dt$node.id <- temp.dt$label;
+    idx <- !temp.dt$node.size > 0;
+    temp.dt$edge.type.1[idx] <- 'dotted';
+    temp.dt$edge.width.1[idx] <- 1;
+    temp.dt$node.size[idx] <- 0.8;
+    temp.dt$node.col[idx] <- 'white';
+    temp.dt$node.label.col[idx] <- 'grey';
+    temp.dt$border.type[idx] <- 'dotted';
+    temp.dt$label[temp.dt$node.size <= 0.5] <- '';
+
+    create.phylogenetic.tree(
+        filename = paste0('figures/2A_', s, '-phylogeny.png'),
+        temp.dt,
+        add.normal = TRUE,
+        scale1 = 2,
+        height = 7,
+        width = 7
+        );
+    }
+```
+
+```{r echo=F, results='asis'}
+# include_graphics(paste0('figures/2A_', sample.list, '-phylogeny.png'));
+png.list <- paste0('figures/2A_', sample.list, '-phylogeny.png');
+
+# Generate Markdown table with each image in a cell
+cat("|", paste(paste0("![](", png.list, "){width=50%}"), collapse = " | "), "|")
+```
+
+
+## 2B. Annotated single-sample phylogenetic tree
+```{r single-tree-annot}
+text.data <- data.frame(
+    node = c('MRCA', 'MRCA', 4, 13, 'MRCA'),
+    name = c('chr1q gain', 'chr12q loss', 'chr2p gain', 'MYC SNV', 'TP53 SNV'),
+    col = c('blue', 'red', 'blue', 'black', 'black'),
+    fontface = c(rep('plain', 3), 'bold', 'bold')
     );
 
-rownames(cp.dt) <- cp.dt$label;
-idx <- !(cp.dt$label %in% unique(R7.dt$clone.id));
-cp.dt$edge.type.1[idx] <- 'dotted';
-cp.dt$edge.width.1[idx] <- 1;
-cp.dt$node.size[idx] <- 0.8;
-cp.dt$node.col[idx] <- 'white';
-cp.dt$node.label.col[idx] <- 'grey';
-cp.dt$border.type[idx] <- 'dotted';
-cp.dt$label[cp.dt$node.size <= 0.5] <- '';
-
 create.phylogenetic.tree(
-    filename = 'figures/2A_sample-specfic-phylogeny.png',
-    cp.dt,
+    filename = 'figures/2B_annot-single-sample-phylogeny.png',
+    single.dt,
     add.normal = TRUE,
-    scale1 = 2,
-    height = 7,
-    width = 5
+    colour.scheme = c(NA, single.dt$node.col),
+    node.text = text.data,
+    node.text.line.dist = 0.6,
+    polygon.width = 3,
+    height = 5,
+    width = 3
+    );
+```
+```{r echo=FALSE, out.width='40%'}
+include_graphics('figures/2B_annot-single-sample-phylogeny.png');
+```
+
+\pagebreak
+
+## 2C. Mutation timeline tree
+```{r echo=F}
+# placeholder before implementing text positioning
+text.data <- data.frame(
+    node = c('MRCA', 'MRCA', 4, 13, 'MRCA'),
+    name = c('chr1q gain', 'chr12q loss\n', 'chr2p gain\n\n\n', 'MYC SNV', 'TP53 SNV\n\n\n\n\n\n\n\n'),
+    col = c('blue', 'red', 'blue', 'black', 'black'),
+    fontface = c(rep('plain', 3), 'bold', 'bold')
+    );
+single.dt <- single.phylogeny[, c('label', 'parent', 'length.1', 'CP')];
+single.dt$edge.col.1 <- c('seagreen', 'darkorchid', 'maroon', 'maroon');
+```
+
+```{r timeline-tree, results='hide'}
+create.phylogenetic.tree(
+    filename = 'figures/2C_mutation-timeline-phylogeny.png',
+    single.dt,
+    scale1 = 3,
+    yaxis1.label = 'Number of SNVs',
+    horizontal.padding = -0.3,
+    node.text.line.dist = 0.2,
+    node.text.cex = 1.2,
+    add.normal = TRUE,
+    node.text = text.data,
+    polygon.width = 3,
+    height = 10,
+    width = 6
     );
 ```
 ```{r echo=FALSE, out.width='50%'}
-kable(cp.dt);
-include_graphics('figures/2A_sample-specfic-phylogeny.png');
+include_graphics('figures/2C_mutation-timeline-phylogeny.png');
 ```
 
-### Different tree modes
+## 2D. Radial mode with 2 edges
+```{r echo=F}
+phy.dt <- multi.phylogeny;
+phy.dt$edge.col.1 <- 'steelblue';
+phy.dt$edge.col.2 <- 'black';
+phy.dt$edge.type.2 <- 'dotted';
 
-# Single-sample Phylogenetic Trees
+kable(
+    phy.dt[, !(names(phy.dt) %in% c('spatial', 'spread'))],
+    caption = 'Tree dataframe for customizing 2 edges.'
+    );
+```
+
+```{r radial, results='hide'}
+create.phylogenetic.tree(
+    filename = 'figures/2D_radial-phylogeny.png',
+    phy.dt,
+    add.normal = TRUE,
+    scale1 = 1.5,
+    scale2 = 1.5,
+    yaxis1.label = 'Number of SNVs',
+    yaxis2.label = 'Number of CNAs',
+    scale.bar = TRUE,
+    scale.bar.coords = c(0.25, 0.85),
+    ylab.cex = 1.4,
+    yaxis.cex = 1.3,
+    scale.size.1 = 20,
+    height = 10,
+    width = 8
+    );
+```
+```{r echo=FALSE, out.width='50%'}
+include_graphics('figures/2D_radial-phylogeny.png');
+```
+
+\pagebreak
+
+## 2E. Dendrogram mode with 2 edges
+```{r dend}
+dend.dt <- phy.dt;
+dend.dt$mode <- 'dendrogram';
+dend.dt$spread <- 1.3;
+
+create.phylogenetic.tree(
+    filename = 'figures/2E_dendrogram-phylogeny.png',
+    dend.dt,
+    add.normal = TRUE,
+    scale1 = 1.5,
+    scale2 = 1.5,
+    yaxis1.label = 'Number of SNVs',
+    yaxis2.label = 'Number of CNAs',
+    scale.bar = TRUE,
+    scale.bar.coords = c(0.2, 0.85),
+    ylab.cex = 1.4,
+    yaxis.cex = 1.3,
+    scale.size.1 = 20,
+    height = 11,
+    width = 8
+    );
+```
+```{r echo=FALSE, out.width='50%'}
+include_graphics('figures/2E_dendrogram-phylogeny.png');
+```
+
+\pagebreak
+
+## 2F. Mixed mode with 2 edges
+```{r mixed}
+mixed.dt <- update.descendant.property(
+    phy.dt,
+    parent.id = c('3', '4'),
+    property = 'mode',
+    value = 'dendrogram'
+    );
+
+mixed.dt <- update.descendant.property(
+    mixed.dt,
+    parent.id = '7',
+    property = 'mode',
+    value = 'radial'
+    );
+mixed.dt$spread[mixed.dt$label == '4'] <- 1.7;
+
+create.phylogenetic.tree(
+    filename = 'figures/2F_mixed-phylogeny.png',
+    mixed.dt,
+    add.normal = TRUE,
+    scale1 = 1.5,
+    scale2 = 1.5,
+    yaxis1.label = 'Number of SNVs',
+    yaxis2.label = 'Number of CNAs',
+    scale.bar = TRUE,
+    scale.bar.coords = c(0.25, 0.85),
+    ylab.cex = 1.4,
+    yaxis.cex = 1.3,
+    scale.size.1 = 20,
+    height = 11,
+    width = 8
+    );
+```
+```{r echo=FALSE, out.width='50%'}
+include_graphics('figures/2F_mixed-phylogeny.png');
+```
+
+\pagebreak
+
+## 2G. 500 node phylogentic tree
+```{r phy-500}
+phy.500 <- phylogeny.500;
+# phy.500$label <- phy.500$child;
+phy.500$length.1 <- 1;
+phy.500$length.2 <- 0;
+phy.500$mode <- 'dendrogram';
+
+node.list <- setNames(
+    c('navy', 'steelblue', 'orchid', 'maroon', 'seagreen', 'tomato'),
+    c('1', '7', '26', '53', '125', '204')
+    );
+
+for (i in seq_along(node.list)) {
+    idx <- which(phy.500$label == names(node.list)[i]);
+    phy.500[idx, 'node.col'] <- node.list[i];
+    phy.500[idx, 'connector.col'] <- node.list[i];
+
+    phy.500 <- update.descendant.property(
+        phy.500,
+        parent.id = names(node.list)[i],
+        property = 'edge.col.1',
+        value = node.list[i]
+        );
+    }
+
+phy.500[which(phy.500$edge.col.1 == 'tomato'), 'edge.type.1'] <- 'dotted';
+phy.500[which(phy.500$edge.col.1 == 'seagreen'), 'length.2'] <- 1;
+phy.500[which(phy.500$edge.col.1 == 'seagreen'), 'edge.col.2'] <- 'palegreen3';
+phy.500[!(phy.500$label %in% names(node.list)), 'draw.node'] <- FALSE;
+phy.500$label <- '';
+
+create.phylogenetic.tree(
+    filename = 'figures/2G_phylogeny-500.png',
+    phy.500,
+    scale2 = 0.1,
+    horizontal.padding = 10,
+    add.normal = TRUE,
+    width = 23,
+    height = 9
+    );
+```
+```{r echo=FALSE, out.width='100%'}
+include_graphics('figures/2G_phylogeny-500.png');
+```
