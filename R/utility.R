@@ -19,39 +19,6 @@ reindex.column <- function(column.values, new.value.index) {
         ));
     }
 
-data.frame.to.array <- function(
-    DF,
-    value = 'CCF',
-    x.axis = 'SNV.id',
-    y.axis = 'ID'
-    ) {
-
-    if (is.null(DF[[x.axis]]) | is.null(DF[[value]]) | is.null(DF[[y.axis]])) {
-        stop(paste('Dataframe does not contain one of the columns:', value, x.axis, y.axis));
-        }
-    arr <- reshape(
-        data = DF[, c(x.axis, y.axis, value)],
-        v.names = value,
-        timevar = y.axis,
-        idvar = x.axis,
-        direction = 'wide'
-        );
-
-    # set x.axis as rownames
-    rows            <- arr[, 1];
-    cols            <- gsub(paste0(value, '.'), '', names(arr)[-1]);
-    arr             <- as.matrix(arr[, (-1)]);
-    rownames(arr)   <- rows;
-    colnames(arr)   <- cols;
-    arr[is.na(arr)] <- 0;
-
-    if (!is.null(levels(DF[, y.axis])) & ncol(arr) > 1) {
-        arr <- arr[, levels(DF[, y.axis])];
-        }
-
-    return(arr);
-    }
-
 validate.data.frame.columns <- function(x, expected.columns) {
     missing.columns <- !(expected.columns %in% colnames(x));
 
@@ -94,40 +61,4 @@ get.encoded.distance <- function(points) {
     encoded.distances <- ifelse(dot.products >= 0, distances.along.line, -distances.along.line);
 
     return(encoded.distances);
-    }
-
-update.descendant.property <- function(
-    x,
-    parent.id,
-    property,
-    value,
-    overwrite = TRUE
-    ) {
-    # update children property
-    children <- x[x$parent %in% parent.id, ]
-
-    # If there are no child rows, return the original data.frame
-    if (nrow(children) == 0) {
-        return(x)
-    }
-
-    # For each child row, add the column and call the function recursively
-    for (child.id in children$label) {
-        # Add the column for the current child
-        if (overwrite) {
-            x[x$label == child.id, property] <- value
-        } else {
-            x[x$label == child.id & is.na(x[[property]]), property] <- value
-        }
-
-        # Call the function recursively for the current child
-        x <- update.descendant.property(
-            x,
-            child.id,
-            property,
-            value,
-            overwrite
-        )
-    }
-    return(x)
     }
