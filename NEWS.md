@@ -10,6 +10,7 @@
 * Aesthetic changes for heatmap and clone-genome distribution plot
 * Add parameters to specify polygon shape and width.
 * Add option to use scale bars instead of y-axes.
+* Wrapper function for `SRCgrob` to automatically save plots to file
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow

@@ -1,6 +1,6 @@
 \name{create.ccf.heatmap}
 \alias{create.ccf.heatmap}
-\title{Subclone Tree Plot}
+\title{CCF Distribution Heatmap}
 \description{
 Creates a heatmap of cancer cell fraction (CCF) distribution across tumour samples. The function is a wrapper around \code{BoutrosLab.plotting.general::create.heatmap()} with some changes in the default parameters. All parameter description are the same as in \code{BoutrosLab.plotting.general::create.heatmap()} except for \code{ccf.thres}.
 }
