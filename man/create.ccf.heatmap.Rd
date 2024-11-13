@@ -11,7 +11,7 @@ create.ccf.heatmap(
     clustering.method = 'complete',
     distance.method = 'euclidean',
     xaxis.lab = '',
-    xlab.label = 'Mutations',
+    xlab.label = 'SNVs',
     print.colour.key = FALSE,
     colour.scheme = c('white', 'blue'),
     ...
@@ -23,7 +23,7 @@ create.ccf.heatmap(
     \item{clustering.method}{Defaults to \dQuote{complete}.}
     \item{distance.method}{Defaults to \dQuote{euclidean}.}
     \item{xaxis.lab}{Defaults to an empty string.}
-    \item{xlab.label}{Defaults to \dQuote{Mutations}.}
+    \item{xlab.label}{Defaults to \dQuote{SNVs}.}
     \item{print.colour.key}{Defaults to \code{FALSE}.}
     \item{colour.scheme}{Defaults to \code{c('white', 'blue')}.}
     \item{...}{Pass through argument. See BoutrosLab.plotting.general::create.heatmap() for further details.}
