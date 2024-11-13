@@ -39,6 +39,22 @@ CancerEvolutionVisualization (CEV) creates customizable, publication quality plo
 This guide will show best practices for creating plots, as well as examples
 of common use cases and tips for refining plot settings.
 
+## Installation
+### CRAN (recommended)
+To install the latest version from CRAN, run the following command in R:
+```{r eval=FALSE}
+install.packages('CancerEvolutionVisualization', dependencies = TRUE);
+library(CancerEvolutionVisualization);
+```
+
+### GitHub
+To install the main branch version from GitHub, run the following command in R:
+```{r eval=FALSE}
+devtools::install_github('uclahs-cds/public-R-CancerEvolutionVisualization', ref = 'main');
+library(CancerEvolutionVisualization);
+```
+To install from a specific branch, replace `main` with the branch name.
+
 # Basic Phylogenetic Tree Visualization
 
 ## Input Data
