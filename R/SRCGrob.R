@@ -27,7 +27,12 @@ SRCGrob <- function(
     polygon.shape = 3,
     polygon.width = 1.2,
     length.from.node.edge = TRUE,
-    size.units = 'npc'
+    size.units = 'npc',
+    scale.bar = FALSE,
+    scale.bar.coords = c(0.5, 1),
+    scale.size.1 = NA,
+    scale.size.2 = NA,
+    scale.padding = 1
     ) {
 
     add.node.text <- !is.null(node.text);
@@ -110,7 +115,12 @@ SRCGrob <- function(
         main = main,
         main.cex = main.cex,
         main.y = main.y,
-        size.units = size.units
+        size.units = size.units,
+        scale.bar = scale.bar,
+        scale.bar.coords = scale.bar.coords,
+        scale.size.1 = scale.size.1,
+        scale.size.2 = scale.size.2,
+        scale.padding = scale.padding
         );
 
     out.tree <- gTree(
