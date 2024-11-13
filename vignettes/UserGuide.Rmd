@@ -84,7 +84,6 @@ parent.only.tree <- SRCGrob(parent.only);
 grid.draw(parent.only.tree);
 ```
 
-
 ## Ex. 1.2: Using `node.id`, `parent` and `label` columns
 With the minimal input, the tree will be rendered with numeric node labels, corresponding to the row index (default `node.id`). A `node.id` column can be included in the input data frame if the IDs reported in the `parent` column does not correspong to row indexes.
 
@@ -94,9 +93,10 @@ node.id <- data.frame(
     parent = as.character(c(NA, 2, 2, 5))
     );
 knitr::kable(node.id, row.names = FALSE);
+```
+```{r}
 node.id.tree <- create.phylogenetic.tree(node.id);
 ```
-
 By default the `node.id` will be used to label the nodes. To customize node labels, a `label` column can be included in the input data frame to override the `node.id` values.
 
 ```{r echo=F}
@@ -124,9 +124,7 @@ knitr::kable(
     branch.lengths,
     row.names = TRUE
     );
-```
 
-```{r}
 branch.lengths.tree <- create.phylogenetic.tree(branch.lengths);
 ```
 
@@ -135,7 +133,7 @@ Branches are scaled automatically, but users can further scale each branch with
 the `scale1` and `scale2` parameters. These values scale each branch proportionally,
 so `scale1 = 1.5` would make the first set of branch lengths 50% longer.
 
-```{r, fig.height=4}
+```{r}
 scaled.tree <- create.phylogenetic.tree(
     branch.lengths,
     scale1 = 1.5,
@@ -146,7 +144,7 @@ scaled.tree <- create.phylogenetic.tree(
 ## Ex. 1.5: Y-Axis Labels
 The y-axis are automatically generated and lengths of different sizes are scaled to fit the plot. The y-axis labels can be customized by specifying the `yaxis1.label` and `yaxis2.label` parameters.
 
-```{r}
+```{r, fig.width=10}
 yaxis.tree <- create.phylogenetic.tree(
     tree = branch.lengths,
     yaxis1.label = 'PGA (%)',
@@ -198,7 +196,7 @@ CP <- simple.example$tree[, c('parent', 'length.1', 'length.2', 'CP')];
 knitr::kable(CP, row.names = TRUE);
 ```
 
-```{r}
+```{r, fig.height=4}
 CP.default.tree <- create.phylogenetic.tree(
     CP,
     xaxis.label = 'CCF'
@@ -207,7 +205,7 @@ CP.default.tree <- create.phylogenetic.tree(
 
 To control the polygon shape and size, users can modify the `polygon.shape` and `polygon.width` parameters. The `colour.scheme` parameter can be used to specify a colour palette for the polygons. When a single colour is specified, CEV will create a gradient from white to the specified colour and assign progrssively darker shades to each node.
 
-```{r}
+```{r, fig.height=4}
 CP.tree <- create.phylogenetic.tree(
     CP,
     colour.scheme = 'steelblue',
@@ -217,7 +215,7 @@ CP.tree <- create.phylogenetic.tree(
 ```
 
 Alternatively, the `colour.scheme` parameter can take a vector with length equal to the number of nodes. This will assign a unique colour to each node.
-```{r}
+```{r, fig.height=4}
 CP.tree2 <- create.phylogenetic.tree(
     CP,
     colour.scheme = c(NA, 'gray70', 'pink', 'maroon', 'steelblue')
@@ -253,9 +251,7 @@ spread.tree.input$spread[c(8:10, 18:21)] <- 0.75;
 spread.tree.input$spread[c(11:16)] <- 1.75;
 
 knitr::kable(spread.tree.input[!is.na(spread.tree.input$spread) | is.na(spread.tree.input$parent), ]);
-```
 
-```{r, echo=F, fig.height=3.5}
 spread.tree <- create.phylogenetic.tree(spread.tree.input);
 ```
 
@@ -269,9 +265,7 @@ angle.input <- data.frame(
     );
 
 knitr::kable(angle.input);
-```
 
-```{r, echo=F}
 angle.tree <- create.phylogenetic.tree(angle.input);
 ```
 
@@ -284,11 +278,9 @@ This mode spreads nodes out radially from the root node. Examples for plotting a
 ## Ex. 3.2: Dendrogram Mode
 This mode is useful for trees with many nodes, as it avoids node collisions and can be easier to read.
 
-```{r echo=F}
+```{r, fig.width = 13}
 dendrogram.input <- complex.tree.input;
 dendrogram.input$mode <- 'dendrogram';
-
-knitr::kable(dendrogram.input, row.names = TRUE);
 
 dendrogram.tree <- create.phylogenetic.tree(dendrogram.input);
 ```
@@ -297,6 +289,8 @@ dendrogram.tree <- create.phylogenetic.tree(dendrogram.input);
 CEV gives the user control over numerous visual aspects of the tree. By specifying optional columns and values in the tree input `data.frame`, the user has individual control of the colour, width, and line type of each node, label border, and edge.
 
 ## Supported Aesthetic Input Columns
+
+<div style="width: 75%; margin: auto;">
 | Style | Column | Defaults |
 | --- | --- | --- |
 | Node presence | `draw.node` | `TRUE` |
@@ -315,12 +309,14 @@ CEV gives the user control over numerous visual aspects of the tree. By specifyi
 | Connector Colour | `connector.col` | black |
 | Connector Width | `connector.width` | 3 |
 | Connector Line Type | `connector.type` | solid |
+</div>
 
 Default values replace missing columns and `NA` values, allowing node-by-node, and edge-by-edge control as needed. Connector parameters are set only when dendrogram mode is used. For sparsely defined values (for example, only specifying a single edge), it can be convenient to initialize a column with `NA`s, then manually assign specific nodes as needed.
 
 ### Line Types
 Valid values for line type columns are based on lattice's values (with some additions and differences).
 
+<div style="width: 30%; margin: auto; text-align: center;">
 | Line Type |
 | --- |
 | `NA` |
@@ -331,6 +327,7 @@ Valid values for line type columns are based on lattice's values (with some addi
 | `'dotdash'` |
 | `'longdash'` |
 | `'twodash'` |
+</div>
 
 ## Ex. 4.1: Styled Tree
 ```{r echo=F}
@@ -422,7 +419,7 @@ common parameters in `SRCGRob` that can be passed in through `create.phylogeneti
 ## Ex. 6.1: Adding the Normal Node
 The most recent common ancestor (MRCA) of all malignant subclones is a descendant of normal or germline cells. The normal node is added to the tree by setting the `add.normal` parameter to `TRUE`. The size of this node can be specified with the `normal.cex` parameter.
 
-```{r}
+```{r, fig.height = 4}
 normal.tree <- create.phylogenetic.tree(
     parent.only,
     add.normal = TRUE,
@@ -438,6 +435,8 @@ For example, `horizontal.padding = -0.8` would reduce the padding by 80%.
 ```{r}
 padding.tree <- create.phylogenetic.tree(
     branch.lengths,
+    yaxis1.label = 'PGA (%)',
+    yaxis2.label = 'Number of SNVs',
     horizontal.padding = -0.8
     );
 ```

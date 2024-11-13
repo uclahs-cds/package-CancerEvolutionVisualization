@@ -9,10 +9,10 @@
 * Node-by-node control of node size
 * Aesthetic changes for heatmap and clone-genome distribution plot
 * Add parameters to specify polygon shape and width.
-* Add option to annotate the CCF summary heatmap with the cell values.
 * Add option to use scale bars instead of y-axes.
 * Wrapper function for `SRCgrob` to automatically save plots to file
-  
+* Add option to annotate the CCF summary heatmap with the cell values.
+
 ## Update
 * Fixed angle calculation bug where child angles do not follow
   their parent angle, instead moving "downward" at 0 degrees.
@@ -25,6 +25,7 @@
 * Improved default node style
 * Define color scheme with a single value, automatically generating other shades.
 * Report the number of SNVs per clone in the legend for the clone-genome distribution plot.
+* Updated the user guide to reflect new features.
 
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.
