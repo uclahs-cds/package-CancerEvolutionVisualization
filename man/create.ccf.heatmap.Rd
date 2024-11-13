@@ -31,12 +31,3 @@ create.ccf.heatmap(
 \value{A `grob` object of the heatmap.}
 \author{Helena Winata}
 \seealso{\code{\link[BoutrosLab.plotting.general]{create.heatmap}}}
-
-\examples{
-    load(file.path(system.file('data', package = 'CancerEvolutionVisualization'), 'SNV.rda'));
-
-    create.ccf.heatmap(
-        x = snv,
-        cluster.dimension = 'columns'
-        );
-}
