@@ -1,12 +1,11 @@
 ---
-title: "User Guide"
-author:
-- name: Dan Knight
-  email: danknight@mednet.ucla.edu
-- name: Helena Winata
-  email: hwinata@mednet.ucla.edu
+title: 'CEV User Guide'
+author: 'Dan Knight, Helena Winata'
 date: "`r Sys.Date()`"
-output: rmarkdown::pdf_document
+output: 
+  html_document:
+    toc: true
+    number_sections: true
 vignette: > 
   %\VignetteIndexEntry{User Guide}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,8 +15,18 @@ vignette: >
 ```{r, echo=F, message=F}
 # library(CancerEvolutionVisualization);
 setwd('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization/vignettes');
-devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization');
-# rmarkdown::render('UserGuide.Rmd');
+# devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization');
+devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/cev-temp');
+knitr::opts_chunk$set(
+    warning = FALSE,
+    message = FALSE,
+    fig.align = 'center',
+    fig.height = 3.5,
+    tidy = TRUE,
+    collapse = TRUE
+    );
+
+# rmarkdown::render('UserGuide.Rmd', output_file = 'UserGuide-w-main.html');
 ```
 
 ```{r load-data, echo=F}
@@ -54,7 +63,7 @@ knitr::kable(
 ```
 
 To plot the tree, we can use the `SRCGrob` function. This function will return a `grob` object that can be passed to `grid.draw` to render the plot.Alternatively, we provided a wrapper function `create.phylogenetic.tree` that will automatically render the plot or save the plot into a TIFF, PNG, PDF or SVG file.
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 parent.only.tree <- SRCGrob(parent.only);
 grid.draw(parent.only.tree);
 ```
@@ -63,7 +72,7 @@ grid.draw(parent.only.tree);
 ## Ex. 1.2: Using `node.id`, `parent` and `label` columns
 With the minimal input, the tree will be rendered with numeric node labels, corresponding to the row index (default `node.id`). A `node.id` column can be included in the input data frame if the IDs reported in the `parent` column does not correspong to row indexes.
 
-```{r echo=F, fig.dim=c(5, 3.5)}
+```{r echo=F}
 node.id <- data.frame(
     node.id = as.character(c(2, 5, 6, 1)),
     parent = as.character(c(NA, 2, 2, 5))
@@ -101,7 +110,7 @@ knitr::kable(
     );
 ```
 
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 branch.lengths.tree <- create.phylogenetic.tree(branch.lengths);
 ```
 
@@ -121,7 +130,7 @@ scaled.tree <- create.phylogenetic.tree(
 ## Ex. 1.5: Y-Axis Labels
 The y-axis are automatically generated and lengths of different sizes are scaled to fit the plot. The y-axis labels can be customized by specifying the `yaxis1.label` and `yaxis2.label` parameters.
 
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 yaxis.tree <- create.phylogenetic.tree(
     tree = branch.lengths,
     yaxis1.label = 'PGA (%)',
@@ -133,7 +142,7 @@ yaxis.tree <- create.phylogenetic.tree(
 The default axis tick positions can be overridden with the `yat` parameter. This
 expects a list of vectors, each corresponding to the ticks on the y-axis.
 
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 yaxis1.ticks <- c(10, 20, 30, 35, 40);
 yaxis2.ticks <- c(100, 250, 400);
 
@@ -152,7 +161,7 @@ Alternatively, the y-axis can be replaced with a scale bar. The `scale.bar = TRU
 - `scale.size.{1,2}` specifies the size of the scale bar if the default is unsatisfactory.
 - `scale.padding` specifies the padding between the scale bars if multiple scale bars are present.
 
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 scalebar.tree <- create.phylogenetic.tree(
     tree = branch.lengths,
     yaxis1.label = 'PGA (%)',
@@ -173,7 +182,7 @@ CP <- simple.example$tree[, c('parent', 'length.1', 'length.2', 'CP')];
 knitr::kable(CP, row.names = TRUE);
 ```
 
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 CP.default.tree <- create.phylogenetic.tree(
     CP,
     xaxis.label = 'CCF'
@@ -182,7 +191,7 @@ CP.default.tree <- create.phylogenetic.tree(
 
 To control the polygon shape and size, users can modify the `polygon.shape` and `polygon.width` parameters. The `colour.scheme` parameter can be used to specify a colour palette for the polygons. When a single colour is specified, CEV will create a gradient from white to the specified colour and assign progrssively darker shades to each node.
 
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 CP.tree <- create.phylogenetic.tree(
     CP,
     colour.scheme = 'steelblue',
@@ -192,7 +201,7 @@ CP.tree <- create.phylogenetic.tree(
 ```
 
 Alternatively, the `colour.scheme` parameter can take a vector with length equal to the number of nodes. This will assign a unique colour to each node.
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 CP.tree2 <- create.phylogenetic.tree(
     CP,
     colour.scheme = c(NA, 'gray70', 'pink', 'maroon', 'steelblue')
@@ -246,7 +255,7 @@ angle.input <- data.frame(
 knitr::kable(angle.input);
 ```
 
-```{r, echo=F, fig.height=3.5}
+```{r, echo=F}
 angle.tree <- create.phylogenetic.tree(angle.input);
 ```
 
@@ -259,7 +268,7 @@ This mode spreads nodes out radially from the root node. Examples for plotting a
 ## Ex. 3.2: Dendrogram Mode
 This mode is useful for trees with many nodes, as it avoids node collisions and can be easier to read.
 
-```{r echo=F, fig.dim=c(10, 3.5)}
+```{r echo=F}
 dendrogram.input <- complex.tree.input;
 dendrogram.input$mode <- 'dendrogram';
 
@@ -323,7 +332,7 @@ knitr::kable(
     );
 ```
 
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 node.style.tree <- create.phylogenetic.tree(node.style);
 ```
 
@@ -342,7 +351,7 @@ knitr::kable(
     );
 ```
 
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 nodeless.tree <- create.phylogenetic.tree(nodeless);
 ```
 
@@ -357,7 +366,7 @@ simple.text.data <- simple.example$text[, 1:2];
 knitr::kable(simple.text.data);
 ```
 
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 simple.text.tree <- create.phylogenetic.tree(
     tree = parent.only,
     node.text = simple.text.data
@@ -365,7 +374,7 @@ simple.text.tree <- create.phylogenetic.tree(
 ```
 
 To specify the distance between edges and text, the `node.text.line.dist` parameter can be used.
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 simple.text.tree2 <- create.phylogenetic.tree(
     tree = parent.only,
     node.text = simple.text.data[4:5, ],
@@ -382,7 +391,7 @@ simple.text.tree2 <- create.phylogenetic.tree(
 knitr::kable(simple.example$text);
 ```
 
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 full.text.tree <- create.phylogenetic.tree(
     tree = parent.only,
     node.text = simple.example$text
@@ -397,7 +406,7 @@ common parameters in `SRCGRob` that can be passed in through `create.phylogeneti
 ## Ex. 6.1: Adding the Normal Node
 The most recent common ancestor (MRCA) of all malignant subclones is a descendant of normal or germline cells. The normal node is added to the tree by setting the `add.normal` parameter to `TRUE`. The size of this node can be specified with the `normal.cex` parameter.
 
-```{r, fig.dim=c(5, 3.5)}
+```{r}
 normal.tree <- create.phylogenetic.tree(
     parent.only,
     add.normal = TRUE,
@@ -410,7 +419,7 @@ Some plots require more or less horizontal padding between the x-axes and the tr
 itself. The `horizontal.padding` parameter scales the default padding proportionally.
 For example, `horizontal.padding = -0.8` would reduce the padding by 80%.
 
-```{r, fig.dim=c(3.5, 3.5)}
+```{r}
 padding.tree <- create.phylogenetic.tree(
     branch.lengths,
     horizontal.padding = -0.8
@@ -422,7 +431,7 @@ The main title of the plot is referred to as `main` in plot parameters. `main` s
 the title text, `main.cex` sets the font size, and `main.y` is used to move the main
 title up if more space is required for the plot.
 
-```{r, fig.dim=c(3.5, 3.5)}
+```{r}
 title.tree <- create.phylogenetic.tree(
     parent.only,
     main = 'Example Plot',

@@ -16,7 +16,7 @@ vignette: >
 
 library(knitr)
 # library(CancerEvolutionVisualization);
-devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization');
+devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/cev-temp');
 opts_chunk$set(warning = FALSE, message = FALSE, fig.align = 'center');
 
 if (!dir.exists('figures')) dir.create('figures');
@@ -24,8 +24,8 @@ if (!dir.exists('figures')) dir.create('figures');
 
 ```{r plot-params, echo=F}
 clone.col <- setNames(
-    c('#a90000', '#e20000', '#f42404', '#df6b0b', '#f48004', '#f2a123', '#d7c454', '#90de3a', '#5ecf1c', '#37a400', 
-   '#158800', '#16a149', '#1ecfa9', '#05f8f2', '#00daff', '#00abff', '#007dff', '#004aff', '#1922ff', '#5703ff', 
+    c('#a90000', '#e20000', '#f42404', '#df6b0b', '#f48004', '#f2a123', '#d7c454', '#90de3a', '#5ecf1c', '#37a400',
+   '#158800', '#16a149', '#1ecfa9', '#05f8f2', '#00daff', '#00abff', '#007dff', '#004aff', '#1922ff', '#5703ff',
    '#8600ff', '#ab19ff', '#bd4cff', '#de56fc', '#f43ded', '#ff00d1'),
    c('MRCA', 1:25)
     );
@@ -248,7 +248,7 @@ for (s in sample.list) {
 png.list <- paste0('figures/2A_', sample.list, '-phylogeny.png');
 
 # Generate Markdown table with each image in a cell
-cat("|", paste(paste0("![](", png.list, "){width=50%}"), collapse = " | "), "|")
+cat('|', paste(paste0('![](', png.list, '){width=50%}'), collapse = ' | '), '|')
 ```
 
 
