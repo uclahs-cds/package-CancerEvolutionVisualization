@@ -24,10 +24,10 @@ make.polygon <- function(
     y0,
     x1,
     x2,
+    sig.shape,
     wid = 1,
     len = 1,
     col = 'gray',
-    sig.shape = 4,
     beta.in = 3
     ) {
 
@@ -62,7 +62,7 @@ position.polygons <- function(
     x,
     y,
     len,
-    sig.shape = 4,
+    sig.shape,
     beta.in = 3,
     branching = TRUE,
     fixed.angle = NULL,
@@ -75,6 +75,7 @@ position.polygons <- function(
 
 	# get the row of v that corresponds to the clone
 	vi <- v[i,];
+	sig.shape <- vi[['polygon.shape']];
 
 	if (!is.na(vi$parent) && vi$parent == -1 && nrow(v[v$parent == -1, ]) == 1) {
 	    # If root the clone extends the full width of the plot

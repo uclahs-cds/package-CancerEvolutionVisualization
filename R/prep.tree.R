@@ -172,12 +172,30 @@ prep.tree <- function(
         conversion.fun = as.character
         );
 
+    if (!('polygon.col' %in% colnames(tree.df))) {
+        tree.df$polygon.col <- NA;
+        }
+    tree.df$polygon.col <- prep.column.values(
+        tree.df$polygon.col,
+        default.values = colour.scheme[1:nrow(tree.df)],
+        conversion.fun = as.character
+        );
+
     if (!('polygon.alpha' %in% colnames(tree.df))) {
         tree.df$polygon.alpha <- NA;
         }
     tree.df$polygon.alpha <- prep.column.values(
         tree.df$polygon.alpha,
         default.values = 0.5,
+        conversion.fun = as.numeric
+        );
+
+    if (!('polygon.shape' %in% colnames(tree.df))) {
+        tree.df$polygon.shape <- NA;
+        }
+    tree.df$polygon.shape <- prep.column.values(
+        tree.df$polygon.shape,
+        default.values = 3,
         conversion.fun = as.numeric
         );
 
@@ -217,7 +235,6 @@ prep.tree <- function(
         id = c(-1, tree.df$child),
         label.text = c('', tree.df$label),
         ccf = if (is.null(tree.df$CP)) NA else c(1, tree.df$CP),
-        color = colour.scheme[1:(nrow(tree.df) + 1)],
         angle = c(NA, tree.df$angle),
         draw.node = c(NA, tree.df$draw.node),
         node.size = c(NA, tree.df$node.size),
@@ -239,6 +256,8 @@ prep.tree <- function(
         mode = c(NA, tree.df$mode),
         bell = c(FALSE, rep(bells, nrow(tree.df))),
         alpha = c(0, tree.df$polygon.alpha),
+        polygon.shape = c(NA, tree.df$polygon.shape),
+        color = c(NA, tree.df$polygon.col),
         stringsAsFactors = FALSE
         );
     if (length(branch.names) > 1) {
