@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2024-10-14)
+# CancerEvolutionVisualization 3.0.0 (2024-11-14)
 
 ## Added
 * Dendrogram mode
@@ -8,7 +8,7 @@
 * Option to disable node drawing with node-by-node control
 * Node-by-node control of node size
 * Aesthetic changes for heatmap and clone-genome distribution plot
-* Add parameters to specify polygon shape and width.
+* Add parameters to specify polygon shape, width, color, and transparency (alpha).
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow
