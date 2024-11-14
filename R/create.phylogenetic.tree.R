@@ -9,11 +9,9 @@ create.phylogenetic.tree <- function(
     ...
     ) {
 
+    tree <- as.data.frame(tree);
     if ('node.id' %in% colnames(tree)) {
         rownames(tree) <- tree$node.id;
-        if (!'label' %in% colnames(tree)) {
-            tree$label <- tree$node.id;
-            }
         }
 
     plt <- SRCGrob(
