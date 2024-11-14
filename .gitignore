@@ -7,3 +7,5 @@
 .Rproj.user
 
 vignettes/figures
+*.pdf
+*.html

@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
     collapse = TRUE
     );
 
-# rmarkdown::render('UserGuide.Rmd', output_file = 'UserGuide-w-main.html');
+# rmarkdown::render('UserGuide.Rmd');
 ```
 
 ```{r load-data, echo=F}
@@ -452,5 +452,29 @@ title.tree <- create.phylogenetic.tree(
     main = 'Example Plot',
     main.y = 0.1,
     main.cex = 1
+    );
+```
+
+## Ex. 6.4: Saving Plot to file
+The `create.phylogenetic.tree` function can save the plot to a file by specifying the `filename` parameter. The file type is determined by the file extension. Supported file types are TIFF, PNG, PDF, and SVG. If a file extension is not specified, or is not one of the supported formats, CEV will use the default TIFF format. Below are the availble parameters, some of which are only applicable to certain file formats.
+
+<div style="width: 40%; margin: auto">
+| Parameters | Description | TIFF | PNG | PDF | SVG |
+| --- | --- | --- | --- | --- | --- |
+| `filename` | Path to output file | x | x | x | x |
+| `width` | Plot width | x | x | x | x |
+| `height` | Plot height | x | x | x | x |
+| `units` | Units for dimesions | x | x |  |  |
+| `res` | Resolution | x | x |  |  |
+| `bg` | Background colour | x | x |  |  |
+</div>
+
+```{r save-plot}
+save.tree <- create.phylogenetic.tree(
+    parent.only,
+    filename = 'figures/simple.tree.png',
+    width = 3,
+    height = 4,
+    bg = 'transparent'
     );
 ```
