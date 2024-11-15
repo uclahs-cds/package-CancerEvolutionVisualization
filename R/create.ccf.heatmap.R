@@ -4,7 +4,7 @@ create.ccf.heatmap <- function(
     clustering.method = 'complete',
     distance.method = 'euclidean',
     xaxis.lab = '',
-    xlab.label = 'Mutations',
+    xlab.label = 'SNVs',
     print.colour.key = FALSE,
     colour.scheme = c('white', 'blue'),
     ...
