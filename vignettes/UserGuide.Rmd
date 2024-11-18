@@ -22,22 +22,16 @@ knitr::opts_chunk$set(
     message = FALSE,
     fig.align = 'center',
     fig.height = 3.5,
-    tidy = TRUE,
     collapse = TRUE
     );
 
 # rmarkdown::render('UserGuide.Rmd');
 ```
 
-```{r load-data, echo=F}
-load('data/simple.example.Rda');
-load('data/complex.example.Rda');
-```
 # Introduction
 CancerEvolutionVisualization (CEV) creates customizable, publication quality plots for representing tumour evolution data. This guide will focus on phylogentic tree visulaization using CEV. For simple plots, this package will handle most settings right out of the box. However, more complex plots may require some trial and error to achieve the right arrangement of nodes and branches.
 
-This guide will show best practices for creating plots, as well as examples
-of common use cases and tips for refining plot settings.
+This guide will show best practices for creating plots, as well as examples of common use cases and tips for refining plot settings.
 
 ## Installation
 ### CRAN (recommended)
@@ -63,23 +57,25 @@ you should be free to use whatever method you prefer for a given dataset. This
 package only handles visualization - not analysis. Therefore, data must be prepared
 and formatted before being passed to any CEV functions.
 
-The input for phylogenetic tree visualization is a data frame where each row defines a parent-child relationship between 2 subclones.
-
-## Ex. 1.1: Minimal Tree
-The simplest input format is a column containing the parent node of each individual node. By default, the row index is assigned as `node.id`. Each node is restricted to one parent. The root node will not have a parent, so a value of `NA` is used.
-
-```{r echo=F}
-parent.only <- data.frame(simple.example$tree[, 'parent', drop = FALSE]);
-
-knitr::kable(
-    parent.only,
-    col.names = c(colnames(simple.example$tree)[1]),
-    row.names = TRUE
-    );
+The input for phylogenetic tree visualization is a data frame where each row defines a parent-child relationship between 2 subclones. To load the data required for this user guide, run the following code:
+```{r load-data}
+load('data/simple.example.Rda');
+load('data/complex.example.Rda');
 ```
 
-To plot the tree, we can use the `SRCGrob` function. This function will return a `grob` object that can be passed to `grid.draw` to render the plot.Alternatively, we provided a wrapper function `create.phylogenetic.tree` that will automatically render the plot or save the plot into a TIFF, PNG, PDF or SVG file.
+The `simple.example` contains an example of a simple tree with 4 nodes while the `complex.example` contains a more complex tree with 25 nodes. Both data frames contain a `tree` data frame and the `simple.example` also contains a `text` dataframe. The `tree` component contains the tree data, while the `text` component contains the text annotations.
+
+### Simple Example
+The `simple.example` tree data frame contains informationof the tree structure as well as aesthetic node-by-node customization settings (colours, edge type, etc.). The `text` data frame contains text annotations for each node.
+```{r simple-example, echo=F}
+knitr::kable(simple.example$tree, caption = 'Simple Example Tree');
+knitr::kable(simple.example$text, caption = 'Simple Example Text', format = 'html', table.attr = 'style="width: 40%;"');
+```
+
+## Ex. 1.1: Minimal Tree
+The simplest input format is a column containing the parent node of each individual node. By default, the row index is assigned as `node.id`. Each node is restricted to one parent. The root node will not have a parent, so a value of `NA` is used. To plot the tree, we can use the `SRCGrob` function. This function will return a `grob` object that can be passed to `grid.draw` to render the plot.Alternatively, we provided a wrapper function `create.phylogenetic.tree` that will automatically render the plot or save the plot into a TIFF, PNG, PDF or SVG file.
 ```{r}
+parent.only <- data.frame(simple.example$tree[, 'parent', drop = FALSE]);
 parent.only.tree <- SRCGrob(parent.only);
 grid.draw(parent.only.tree);
 ```
@@ -87,51 +83,31 @@ grid.draw(parent.only.tree);
 ## Ex. 1.2: Using `node.id`, `parent` and `label` columns
 With the minimal input, the tree will be rendered with numeric node labels, corresponding to the row index (default `node.id`). A `node.id` column can be included in the input data frame if the IDs reported in the `parent` column does not correspong to row indexes.
 
-```{r echo=F}
+```{r}
 node.id <- data.frame(
     node.id = as.character(c(2, 5, 6, 1)),
     parent = as.character(c(NA, 2, 2, 5))
     );
-knitr::kable(node.id, row.names = FALSE);
-```
-```{r}
 node.id.tree <- create.phylogenetic.tree(node.id);
 ```
+
 By default the `node.id` will be used to label the nodes. To customize node labels, a `label` column can be included in the input data frame to override the `node.id` values.
 
-```{r echo=F}
+```{r}
 node.id$label <- c('A', 'B', 'C', 'D');
-knitr::kable(node.id, row.names = FALSE);
 node.id.tree <- create.phylogenetic.tree(node.id);
 ```
 
 ## Ex. 1.3: Branch Lengths
-It's common to associate branch lengths with a the values of a particular variable 
-(for example, PGA or SNVs). Up to two branch lengths can be specified. Including a 
-`length.1` and/or `length.2` column  in the tree dataframe will enable this branch scaling behaviour,
-and automatically adding a corresponding y-axis.
+It's common to associate branch lengths with a the values of a particular variable (for example, PGA or SNVs). Up to two branch lengths can be specified. Including a `length.1` and/or `length.2` column  in the tree dataframe will enable this branch scaling behaviour, and automatically adding a corresponding y-axis. Specifying multiple length columns will result in multiple (distinctly coloured) parallel lines. For each branch, the next node will be placed at the end of the longest line.
 
-Multiple length values can be used together. All columns whose names contain `length`
-will be used. (For example, `length.1` and `snv.length` are both valid.) Multiple 
-columns will result in multiple (distinctly coloured) parallel lines. Any branch 
-length conflicts will be resolved automatically. For each branch, the next node
-will be placed at the end of the longest line.
-
-```{r echo=F}
-branch.lengths <- simple.example$tree[, 1:3];
-
-knitr::kable(
-    branch.lengths,
-    row.names = TRUE
-    );
-
+```{r}
+branch.lengths <- simple.example$tree[, c('parent', 'length.1', 'length.2')];
 branch.lengths.tree <- create.phylogenetic.tree(branch.lengths);
 ```
 
 ## Ex. 1.4: Branch Scaling
-Branches are scaled automatically, but users can further scale each branch with
-the `scale1` and `scale2` parameters. These values scale each branch proportionally,
-so `scale1 = 1.5` would make the first set of branch lengths 50% longer.
+Branches are scaled automatically, but users can further scale each branch with the `scale1` and `scale2` parameters. These values scale each branch proportionally, so `scale1 = 1.5` would make the first set of branch lengths 50% longer.
 
 ```{r}
 scaled.tree <- create.phylogenetic.tree(
@@ -153,8 +129,7 @@ yaxis.tree <- create.phylogenetic.tree(
 ```
 
 ## Ex. 1.6: Axis Tick Placement
-The default axis tick positions can be overridden with the `yat` parameter. This
-expects a list of vectors, each corresponding to the ticks on the y-axis.
+The default axis tick positions can be overridden with the `yat` parameter. This expects a list of vectors, each corresponding to the ticks on the y-axis.
 
 ```{r}
 yaxis1.ticks <- c(10, 20, 30, 35, 40);
@@ -190,13 +165,8 @@ scalebar.tree <- create.phylogenetic.tree(
 ## Ex. 1.8: Visualizing Cellular Prevalence
 A `CP` column containing the cellular prevalence or cancer cell fraction (CCF) of each subclone can be added to the input tree dataframe. These values typically range between 0 and 1, and the sum of all child nodes must not be larger than their parent node's value. Whether you are using 'CCF, 'CP' pr any other metric, make sure the x-axis label matches the metric used.
 
-```{r echo=F}
-CP <- simple.example$tree[, c('parent', 'length.1', 'length.2', 'CP')];
-
-knitr::kable(CP, row.names = TRUE);
-```
-
 ```{r, fig.height=4}
+CP <- simple.example$tree[, c('parent', 'length.1', 'length.2', 'CP')];
 CP.default.tree <- create.phylogenetic.tree(
     CP,
     xaxis.label = 'CCF'
@@ -241,16 +211,13 @@ An optional `spread` column can be included in the input tree data.frame. Spread
 
 To create more space for the numerous nodes in the lower levels of our example tree, we can increase the spread of the nodes at the top level. To create even more room, we can _decrease_ the spread of some lower level nodes where appropriate.
 
-```{r node-spread, echo=F}
+```{r node-spread}
 spread.tree.input <- complex.tree.input;
-
 spread.tree.input$spread <- 1;
 spread.tree.input$spread[2:5] <- c(2, 2, 3, 2);
 spread.tree.input$spread[c(6:7, 17:18, 24:25)] <- 0.5;
 spread.tree.input$spread[c(8:10, 18:21)] <- 0.75;
 spread.tree.input$spread[c(11:16)] <- 1.75;
-
-knitr::kable(spread.tree.input[!is.na(spread.tree.input$spread) | is.na(spread.tree.input$parent), ]);
 
 spread.tree <- create.phylogenetic.tree(spread.tree.input);
 ```
@@ -258,13 +225,10 @@ spread.tree <- create.phylogenetic.tree(spread.tree.input);
 ## Ex. 2.2: Node Angles
 Alternative, an `angle` column can be specified to manually set the angle of each node. Angels are specified in degrees, where 0 points opposite from the parent edge. Angles can be provided in radians when `use.radians = TRUE`.
 
-```{r node-angle, echo=F}
-angle.input <- data.frame(
-    parent = complex.tree.input[1:5, 'parent'],
-    angle = c(NA, -70, -30, 0, 20)
-    );
-
-knitr::kable(angle.input);
+```{r node-angle}
+angle.input <- complex.tree.input;
+angle.input$angle <- NA;
+angle.input$angle[2:5] <- c(-80, -20, 30, 85);
 
 angle.tree <- create.phylogenetic.tree(angle.input);
 ```
@@ -330,7 +294,7 @@ Valid values for line type columns are based on lattice's values (with some addi
 </div>
 
 ## Ex. 4.1: Styled Tree
-```{r echo=F}
+```{r}
 node.style <- simple.example$tree[, c(
     'parent', 'length.1', 'length.2',
     'node.col', 'node.label.col',
@@ -339,28 +303,25 @@ node.style <- simple.example$tree[, c(
     'edge.col.2', 'edge.width.2'
     )];
 
-knitr::kable(
-    node.style, #[, !(colnames(node.style) %in% c('parent', 'length.1', 'length.2'))],
-    row.names = TRUE
-    );
-```
-
-```{r}
 node.style.tree <- create.phylogenetic.tree(node.style);
 ```
 
 ## Ex. 4.2: Nodeless Tree
 Complex trees may benefit from simpler visual styles. For example, there may not be room to render the node ellipses. CEV provides node-by-node control with the `draw.node` column.
 
-```{r echo=F}
+```{r}
 nodeless <- spread.tree.input;
 nodeless$draw.node <- TRUE;
 n <- table(nodeless$parent);
 nodeless$draw.node[nodeless$parent %in% n[n >= 4]] <- FALSE;
+```
 
+```{r, echo=F}
 knitr::kable(
-    nodeless[, c('parent', 'draw.node')],
-    row.names = TRUE
+    nodeless,
+    row.names = TRUE,
+    format = 'html',
+    table.attr = 'style="width: 40%;margin-left: auto; margin-right: auto;"'
     );
 ```
 
@@ -374,12 +335,9 @@ Annotations can be added using a secondary dataframe to specify additional text 
 ## Ex. 5.1: Edge annotations
 Each row must include a node ID for the text. Text will be stacked next to the branch preceeding the specified node.
 
-```{r echo=F}
-simple.text.data <- simple.example$text[, 1:2];
-knitr::kable(simple.text.data);
-```
-
 ```{r}
+simple.text.data <- simple.example$text[, c('name', 'node')];
+
 simple.text.tree <- create.phylogenetic.tree(
     tree = parent.only,
     node.text = simple.text.data
@@ -401,7 +359,7 @@ simple.text.tree2 <- create.phylogenetic.tree(
 - `NA` values in each column will default to `black` and `plain` respectively.
 
 ```{r echo=F}
-knitr::kable(simple.example$text);
+knitr::kable(simple.example$text, caption = 'Simple Example Text', format = 'html', table.attr = 'style="width: 40%;"');
 ```
 
 ```{r}
