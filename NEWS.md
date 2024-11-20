@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2024-10-14)
+# CancerEvolutionVisualization 3.0.0 (2024-11-14)
 
 ## Added
 * Dendrogram mode
@@ -11,7 +11,8 @@
 * Add parameters to specify polygon shape and width.
 * Add option to use scale bars instead of y-axes.
 * Wrapper function for `SRCgrob` to automatically save plots to file
-* * Add option to annotate the CCF summary heatmap with the cell values.
+* Add option to annotate the CCF summary heatmap with the cell values.
+* Add parameters to specify polygon shape, width, color, and transparency (alpha).
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow
@@ -25,6 +26,8 @@
 * Improved default node style
 * Define color scheme with a single value, automatically generating other shades.
 * Report the number of SNVs per clone in the legend for the clone-genome distribution plot.
+* Allow `polygon.alpha` to be specified in the tree input data.frame to control opacity of fish plot polygons.
+
 
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.
