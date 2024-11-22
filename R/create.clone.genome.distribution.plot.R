@@ -95,7 +95,7 @@ create.clone.genome.distribution.plot.per.sample <- function(
             next;
         }
         density.list[[k]] <- calculate.density.and.scale(
-            cluster.df = sample.df[sample.df$clone.id == k, ]
+            x = sample.df[sample.df$clone.id == k, ]
             );
         }
     density.df <- do.call(rbind, density.list);

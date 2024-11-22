@@ -25,11 +25,16 @@ create.clone.genome.distribution.densityplot <- function(
         ));
     }
 
-calculate.density.and.scale <- function(cluster.df) {
-    density <- density(x = cluster.df$genome.pos, bw = 'nrd', adjust = 0.05, na.rm = TRUE);
-    density.df <- as.data.frame(density[c('x','y')]);
-    density.df$clone.id <- unique(cluster.df$clone.id);
-    density.df$count <- nrow(cluster.df) / sum(density.df$y) * density.df$y;
+calculate.density.and.scale <- function(
+    x,
+    value = 'genome.pos',
+    group = 'clone.id'
+    ) {
+
+    density <- density(x = x[[value]], bw = 'nrd', adjust = 0.05, na.rm = TRUE);
+    density.df <- as.data.frame(density[c('x', 'y')]);
+    density.df$clone.id <- unique(x[[group]]);
+    density.df$count <- nrow(x) / sum(density.df$y) * density.df$y;
 
     return(density.df)
     }
