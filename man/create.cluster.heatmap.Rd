@@ -1,12 +1,13 @@
 \name{create.cluster.heatmap}
 \alias{create.cluster.heatmap}
-\title{Subclone Tree Plot}
+\title{Cluster Heatmap}
 \description{
 Creates a heatmap of cancer cell fraction (CCF) distribution across tumour samples with clone IDs as a covariate beneath the heatmap.
 }
 \usage{
 create.cluster.heatmap(
     DF,
+    ccf.limits = NULL,
     clone.colours = NULL,
     height = 6,
     width = 11,
@@ -15,6 +16,7 @@ create.cluster.heatmap(
     legend.title.cex = 1.2,
     legend.label.cex = 1,
     filename = NULL,
+    xlab.label = 'SNVs',
     xlab.cex = 1.2,
     xaxis.cex = 1,
     xaxis.fontface = 'bold',
@@ -25,6 +27,7 @@ create.cluster.heatmap(
 }
 \arguments{
     \item{DF}{A data-frame with the following column names: 'ID', 'SNV.id', 'clone.id', 'CCF'.}
+    \item{ccf.limits}{CCF limits to be applied to the heatmap. Must be a vector of length 2 for min and max thresholds. Defaults to \code{NULL}}
     \item{clone.colours}{Named list to provide a colour scheme for the clone ID covariate bar. If NULL, colours will be randomly generated. Defaults to \code{NULL}.}
     \item{height}{Defaults to 6}
     \item{width}{Defaults to 11}
@@ -33,6 +36,7 @@ create.cluster.heatmap(
     \item{legend.title.cex}{Size of titles in the legends. Defaults to 1.2}
     \item{legend.label.cex}{Size of text labels in the legends. Defaults to 1}
     \item{filename}{Filename for tiff output, or if NULL returns the trellis object itself. Defaults to \code{NULL}.}
+    \item{xlab.label}{Defaults to \dQuote{SNVs}.}
     \item{xlab.cex}{Defaults to 1.2}
     \item{xaxis.cex}{Defaults to 1}
     \item{xaxis.fontface}{Defaults to \dQuote{bold}.}
@@ -42,4 +46,4 @@ create.cluster.heatmap(
 }
 \value{A `grob` object of the heatmap.}
 \author{Helena Winata}
-\seealso{\code{\link{create.ccf.heatmap}}}
+\seealso{\code{\link{create.ccf.heatmap}}, \code{\link[BoutrosLab.plotting.general]{create.heatmap}}}

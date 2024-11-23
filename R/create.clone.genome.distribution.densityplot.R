@@ -12,7 +12,7 @@ create.clone.genome.distribution.densityplot <- function(
         data = density.df,
         groups = density.df$clone.id,
         xlab.label = 'Chromosome',
-        ylab.label = 'Number of SNVs',
+        ylab.label = 'SNV Density',
         xlimits = c(0, sum(chr.info$length)),
         xaxis.lab = chr.info$chr,
         xat = chr.info$xat,

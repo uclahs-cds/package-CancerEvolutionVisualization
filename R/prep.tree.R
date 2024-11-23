@@ -4,7 +4,7 @@ prep.tree <- function(
     bells = TRUE,
     colour.scheme,
     use.radians = FALSE,
-    default.node.colour = 'grey29'
+    default.node.colour = 'white'
     ) {
 
     if (!('parent' %in% colnames(tree.df))) {
@@ -81,6 +81,11 @@ prep.tree <- function(
             tree.df$CP <- NULL;
             }
         }
+
+    if (!('node.size' %in% colnames(tree.df))) {
+        tree.df$node.size <- NA;
+        }
+    tree.df$node.size <- prep.node.size(tree.df);
 
     tree.df <- prep.draw.node.setting(tree.df);
     tree.df <- prep.edge.colours(tree.df);
@@ -206,6 +211,7 @@ prep.tree <- function(
         color = colour.scheme[1:(nrow(tree.df) + 1)],
         angle = c(NA, tree.df$angle),
         draw.node = c(NA, tree.df$draw.node),
+        node.size = c(NA, tree.df$node.size),
         spread = c(NA, tree.df$spread),
         node.colour = c(NA, tree.df$node.col),
         node.label.colour = c(NA, tree.df$node.label.col),
@@ -472,7 +478,7 @@ prep.node.border.colours <- function(tree.df) {
         tree.df,
         MARGIN = 1,
         FUN = function(row) {
-            if (is.na(row['border.col'])) row['node.col'] else row['border.col'];
+            if (is.na(row['border.col'])) 'black' else row['border.col'];
             }
         );
 
@@ -607,6 +613,17 @@ check.dendrogram.angle.conflicts <- function(tree.df) {
     if (any(conflicts)) {
         warning('"x" values override "angle" and "spread" values in dendrogram mode.')
         }
+    }
+
+prep.node.size <- function(tree.df) {
+    node.size <- prep.column.values(
+        tree.df$node.size,
+        default.values = 1,
+        conversion.fun = as.numeric
+        );
+    node.size[tree.df$draw.node == FALSE] <- 0;
+
+    return(node.size);
     }
 
 # default.values must be either a scalar or matching length of column.values.

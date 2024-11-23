@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2024-08-28)
+# CancerEvolutionVisualization 3.0.0 (2024-10-14)
 
 ## Added
 * Dendrogram mode
@@ -6,6 +6,12 @@
 * Plotting functions to visualize the distribution of clones across the genome.
 * Documentation for heatmaps and clone-genome distribution plot
 * Option to disable node drawing with node-by-node control
+* Node-by-node control of node size
+* Aesthetic changes for heatmap and clone-genome distribution plot
+* Add parameters to specify polygon shape and width.
+* Add option to use scale bars instead of y-axes.
+* Wrapper function for `SRCgrob` to automatically save plots to file
+* * Add option to annotate the CCF summary heatmap with the cell values.
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow
@@ -16,6 +22,13 @@
 * Updated changelog format to NEWS.md Markdown format
 * Refactored use of plyr/dplyr and stringr functions to remove dependencies
 * Set default parameters for heatmaps, defaulting to BPG defaults unless necessary
+* Improved default node style
+* Define color scheme with a single value, automatically generating other shades.
+* Report the number of SNVs per clone in the legend for the clone-genome distribution plot.
+
+## Bug
+* Resolved issue where the spread parameter was not applied in dendrogram mode.
+* Resolved issue for simple dendrogram trees ( < 6 nodes or binary tree), where node angles were not calculated correctly.
 
 # CancerEvolutionVisualization 2.0.1 (2023-11-17)
 
@@ -24,6 +37,7 @@
 
 ## Bug
 * Fixed S3 naming conflict in heatmap functions, using safe "create." prefix
+* Fixed error when input is monoclonal
 
 
 # CancerEvolutionVisualization 2.0.0 (2023-11-16)

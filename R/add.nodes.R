@@ -32,12 +32,13 @@ add.node.ellipse <- function(
     circle.nodes <- clone.out$v[clone.out$v$draw.node, ];
 
 	# More precise than circleGrob
+	nchar.lab <- sapply(circle.nodes$plot.lab, function(x) max(nchar(x), 1));
 	circle.grobs <- ellipseGrob(
 	    name = node.grob.name,
 	    x = unit(circle.nodes$x, 'native'),
 	    y = unit(circle.nodes$y, 'native'),
-	    size = node.radius * (1 + 0.2 * nchar(circle.nodes$plot.lab)),
-	    ar = 1 - log2(nchar(circle.nodes$plot.lab)) / 10,
+	    size = node.radius * circle.nodes$node.size * (1 + 0.2 * nchar.lab),
+	    ar = 1 - log2(nchar.lab) / 10,
 	    gp = gpar(
 	        fill = circle.nodes$node.colour,
 	        col = circle.nodes$border.colour,
@@ -78,7 +79,7 @@ add.normal <- function(clone.out, node.radius, label.cex, normal.cex = 1) {
         width = unit(2 * node.radius * normal.cex,'inches'),
         height = unit(2 * node.radius * normal.cex, 'inches'),
         just = c('center', 'center'),
-        gp = gpar(col = 'black', fill = 'transparent', lwd = 1.5, lty = '31')
+        gp = gpar(col = 'black', fill = 'white', lwd = 1.5, lty = '31')
         );
 
     normal.label <- textGrob(

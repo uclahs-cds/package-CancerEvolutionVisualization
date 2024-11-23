@@ -5,6 +5,9 @@ create.clone.genome.distribution.plot <- function(
     clone.colours = NULL,
     filename = NULL,
     multi.sample = FALSE,
+    alpha = 0.25,
+    legend.x = 0.1,
+    legend.y = 0.55,
     ...
     ) {
 
@@ -16,21 +19,17 @@ create.clone.genome.distribution.plot <- function(
         clone.order <- sort(unique(snv.df$clone.id));
         }
 
-    if (!is.null(filename)) {
-        save.plt <- filename;
-        }
-
     if (multi.sample) {
         # if multi-sample is true, check for sample ids in 'ID' column
         if (is.null(snv.df$ID)) {
             stop('ID column must contain sample ID if multi.sample is TRUE');
             }
         # filename must be a directory
-        if (!dir.exists(save.plt)) {
+        if (!is.null(filename) && !dir.exists(filename)) {
             stop('filename must be a directory if multi.sample is TRUE');
             }
     } else {
-        if (dir.exists(save.plt)) {
+        if (!is.null(filename) && dir.exists(filename)) {
             stop('filename must be a path (not a directory) if multi.sample is FALSE');
             }
         snv.df$ID <- 'all';
@@ -47,23 +46,31 @@ create.clone.genome.distribution.plot <- function(
     chr.info <- genome.pos.df$chr.info;
     chr.info$xat <- (chr.info$length / 2) + chr.info$start;
 
+    plt.list <- list();
     for (s in unique(snv.df$ID)) {
         # Iterate through each sample -------------------------------------------------------------
         print(paste('Plotting clone distribution across the genome for sample:', s));
 
-        sample.df <- droplevels(snv.df[snv.df$ID == s, ])
-        if (multi.sample & !is.null(filename)) {
-            save.plt <- file.path(save.plt, paste0(s, '.png'));
+        sample.df <- droplevels(snv.df[snv.df$ID == s, ]);
+        sample.df <- unique(sample.df[, c('clone.id', 'genome.pos', 'SNV.id', 'ID')]);
+        if (!is.null(filename) && multi.sample) {
+            save.plt <- file.path(filename, paste0(s, '.png'));
+        } else {
+            save.plt <- filename;
             }
 
-        plt <- create.clone.genome.distribution.plot.per.sample(
+        plt.list[[s]] <- create.clone.genome.distribution.plot.per.sample(
             sample.df,
             clone.colours[levels(sample.df$clone.id)],
             chr.info,
-            save.plt = ifelse(is.null(filename), NULL, save.plt),
+            save.plt = save.plt,
+            alpha = alpha,
+            legend.x = legend.x,
+            legend.y = legend.y,
             ...
             );
         }
+    return(plt.list);
     }
 
 create.clone.genome.distribution.plot.per.sample <- function(
@@ -84,13 +91,16 @@ create.clone.genome.distribution.plot.per.sample <- function(
     legend.size = 3,
     legend.title.cex = 1.2,
     legend.label.cex = 1,
+    legend.x = 0.1,
+    legend.y = 0.55,
+    alpha = 0.25,
     ...
     ) {
 
     # calculate densities for each cluster --------------------------------------------------------
     density.list <- list();
     for (k in unique(sample.df$clone.id)) {
-        if (sum(sample.df$clone.id == k) <= 1) {
+        if (sum(sample.df$clone.id == k, na.rm = TRUE) <= 1) {
             warning(paste('Skipping clone', k, 'in sample', unique(sample.df$ID), 'since there is only one SNV'));
             next;
         }
@@ -101,17 +111,22 @@ create.clone.genome.distribution.plot.per.sample <- function(
     density.df <- do.call(rbind, density.list);
 
     # get plot legend -----------------------------------------------------------------------------
+    legend.label <- sapply(names(clone.colours), function(k) {
+        nsnv <- length(unique(sample.df[sample.df$clone.id == k, ]$SNV.id));
+        return(paste0(k, ' (', nsnv, ')'));
+        });
     clone.colours <- clone.colours[levels(sample.df$clone.id)];
     cluster.legend <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
-                title = 'Clones',
-                labels = names(clone.colours),
+                title = 'Clone (SNVs)',
+                labels = legend.label[names(clone.colours)],
                 colours = c(clone.colours),
                 border = 'black'
                 )
             ),
         size = legend.size,
+        title.just = 'left',
         title.cex = legend.title.cex,
         label.cex = legend.label.cex
         );
@@ -130,7 +145,8 @@ create.clone.genome.distribution.plot.per.sample <- function(
         xlab.cex = 0,
         ylab.cex = ylab.cex,
         xaxis.cex = 0,
-        yaxis.cex = yaxis.cex
+        yaxis.cex = yaxis.cex,
+        alpha = alpha
         );
 
     density.plt <- create.clone.genome.distribution.densityplot(
@@ -161,8 +177,10 @@ create.clone.genome.distribution.plot.per.sample <- function(
         layout.width = 1,
         layout.height = 2,
         plot.objects.heights = c(height.scatter, 5) / total.height,
-        legend = list(right = list(
-                fun = cluster.legend
+        legend = list(inside = list(
+                fun = cluster.legend,
+                x = legend.x,
+                y = legend.y
                 )),
         height = total.height,
         width = width,

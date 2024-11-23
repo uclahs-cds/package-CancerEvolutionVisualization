@@ -1,19 +1,14 @@
 create.ccf.heatmap <- function(
     x,
-    ccf.thres = NULL,
     cluster.dimensions = 'both',
     clustering.method = 'complete',
     distance.method = 'euclidean',
     xaxis.lab = '',
-    xlab.label = 'Mutations',
+    xlab.label = 'SNVs',
     print.colour.key = FALSE,
     colour.scheme = c('white', 'blue'),
     ...
     ) {
-
-    if (!is.null(ccf.thres)) {
-        x[x <= ccf.thres] <- 0;
-        }
 
     col.labels <- seq(min(x), max(x), length.out = 5);
 
