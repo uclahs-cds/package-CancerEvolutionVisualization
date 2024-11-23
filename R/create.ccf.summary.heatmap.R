@@ -98,8 +98,19 @@ create.ccf.summary.heatmap <- function(
         xat = sample.xaxis$at
         );
 
+    #edit start
+    same.as.matrix <- is.numeric(arr)
+    if(is.numeric(arr)) {
+        arr <- as.data.frame(arr)
+        colnames(arr) <- as.character(unique(DF$ID))
+        arr <- as.matrix(arr)
+        hm.args.x <- as.data.frame(arr)
+        } else {
+        hm.args.x <- arr
+        }
+
     hm.args <- list(
-        x = arr,
+        x = hm.args.x,
         cluster.dimensions = 'none',
         xlab.label = 'Clone',
         xlab.cex = ifelse(is.null(clone.colours), subplot.xlab.cex, 0),
@@ -113,7 +124,8 @@ create.ccf.summary.heatmap <- function(
         yaxis.cex = subplot.yaxis.cex,
         yaxis.fontface = subplot.yaxis.fontface,
         print.colour.key = FALSE,
-        colour.scheme = hm.col.scheme
+        colour.scheme = hm.col.scheme,
+        same.as.matrix = same.as.matrix
         );
 
     if (add.median.text) {
@@ -122,6 +134,11 @@ create.ccf.summary.heatmap <- function(
         hm.args$row.pos <- which(arr > 0, arr.ind = TRUE)[,2];
         hm.args$col.pos <- which(arr > 0, arr.ind = TRUE)[,1];
         hm.args$text.col <- ifelse(arr > contrast.thres, 'white', 'black');
+        }
+
+    if(same.as.matrix) {
+        hm.args$yat = 1.5
+        hm.args$row.pos = 1.5
         }
 
     hm <- do.call(BoutrosLab.plotting.general::create.heatmap, hm.args);
