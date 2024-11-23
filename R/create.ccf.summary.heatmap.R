@@ -98,7 +98,6 @@ create.ccf.summary.heatmap <- function(
         xat = sample.xaxis$at
         );
 
-    #edit start
     same.as.matrix <- is.numeric(arr)
     if(is.numeric(arr)) {
         arr <- as.data.frame(arr)
