@@ -44,7 +44,7 @@ create.cluster.heatmap <- function(
         arr[arr > ccf.limits[2]] <- ccf.limits[2];
         }
 
-    if (is.numeric(arr)) {
+    if (!is.matrix(arr)) {
         arr <- as.data.frame(arr)
         colnames(arr) <- as.character(unique(DF$ID))
 
