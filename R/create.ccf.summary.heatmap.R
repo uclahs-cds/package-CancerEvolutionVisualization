@@ -134,7 +134,7 @@ create.ccf.summary.heatmap <- function(
         hm.args$row.pos <- 1.5
         }
 
-    if(nrow(hm.args.x) == 1 & ncol(hm.args.x) == 1) {
+    if (nrow(hm.args.x) == 1 & ncol(hm.args.x) == 1) {
         legend.colour.change <- hm.col.scheme[length(hm.col.scheme)]
         hm.args$x <- as.data.frame(hm.col.scheme[length(hm.col.scheme)])
         hm.args$input.colours <- TRUE
@@ -166,7 +166,7 @@ create.ccf.summary.heatmap <- function(
         );
 
     if (!is.null(clone.colours)) {
-        if(length(clone.colours) == 1) {
+        if (length(clone.colours) == 1) {
         clone.cov <- BoutrosLab.plotting.general::create.heatmap(
             x = as.data.frame(clone.colours),
             xlab.label = 'Clone',
