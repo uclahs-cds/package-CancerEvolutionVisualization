@@ -52,6 +52,12 @@ create.ccf.summary.heatmap <- function(
         sample.df$ID        <- factor(sample.df$ID, levels = rev(sample.order));
         }
 
+    if(is.numeric(arr)) {
+        arr <- as.data.frame(arr)
+        colnames(arr) <- as.character(unique(DF$ID))
+        arr <- as.matrix(arr)
+        }
+
     clone.yaxis <- auto.axis(
         x = clone.df$nsnv,
         log.scaled = FALSE,
