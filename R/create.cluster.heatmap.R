@@ -44,14 +44,31 @@ create.cluster.heatmap <- function(
         arr[arr > ccf.limits[2]] <- ccf.limits[2];
         }
 
-    hm <- create.ccf.heatmap(
-        x = arr,
-        cluster.dimensions = 'none',
-        xlab.label = '',
-        xaxis.lab = xaxis.label,
-        colour.scheme = colour.scheme,
-        ...
-        );
+    if(is.numeric(arr)) {
+        arr <- as.data.frame(arr)
+        colnames(arr) <- as.character(unique(DF$ID))
+
+        hm <- create.ccf.heatmap(
+            x = arr,
+            cluster.dimensions = 'none',
+            xlab.label = '',
+            xaxis.lab = xaxis.label,
+            colour.scheme = colour.scheme,
+            same.as.matrix = TRUE,
+            yat = 1.5,
+            ...
+            );
+            
+    } else {
+        hm <- create.ccf.heatmap(
+            x = arr,
+            cluster.dimensions = 'none',
+            xlab.label = '',
+            xaxis.lab = xaxis.label,
+            colour.scheme = colour.scheme,
+            ...
+            );
+    }
 
     cov <- BoutrosLab.plotting.general::create.heatmap(
         x = t(clone.colours[snv.order$clone.id]),
