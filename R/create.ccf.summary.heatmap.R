@@ -93,7 +93,7 @@ create.ccf.summary.heatmap <- function(
         );
 
     same.as.matrix <- is.numeric(arr)
-    if(is.numeric(arr)) {
+    if (is.numeric(arr)) {
         arr <- as.data.frame(arr)
         colnames(arr) <- as.character(unique(DF$ID))
         arr <- as.matrix(arr)
@@ -129,9 +129,9 @@ create.ccf.summary.heatmap <- function(
         hm.args$text.col <- ifelse(arr > contrast.thres, 'white', 'black');
         }
 
-    if(same.as.matrix) {
-        hm.args$yat = 1.5
-        hm.args$row.pos = 1.5
+    if (same.as.matrix) {
+        hm.args$yat <- 1.5
+        hm.args$row.pos <- 1.5
         }
 
     hm <- do.call(BoutrosLab.plotting.general::create.heatmap, hm.args);

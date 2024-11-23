@@ -44,7 +44,7 @@ create.cluster.heatmap <- function(
         arr[arr > ccf.limits[2]] <- ccf.limits[2];
         }
 
-    if(is.numeric(arr)) {
+    if (is.numeric(arr)) {
         arr <- as.data.frame(arr)
         colnames(arr) <- as.character(unique(DF$ID))
 
@@ -58,7 +58,6 @@ create.cluster.heatmap <- function(
             yat = 1.5,
             ...
             );
-            
     } else {
         hm <- create.ccf.heatmap(
             x = arr,
