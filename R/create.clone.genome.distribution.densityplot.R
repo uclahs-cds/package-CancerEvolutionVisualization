@@ -8,7 +8,7 @@ create.clone.genome.distribution.densityplot <- function(
 
     return(BoutrosLab.plotting.general::create.scatterplot(
         filename = save.plt,
-        formula = count ~ x,
+        formula = y ~ x,
         data = density.df,
         groups = density.df$clone.id,
         xlab.label = 'Chromosome',
@@ -23,18 +23,4 @@ create.clone.genome.distribution.densityplot <- function(
         abline.lwd = 1.2,
         ...
         ));
-    }
-
-calculate.density.and.scale <- function(
-    x,
-    value = 'genome.pos',
-    group = 'clone.id'
-    ) {
-
-    density <- density(x = x[[value]], bw = 'nrd', adjust = 0.05, na.rm = TRUE);
-    density.df <- as.data.frame(density[c('x', 'y')]);
-    density.df$clone.id <- unique(x[[group]]);
-    density.df$count <- nrow(x) / sum(density.df$y) * density.df$y;
-
-    return(density.df)
     }
