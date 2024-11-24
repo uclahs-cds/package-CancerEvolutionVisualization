@@ -11,7 +11,8 @@
 * Add parameters to specify polygon shape and width.
 * Add option to use scale bars instead of y-axes.
 * Wrapper function for `SRCgrob` to automatically save plots to file
-* * Add option to annotate the CCF summary heatmap with the cell values.
+* Add option to annotate the CCF summary heatmap with the cell values.
+* Function to generate single-sample density plot
   
 ## Update
 * Fixed angle calculation bug where child angles do not follow
