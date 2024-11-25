@@ -20,7 +20,7 @@ SRCGrob(
     ylab.cex = 1.55,
     xaxis.cex = 1.45,
     yaxis.cex = 1.45,
-    xaxis.label = 'CP',
+    xaxis.label = 'CCF',
     label.cex = NA,
     node.text.cex = 0.85,
     main.y = NULL,
@@ -76,17 +76,17 @@ SRCGrob(
     \item{node.text.line.dist}{
     Distance between node text and tree branches (as a value between 0 and 1)
     }
-    \item{colour.scheme}{Vector of colour values to be used for CP polygons}
+    \item{colour.scheme}{Vector of colour values to be used for CCF polygons}
     \item{add.normal}{Adds a normal}
     \item{use.radians}{Unit to be used for 'angle' column (degrees or radians)}
     \item{normal.cex}{Font size within the normal 'box'}
     \item{label.nodes}{Enable/disable node labels}
-    \item{disable.polygons}{Disables CP polygon drawing (even when CP values are provided)}
+    \item{disable.polygons}{Disables CCF polygon drawing (even when CCF values are provided)}
     \item{polygon.shape}{
-    Changes the shape of the CP shading.
+    Changes the shape of the CCF shading.
     Lower values are smoother.
     }
-    \item{polygon.width}{Width of the CP shading}
+    \item{polygon.width}{Width of the CCF shading}
     \item{length.from.node.edge}{
     Sets the branch length to be calculated from the edge of the node instead of the centre
     }
@@ -118,12 +118,12 @@ SRCGrob(branch.lengths.tree);
 
 
 # Cellular Prevalence
-CP.tree <- data.frame(
+CCF.tree <- data.frame(
     branch.lengths.tree,
-    CP = c(1, 0.3, 0.5)
+    CCF = c(1, 0.3, 0.5)
     );
 
-SRCGrob(CP.tree);
+SRCGrob(CCF.tree);
 
 
 # Scaled Branch Lengths
