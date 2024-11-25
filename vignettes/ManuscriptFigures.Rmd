@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r, echo=FALSE, message=FALSE}
-library(knitr)
+library(knitr);
 library(CancerEvolutionVisualization);
 
 opts_chunk$set(warning = FALSE, message = FALSE, fig.align = 'center');

@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output: 
   html_document:
     toc: true
-    number_sections: true
+    number_sections: false
 vignette: > 
   %\VignetteIndexEntry{User Guide}
   %\VignetteEngine{knitr::rmarkdown}
@@ -13,9 +13,7 @@ vignette: >
 ---
 
 ```{r, echo=F, message=F}
-# library(CancerEvolutionVisualization);
-setwd('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization/vignettes');
-# devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization');
+library(CancerEvolutionVisualization);
 devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/cev-temp');
 knitr::opts_chunk$set(
     warning = FALSE,
@@ -51,7 +49,7 @@ To install from a specific branch, replace `main` with the branch name.
 
 # Basic Phylogenetic Tree Visualization
 
-## Input Data
+## Input Phylogenetic Data
 There are many methods for determining subpopulations within genomic data, and 
 you should be free to use whatever method you prefer for a given dataset. This
 package only handles visualization - not analysis. Therefore, data must be prepared
@@ -173,7 +171,7 @@ CP.default.tree <- create.phylogenetic.tree(
     );
 ```
 
-To control the polygon shape and size, users can modify the `polygon.shape` and `polygon.width` parameters. The `colour.scheme` parameter can be used to specify a colour palette for the polygons. When a single colour is specified, CEV will create a gradient from white to the specified colour and assign progrssively darker shades to each node.
+To control the polygon shape and size, users can modify the `polygon.shape` and `polygon.width` parameters. The `colour.scheme` parameter can be used to specify a colour palette for the polygons. When a single colour is specified, CEV will create a gradient from white to the specified colour and assign progressively darker shades to each node.
 
 ```{r, fig.height=4}
 CP.tree <- create.phylogenetic.tree(
@@ -224,6 +222,8 @@ spread.tree <- create.phylogenetic.tree(spread.tree.input);
 
 ## Ex. 2.2: Node Angles
 Alternative, an `angle` column can be specified to manually set the angle of each node. Angels are specified in degrees, where 0 points opposite from the parent edge. Angles can be provided in radians when `use.radians = TRUE`.
+
+When `angle` and `spread` are both specified, `angle` will take precedence.
 
 ```{r node-angle}
 angle.input <- complex.tree.input;
@@ -434,5 +434,84 @@ save.tree <- create.phylogenetic.tree(
     width = 3,
     height = 4,
     bg = 'transparent'
+    );
+```
+
+# CCF Distribution Visualization
+
+## Input SNV-to-subclone Assignment Data
+The input data frame for visualizing CCF distribution should contain the following columns:
+- `ID`: Sample identifier
+- `SNV.id`: Unique SNV identifier; typically in the format `chr_pos_ref_alt`
+- `CCF`: Cancer cell fraction (CCF) of the SNV in the sample
+- `clone.id`: Unique identifier for the subclone where the SNV is assigned to
+
+```{r}
+load('data/SNV.rda');
+```
+
+```{r echo=F}
+knitr::kable(snv[1:5, c('ID', 'SNV.id', 'CCF', 'clone.id')], caption = 'SNV CCF Data');
+```
+
+## Ex. 7.1: CCF Distribution Heatmap
+The `create.ccf.heatmap` function is a wrapper for `BBoutrosLab.plotting.general::create.heatmap`, which creates a heatmap of the SNV CCF distribution across multiple samples. The input must be a 2D array containing CCF values, where each row represents an SNV and each column represents a sample. Users can use the `data.frame.to.array` function to convert the input data frame to the required array format.
+
+```{r fig.height=5, fig.width=7}
+ccf.array <- data.frame.to.array(snv);
+create.ccf.heatmap(
+    ccf.array,
+    print.colour.key = TRUE,
+    colourkey.cex = 1.5,
+    xaxis.cex = 0
+    );
+```
+
+## Ex. 7.2: CCF Distribution Across subclones
+To visualize the CCF distribution across subclones, the `create.cluster.heatmap` function can be used. This function creates a heatmap of the SNV CCF values, ordered based on the cluster they are assigned to. To limit CCF values to a certain range, the `ccf.limits` parameter can be used.
+
+```{r fig.height=7, fig.width=11}
+create.cluster.heatmap(
+    snv,
+    ccf.limits = c(0, 1)
+    );
+```
+
+## Ex. 7.3: Summary of CCF Distribution
+The `create.ccf.summary.heatmap` function creates a summary plot of the CCF distribution across samples. The plot shows the median CCF values for each sample and subclone, as well as the number of unique SNVs detected in a patien and assigned to each subclone. To specify an order for the samples and subclones, the `sample.order` and `clone.order` parameters can be used.
+
+```{r fig.height=7, fig.width=11}
+# Calculate median CCF per sample
+median.ccf <- aggregate(CCF ~ ID + clone.id, data = snv, FUN = median);
+names(median.ccf)[names(median.ccf) == 'CCF'] <- 'median.ccf.per.sample';
+snv <- merge(snv, median.ccf, by = c('ID', 'clone.id'));
+
+create.ccf.summary.heatmap(
+    snv,
+    ccf.limits = c(0, 1),
+    clone.order = levels(snv$clone.id),
+    sample.order = levels(snv$ID)
+    );
+```
+
+## Ex. 7.4: Clone-Genome Distribution Plot
+To survey the genome-wide distribution of SNVs across subclones, the `create.clone.genome.distribution.plot` function can be used. In the scatterplot, each point is an SNV and is coloured based on the subclone it is assigned to, which is also visualized as a density plot in the bottom plot.
+
+Legend position can be defined using the `legend.x` and `legend.y` parameters. By default legends are plotted inside the plot area. To move the legend to the right side (outside) the plot area, set `legend.x` to a value greater than 1.
+
+```{r fig.height=7, fig.width=25}
+# Subset for clone size > 10
+clone.nsnv <- aggregate(
+    SNV.id ~ clone.id,
+    data = snv,
+    FUN = function(x) length(unique(x))
+    );
+large.clone <- clone.nsnv[clone.nsnv$SNV.id > 10, 'clone.id'];
+
+sub.snv <- snv[snv$clone.id %in% large.clone, ];
+sub.snv$clone.id <- factor(sub.snv$clone.id, levels = large.clone);
+create.clone.genome.distribution.plot(
+    sub.snv,
+    legend.x = 1.1
     );
 ```
