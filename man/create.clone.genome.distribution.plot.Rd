@@ -39,7 +39,7 @@ This function preprocesses the input data frame, extracts chromosome information
 
 \examples{
 setseed(123);
-load(file.path(system.file('data', package = 'CancerEvolutionVisualization'), 'SNV.Rda'));
+load(file.path(system.file('data', package = 'CancerEvolutionVisualization'), 'SNV.rda'));
 
 create.clone.genome.distribution.plot(snv);
 
