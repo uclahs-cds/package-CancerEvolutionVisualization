@@ -14,7 +14,7 @@ vignette: >
 
 ```{r, echo=F, message=F}
 library(CancerEvolutionVisualization);
-devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/cev-temp');
+
 knitr::opts_chunk$set(
     warning = FALSE,
     message = FALSE,
