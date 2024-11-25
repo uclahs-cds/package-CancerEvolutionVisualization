@@ -168,6 +168,16 @@ create.clone.genome.distribution.plot.per.sample <- function(
     height.scatter <- 0.5 * length(unique(sample.df$clone.id));
     total.height <- height.scatter + 5;
 
+    if (legend.x > 1) {
+        cluster.legend <- list(right = list(fun = cluster.legend));
+    } else {
+        cluster.legend <- list(inside = list(
+            fun = cluster.legend,
+            x = legend.x,
+            y = legend.y
+            ));
+        }
+
     return(BoutrosLab.plotting.general::create.multipanelplot(
         filename = save.plt,
         plot.objects = list(
@@ -177,11 +187,7 @@ create.clone.genome.distribution.plot.per.sample <- function(
         layout.width = 1,
         layout.height = 2,
         plot.objects.heights = c(height.scatter, 5) / total.height,
-        legend = list(inside = list(
-                fun = cluster.legend,
-                x = legend.x,
-                y = legend.y
-                )),
+        legend = cluster.legend,
         height = total.height,
         width = width,
         ...
