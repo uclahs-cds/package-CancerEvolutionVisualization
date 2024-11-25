@@ -10,12 +10,9 @@ vignette: >
 ---
 
 ```{r, echo=FALSE, message=FALSE}
-# rmarkdown::render('example.Rmd');
-
 library(knitr)
-# library(CancerEvolutionVisualization);
-devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/public-R-CancerEvolutionVisualization');
-# devtools::load_all('/hot/code/hwinata/GitHub/uclahs-cds/cev-temp');
+library(CancerEvolutionVisualization);
+
 opts_chunk$set(warning = FALSE, message = FALSE, fig.align = 'center');
 
 if (!dir.exists('figures')) dir.create('figures');
@@ -79,8 +76,8 @@ kable(
 
 ## 1B. CCF Heatmap
 ```{r ccf-hm}
-create.cluster.heatmap(
-    filename = 'figures/1B_CCF-heatmap.png',
+plt <- create.cluster.heatmap(
+    # filename = 'figures/1B_CCF-heatmap.png',
     DF = snv,
     ccf.limits = c(0, 1),
     clone.colours = clone.col,
@@ -355,7 +352,7 @@ dend.dt$mode <- 'dendrogram';
 dend.dt$spread <- 1.3;
 
 create.phylogenetic.tree(
-    filename = '2E_dendrogram-phylogeny.png',
+    filename = 'figures/2E_dendrogram-phylogeny.png',
     dend.dt,
     add.normal = TRUE,
     scale1 = 1.5,
