@@ -417,7 +417,7 @@ include_graphics('figures/2F_mixed-phylogeny.png');
 ## 2G. 500 node phylogentic tree
 ```{r phy-500}
 phy.500 <- phylogeny.500;
-# phy.500$label <- phy.500$child;
+phy.500$node.id <- phy.500$label;
 phy.500$length.1 <- 1;
 phy.500$length.2 <- 0;
 phy.500$mode <- 'dendrogram';
