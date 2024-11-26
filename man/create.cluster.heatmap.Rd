@@ -50,7 +50,7 @@ create.cluster.heatmap(
 
 \examples{
 setseed(123);
-load('SNV.rda');
+data('SNV.rda');
 
 create.cluster.heatmap(
     DF = snv,

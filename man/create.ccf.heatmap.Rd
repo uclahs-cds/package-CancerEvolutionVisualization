@@ -33,7 +33,7 @@ create.ccf.heatmap(
 \seealso{\code{\link[BoutrosLab.plotting.general]{create.heatmap}}}
 
 \examples{
-    load('SNV.rda');
+    data('SNV.rda');
 
     create.ccf.heatmap(
         x = snv,

@@ -64,7 +64,7 @@ create.ccf.summary.heatmap(
 
 \examples{
 setseed(123);
-load('SNV.rda');
+data('SNV.rda');
 
 snv <- do.call(rbind, lapply(split(snv, list(snv$ID, snv$clone.id)), function(df) {
     df$median.ccf.per.sample <- median(df$CCF)
