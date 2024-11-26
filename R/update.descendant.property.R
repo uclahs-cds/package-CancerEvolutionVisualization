@@ -1,4 +1,3 @@
-
 update.descendant.property <- function(
     x,
     parent.id,
@@ -15,12 +14,12 @@ update.descendant.property <- function(
         }
 
     # For each child row, add the column and call the function recursively
-    for (child.id in children$label) {
+    for (child.id in children$node.id) {
         # Add the column for the current child
         if (overwrite) {
-            x[x$label == child.id, property] <- value;
+            x[x$node.id == child.id, property] <- value;
         } else {
-            x[x$label == child.id & is.na(x[[property]]), property] <- value;
+            x[x$node.id == child.id & is.na(x[[property]]), property] <- value;
             }
 
         # Call the function recursively for the current child
