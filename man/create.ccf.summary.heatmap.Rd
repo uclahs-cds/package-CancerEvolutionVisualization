@@ -1,6 +1,6 @@
 \name{create.ccf.summary.heatmap}
 \alias{create.ccf.summary.heatmap}
-\title{Subclone Tree Plot}
+\title{CCF Summary Heatmap}
 \description{
 Creates a heatmap of cancer cell fraction (CCF) distribution across tumour samples with clone IDs as a covariate beneath the heatmap. Subplot parameters controls the appearance of the heatmap and barplots. See \code{BoutrosLab.plotting.general::create.barplot()} or \code{BoutrosLab.plotting.general::create.heatmap()}  for parameter description. Legend parameters are passed to \code{BoutrosLab.plotting.general::legend.grob()}.
 }
@@ -28,6 +28,7 @@ create.ccf.summary.heatmap(
     legend.x = 0.9,
     legend.y = 0.8,
     plot.objects.heights = c(0.3, 1),
+    add.median.text = FALSE,
     ...
     );
 }
@@ -53,6 +54,7 @@ create.ccf.summary.heatmap(
     \item{legend.x}{Legend parameter. Defaults to 0.9}
     \item{legend.y}{Legend parameter. Defaults to 0.8}
     \item{plot.objects.heights}{If \code{clone.colours} is specified, this must be an array of length 3. Defaults to \code{c(0.3, 1)}. See BoutrosLab.plotting.general::create.multipanelplot()}
+    \item{add.median.text}{If \code{TRUE}, median CCF values will be added to the heatmap. Defaults to \code{FALSE}}
     \item{...}{Pass through argument. See BoutrosLab.plotting.general::create.multipanelplot() for further details.}
 
 }

@@ -1,6 +1,6 @@
 \name{create.ccf.heatmap}
 \alias{create.ccf.heatmap}
-\title{Subclone Tree Plot}
+\title{CCF Distribution Heatmap}
 \description{
 Creates a heatmap of cancer cell fraction (CCF) distribution across tumour samples. The function is a wrapper around \code{BoutrosLab.plotting.general::create.heatmap()} with some changes in the default parameters. All parameter description are the same as in \code{BoutrosLab.plotting.general::create.heatmap()} except for \code{ccf.thres}.
 }
@@ -11,7 +11,7 @@ create.ccf.heatmap(
     clustering.method = 'complete',
     distance.method = 'euclidean',
     xaxis.lab = '',
-    xlab.label = 'Mutations',
+    xlab.label = 'SNVs',
     print.colour.key = FALSE,
     colour.scheme = c('white', 'blue'),
     ...
@@ -23,7 +23,7 @@ create.ccf.heatmap(
     \item{clustering.method}{Defaults to \dQuote{complete}.}
     \item{distance.method}{Defaults to \dQuote{euclidean}.}
     \item{xaxis.lab}{Defaults to an empty string.}
-    \item{xlab.label}{Defaults to \dQuote{Mutations}.}
+    \item{xlab.label}{Defaults to \dQuote{SNVs}.}
     \item{print.colour.key}{Defaults to \code{FALSE}.}
     \item{colour.scheme}{Defaults to \code{c('white', 'blue')}.}
     \item{...}{Pass through argument. See BoutrosLab.plotting.general::create.heatmap() for further details.}

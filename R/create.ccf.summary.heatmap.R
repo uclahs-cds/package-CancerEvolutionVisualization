@@ -20,6 +20,7 @@ create.ccf.summary.heatmap <- function(
     legend.x = 0.9,
     legend.y = 0.8,
     plot.objects.heights = c(0.3, 1),
+    add.median.text = FALSE,
     ...
     ) {
 
@@ -91,16 +92,16 @@ create.ccf.summary.heatmap <- function(
         xat = sample.xaxis$at
         );
 
-    hm <- BoutrosLab.plotting.general::create.heatmap(
+    hm.args <- list(
         x = arr,
         cluster.dimensions = 'none',
-        xlab.label = 'Clone ID',
+        xlab.label = 'Clone',
         xlab.cex = ifelse(is.null(clone.colours), subplot.xlab.cex, 0),
         xaxis.lab = rownames(arr),
         xaxis.cex = ifelse(is.null(clone.colours), subplot.xaxis.cex, 0),
         xaxis.fontface = subplot.xaxis.fontface,
         xaxis.rot = hm.xaxis.rot,
-        ylab.label = 'Sample ID',
+        ylab.label = 'Sample',
         ylab.cex = subplot.ylab.cex,
         yaxis.lab = colnames(arr),
         yaxis.cex = subplot.yaxis.cex,
@@ -109,11 +110,21 @@ create.ccf.summary.heatmap <- function(
         colour.scheme = hm.col.scheme
         );
 
+    if (add.median.text) {
+        contrast.thres <- (diff(range(arr)) * 0.8) + min(arr);
+        hm.args$cell.text <- round(arr[arr > 0], 2);
+        hm.args$row.pos <- which(arr > 0, arr.ind = TRUE)[,2];
+        hm.args$col.pos <- which(arr > 0, arr.ind = TRUE)[,1];
+        hm.args$text.col <- ifelse(arr > contrast.thres, 'white', 'black');
+        }
+
+    hm <- do.call(BoutrosLab.plotting.general::create.heatmap, hm.args);
+
     legend.ccf <- BoutrosLab.plotting.general::legend.grob(
         list(
             legend = list(
                 title = 'CCF',
-                labels = c(min(arr), rep('', legend.size), max(arr)),
+                labels = c(signif(min(arr), 2), rep('', legend.size), signif(max(arr), 2)),
                 colours = c('white', 'blue'),
                 border = 'black',
                 continuous = TRUE,
@@ -128,7 +139,7 @@ create.ccf.summary.heatmap <- function(
     if (!is.null(clone.colours)) {
         clone.cov <- BoutrosLab.plotting.general::create.heatmap(
             x = t(clone.colours[rownames(arr)]),
-            xlab.label = 'Clone ID',
+            xlab.label = 'Clone',
             xlab.cex = subplot.xlab.cex,
             xaxis.lab = rownames(arr),
             xaxis.cex = subplot.xaxis.cex,
@@ -143,8 +154,8 @@ create.ccf.summary.heatmap <- function(
         plot.list <- list(clone.bar, hm, sample.bar, clone.cov);
         layout.skip <- c(FALSE, TRUE, FALSE, FALSE, FALSE, TRUE);
         layout.height <- 3;
-        if (length(plot.object.heights) == 2 ) {
-            plot.objects.heights <- c(plot.object.heights, 0.2);
+        if (length(plot.objects.heights) == 2 ) {
+            plot.objects.heights <- c(plot.objects.heights, 0.2);
             }
     } else {
         plot.list <- list(clone.bar, hm,sample.bar);
