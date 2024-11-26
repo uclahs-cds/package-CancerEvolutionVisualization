@@ -61,3 +61,14 @@ create.ccf.summary.heatmap(
 \value{A `grob` object of the summary plot.}
 \author{Helena Winata}
 \seealso{\code{\link[BoutrosLab.plotting.general]{legend.grob}}, \code{\link[BoutrosLab.plotting.general]{create.multipanelplot}}, \code{\link[BoutrosLab.plotting.general]{create.heatmap}}}
+
+\examples{
+set.seed(123);
+snv <- do.call(rbind, lapply(split(snv, list(snv$ID, snv$clone.id)), function(df) {
+    df$median.ccf.per.sample <- median(df$CCF)
+    df$total.nsnv <- length(unique(df$SNV.id))
+    df
+    }));
+
+create.ccf.summary.heatmap(snv);
+}

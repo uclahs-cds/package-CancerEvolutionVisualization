@@ -281,7 +281,11 @@ add.tree.segs <- function(
             }
         }
 
-    dendrogram.ids <- clone.out$v[clone.out$v$mode == 'dendrogram', 'id'];
+    if (length(unique(clone.out$v$mode)) > 1 ) {
+        dendrogram.ids <- clone.out$v[clone.out$v$mode == 'dendrogram', 'parent'];
+    } else {
+        dendrogram.ids <- clone.out$v[clone.out$v$mode == 'dendrogram', 'id'];
+        }
     dendrogram.coords <- rbind(tree.segs1, tree.segs2);
     dendrogram.coords <- dendrogram.coords[dendrogram.coords$parent %in% dendrogram.ids, ];
 
