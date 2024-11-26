@@ -33,10 +33,9 @@ create.ccf.heatmap(
 \seealso{\code{\link[BoutrosLab.plotting.general]{create.heatmap}}}
 
 \examples{
-    data('SNV.rda');
-
-    create.ccf.heatmap(
-        x = snv,
-        cluster.dimension = 'columns'
-        );
+    set.seed(123);
+    arr <- matrix(rnorm(500), nrow = 100, ncol = 5);
+    rownames(arr) <- paste0('SNV.', 1:100);
+    colnames(arr) <- paste0('Sample.', 1:5);
+    create.ccf.heatmap(arr);
 }

@@ -49,8 +49,7 @@ create.cluster.heatmap(
 \seealso{\code{\link{create.ccf.heatmap}}, \code{\link[BoutrosLab.plotting.general]{create.heatmap}}}
 
 \examples{
-setseed(123);
-data('SNV.rda');
+set.seed(123);
 
 create.cluster.heatmap(
     DF = snv,

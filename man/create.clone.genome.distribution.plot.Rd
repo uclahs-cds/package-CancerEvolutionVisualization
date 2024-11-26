@@ -38,9 +38,6 @@ This function preprocesses the input data frame, extracts chromosome information
 \seealso{\code{\link[BoutrosLab.plotting.general]{legend.grob}}, \code{\link[BoutrosLab.plotting.general]{create.multipanelplot}}, \code{\link[BoutrosLab.plotting.general]{create.scatterplot}}, \code{\link[BoutrosLab.plotting.general]{create.densityplot}}}
 
 \examples{
-setseed(123);
-data('SNV.rda');
-
+set.seed(123);
 create.clone.genome.distribution.plot(snv);
-
 }
