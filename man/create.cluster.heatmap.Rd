@@ -50,7 +50,7 @@ create.cluster.heatmap(
 
 \examples{
 setseed(123);
-load(file.path(system.file('data', package = 'CancerEvolutionVisualization'), 'SNV.rda'));
+load('SNV.rda');
 
 create.cluster.heatmap(
     DF = snv,

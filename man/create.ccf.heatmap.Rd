@@ -33,7 +33,7 @@ create.ccf.heatmap(
 \seealso{\code{\link[BoutrosLab.plotting.general]{create.heatmap}}}
 
 \examples{
-    load(file.path(system.file('data', package = 'CancerEvolutionVisualization'), 'SNV.rda'));
+    load('../vignettes/data/SNV.rda');
 
     create.ccf.heatmap(
         x = snv,
