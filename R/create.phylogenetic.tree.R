@@ -11,7 +11,10 @@ create.phylogenetic.tree <- function(
 
     if ('node.id' %in% colnames(tree)) {
         rownames(tree) <- tree$node.id;
-        }
+         if (!'label' %in% colnames(tree)) {
+            tree$label <- tree$node.id;
+            }
+       }
 
     plt <- SRCGrob(
         tree,
