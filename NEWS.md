@@ -9,7 +9,6 @@
 * Node-by-node control of node size
 * Aesthetic changes for heatmap and clone-genome distribution plot
 * Add parameters to specify polygon shape, width, color, and transparency (alpha).
-* Add parameters to specify polygon shape and width.
 * Add option to use scale bars instead of y-axes.
 * Wrapper function for `SRCgrob` to automatically save plots to file
 * Add option to annotate the CCF summary heatmap with the cell values.
@@ -25,8 +24,6 @@
 * Set default parameters for heatmaps, defaulting to BPG defaults unless necessary
 * Improved default node style
 * Define color scheme with a single value, automatically generating other shades.
-* More control of fish-plot polygon visual style (shape, color, alpha) specified in the tree input `data.frame`.
-* Report the number of SNVs per clone in the legend for the clone-genome distribution plot.
 
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.
