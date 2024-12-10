@@ -1,10 +1,11 @@
 ---
-title: "User Guide"
-author:
-- name: 'Dan Knight'
-  email: danknight@mednet.ucla.edu
+title: 'CEV User Guide'
+author: 'Dan Knight, Helena Winata'
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    toc: true
+    number_sections: false
 vignette: > 
   %\VignetteIndexEntry{User Guide}
   %\VignetteEngine{knitr::rmarkdown}
@@ -13,147 +14,273 @@ vignette: >
 
 ```{r, echo=F, message=F}
 library(CancerEvolutionVisualization);
+
+knitr::opts_chunk$set(
+    warning = FALSE,
+    message = FALSE,
+    fig.align = 'center',
+    fig.height = 3.5,
+    collapse = TRUE
+    );
+
+# rmarkdown::render('UserGuide.Rmd');
 ```
 
 # Introduction
-CancerEvolutionVisualization (CEV) creates publication quality phylogenetic tree plots. For simple plots,
-this package will handle most settings right out of the box. However, more complex
-plots may require some trial and error to achieve the right arrangement of nodes
-and branches.
+CancerEvolutionVisualization (CEV) creates customizable, publication quality plots for representing tumour evolution data. This guide will focus on phylogentic tree visulaization using CEV. For simple plots, this package will handle most settings right out of the box. However, more complex plots may require some trial and error to achieve the right arrangement of nodes and branches.
 
-This guide will show best practices for creating plots, as well as examples
-of common use cases and tips for refining plot settings.
+This guide will show best practices for creating plots, as well as examples of common use cases and tips for refining plot settings.
 
+## Installation
+### CRAN (recommended)
+To install the latest version from CRAN, run the following command in R:
+```{r eval=FALSE}
+install.packages('CancerEvolutionVisualization', dependencies = TRUE);
+library(CancerEvolutionVisualization);
+```
 
-# Input Data
+### GitHub
+To install the main branch version from GitHub, run the following command in R:
+```{r eval=FALSE}
+devtools::install_github('uclahs-cds/public-R-CancerEvolutionVisualization', ref = 'main');
+library(CancerEvolutionVisualization);
+```
+To install from a specific branch, replace `main` with the branch name.
+
+# Basic Phylogenetic Tree Visualization
+
+## Input Phylogenetic Data
 There are many methods for determining subpopulations within genomic data, and 
 you should be free to use whatever method you prefer for a given dataset. This
 package only handles visualization - not analysis. Therefore, data must be prepared
 and formatted before being passed to any CEV functions.
 
-## Tree Dataframe
-This is the primary source of data for a plot. It defines the tree's structure
-of parent and child nodes. It also provides information about the number of
-mutations at each node.
-
-
-### Ex. 1.1: Parent Data
-```{r echo=F}
+The input for phylogenetic tree visualization is a data frame where each row defines a parent-child relationship between 2 subclones. To load the data required for this user guide, run the following code:
+```{r load-data}
 load('data/simple.example.Rda');
 load('data/complex.example.Rda');
 ```
 
-The simplest input format is a column containing the parent node of each
-individual node. (A node will only have one parent.) The root node will not have
-a parent, so a value of `NA` is used.
+The `simple.example` contains an example of a simple tree with 4 nodes while the `complex.example` contains a more complex tree with 25 nodes. Both data frames contain a `tree` data frame and the `simple.example` also contains a `text` dataframe. The `tree` component contains the tree data, while the `text` component contains the text annotations.
 
-```{r echo=F}
+### Simple Example
+The `simple.example` tree data frame contains informationof the tree structure as well as aesthetic node-by-node customization settings (colours, edge type, etc.). The `text` data frame contains text annotations for each node.
+```{r simple-example, echo=F}
+knitr::kable(simple.example$tree, caption = 'Simple Example Tree');
+knitr::kable(simple.example$text, caption = 'Simple Example Text', format = 'html', table.attr = 'style="width: 40%;"');
+```
+
+## Ex. 1.1: Minimal Tree
+The simplest input format is a column containing the parent node of each individual node. By default, the row index is assigned as `node.id`. Each node is restricted to one parent. The root node will not have a parent, so a value of `NA` is used. To plot the tree, we can use the `SRCGrob` function. This function will return a `grob` object that can be passed to `grid.draw` to render the plot.Alternatively, we provided a wrapper function `create.phylogenetic.tree` that will automatically render the plot or save the plot into a TIFF, PNG, PDF or SVG file.
+```{r}
 parent.only <- data.frame(simple.example$tree[, 'parent', drop = FALSE]);
-
-knitr::kable(
-    parent.only,
-    col.names = c(colnames(simple.example$tree)[1]),
-    row.names = TRUE
-    );
-```
-
-```{r, fig.show='hide'}
 parent.only.tree <- SRCGrob(parent.only);
-```
-
-```{r echo=F}
 grid.draw(parent.only.tree);
 ```
 
-### Ex. 1.2: Branch Lengths
+## Ex. 1.2: Using `node.id`, `parent` and `label` columns
+With the minimal input, the tree will be rendered with numeric node labels, corresponding to the row index (default `node.id`). A `node.id` column can be included in the input data frame if the IDs reported in the `parent` column does not correspong to row indexes.
 
-It's common to associate branch lengths with a the values of a particular variable 
-(for example, PGA or SNVs). Up to two branch lengths can be specified. Including a 
-`length1` and/or `length2` column will enable this branch scaling behaviour,
-and automatically add y-axis ticks and labels.
+```{r}
+node.id <- data.frame(
+    node.id = as.character(c(2, 5, 6, 1)),
+    parent = as.character(c(NA, 2, 2, 5))
+    );
+node.id.tree <- create.phylogenetic.tree(node.id);
+```
 
-Multiple length values can be used together. All columns whose names contain `length`
-will be used. (For example, `length1` and `snv.length` are both valid.) Multiple 
-columns will result in multiple (distinctly coloured) parallel lines. Any branch 
-length conflicts will be resolved automatically. For each branch, the next node
-will be placed at the end of the longest line.
+By default the `node.id` will be used to label the nodes. To customize node labels, a `label` column can be included in the input data frame to override the `node.id` values.
 
-```{r echo=F}
-branch.lengths <- simple.example$tree[, 1:3];
+```{r}
+node.id$label <- c('A', 'B', 'C', 'D');
+node.id.tree <- create.phylogenetic.tree(node.id);
+```
 
-knitr::kable(
+## Ex. 1.3: Branch Lengths
+It's common to associate branch lengths with a the values of a particular variable (for example, PGA or SNVs). Up to two branch lengths can be specified. Including a `length.1` and/or `length.2` column  in the tree dataframe will enable this branch scaling behaviour, and automatically adding a corresponding y-axis. Specifying multiple length columns will result in multiple (distinctly coloured) parallel lines. For each branch, the next node will be placed at the end of the longest line.
+
+```{r}
+branch.lengths <- simple.example$tree[, c('parent', 'length.1', 'length.2')];
+branch.lengths.tree <- create.phylogenetic.tree(branch.lengths);
+```
+
+## Ex. 1.4: Branch Scaling
+Branches are scaled automatically, but users can further scale each branch with the `scale1` and `scale2` parameters. These values scale each branch proportionally, so `scale1 = 1.5` would make the first set of branch lengths 50% longer.
+
+```{r}
+scaled.tree <- create.phylogenetic.tree(
     branch.lengths,
-    row.names = TRUE
+    scale1 = 1.5,
+    scale2 = 0.5
     );
 ```
 
-```{r, fig.show='hide'}
-branch.lengths.tree <- SRCGrob(branch.lengths);
+## Ex. 1.5: Y-Axis Labels
+The y-axis are automatically generated and lengths of different sizes are scaled to fit the plot. The y-axis labels can be customized by specifying the `yaxis1.label` and `yaxis2.label` parameters.
+
+```{r, fig.width=10}
+yaxis.tree <- create.phylogenetic.tree(
+    tree = branch.lengths,
+    yaxis1.label = 'PGA (%)',
+    yaxis2.label = 'Number of SNVs'
+    );
 ```
 
-```{r, fig.dim=c(5, 3.5)}
-grid.draw(branch.lengths.tree);
+## Ex. 1.6: Axis Tick Placement
+The default axis tick positions can be overridden with the `yat` parameter. This expects a list of vectors, each corresponding to the ticks on the y-axis.
+
+```{r}
+yaxis1.ticks <- c(10, 20, 30, 35, 40);
+yaxis2.ticks <- c(100, 250, 400);
+
+yat.tree <- create.phylogenetic.tree(
+    branch.lengths,
+    yat = list(
+        yaxis1.ticks,
+        yaxis2.ticks
+        )
+    );
 ```
 
-### Ex. 1.3: Complex Trees
+## Ex. 1.7: Scale Bars
+Alternatively, the y-axis can be replaced with a scale bar. The `scale.bar = TRUE` parameter will add a scale bar to the plot, replacing the y-axis. The scale bar will be placed at the top of the plot, and the y-axis will be removed. To further customize the scale bar postion and size, users can use the following parameters:
+- `scale.bar.coords` specifies the relative x and y coordinates of the scale bar. Both values should range from 0 to 1.
+- `scale.size.{1,2}` specifies the size of the scale bar if the default is unsatisfactory.
+- `scale.padding` specifies the padding between the scale bars if multiple scale bars are present.
 
+```{r}
+scalebar.tree <- create.phylogenetic.tree(
+    tree = branch.lengths,
+    yaxis1.label = 'PGA (%)',
+    yaxis2.label = 'Number of SNVs',
+    scale.bar = TRUE,
+    scale.bar.coords = c(0, 0.6),
+    scale.size.2 = 1000,
+    scale.padding = 4
+    );
+```
+
+## Ex. 1.8: Visualizing Cellular Prevalence
+A `CP` column containing the cellular prevalence or cancer cell fraction (CCF) of each subclone can be added to the input tree dataframe. These values typically range between 0 and 1, and the sum of all child nodes must not be larger than their parent node's value. Whether you are using 'CCF, 'CP' pr any other metric, make sure the x-axis label matches the metric used.
+
+```{r, fig.height=4}
+CP <- simple.example$tree[, c('parent', 'length.1', 'length.2', 'CP')];
+CP.default.tree <- create.phylogenetic.tree(
+    CP,
+    xaxis.label = 'CCF'
+    );
+```
+
+To control the polygon shape and size, users can modify the `polygon.shape` and `polygon.width` parameters. The `colour.scheme` parameter can be used to specify a colour palette for the polygons. When a single colour is specified, CEV will create a gradient from white to the specified colour and assign progressively darker shades to each node.
+
+```{r, fig.height=4}
+CP.tree <- create.phylogenetic.tree(
+    CP,
+    colour.scheme = 'steelblue',
+    polygon.shape = 2,
+    polygon.width = 2
+    );
+```
+
+Alternatively, the `colour.scheme` parameter can take a vector with length equal to the number of nodes. This will assign a unique colour to each node.
+```{r, fig.height=4}
+CP.tree2 <- create.phylogenetic.tree(
+    CP,
+    colour.scheme = c(NA, 'gray70', 'pink', 'maroon', 'steelblue')
+    );
+```
+
+# Customizing Node Arrangement {#node-spacing}
 CEV provides several methods for refining the spacing and arrangement of a tree's nodes. This is especially useful in complex trees, which often require more attention to avoid visual problems such as node collisions and uneven branch/level spacing. Here, we see a tree with many issues.
 
 Consider this example tree.
 
 ```{r complex-tree, echo=F, fig.height=3.5}
 complex.tree.input <- complex.example$tree;
-
-grid.draw(SRCGrob(complex.tree.input));
+complex.tree <- create.phylogenetic.tree(complex.tree.input);
 ```
 
-
-#### Node Spread
+## Ex. 2.1: Node Spread
 An optional `spread` column can be included in the input tree data.frame. Spread operates _relatively_ as a percentage of the initial angle calculation.
 
-- A `spread` value of 1 or `NA` will leave the spacing unchanged _unchanged_.
+- A `spread` value of 1 or `NA` will leave the spacing _unchanged_.
 - A `spread` value greater than 1 will _increase_ the space between nodes. For example, a `spread` value of 1.25 will spread the nodes 25% more.
 - A `spread` value less than 1 will _decrease_ the space between nodes. For example, a `spread` of 0.85 will spread the nodes 15% less.
 
 To create more space for the numerous nodes in the lower levels of our example tree, we can increase the spread of the nodes at the top level. To create even more room, we can _decrease_ the spread of some lower level nodes where appropriate.
 
-```{r node-spread, echo=F}
+```{r node-spread}
 spread.tree.input <- complex.tree.input;
+spread.tree.input$spread <- 1;
+spread.tree.input$spread[2:5] <- c(2, 2, 3, 2);
+spread.tree.input$spread[c(6:7, 17:18, 24:25)] <- 0.5;
+spread.tree.input$spread[c(8:10, 18:21)] <- 0.75;
+spread.tree.input$spread[c(11:16)] <- 1.75;
 
-spread.tree.input$spread <- NA;
-spread.tree.input$spread[2:5] <- c(1.25, 1.5, 2, 1.5);
-spread.tree.input$spread[c(6:7, 17:18, 19:20, 24:25)] <- 0.5;
-spread.tree.input$spread[c(8:10)] <- 0.75;
-
-knitr::kable(spread.tree.input[!is.na(spread.tree.input$spread) | is.na(spread.tree.input$parent), ]);
+spread.tree <- create.phylogenetic.tree(spread.tree.input);
 ```
 
-```{r, echo=F, fig.height=3.5}
-grid.draw(SRCGrob(spread.tree.input));
+## Ex. 2.2: Node Angles
+Alternative, an `angle` column can be specified to manually set the angle of each node. Angels are specified in degrees, where 0 points opposite from the parent edge. Angles can be provided in radians when `use.radians = TRUE`.
+
+When `angle` and `spread` are both specified, `angle` will take precedence.
+
+```{r node-angle}
+angle.input <- complex.tree.input;
+angle.input$angle <- NA;
+angle.input$angle[2:5] <- c(-80, -20, 30, 85);
+
+angle.tree <- create.phylogenetic.tree(angle.input);
 ```
 
-### Ex. 1.4: Styling the Tree
+# Phylogenetic Tree Modes
+CEV currently supports two modes for visualizing phylogenetic trees: radial and dendrogram. The default mode is radial, but users can switch to dendrogram mode by setting the `mode` column to `dendrogram`.
 
-CEV gives the user control over numerous visual aspects of the tree. By specifying optional columns and values in the tree input data.frame, the user has individual control of the colour, width, and line type of each node, label border, and edge.
+## Ex. 3.1: Radial Mode
+This mode spreads nodes out radially from the root node. Examples for plotting and customizing radial trees have been shown in the previous [sections]{#node-spacing}.
 
-#### Optional Style Columns
-| Style | Column |
-| --- | --- |
-| Node Colour | `node.col` |
-| Node Label Colour | `node.label.col` |
-| Node Border Colour | `border.col` |
-| Node Border Width | `border.width` |
-| Node Border Line Type | `border.type` |
-| | |
-| Edge Colour | `edge.col.1`, `edge.col.2` |
-| Edge Width | `edge.width.1`, `edge.width.2` |
-| Edge Line Type | `edge.type.1`, `edge.type.2` |
+## Ex. 3.2: Dendrogram Mode
+This mode is useful for trees with many nodes, as it avoids node collisions and can be easier to read.
 
-Default values replace missing columns and `NA` values, allowing node-by-node, and edge-by-edge control as needed. For sparsely defined values (for example, only specifying a single edge), it can be convenient to initialize a column with `NA`s, then manually assign specific nodes as needed.
+```{r, fig.width = 13}
+dendrogram.input <- complex.tree.input;
+dendrogram.input$mode <- 'dendrogram';
 
-#### Line Types
+dendrogram.tree <- create.phylogenetic.tree(dendrogram.input);
+```
+
+# Customizing Phylogenetic Tree Aesthetics
+CEV gives the user control over numerous visual aspects of the tree. By specifying optional columns and values in the tree input `data.frame`, the user has individual control of the colour, width, and line type of each node, label border, and edge.
+
+## Supported Aesthetic Input Columns
+
+<div style="width: 75%; margin: auto;">
+| Style | Column | Defaults |
+| --- | --- | --- |
+| Node presence | `draw.node` | `TRUE` |
+| Node Label | `label` | `node.id` column |
+| Node Colour | `node.col` | white |
+| Node Label Colour | `node.label.col` | black |
+| Node Border Colour | `border.col` | black |
+| Node Border Width | `border.width` | 1 |
+| Node Border Line Type | `border.type` | solid
+| Node Size | `node.size` | 1 |
+| | | |
+| Edge Colour | `edge.col.1`, `edge.col.2` | black, green |
+| Edge Width | `edge.width.1`, `edge.width.2` | 3, 3 |
+| Edge Line Type | `edge.type.1`, `edge.type.2` | solid, solid |
+| | | |
+| Connector Colour | `connector.col` | black |
+| Connector Width | `connector.width` | 3 |
+| Connector Line Type | `connector.type` | solid |
+</div>
+
+Default values replace missing columns and `NA` values, allowing node-by-node, and edge-by-edge control as needed. Connector parameters are set only when dendrogram mode is used. For sparsely defined values (for example, only specifying a single edge), it can be convenient to initialize a column with `NA`s, then manually assign specific nodes as needed.
+
+### Line Types
 Valid values for line type columns are based on lattice's values (with some additions and differences).
 
+<div style="width: 30%; margin: auto; text-align: center;">
 | Line Type |
 | --- |
 | `NA` |
@@ -164,249 +291,227 @@ Valid values for line type columns are based on lattice's values (with some addi
 | `'dotdash'` |
 | `'longdash'` |
 | `'twodash'` |
+</div>
 
-#### Styled Tree
-
-```{r echo=F}
+## Ex. 4.1: Styled Tree
+```{r}
 node.style <- simple.example$tree[, c(
-    'parent', 'length1', 'length2',
+    'parent', 'length.1', 'length.2',
     'node.col', 'node.label.col',
     'border.col', 'border.width', 'border.type',
     'edge.col.1', 'edge.type.1',
     'edge.col.2', 'edge.width.2'
     )];
 
-knitr::kable(
-    node.style[, !(colnames(node.style) %in% c('parent', 'length1', 'length2'))],
-    row.names = TRUE
-    );
+node.style.tree <- create.phylogenetic.tree(node.style);
 ```
 
-```{r, fig.show='hide'}
-node.style.tree <- SRCGrob(node.style);
-```
-
-```{r, fig.dim=c(5, 3.5), echo=F}
-grid.draw(node.style.tree);
-```
-
-### Ex. 1.5: Showing Cellular Prevalence
-
-A `cellular.prevalence` column can also be added. These values must range between 0 and 1, and the sum of all child nodes must not be larger than their parent node's value.
-
-```{r echo=F}
-CP <- simple.example$tree[, c('parent', 'length1', 'length2', 'CP')];
-
-knitr::kable(
-    CP,
-    row.names = TRUE
-    );
-```
-
-```{r, fig.show='hide'}
-CP.tree <- SRCGrob(CP);
-```
-
-```{r, echo=F}
-grid.draw(CP.tree);
-```
-
-### Ex. 1.6: Simplifying the Tree
-
+## Ex. 4.2: Nodeless Tree
 Complex trees may benefit from simpler visual styles. For example, there may not be room to render the node ellipses. CEV provides node-by-node control with the `draw.node` column.
 
-```{r echo=F}
-nodeless <- data.frame(
-    parent = c(
-        NA, 1, 2, 2, 2,
-        3, 3, 3,
-        4, 4, 4, 4, 4,
-        5, 5, 5, 5
-        ),
-    draw.node = TRUE,
-    spread = NA
-    );
-nodeless$spread[6:nrow(nodeless)] <- 0.6;
-nodeless$draw.node[c(2, 6:nrow(nodeless))] <- FALSE;
-
-knitr::kable(
-    nodeless[, c('parent', 'draw.node')],
-    row.names = TRUE
-    );
-```
-
-```{r, fig.show='hide'}
-nodeless.tree <- SRCGrob(nodeless);
+```{r}
+nodeless <- spread.tree.input;
+nodeless$draw.node <- TRUE;
+n <- table(nodeless$parent);
+nodeless$draw.node[nodeless$parent %in% n[n >= 4]] <- FALSE;
 ```
 
 ```{r, echo=F}
-grid.draw(nodeless.tree);
-```
-
-## Text Dataframe
-This secondary dataframe can be used to specify additional text corresponding to each 
-node.
-
-### Ex. 6: Node Text
-Each row must include a node ID for the text. Text will be stacked next to the 
-specified node.
-
-```{r echo=F}
-simple.text.data <- simple.example$text[, 1:2];
-
 knitr::kable(
-    simple.text.data,
-    col.names = colnames(simple.example$text)[1:2]
+    nodeless,
+    row.names = TRUE,
+    format = 'html',
+    table.attr = 'style="width: 40%;margin-left: auto; margin-right: auto;"'
     );
-```
-
-
-```{r, fig.show='hide'}
-simple.text.tree <- SRCGrob(parent.only, simple.text.data);
 ```
 
 ```{r}
-grid.draw(simple.text.tree);
+nodeless.tree <- create.phylogenetic.tree(nodeless);
 ```
 
-### Ex. 7: Specifying Colour and Style
+# Text Annotations
+Annotations can be added using a secondary dataframe to specify additional text corresponding to each node.
+
+## Ex. 5.1: Edge annotations
+Each row must include a node ID for the text. Text will be stacked next to the branch preceeding the specified node.
+
+```{r}
+simple.text.data <- simple.example$text[, c('name', 'node')];
+
+simple.text.tree <- create.phylogenetic.tree(
+    tree = parent.only,
+    node.text = simple.text.data
+    );
+```
+
+To specify the distance between edges and text, the `node.text.line.dist` parameter can be used.
+```{r}
+simple.text.tree2 <- create.phylogenetic.tree(
+    tree = parent.only,
+    node.text = simple.text.data[4:5, ],
+    node.text.line.dist = 0.5
+    );
+```
+
+## Ex. 5.2: Specifying Text Colour and Style
 - An optional `col` column can be included to specify the colour of each text.
 - A `fontface` column can be included to bold, italicize, etc. These values correspond to the standard R `fontface` values.
 - `NA` values in each column will default to `black` and `plain` respectively.
 
 ```{r echo=F}
-knitr::kable(
-    simple.example$text
-    );
-```
-
-```{r, fig.show='hide'}
-full.text.tree <- SRCGrob(parent.only, simple.example$text);
+knitr::kable(simple.example$text, caption = 'Simple Example Text', format = 'html', table.attr = 'style="width: 40%;"');
 ```
 
 ```{r}
-grid.draw(full.text.tree);
+full.text.tree <- create.phylogenetic.tree(
+    tree = parent.only,
+    node.text = simple.example$text
+    );
 ```
 
-# Plot Parameters
+# Additional Plot Parameters
 The default settings should produce a reasonable baseline plot, but many users will
 want more control over their plot. This section will highlight some of the most
-common parameters in `SRCGRob`.
+common parameters in `SRCGRob` that can be passed in through `create.phylogenetic.tree` .
 
-## Plot Size
+## Ex. 6.1: Adding the Normal Node
+The most recent common ancestor (MRCA) of all malignant subclones is a descendant of normal or germline cells. The normal node is added to the tree by setting the `add.normal` parameter to `TRUE`. The size of this node can be specified with the `normal.cex` parameter.
 
-### Ex. 8: Plot Width with Horizontal Padding
+```{r, fig.height = 4}
+normal.tree <- create.phylogenetic.tree(
+    parent.only,
+    add.normal = TRUE,
+    normal.cex = 2
+    );
+```
+
+## Ex. 6.2: Horizontal Padding Between Tree and Axes
 Some plots require more or less horizontal padding between the x-axes and the tree
 itself. The `horizontal.padding` parameter scales the default padding proportionally.
-For example, `horizontal.padding = -0.2` would reduce the padding by 20%.
+For example, `horizontal.padding = -0.8` would reduce the padding by 80%.
 
-```{r, fig.show='hide'}
-padding.tree <- SRCGrob(
+```{r}
+padding.tree <- create.phylogenetic.tree(
     branch.lengths,
+    yaxis1.label = 'PGA (%)',
+    yaxis2.label = 'Number of SNVs',
     horizontal.padding = -0.8
     );
 ```
 
-```{r, fig.dim=c(3.5, 3.5)}
-grid.draw(padding.tree);
-```
-
-### Ex. 9: Branch Scaling
-Branches are scaled automatically, but users can further scale each branch with
-the `scale1` and `scale2` parameters. These values scale each branch proportionally,
-so `scale1 = 1.1` would make the first set of branch lengths 10% longer.
-
-```{r, fig.show='hide'}
-scaled.tree <- SRCGrob(
-    branch.lengths,
-    scale1 = 1.5,
-    scale2 = 0.5
-    );
-```
-
-```{r, fig.height=4}
-grid.draw(scaled.tree);
-```
-
-
-### Ex. 10: Plot Title
+## Ex. 6.3: Plot Title
 The main title of the plot is referred to as `main` in plot parameters. `main` sets
 the title text, `main.cex` sets the font size, and `main.y` is used to move the main
 title up if more space is required for the plot.
 
-```{r, fig.show='hide'}
-title.tree <- SRCGrob(
+```{r}
+title.tree <- create.phylogenetic.tree(
     parent.only,
-    main = 'Example Plot'
+    main = 'Example Plot',
+    main.y = 0.1,
+    main.cex = 1
     );
 ```
 
-```{r, echo=F}
-title.tree$vp$y <- unit(0.8, 'npc');
-```
+## Ex. 6.4: Saving Plot to file
+The `create.phylogenetic.tree` function can save the plot to a file by specifying the `filename` parameter. The file type is determined by the file extension. Supported file types are TIFF, PNG, PDF, and SVG. If a file extension is not specified, or is not one of the supported formats, CEV will use the default TIFF format. Below are the availble parameters, some of which are only applicable to certain file formats.
 
-```{r, fig.height=3.5}
-grid.draw(title.tree);
-```
+<div style="width: 40%; margin: auto">
+| Parameters | Description | TIFF | PNG | PDF | SVG |
+| --- | --- | --- | --- | --- | --- |
+| `filename` | Path to output file | x | x | x | x |
+| `width` | Plot width | x | x | x | x |
+| `height` | Plot height | x | x | x | x |
+| `units` | Units for dimesions | x | x |  |  |
+| `res` | Resolution | x | x |  |  |
+| `bg` | Background colour | x | x |  |  |
+</div>
 
-## X-Axes
-A y-axis will be added automatically for each branch length column (the 
-left-sided axis corresponding to the first branch length column, and the right
-with the second length column).
-
-### Ex. 11: Y-Axis
-Ticks are placed automatically based on the plot size and the branch lengths. 
-
-### Ex. 12: Axis Title
-Axis titles are specified with the `yaxis1.label` and `yaxis2.label` parameters.
-
-```{r, fig.show='hide'}
-axis.title.tree <- SRCGrob(
+```{r save-plot}
+save.tree <- create.phylogenetic.tree(
     parent.only,
-    yaxis1.label = 'SNVs',
-    horizontal.padding = -0.6
+    filename = 'figures/simple.tree.png',
+    width = 3,
+    height = 4,
+    bg = 'transparent'
     );
 ```
 
-```{r, echo=F}
-axis.title.tree$vp$x <- unit(0.75, 'npc');
-```
+# CCF Distribution Visualization
+
+## Input SNV-to-subclone Assignment Data
+The input data frame for visualizing CCF distribution should contain the following columns:
+- `ID`: Sample identifier
+- `SNV.id`: Unique SNV identifier; typically in the format `chr_pos_ref_alt`
+- `CCF`: Cancer cell fraction (CCF) of the SNV in the sample
+- `clone.id`: Unique identifier for the subclone where the SNV is assigned to
 
 ```{r}
-grid.draw(axis.title.tree);
+load('data/SNV.rda');
 ```
 
-### Ex. 13: Axis Tick Placement
-The default axis tick positions can be overridden with the `yat` parameter. This
-expects a list of vectors, each corresponding to the ticks on an x-axis.
+```{r echo=F}
+knitr::kable(snv[1:5, c('ID', 'SNV.id', 'CCF', 'clone.id')], caption = 'SNV CCF Data');
+```
 
-```{r, fig.show='hide'}
-xaxis1.ticks <- c(10, 20, 30, 35, 40);
-xaxis2.ticks <- c(100, 250, 400);
+## Ex. 7.1: CCF Distribution Heatmap
+The `create.ccf.heatmap` function is a wrapper for `BBoutrosLab.plotting.general::create.heatmap`, which creates a heatmap of the SNV CCF distribution across multiple samples. The input must be a 2D array containing CCF values, where each row represents an SNV and each column represents a sample. Users can use the `data.frame.to.array` function to convert the input data frame to the required array format.
 
-yat.tree <- SRCGrob(
-    branch.lengths,
-    yat = list(
-        xaxis1.ticks,
-        xaxis2.ticks
-        ),
-    horizontal.padding = -0.4
+```{r fig.height=5, fig.width=7}
+ccf.array <- data.frame.to.array(snv);
+create.ccf.heatmap(
+    ccf.array,
+    print.colour.key = TRUE,
+    colourkey.cex = 1.5,
+    xaxis.cex = 0
     );
 ```
 
-```{r, fig.width=5}
-grid.draw(yat.tree);
-```
+## Ex. 7.2: CCF Distribution Across subclones
+To visualize the CCF distribution across subclones, the `create.cluster.heatmap` function can be used. This function creates a heatmap of the SNV CCF values, ordered based on the cluster they are assigned to. To limit CCF values to a certain range, the `ccf.limits` parameter can be used.
 
-### Ex. 14: Normal
-```{r, fig.show='hide'}
-normal.tree <- SRCGrob(
-    parent.only,
-    add.normal = TRUE
+```{r fig.height=7, fig.width=11}
+create.cluster.heatmap(
+    snv,
+    ccf.limits = c(0, 1)
     );
 ```
 
-```{r}
-grid.draw(normal.tree);
+## Ex. 7.3: Summary of CCF Distribution
+The `create.ccf.summary.heatmap` function creates a summary plot of the CCF distribution across samples. The plot shows the median CCF values for each sample and subclone, as well as the number of unique SNVs detected in a patien and assigned to each subclone. To specify an order for the samples and subclones, the `sample.order` and `clone.order` parameters can be used.
+
+```{r fig.height=7, fig.width=11}
+# Calculate median CCF per sample
+median.ccf <- aggregate(CCF ~ ID + clone.id, data = snv, FUN = median);
+names(median.ccf)[names(median.ccf) == 'CCF'] <- 'median.ccf.per.sample';
+snv <- merge(snv, median.ccf, by = c('ID', 'clone.id'));
+
+create.ccf.summary.heatmap(
+    snv,
+    ccf.limits = c(0, 1),
+    clone.order = levels(snv$clone.id),
+    sample.order = levels(snv$ID)
+    );
 ```
 
+## Ex. 7.4: Clone-Genome Distribution Plot
+To survey the genome-wide distribution of SNVs across subclones, the `create.clone.genome.distribution.plot` function can be used. In the scatterplot, each point is an SNV and is coloured based on the subclone it is assigned to, which is also visualized as a density plot in the bottom plot.
+
+Legend position can be defined using the `legend.x` and `legend.y` parameters. By default legends are plotted inside the plot area. To move the legend to the right side (outside) the plot area, set `legend.x` to a value greater than 1.
+
+```{r fig.height=7, fig.width=25}
+# Subset for clone size > 10
+clone.nsnv <- aggregate(
+    SNV.id ~ clone.id,
+    data = snv,
+    FUN = function(x) length(unique(x))
+    );
+large.clone <- clone.nsnv[clone.nsnv$SNV.id > 10, 'clone.id'];
+
+sub.snv <- snv[snv$clone.id %in% large.clone, ];
+sub.snv$clone.id <- factor(sub.snv$clone.id, levels = large.clone);
+create.clone.genome.distribution.plot(
+    sub.snv,
+    legend.x = 1.1
+    );
+```

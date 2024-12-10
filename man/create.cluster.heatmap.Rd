@@ -47,3 +47,13 @@ create.cluster.heatmap(
 \value{A `grob` object of the heatmap.}
 \author{Helena Winata}
 \seealso{\code{\link{create.ccf.heatmap}}, \code{\link[BoutrosLab.plotting.general]{create.heatmap}}}
+
+\examples{
+set.seed(123);
+
+create.cluster.heatmap(
+    DF = snv,
+    ccf.limits = c(0, 1),
+    ylab.label = 'Sample'
+    );
+}
