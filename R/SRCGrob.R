@@ -24,8 +24,6 @@ SRCGrob <- function(
     normal.cex = 1,
     label.nodes = TRUE,
     disable.polygons = FALSE,
-    polygon.shape = 3,
-    polygon.width = 1.2,
     length.from.node.edge = TRUE,
     size.units = 'npc',
     scale.bar = FALSE,
@@ -42,6 +40,8 @@ SRCGrob <- function(
 
     yat <- prep.yat(yat);
     yaxis.position <- get.y.axis.position(colnames(tree));
+
+    polygon.width <- 1.2;
 
     node.col <- 'white';
     if (length(colour.scheme) == 1) {
@@ -92,7 +92,6 @@ SRCGrob <- function(
         length.from.node.edge = length.from.node.edge,
         default.branch.width = 4,
         add.polygons = add.polygons,
-        sig.shape = polygon.shape,
         spread = spread,
         fixed.angle = fixed.angle,
         add.node.text = add.node.text,
