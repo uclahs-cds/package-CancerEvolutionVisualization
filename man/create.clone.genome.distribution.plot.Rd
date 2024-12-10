@@ -36,3 +36,8 @@ This function preprocesses the input data frame, extracts chromosome information
 \value{A `grob` object.}
 \author{Helena Winata, Selina Wu}
 \seealso{\code{\link[BoutrosLab.plotting.general]{legend.grob}}, \code{\link[BoutrosLab.plotting.general]{create.multipanelplot}}, \code{\link[BoutrosLab.plotting.general]{create.scatterplot}}, \code{\link[BoutrosLab.plotting.general]{create.densityplot}}}
+
+\examples{
+set.seed(123);
+create.clone.genome.distribution.plot(snv);
+}

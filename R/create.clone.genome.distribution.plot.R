@@ -168,6 +168,16 @@ create.clone.genome.distribution.plot.per.sample <- function(
     height.scatter <- 0.5 * length(unique(sample.df$clone.id));
     total.height <- height.scatter + 5;
 
+    if (legend.x > 1) {
+        cluster.legend <- list(right = list(fun = cluster.legend));
+    } else {
+        cluster.legend <- list(inside = list(
+            fun = cluster.legend,
+            x = legend.x,
+            y = legend.y
+            ));
+        }
+
     return(BoutrosLab.plotting.general::create.multipanelplot(
         filename = save.plt,
         plot.objects = list(
@@ -177,13 +187,31 @@ create.clone.genome.distribution.plot.per.sample <- function(
         layout.width = 1,
         layout.height = 2,
         plot.objects.heights = c(height.scatter, 5) / total.height,
-        legend = list(inside = list(
-                fun = cluster.legend,
-                x = legend.x,
-                y = legend.y
-                )),
+        legend = cluster.legend,
         height = total.height,
         width = width,
         ...
         ));
+    }
+
+get.genome.pos <- function(
+    snv.df,
+    genome.build = 'GRCh37',
+    chr.order = c(1:22, 'X', 'Y')
+    ) {
+
+    if (!(genome.build %in% c('GRCh37', 'GRCh38'))) {
+        stop('genome.build must be either GRCh37 or GRCh38')
+        }
+    assign('chr.info', get(genome.build));
+
+    snv.df$chr      <- droplevels(factor(snv.df$chr, levels = chr.order));
+    chr.info        <- chr.info[chr.info$chr %in% levels(snv.df$chr), c('chr', 'length')];
+    chr.info$chr    <- droplevels(factor(chr.info$chr, levels = chr.order));
+    chr.info$length <- as.numeric(chr.info$length);
+    chr.info$start  <- c(0, cumsum(chr.info$length[-length(chr.info$length)]));
+
+    snv.df$genome.pos <- chr.info[match(snv.df$chr, chr.info$chr), 'start'] + as.integer(snv.df$pos);
+
+    return(list('snv' = snv.df, 'chr.info' = chr.info));
     }

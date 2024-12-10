@@ -12,7 +12,7 @@ SRCGrob <- function(
     ylab.cex = 1.55,
     xaxis.cex = 1.45,
     yaxis.cex = 1.45,
-    xaxis.label = 'CP',
+    xaxis.label = 'CCF',
     label.cex = NA,
     node.text.cex = 0.85,
     main.y = NULL,
