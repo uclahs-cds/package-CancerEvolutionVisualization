@@ -21,7 +21,7 @@ create.cluster.heatmap(
     xaxis.cex = 1,
     xaxis.fontface = 'bold',
     y.spacing = 1,
-    colour.scheme = c('white', 'blue'),
+    polygon.colour.scheme = c('white', 'blue'),
     ...
     );
 }

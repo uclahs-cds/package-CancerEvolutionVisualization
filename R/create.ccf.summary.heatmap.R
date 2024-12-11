@@ -4,7 +4,7 @@ create.ccf.summary.heatmap <- function(
     median.col = 'median.ccf.per.sample',
     clone.order = NULL,
     sample.order = NULL,
-    hm.col.scheme = c('white', 'blue'),
+    colour.scheme = c('white', 'blue'),
     clone.colours = NULL,
     subplot.xlab.cex = 1.2,
     subplot.xaxis.cex = 1,
@@ -107,7 +107,7 @@ create.ccf.summary.heatmap <- function(
         yaxis.cex = subplot.yaxis.cex,
         yaxis.fontface = subplot.yaxis.fontface,
         print.colour.key = FALSE,
-        colour.scheme = hm.col.scheme
+        colour.scheme = colour.scheme
         );
 
     if (add.median.text) {

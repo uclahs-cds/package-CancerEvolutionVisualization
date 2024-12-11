@@ -192,7 +192,7 @@ create.phylogenetic.tree(
     filename = 'figures/1H_single-sample-phylogeny.png',
     single.dt,
     add.normal = TRUE,
-    polygon.width = 3,
+    polygon.scale = 2.5,
     height = 5,
     width = 3
     );
@@ -261,10 +261,10 @@ create.phylogenetic.tree(
     filename = 'figures/2B_annot-single-sample-phylogeny.png',
     single.dt,
     add.normal = TRUE,
-    colour.scheme = c(NA, single.dt$node.col),
+    polygon.colour.scheme = c(NA, single.dt$node.col),
     node.text = text.data,
     node.text.line.dist = 0.6,
-    polygon.width = 3,
+    polygon.scale = 2.5,
     height = 5,
     width = 3
     );
@@ -299,7 +299,7 @@ create.phylogenetic.tree(
     node.text.cex = 1.2,
     add.normal = TRUE,
     node.text = text.data,
-    polygon.width = 3,
+    polygon.scale = 2.5,
     height = 10,
     width = 6
     );

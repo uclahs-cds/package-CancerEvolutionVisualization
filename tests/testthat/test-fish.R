@@ -7,7 +7,7 @@ test_that(
             fish.example,
             SRCGrob(
                 fish.test.data$tree,
-                colour.scheme = fish.test.data$colour.scheme
+                polygon.colour.scheme = fish.test.data$colour.scheme
                 )
             ));
         });

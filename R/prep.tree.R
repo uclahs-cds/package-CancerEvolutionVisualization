@@ -2,7 +2,7 @@ prep.tree <- function(
     tree.df,
     text.df,
     bells = TRUE,
-    colour.scheme,
+    polygon.colour.scheme,
     use.radians = FALSE,
     default.node.colour = 'white'
     ) {
@@ -177,7 +177,7 @@ prep.tree <- function(
         }
     tree.df$polygon.col <- prep.column.values(
         tree.df$polygon.col,
-        default.values = colour.scheme[1:nrow(tree.df)],
+        default.values = polygon.colour.scheme[1:nrow(tree.df)],
         conversion.fun = as.character
         );
 

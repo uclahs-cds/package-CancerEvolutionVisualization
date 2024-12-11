@@ -26,7 +26,7 @@ SRCGrob(
     main.y = NULL,
     main.cex = 1.7,
     node.text.line.dist = 0.1,
-    colour.scheme = 'grey',
+    polygon.colour.scheme = 'grey',
     add.normal = FALSE,
     use.radians = FALSE,
     normal.cex = 1,

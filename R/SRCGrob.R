@@ -18,7 +18,8 @@ SRCGrob <- function(
     main.y = NULL,
     main.cex = 1.7,
     node.text.line.dist = 0.1,
-    colour.scheme = 'grey',
+    polygon.colour.scheme = 'grey',
+    polygon.scale = 1,
     add.normal = FALSE,
     use.radians = FALSE,
     normal.cex = 1,
@@ -41,17 +42,18 @@ SRCGrob <- function(
     yat <- prep.yat(yat);
     yaxis.position <- get.y.axis.position(colnames(tree));
 
-    polygon.width <- 1.2;
+    if (polygon.scale < 0) {
+        stop('"polygon.scale" must be positive.');
+        }
+    polygon.width <- 1.2 * polygon.scale;
 
     node.col <- 'white';
-    if (length(colour.scheme) == 1) {
-        colour.scheme <- BoutrosLab.plotting.general::colour.gradient(colour.scheme, nrow(tree));
-        }
+    colour.scheme <- gradient.color.scheme(polygon.colour.scheme, nrow(tree));
 
     inputs <- prep.tree(
         tree,
         node.text,
-        colour.scheme = colour.scheme,
+        polygon.colour.scheme = colour.scheme,
         use.radians = use.radians,
         default.node.colour = node.col
         );
