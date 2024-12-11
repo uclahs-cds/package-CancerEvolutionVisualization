@@ -13,7 +13,7 @@ create.ccf.heatmap(
     xaxis.lab = '',
     xlab.label = 'SNVs',
     print.colour.key = FALSE,
-    polygon.colour.scheme = c('white', 'blue'),
+    colour.scheme = c('white', 'blue'),
     ...
     )
 }

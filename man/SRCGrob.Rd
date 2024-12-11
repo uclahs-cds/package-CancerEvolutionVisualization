@@ -26,14 +26,13 @@ SRCGrob(
     main.y = NULL,
     main.cex = 1.7,
     node.text.line.dist = 0.1,
-    polygon.colour.scheme = 'grey',
     add.normal = FALSE,
     use.radians = FALSE,
     normal.cex = 1,
     label.nodes = TRUE,
     disable.polygons = FALSE,
-    polygon.shape = 3,
-    polygon.width = 1.2,
+    polygon.colour.scheme = 'grey',
+    polygon.scale = 1,
     length.from.node.edge = TRUE,
     size.units = 'npc',
     scale.bar = FALSE,
@@ -76,17 +75,13 @@ SRCGrob(
     \item{node.text.line.dist}{
     Distance between node text and tree branches (as a value between 0 and 1)
     }
-    \item{colour.scheme}{Vector of colour values to be used for CCF polygons}
     \item{add.normal}{Adds a normal}
     \item{use.radians}{Unit to be used for 'angle' column (degrees or radians)}
     \item{normal.cex}{Font size within the normal 'box'}
     \item{label.nodes}{Enable/disable node labels}
     \item{disable.polygons}{Disables CCF polygon drawing (even when CCF values are provided)}
-    \item{polygon.shape}{
-    Changes the shape of the CCF shading.
-    Lower values are smoother.
-    }
-    \item{polygon.width}{Width of the CCF shading}
+    \item{polygon.colour.scheme}{Vector of colour values to be used for CCF polygons. Creates a gradient color scheme.}
+    \item{polygon.scale}{Multiplier to scale CCF polygons (must be positive).}
     \item{length.from.node.edge}{
     Sets the branch length to be calculated from the edge of the node instead of the centre
     }
