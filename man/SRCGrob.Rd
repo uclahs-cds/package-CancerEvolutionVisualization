@@ -26,13 +26,13 @@ SRCGrob(
     main.y = NULL,
     main.cex = 1.7,
     node.text.line.dist = 0.1,
+    polygon.colour.scheme = 'grey',
+    polygon.scale = 1,
     add.normal = FALSE,
     use.radians = FALSE,
     normal.cex = 1,
     label.nodes = TRUE,
     disable.polygons = FALSE,
-    polygon.colour.scheme = 'grey',
-    polygon.scale = 1,
     length.from.node.edge = TRUE,
     size.units = 'npc',
     scale.bar = FALSE,
@@ -40,7 +40,6 @@ SRCGrob(
     scale.size.1 = NA,
     scale.size.2 = NA,
     scale.padding = 1
-
     );
 }
 \arguments{
