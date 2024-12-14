@@ -172,23 +172,45 @@ CP.default.tree <- create.phylogenetic.tree(
     );
 ```
 
-To control the overall scale of the polygons, users can modify the `polygon.width` parameters. The `colour.scheme` parameter can be used to specify a colour palette for the polygons. When a single colour is specified, CEV will create a gradient from white to the specified colour and assign progressively darker shades to each node.
+To control the overall scale of the polygons, users can modify the `polygon.scale` parameters. The `polygon.colour.scheme` parameter can be used to specify a colour palette for the polygons. When a single colour is provided, a light-to-dark gradient will be generated based on the given colour. If multiple colours are provided, the gradient will transition between the given colours. An optional `polygon.col` column can be included in the tree input to override the polygon colour scheme.
 
-```{r, fig.height=4}
-CP.tree <- create.phylogenetic.tree(
+```{r, include=F}
+steelblue.CP.tree <- create.phylogenetic.tree(
     CP,
     polygon.colour.scheme = 'steelblue',
-    polygon.scale = 2
+    horizontal.padding = -0.9,
+    main = 'Single Color Gradient'
+    );
+
+steelblue.purple.CP.tree <- create.phylogenetic.tree(
+    CP,
+    polygon.colour.scheme = c('steelblue', 'purple'),
+    horizontal.padding = -0.9,
+    main = 'Multicolor Gradient'
+    );
+
+override.CP <- simple.example$tree[, c('parent', 'length.1', 'length.2', 'CP', 'polygon.col')];
+override.CP.tree <- create.phylogenetic.tree(
+    override.CP,
+    main = 'Manual Override',
+    horizontal.padding = -0.9,
     );
 ```
 
-Alternatively, the `colour.scheme` parameter can take a vector with length equal to the number of nodes. This will assign a unique colour to each node.
-```{r, fig.height=4}
-CP.tree2 <- create.phylogenetic.tree(
-    CP,
-    polygon.colour.scheme = c('gray70', 'pink', 'maroon', 'steelblue')
+```{r, echo=F, fig.width=12}
+BoutrosLab.plotting.general::create.multipanelplot(
+    plot.objects = list(
+        steelblue.CP.tree,
+        steelblue.purple.CP.tree,
+        override.CP.tree
+        ),
+    layout.height = 1,
+    layout.width = 3,
+    x.spacing = 10,
+    resolution = 300
     );
 ```
+
 
 Polygon transparency can be specified in the tree input dataframe using the `polygon.alpha`
 
