@@ -6,7 +6,7 @@ test_that(
         prep.tree(
             tree.df = invalid.parent.tree,
             text.df = NULL,
-            colour.scheme = colours
+            polygon.colour.scheme = colours
             ),
         regexp = 'parent'
         );
@@ -23,7 +23,7 @@ test_that(
         prep.tree(
             tree.df = invalid.CP.tree,
             text.df = NULL,
-            colour.scheme = colours
+            polygon.colour.scheme = colours
             )$in.tree.df$ccf
         );
 
@@ -41,7 +41,7 @@ test_that(
         prep.tree(
             tree.df = invalid.CP.tree,
             text.df = NULL,
-            colour.scheme = colours
+            polygon.colour.scheme = colours
             ),
         regexp = 'CP'
         );
@@ -57,7 +57,7 @@ test_that(
         result <- prep.tree(
             tree.df,
             text.df = NULL,
-            colour.scheme = colours
+            polygon.colour.scheme = colours
             );
 
         result.edge.colours <- result$in.tree.df$edge.colour.1;
@@ -78,7 +78,7 @@ test_that(
         result <- prep.tree(
             tree.df,
             text.df = NULL,
-            colour.scheme = colours
+            polygon.colour.scheme = colours
             );
 
         result.edge.colours <- result$in.tree.df$edge.colour.2;
@@ -97,7 +97,7 @@ test_that(
         result <- prep.tree(
             tree.df,
             text.df = NULL,
-            colour.scheme = colours
+            polygon.colour.scheme = colours
             );
 
         result.edge.widths <- result$in.tree.df$edge.width.1;
@@ -118,7 +118,7 @@ test_that(
         result <- prep.tree(
             tree.df,
             text.df = NULL,
-            colour.scheme = colours
+            polygon.colour.scheme = colours
             );
 
         result.edge.widths <- result$in.tree.df$edge.width.2;
@@ -137,7 +137,7 @@ test_that(
         result <- prep.tree(
             tree.df,
             text.df = NULL,
-            colour.scheme = colours
+            polygon.colour.scheme = colours
             );
 
         result.edge.linetypes <- result$in.tree.df$edge.type.1;
@@ -158,7 +158,7 @@ test_that(
         result <- prep.tree(
             tree.df,
             text.df = NULL,
-            colour.scheme = colours
+            polygon.colour.scheme = colours
             );
 
         result.edge.linetypes <- result$in.tree.df$edge.type.2;

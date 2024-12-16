@@ -12,7 +12,6 @@ make.clone.tree.grobs <- function(
     seg2.col,
     cluster.list,
     add.polygons,
-    sig.shape,
     spread,
     fixed.angle,
     add.node.text,
@@ -106,7 +105,6 @@ make.clone.tree.grobs <- function(
         extra.len,
         node.col,
         spread = spread,
-        sig.shape = sig.shape,
         fixed.angle = fixed.angle,
         add.polygons = add.polygons,
         no.ccf = no.ccf
