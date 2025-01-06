@@ -61,18 +61,11 @@ check.overlap <- function(
 
     node.text.xrange <- c(left, right);
 
-    node.segs <- adply(
-        tree.max.adjusted[, c('tip', 'parent', 'x', 'y')],
-        .margins = 1,
-        .fun = function(w) {
-            data.frame(
-                y0 = (w$y + node.radius),
-                y1 = (w$y - node.radius),
-                x0 = (w$x - node.radius),
-                x1 = (w$x + node.radius)
-                );
-            }
-        );
+    node.segs <- tree.max.adjusted[, c('tip', 'parent', 'x', 'y')];
+    node.segs$y0 <- tree.max.adjusted$y + node.radius;
+    node.segs$y1 <- tree.max.adjusted$y - node.radius;
+    node.segs$x0 <- tree.max.adjusted$x - node.radius;
+    node.segs$x1 <- tree.max.adjusted$x + node.radius;
 
     line.intercept <- logical(length = nrow(tree.max.adjusted));
     node.intercept <- logical(length = nrow(tree.max.adjusted));
@@ -220,7 +213,7 @@ position.node.text <- function(
                     #back computing the x position based on the intercept and the slope
                     xpos <- ifelse(
                         is.infinite(slope),
-                        yes = tree.max.adjusted$x0[s],
+                        yes = tree.max.adjusted$x1[s],
                         no = (ypos - intercept) / slope
                         );
 
@@ -503,105 +496,86 @@ add.text2 <- function(
     # Radius in native units
     node.radius <- node.radius / scale;
     node.text <- node.text[node.text$node %in% tree$tip, ];
-    node.list <- alply(
-        seq_len(nrow(tree)),
-        .margins = 1,
-        .fun = function(x) {
-            return(character())
+
+    node.list <- vector('list', nrow(tree));
+    node.text.col <- vector('list', nrow(tree));
+    node.text.fontface <- vector('list', nrow(tree));
+
+    # Loop to assign text to nodes
+    for (i in seq_len(nrow(node.text))) {
+        text.row <- node.text[i, ];
+        pos <- which(tree$tip == text.row$node);
+        text.value <- text.row$name;
+
+        # Check if the text contains an underscore and parse if necessary
+        if (length(grep('_', text.value)) > 0) {
+            text.split <- strsplit(text.value, split = '_')[[1]];
+            node.text.value <- text.split[1];
+            amp <- text.split[2];
+            call <- paste0(node.text.value, '^\'A', amp, '\'');
+            text.value <- parse(text = call);
             }
-        );
 
-    node.text.col <- node.list;
-    node.text.fontface <- node.list;
+        # Assign text value, color, and font face
+        node.list[[pos]] <- c(node.list[[pos]], text.value);
+        node.text.col[[pos]] <- c(node.text.col[[pos]], if (!is.na(text.row$col)) text.row$col else 'black');
+        node.text.fontface[[pos]] <- c(node.text.fontface[[pos]], if (!is.na(text.row$fontface)) text.row$fontface else 'plain');
+        }
 
-    a_ply(
-        seq_len(
-            nrow(node.text)),
-        .margins = 1,
-        .fun = function(x) {
-            text.row <- node.text[x, ];
-            pos <- which(tree$tip == text.row$node);
-            text.value <- text.row$name;
-
-            if (length(grep('_', text.value)) > 0) {
-                text.split <- strsplit(text.value, split = '_')[[1]];
-                node.text.value <- text.split[1];
-                amp <- text.split[2];
-                call <- paste0(node.text.value, '^\'A', amp, '\'');
-                text.value <- parse(text = call);
-                }
-
-            node.list[[pos]] <<- c(node.list[[pos]], text.value);
-
-            node.text.col[[pos]] <<- c(
-                node.text.col[[pos]],
-                if (!is.na(text.row$col)) text.row$col else 'black'
-                );
-
-            node.text.fontface[[pos]] <<- c(
-                node.text.fontface[[pos]],
-                if (!is.na(text.row$fontface)) text.row$fontface else 'plain'
-                );
-            }
-        );
-
-    tree.max <- adply(
+    tree.max <- apply(
         tree,
-        .margins = 1,
-        .fun = function(x) {
-            if (x$parent == -1) {
+        MARGIN = 1,
+        FUN = function(x) {
+            if (x['parent'] == -1) {
                 basex <- 0;
                 basey <- 0;
             } else {
-                basex <- v$x[v$id == x$parent];
-                basey <- v$y[v$id == x$parent];
+                basex <- v$x[v$id == x['parent']];
+                basey <- v$y[v$id == x['parent']];
                 }
 
-            tipx <- v$x[v$id == x$tip];
-            tipy <- v$y[v$id == x$tip];
+            tipx <- v$x[v$id == x['tip']];
+            tipy <- v$y[v$id == x['tip']];
+            mode <- v$mode[v$id == x['tip']];
+
+            return(data.frame(basex, basey, tipx, tipy, mode));
+            }
+        );
+    tree.max <- do.call('rbind', tree.max);
+    rownames(tree.max) <- rownames(tree);
+    tree.max <- cbind(tree, tree.max);
+
+    tree.max.adjusted <- as.data.frame(do.call(rbind, lapply(
+        1:nrow(tree.max),
+        FUN = function(i) {
+            x <- tree.max[i, ];
+            if (x['mode'] == 'radial') {
+                angle <- x['angle'];
+            } else if (x['mode'] == 'dendrogram') {
+                angle <- 0;
+                x['basex'] <- x['tipx'];
+                }
+            # 1 if positive angle, -1 if negative (or 0 degrees)
+            angle.modifier <- (angle > 0) * 2 - 1;
+
+            basex <- x['basex'] + (angle.modifier * node.radius * sin(angle));
+            tipx  <- x['tipx']  - (angle.modifier * node.radius * sin(angle));
+            basey <- x['basey'] + (angle.modifier * node.radius * cos(angle));
+            tipy  <- x['tipy']  - (angle.modifier * node.radius * cos(angle));
 
             return(data.frame(basex, basey, tipx, tipy));
-            }
-        );
+            })));
+    tree.max.adjusted <- cbind(tree, tree.max.adjusted);
 
-    #the length of the visible line segments
-    tree.max.adjusted <- adply(
-        tree.max,
-        .margins = 1,
-        .fun = function(x) {
-            if (x$tipx == x$basex) {
-                #straight line
-                basex <- x$basex;
-                tipx <- x$tipx;
-                basey <- x$basey + node.radius;
-                tipy <- x$tipy - node.radius;
-            } else if (x$tipx > x$basex) {
-                basey <- x$basey + node.radius * cos(x$angle);
-                tipy <- x$tipy - node.radius * cos(x$angle);
-                basex <- x$basex + node.radius * sin(x$angle);
-                tipx <- x$tipx - node.radius * sin(x$angle);
-            } else if (x$tipx < x$basex) {
-                basey <- x$basey + node.radius * cos(x$angle);
-                tipy <- x$tipy - node.radius * cos(x$angle);
-                basex <- x$basex + node.radius * sin(x$angle);
-                tipx <- x$tipx - node.radius * sin(x$angle);
-                }
-            if (x$parent == -1) {
-                basex <- basey <- 0;
-                }
-
-            return(data.frame(basex,basey,tipx,tipy));
-            }
-        );
-
-    #push a viewport the same size as the final panel so we can do calculations based on absolute size units
+    # Push a viewport the same size as the final panel
+    # to perform calculations using absolute size units
     if (!is.null(clone.out)) {
         pushViewport(clone.out$vp);
     } else {
         pushViewport(viewport(
             height = unit(panel.height, 'inches'),
             name = 'ref',
-            width = unit(panel.width,'inches'),
+            width = unit(panel.width, 'inches'),
             xscale = xlims,
             yscale = c(ymax, -2)
             ));
@@ -646,7 +620,6 @@ add.text2 <- function(
             children = text.grob.gList,
             vp = make.plot.viewport(clone.out, clip = 'off')
             );
-
         return(text.tree);
         }
 
@@ -664,4 +637,4 @@ add.text2 <- function(
         );
 
     return(list(text.tree, tree.max.adjusted));
-	}
+    }

@@ -24,10 +24,10 @@ make.polygon <- function(
     y0,
     x1,
     x2,
+    sig.shape,
     wid = 1,
     len = 1,
     col = 'gray',
-    sig.shape = 4,
     beta.in = 3
     ) {
 
@@ -62,7 +62,6 @@ position.polygons <- function(
     x,
     y,
     len,
-    sig.shape = 4,
     beta.in = 3,
     branching = TRUE,
     fixed.angle = NULL,
@@ -75,6 +74,7 @@ position.polygons <- function(
 
 	# get the row of v that corresponds to the clone
 	vi <- v[i,];
+	sig.shape <- vi[['polygon.shape']];
 
 	if (!is.na(vi$parent) && vi$parent == -1 && nrow(v[v$parent == -1, ]) == 1) {
 	    # If root the clone extends the full width of the plot
@@ -238,7 +238,6 @@ get.clones <- function(
     y = 0,
     wid = 1.2,
     len = len,
-    sig.shape = 3,
     beta.in = 3,
     branching = FALSE,
     no.ccf = FALSE,
@@ -266,7 +265,6 @@ get.clones <- function(
             x = x,
             y = y,
             len = len,
-            sig.shape = sig.shape,
             beta.in = beta.in,
             branching = branching,
             no.ccf = no.ccf,
@@ -290,7 +288,6 @@ get.clones <- function(
 	                x = x,
 	                y = y,
 	                len = len,
-	                sig.shape = sig.shape,
 	                beta.in = beta.in + beta.add,
 	                branching = branching,
 	                no.ccf = no.ccf,
@@ -319,7 +316,6 @@ compute.clones <- function(
     extra.len = 1,
     tree = NULL,
     fixed.angle = NULL,
-    sig.shape = 3,
     beta.in = 3,
     branching = TRUE,
     no.ccf = FALSE,
@@ -331,10 +327,9 @@ compute.clones <- function(
 	v <- v[is.na(v$parent) | v$parent != -1, ];
 	v <- rbind(root, v);
 	v <- count.leaves.per.node(v);
-
 	if (no.ccf) {
-	    tree$angle <- if ((is.null(fixed.angle) && nrow(v) > 6) || any(table(v$parent) > 2)) {
-    		tau <- -(pi / 2.5);
+	    tree$angle <- if ((is.null(fixed.angle) && nrow(v) > 6) || any(table(v$parent) > 2) || any(v$mode == 'dendrogram')) {
+			tau <- -(pi / 2.5);
     		vi <- v[v$parent == -1, ];
     		calculate.angles.radial(v, tree, spread, abs(tau));
 	    } else {
@@ -362,7 +357,6 @@ compute.clones <- function(
 	    x = x,
 	    y = y,
 	    len = len,
-	    sig.shape = sig.shape,
 	    beta.in = beta.in,
 	    branching = branching,
 	    no.ccf = no.ccf,
@@ -380,7 +374,6 @@ compute.clones <- function(
              y = y,
              wid = wid,
              len = len,
-             sig.shape = sig.shape,
              beta.in = beta.in,
              branching = branching,
              no.ccf = no.ccf,
@@ -395,7 +388,6 @@ compute.clones <- function(
 	    x = x,
 	    y = y,
 	    len = len,
-	    sig.shape = sig.shape,
 	    beta.in = beta.in,
 	    branching = branching,
 	    no.ccf = no.ccf,

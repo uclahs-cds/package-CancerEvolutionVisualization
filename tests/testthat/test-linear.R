@@ -3,15 +3,21 @@ test_that(
         load('data/linear.plots.Rda');
         load('data/linear.data.Rda')
 
-        expect_true(compare.trees(
-            linear.example,
-            create.test.tree(
-                linear.test.data$tree,
-                linear.test.data$node.text,
-                'WHO003',
-                add.normal = TRUE,
-                horizontal.padding = -1
-                )
-            ));
+        result.tree <- SRCGrob(
+            linear.test.data$tree,
+            linear.test.data$node.text,
+            main = 'WHO003',
+            node.text.cex = 0.85,
+            scale1 = 0.9,
+            yaxis1.label = 'PGA',
+            yaxis2.label = 'SNV',
+            xaxis.label = 'CP',
+            main.cex = 1.55,
+            main.y = 0.3,
+            size.units = 'inches',
+            horizontal.padding = -1,
+            add.normal = TRUE,
+            );
+        expect_true(compare.trees(linear.example, result.tree));
         }
     );

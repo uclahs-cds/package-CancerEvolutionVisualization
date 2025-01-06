@@ -12,6 +12,9 @@ create.clone.genome.distribution.plot(
     clone.colours = NULL,
     filename = NULL,
     multi.sample = FALSE,
+    alpha = 0.25,
+    legend.x = 0.1,
+    legend.y = 0.55,
     ...
     )
 }
@@ -22,6 +25,9 @@ create.clone.genome.distribution.plot(
     \item{clone.colours}{A named vector specifying the color to use for each clone. If \code{NULL}, colors will be automatically assigned.}
     \item{filename}{Directory or filepath to save the plot in. If \code{multi.sample = TRUE}, this must be a directory. if \code{multi.sample = FALSE}, this must be a filepath. If \code{NULL}, the plot will not be saved.}
     \item{multi.sample}{Logical indicating whether the input data contains multiple samples. Defaults to \code{FALSE}.}
+    \item{alpha}{Transparency level of the points in the scatter plot. Defaults to 0.25.}
+    \item{legend.x}{Legend parameter. Defaults to 0.1}
+    \item{legend.y}{Legend parameter. Defaults to 0.55}
     \item{...}{Additional arguments to be passed to \code{BoutrosLab.plotting.general::create.multipanelplot()}.}
 }
 \details{
@@ -29,4 +35,9 @@ This function preprocesses the input data frame, extracts chromosome information
 }
 \value{A `grob` object.}
 \author{Helena Winata, Selina Wu}
+\seealso{\code{\link[BoutrosLab.plotting.general]{legend.grob}}, \code{\link[BoutrosLab.plotting.general]{create.multipanelplot}}, \code{\link[BoutrosLab.plotting.general]{create.scatterplot}}, \code{\link[BoutrosLab.plotting.general]{create.densityplot}}}
 
+\examples{
+set.seed(123);
+create.clone.genome.distribution.plot(snv);
+}

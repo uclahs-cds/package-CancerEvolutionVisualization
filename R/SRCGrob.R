@@ -12,23 +12,26 @@ SRCGrob <- function(
     ylab.cex = 1.55,
     xaxis.cex = 1.45,
     yaxis.cex = 1.45,
-    xaxis.label = 'CP',
+    xaxis.label = 'CCF',
     label.cex = NA,
     node.text.cex = 0.85,
     main.y = NULL,
     main.cex = 1.7,
-    node.radius = 0.1,
     node.text.line.dist = 0.1,
-    colour.scheme = CancerEvolutionVisualization::colours,
-    draw.nodes = TRUE,
+    polygon.colour.scheme = 'grey',
+    polygon.scale = 1,
     add.normal = FALSE,
     use.radians = FALSE,
     normal.cex = 1,
-    sig.shape = 3,
     label.nodes = TRUE,
     disable.polygons = FALSE,
     length.from.node.edge = TRUE,
-    size.units = 'npc'
+    size.units = 'npc',
+    scale.bar = FALSE,
+    scale.bar.coords = c(0.5, 1),
+    scale.size.1 = NA,
+    scale.size.2 = NA,
+    scale.padding = 1
     ) {
 
     add.node.text <- !is.null(node.text);
@@ -39,21 +42,27 @@ SRCGrob <- function(
     yat <- prep.yat(yat);
     yaxis.position <- get.y.axis.position(colnames(tree));
 
-    node.col <- 'grey40';
+    if (polygon.scale < 0) {
+        stop('"polygon.scale" must be positive.');
+        }
+    polygon.width <- 1.2 * polygon.scale;
+
+    node.col <- 'white';
+    colour.scheme <- gradient.color.scheme(polygon.colour.scheme, nrow(tree));
 
     inputs <- prep.tree(
         tree,
         node.text,
-        colour.scheme = colour.scheme,
+        polygon.colour.scheme = colour.scheme,
         use.radians = use.radians,
         default.node.colour = node.col
         );
 
     fixed.angle <- pi / 6;
     min.width <- get.plot.width(horizontal.padding);
-    wid <- 1.2;
     spread <- 1;
     cluster.list <- NULL;
+    node.radius <- 0.1;
 
     axis.cex <- list(
         x = xaxis.cex,
@@ -81,11 +90,10 @@ SRCGrob <- function(
         scale1 = scale1,
         scale2 = scale2,
         yat = yat,
-        wid = wid,
+        wid = polygon.width,
         length.from.node.edge = length.from.node.edge,
         default.branch.width = 4,
         add.polygons = add.polygons,
-        sig.shape = sig.shape,
         spread = spread,
         fixed.angle = fixed.angle,
         add.node.text = add.node.text,
@@ -99,7 +107,6 @@ SRCGrob <- function(
         axis.cex = axis.cex,
         xaxis.label = xaxis.label,
         min.width = min.width,
-        draw.nodes = draw.nodes,
         label.nodes = label.nodes,
         node.col = node.col,
         label.cex = label.cex,
@@ -109,7 +116,12 @@ SRCGrob <- function(
         main = main,
         main.cex = main.cex,
         main.y = main.y,
-        size.units = size.units
+        size.units = size.units,
+        scale.bar = scale.bar,
+        scale.bar.coords = scale.bar.coords,
+        scale.size.1 = scale.size.1,
+        scale.size.2 = scale.size.2,
+        scale.padding = scale.padding
         );
 
     out.tree <- gTree(

@@ -20,75 +20,78 @@ SRCGrob(
     ylab.cex = 1.55,
     xaxis.cex = 1.45,
     yaxis.cex = 1.45,
-    xaxis.label = "CP",
+    xaxis.label = 'CCF',
     label.cex = NA,
     node.text.cex = 0.85,
     main.y = NULL,
     main.cex = 1.7,
-    node.radius = 0.1,
     node.text.line.dist = 0.1,
-    colour.scheme = CancerEvolutionVisualization::colours,
-    draw.nodes = TRUE,
+    polygon.colour.scheme = 'grey',
+    polygon.scale = 1,
     add.normal = FALSE,
     use.radians = FALSE,
     normal.cex = 1,
-    sig.shape = 3,
     label.nodes = TRUE,
     disable.polygons = FALSE,
     length.from.node.edge = TRUE,
-    size.units = "npc"
+    size.units = 'npc',
+    scale.bar = FALSE,
+    scale.bar.coords = c(0.5, 1),
+    scale.size.1 = NA,
+    scale.size.2 = NA,
+    scale.padding = 1
     );
 }
 \arguments{
-  \item{tree}{Tree structure data.frame}
-  \item{node.text}{Dataframe for text labels to be displayed next to nodes}
-  \item{main}{Main plot title}
-  \item{horizontal.padding}{
-  Increase/reduce the plot's horizontal padding proportionally.
-  A positive value will expand the padding, and a negative value will reduce it.
-  }
-  \item{scale1}{
-  Proportionally scale the values of the first branch length column in the tree input.
-  }
-  \item{scale2}{
-  Proportionally scale the values of the second branch length column in the tree input.
-  }
-  \item{yat}{
-  Specific values to be used for the y-axis ticks. A list is required, with each element
-  corresponding to an axis.
-  }
-  \item{yaxis1.label}{Text label for the first, leftmost y-axis}
-  \item{yaxis2.label}{Text label for the second, rightmost y-axis}
-  \item{xlab.cex}{Font size for the x-axis label}
-  \item{ylab.cex}{Font size for the y-axis labels}
-  \item{xaxis.cex}{Font size for the x-axis tick labels}
-  \item{yaxis.cex}{Font size for the y-axis tick labels}
-  \item{xaxis.label}{Text label for the x-axis}
-  \item{label.cex}{Font size for the node labels}
-  \item{node.text.cex}{Font size for the node text}
-  \item{main.y}{Move the main plot title position up or down}
-  \item{main.cex}{Font size for the main plot title}
-  \item{node.radius}{Node size}
-  \item{node.text.line.dist}{
-  Distance between node text and tree branches (as a value between 0 and 1)
-  }
-  \item{colour.scheme}{Vector of colour values to be used for CP polygons}
-  \item{draw.nodes}{Enable or disable drawing tree nodes}
-  \item{add.normal}{Adds a normal}
-  \item{use.radians}{Unit to be used for "angle" column (degrees or radians)}
-  \item{normal.cex}{Font size within the normal "box"}
-  \item{sig.shape}{
-  Changes the shape of the CP shading.
-  Lower values are smoother.
-  }
-  \item{label.nodes}{Enable/disable node labels}
-  \item{disable.polygons}{Disables CP polygon drawing (even when CP values are provided)}
-  \item{length.from.node.edge}{
-  Sets the branch length to be calculated from the edge of the node instead of the centre
-  }
-  \item{size.units}{Grid units to be used for all specific size/length parameters}
+    \item{tree}{Tree structure data.frame}
+    \item{node.text}{Dataframe for text labels to be displayed next to nodes}
+    \item{main}{Main plot title}
+    \item{horizontal.padding}{
+    Increase/reduce the plot's horizontal padding proportionally.
+    A positive value will expand the padding, and a negative value will reduce it.
+    }
+    \item{scale1}{
+    Proportionally scale the values of the first branch length column in the tree input.
+    }
+    \item{scale2}{
+    Proportionally scale the values of the second branch length column in the tree input.
+    }
+    \item{yat}{
+    Specific values to be used for the y-axis ticks. A list is required, with each element
+    corresponding to an axis.
+    }
+    \item{yaxis1.label}{Text label for the first, leftmost y-axis}
+    \item{yaxis2.label}{Text label for the second, rightmost y-axis}
+    \item{xlab.cex}{Font size for the x-axis label}
+    \item{ylab.cex}{Font size for the y-axis labels}
+    \item{xaxis.cex}{Font size for the x-axis tick labels}
+    \item{yaxis.cex}{Font size for the y-axis tick labels}
+    \item{xaxis.label}{Text label for the x-axis}
+    \item{label.cex}{Font size for the node labels}
+    \item{node.text.cex}{Font size for the node text}
+    \item{main.y}{Move the main plot title position up or down}
+    \item{main.cex}{Font size for the main plot title}
+    \item{node.text.line.dist}{
+    Distance between node text and tree branches (as a value between 0 and 1)
+    }
+    \item{add.normal}{Adds a normal}
+    \item{use.radians}{Unit to be used for 'angle' column (degrees or radians)}
+    \item{normal.cex}{Font size within the normal 'box'}
+    \item{label.nodes}{Enable/disable node labels}
+    \item{disable.polygons}{Disables CCF polygon drawing (even when CCF values are provided)}
+    \item{polygon.colour.scheme}{Vector of colour values to be used for CCF polygons. Creates a gradient color scheme.}
+    \item{polygon.scale}{Multiplier to scale CCF polygons (must be positive).}
+    \item{length.from.node.edge}{
+    Sets the branch length to be calculated from the edge of the node instead of the centre
+    }
+    \item{size.units}{Grid units to be used for all specific size/length parameters}
+    \item{scale.bar}{Set to \code{TRUE} to add a scale bar instead of y-axis}
+    \item{scale.bar.coords}{Coordinates for the scale bar placement \code{c(x.pos, y.pos)}}
+    \item{scale.size.1}{Overide size of the first scale bar}
+    \item{scale.size.2}{Overide size of the second scale bar}
+    \item{scale.padding}{Padding between scale bars if more than 1 is present}
 }
-\value{A `grob` of class "SRCGrob"}
+\value{A `grob` of class 'SRCGrob'}
 \author{Dan Knight}
 \examples{
 # Simple Tree Plot
@@ -109,12 +112,12 @@ SRCGrob(branch.lengths.tree);
 
 
 # Cellular Prevalence
-CP.tree <- data.frame(
+CCF.tree <- data.frame(
     branch.lengths.tree,
-    CP = c(1, 0.3, 0.5)
+    CCF = c(1, 0.3, 0.5)
     );
 
-SRCGrob(CP.tree);
+SRCGrob(CCF.tree);
 
 
 # Scaled Branch Lengths
@@ -168,9 +171,26 @@ SRCGrob(
     );
 
 
+# Scale Bar
+SRCGrob(
+    branch.lengths.tree,
+    yaxis1.label = 'SNVs',
+    scale.bar = TRUE
+    );
+
+
 # Normal
 SRCGrob(
     simple.tree,
     add.normal = TRUE
     );
+
+
+# Nodeless Mode
+nodeless.tree <- data.frame(
+    parent = c(NA, 1, 2, 2),
+    draw.node = c(TRUE, FALSE, TRUE, TRUE)
+    );
+
+SRCGrob(nodeless.tree);
 }
