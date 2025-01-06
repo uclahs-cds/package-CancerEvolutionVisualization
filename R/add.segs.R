@@ -262,7 +262,7 @@ add.tree.segs <- function(
 
     if (!is.null(tree.segs2)) {
         include.segs2 <- which(c(
-            tree.segs2$basey != tree.segs2$tipy) 
+            tree.segs2$basey != tree.segs2$tipy)
             | (tree.segs2$basex != tree.segs2$tipx
             ));
         tree.segs2 <- tree.segs2[include.segs2, ];
