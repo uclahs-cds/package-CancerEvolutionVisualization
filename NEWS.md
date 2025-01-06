@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2024-12-09)
+# CancerEvolutionVisualization 3.0.0 (2025-01-06)
 
 ## Added
 * Dendrogram mode
