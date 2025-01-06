@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2024-12-09)
+# CancerEvolutionVisualization 3.0.0 (2025-01-06)
 
 ## Added
 * Dendrogram mode
@@ -18,7 +18,7 @@
   their parent angle, instead moving "downward" at 0 degrees.
 * Updated package metadata and README
 * Split angle handling for `radial` and `dendrogram` modes to optimized each
-* Set default parameters for heatmaps, defaulting too BPG defaults unless necessary
+* Fixed bug where horizontal tree segments rendered as zero-length segments
 * Updated changelog format to NEWS.md Markdown format
 * Refactored use of plyr/dplyr and stringr functions to remove dependencies
 * Set default parameters for heatmaps, defaulting to BPG defaults unless necessary
