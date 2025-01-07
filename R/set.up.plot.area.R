@@ -153,10 +153,11 @@ add.axis.label <- function(axisGrob, axis.label, axis.position, axis.label.cex, 
 
 add.axes <- function(
     clone.out,
+    yat,
     scale1,
     scale2 = NULL,
+    scale.bar = FALSE,
     yaxis.position = 'left',
-    yat,
     xaxis.label = 'CCF',
     yaxis1.label = 'PGA',
     yaxis2.label = NULL,
@@ -176,48 +177,50 @@ add.axes <- function(
 		    );
 	    }
 
-    ylabels1 <- unlist(yat[1]);
-    ylabels2 <- unlist(yat[2]);
+    if (yaxis.position != 'none' & scale.bar == FALSE) {
+        ylabels1 <- unlist(yat[1]);
+        ylabels2 <- unlist(yat[2]);
 
-    if (yaxis.position == 'both') {
-		if (is.null(yaxis2.label)) {
-			warning('Missing second y-axis label');
-			yaxis2.label <- '';
-		    }
+        if (yaxis.position == 'both') {
+    		if (is.null(yaxis2.label)) {
+    			warning('Missing second y-axis label');
+    			yaxis2.label <- '';
+    		    }
 
-        conversion.factor <- scale1 / scale2
+            conversion.factor <- scale1 / scale2
 
-		ymax1 <- add.yaxis(
-		    clone.out,
-		    yaxis.position = 'left',
-		    axis1.label = yaxis1.label,
-		    no.ccf = no.ccf,
-		    axis.label.cex = axis.label.cex[['y']],
-		    axis.cex = axis.cex[['y']],
-		    ylabels = ylabels1
-		    );
+    		ymax1 <- add.yaxis(
+    		    clone.out,
+    		    yaxis.position = 'left',
+    		    axis1.label = yaxis1.label,
+    		    no.ccf = no.ccf,
+    		    axis.label.cex = axis.label.cex[['y']],
+    		    axis.cex = axis.cex[['y']],
+    		    ylabels = ylabels1
+    		    );
 
-		add.yaxis(
-		    clone.out,
-		    yaxis.position = 'right',
-		    conversion.factor = conversion.factor,
-		    axis1.label = yaxis2.label,
-		    no.ccf = no.ccf,
-		    axis.label.cex = axis.label.cex[['y']],
-		    axis.cex = axis.cex[['y']],
-		    ylabels = ylabels2
-		    );
-    } else {
-		add.yaxis(
-		    clone.out,
-		    yaxis.position = yaxis.position,
-		    axis1.label = yaxis1.label,
-		    no.ccf = no.ccf,
-		    axis.label.cex = axis.label.cex[['y']],
-		    axis.cex = axis.cex[['y']],
-		    ylabels = ylabels1
-		    );
-	    }
+    		add.yaxis(
+    		    clone.out,
+    		    yaxis.position = 'right',
+    		    conversion.factor = conversion.factor,
+    		    axis1.label = yaxis2.label,
+    		    no.ccf = no.ccf,
+    		    axis.label.cex = axis.label.cex[['y']],
+    		    axis.cex = axis.cex[['y']],
+    		    ylabels = ylabels2
+    		    );
+        } else {
+    		add.yaxis(
+    		    clone.out,
+    		    yaxis.position = yaxis.position,
+    		    axis1.label = yaxis1.label,
+    		    no.ccf = no.ccf,
+    		    axis.label.cex = axis.label.cex[['y']],
+    		    axis.cex = axis.cex[['y']],
+    		    ylabels = ylabels1
+    		    );
+            }
+        }
     }
 
 add.yaxis <- function(

@@ -26,6 +26,7 @@
 * Define color scheme with a single value, automatically generating other shades.
 * Report the number of SNVs per clone in the legend for the clone-genome distribution plot.
 * Updated the user guide to reflect new features.
+* Fix bug where the x-axis only renders when y-axis is also rendered.
 
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.
