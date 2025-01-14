@@ -2,6 +2,7 @@ SRCGrob <- function(
     tree,
     node.text = NULL,
     main = NULL,
+    plotting.direction = 'down',
     horizontal.padding = 0.1,
     scale1 = 1,
     scale2 = 1,

@@ -654,6 +654,34 @@ prep.node.size <- function(tree.df) {
     return(node.size);
     }
 
+prep.plotting.direction <- function(direction, radians = TRUE) {
+    if (length(direction) > 1) {
+        stop('"plotting.direction" must be a scalar value.');
+        }
+
+    if (is.character(direction)) {
+        direction <- switch(
+            direction,
+            'down' = 0,
+            'up' = pi,
+            'left' = -pi / 2,
+            'right' = pi / 2,
+            NA
+            );
+        if (is.na(direction)) {
+            stop('A character value for "plotting.direction" must be one of "down", "up", "left", or "right".')
+            }
+    } else if (is.numeric(direction)) {
+        if (!radians) {
+            direction <- degrees.to.radians(direction);
+            }
+        direction <- direction %% (2 * pi);
+    } else {
+        stop('"plotting.direction" must be numeric or one of "down", "up", "left", or "right".');
+        }
+    return(direction);
+    }
+
 # default.values must be either a scalar or matching length of column.values.
 # A scalar will be applied to all NAs.
 # Otherwise, the corresponding value from default.values will be used.
