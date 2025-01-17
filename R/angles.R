@@ -30,7 +30,7 @@ calculate.angles.radial <- function(
         if (num.children > 0) {
             parent.angle <- angles[tree$tip == current.node.id];
             if (is.na(parent.angle) || length(parent.angle) == 0) {
-                parent.angle <- 0;
+                parent.angle <- start.angle;
                 angles[tree$tip == current.node.id] <- parent.angle;
                 }
 
