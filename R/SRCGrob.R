@@ -59,6 +59,10 @@ SRCGrob <- function(
         default.node.colour = node.col
         );
 
+    start.angle <- prep.plotting.direction(
+        plotting.direction,
+        radians = use.radians
+        );
     fixed.angle <- pi / 6;
     min.width <- get.plot.width(horizontal.padding);
     spread <- 1;
@@ -96,6 +100,7 @@ SRCGrob <- function(
         default.branch.width = 4,
         add.polygons = add.polygons,
         spread = spread,
+        start.angle = start.angle,
         fixed.angle = fixed.angle,
         add.node.text = add.node.text,
         text.on.nodes = text.on.nodes,

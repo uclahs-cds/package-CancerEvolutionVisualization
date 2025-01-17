@@ -13,6 +13,7 @@ make.clone.tree.grobs <- function(
     cluster.list,
     add.polygons,
     spread,
+    start.angle,
     fixed.angle,
     add.node.text,
     text.df,
@@ -75,7 +76,7 @@ make.clone.tree.grobs <- function(
 
     #initializing line segment dataframe and adjusting lengths to accomodate the node circles
     tree$angle <- numeric(length = nrow(tree));
-    tree$angle[tree$parent == -1] <- 0;
+    tree$angle[tree$parent == -1] <- start.angle;
     if ('length2' %in% colnames(tree)) {
         tree$length2.c <- tree$length2 / scale1 * scale2;
 
@@ -105,6 +106,7 @@ make.clone.tree.grobs <- function(
         extra.len,
         node.col,
         spread = spread,
+        start.angle = start.angle,
         fixed.angle = fixed.angle,
         add.polygons = add.polygons,
         no.ccf = no.ccf

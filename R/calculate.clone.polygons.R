@@ -315,6 +315,7 @@ compute.clones <- function(
     wid = 1.2,
     extra.len = 1,
     tree = NULL,
+    start.angle = 0,
     fixed.angle = NULL,
     beta.in = 3,
     branching = TRUE,
@@ -331,9 +332,20 @@ compute.clones <- function(
 	    tree$angle <- if ((is.null(fixed.angle) && nrow(v) > 6) || any(table(v$parent) > 2) || any(v$mode == 'dendrogram')) {
 			tau <- -(pi / 2.5);
     		vi <- v[v$parent == -1, ];
-    		calculate.angles.radial(v, tree, spread, abs(tau));
+    		calculate.angles.radial(
+    		    v,
+    		    tree,
+    		    spread,
+    		    abs(tau),
+    		    start.angle = start.angle
+    		    );
 	    } else {
-	        calculate.angles.fixed(v, tree, fixed.angle);
+	        calculate.angles.fixed(
+	            v,
+	            tree,
+	            fixed.angle,
+	            start.angle = start.angle
+	            );
 	        }
 	    tmp <- position.nodes(v, tree, extra.len);
 
