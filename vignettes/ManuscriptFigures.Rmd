@@ -34,7 +34,6 @@ spatial.col <- setNames(
 
 
 ```{r echo=FALSE}
-load('data/SNV.rda');
 load('data/multi.phylogeny.rda');
 load('data/single.phylogeny.rda');
 load('data/phylogeny.500.rda');
