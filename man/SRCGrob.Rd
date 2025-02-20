@@ -20,20 +20,19 @@ SRCGrob(
     ylab.cex = 1.55,
     xaxis.cex = 1.45,
     yaxis.cex = 1.45,
-    xaxis.label = 'CP',
+    xaxis.label = 'CCF',
     label.cex = NA,
     node.text.cex = 0.85,
     main.y = NULL,
     main.cex = 1.7,
     node.text.line.dist = 0.1,
-    colour.scheme = 'grey',
+    polygon.colour.scheme = 'grey',
+    polygon.scale = 1,
     add.normal = FALSE,
     use.radians = FALSE,
     normal.cex = 1,
     label.nodes = TRUE,
     disable.polygons = FALSE,
-    polygon.shape = 3,
-    polygon.width = 1.2,
     length.from.node.edge = TRUE,
     size.units = 'npc',
     scale.bar = FALSE,
@@ -41,7 +40,6 @@ SRCGrob(
     scale.size.1 = NA,
     scale.size.2 = NA,
     scale.padding = 1
-
     );
 }
 \arguments{
@@ -76,17 +74,13 @@ SRCGrob(
     \item{node.text.line.dist}{
     Distance between node text and tree branches (as a value between 0 and 1)
     }
-    \item{colour.scheme}{Vector of colour values to be used for CP polygons}
     \item{add.normal}{Adds a normal}
     \item{use.radians}{Unit to be used for 'angle' column (degrees or radians)}
     \item{normal.cex}{Font size within the normal 'box'}
     \item{label.nodes}{Enable/disable node labels}
-    \item{disable.polygons}{Disables CP polygon drawing (even when CP values are provided)}
-    \item{polygon.shape}{
-    Changes the shape of the CP shading.
-    Lower values are smoother.
-    }
-    \item{polygon.width}{Width of the CP shading}
+    \item{disable.polygons}{Disables CCF polygon drawing (even when CCF values are provided)}
+    \item{polygon.colour.scheme}{Vector of colour values to be used for CCF polygons. Creates a gradient color scheme.}
+    \item{polygon.scale}{Multiplier to scale CCF polygons (must be positive).}
     \item{length.from.node.edge}{
     Sets the branch length to be calculated from the edge of the node instead of the centre
     }
@@ -118,12 +112,12 @@ SRCGrob(branch.lengths.tree);
 
 
 # Cellular Prevalence
-CP.tree <- data.frame(
+CCF.tree <- data.frame(
     branch.lengths.tree,
-    CP = c(1, 0.3, 0.5)
+    CCF = c(1, 0.3, 0.5)
     );
 
-SRCGrob(CP.tree);
+SRCGrob(CCF.tree);
 
 
 # Scaled Branch Lengths

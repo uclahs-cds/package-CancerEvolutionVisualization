@@ -12,20 +12,19 @@ SRCGrob <- function(
     ylab.cex = 1.55,
     xaxis.cex = 1.45,
     yaxis.cex = 1.45,
-    xaxis.label = 'CP',
+    xaxis.label = 'CCF',
     label.cex = NA,
     node.text.cex = 0.85,
     main.y = NULL,
     main.cex = 1.7,
     node.text.line.dist = 0.1,
-    colour.scheme = 'grey',
+    polygon.colour.scheme = 'grey',
+    polygon.scale = 1,
     add.normal = FALSE,
     use.radians = FALSE,
     normal.cex = 1,
     label.nodes = TRUE,
     disable.polygons = FALSE,
-    polygon.shape = 3,
-    polygon.width = 1.2,
     length.from.node.edge = TRUE,
     size.units = 'npc',
     scale.bar = FALSE,
@@ -43,15 +42,18 @@ SRCGrob <- function(
     yat <- prep.yat(yat);
     yaxis.position <- get.y.axis.position(colnames(tree));
 
-    node.col <- 'white';
-    if (length(colour.scheme) == 1) {
-        colour.scheme <- c(NA, BoutrosLab.plotting.general::colour.gradient(colour.scheme, nrow(tree)));
+    if (polygon.scale < 0) {
+        stop('"polygon.scale" must be positive.');
         }
+    polygon.width <- 1.2 * polygon.scale;
+
+    node.col <- 'white';
+    colour.scheme <- gradient.color.scheme(polygon.colour.scheme, nrow(tree));
 
     inputs <- prep.tree(
         tree,
         node.text,
-        colour.scheme = colour.scheme,
+        polygon.colour.scheme = colour.scheme,
         use.radians = use.radians,
         default.node.colour = node.col
         );
@@ -92,7 +94,6 @@ SRCGrob <- function(
         length.from.node.edge = length.from.node.edge,
         default.branch.width = 4,
         add.polygons = add.polygons,
-        sig.shape = polygon.shape,
         spread = spread,
         fixed.angle = fixed.angle,
         add.node.text = add.node.text,

@@ -7,7 +7,16 @@ importFrom("graphics", "par", "strheight", "strwidth")
 importFrom("grDevices", "dev.list", "rainbow")
 importFrom("utils", "read.table", "vi", "head")
 importFrom("stats", "median", "setNames", "aggregate", "reshape")
-importFrom("grDevices", "col2rgb", "dev.off", "pdf", "png", "svg", "tiff")
+importFrom(
+    "grDevices",
+    "col2rgb",
+    "dev.off",
+    "pdf",
+    "png",
+    "svg",
+    "tiff",
+    "colorRampPalette"
+    )
 
 export(SRCGrob)
 export(create.phylogenetic.tree)
@@ -16,3 +25,6 @@ export(create.cluster.heatmap)
 export(create.ccf.summary.heatmap)
 export(create.clone.genome.distribution.plot)
 export(create.ccf.densityplot)
+
+export(data.frame.to.array)
+export(update.descendant.property)
