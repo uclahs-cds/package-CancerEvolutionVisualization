@@ -33,7 +33,7 @@ create.ccf.densityplot(
     \item{breaks}{Number of breaks for the histogram. Defaults to 100.}
     \item{xlab.label}{Defaults to \dQuote{CCF}.}
     \item{ylab.label}{Defaults to \dQuote{SNV Density}.}
-    \item{x.limits}{Limits for the x-axis. Defaults to \code{c(0, 1.5)}.}
+    \item{xlimits}{Limits for the x-axis. Defaults to \code{c(0, 1.5)}.}
     \item{xat}{Positions for the x-axis labels. Defaults to \code{seq(0, 1.5, 0.25)}.}
     \item{legend.size}{Width of the legend boxes in 'character' units. Defaults to 3}
     \item{legend.title.cex}{Size of titles in the legends. Defaults to 1.2}
