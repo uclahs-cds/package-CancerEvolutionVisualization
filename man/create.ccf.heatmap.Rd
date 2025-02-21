@@ -12,6 +12,7 @@ create.ccf.heatmap(
     distance.method = 'euclidean',
     xaxis.lab = '',
     xlab.label = 'SNVs',
+    yaxis.lab = colnames(x),
     print.colour.key = FALSE,
     colour.scheme = c('white', 'blue'),
     ...
@@ -24,6 +25,7 @@ create.ccf.heatmap(
     \item{distance.method}{Defaults to \dQuote{euclidean}.}
     \item{xaxis.lab}{Defaults to an empty string.}
     \item{xlab.label}{Defaults to \dQuote{SNVs}.}
+    \item{xaxis.lab}{Defaults to the column names of array \code{x}.}
     \item{print.colour.key}{Defaults to \code{FALSE}.}
     \item{colour.scheme}{Defaults to \code{c('white', 'blue')}.}
     \item{...}{Pass through argument. See BoutrosLab.plotting.general::create.heatmap() for further details.}
