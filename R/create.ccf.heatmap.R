@@ -5,6 +5,7 @@ create.ccf.heatmap <- function(
     distance.method = 'euclidean',
     xaxis.lab = '',
     xlab.label = 'SNVs',
+    yaxis.lab = colnames(x),
     print.colour.key = FALSE,
     colour.scheme = c('white', 'blue'),
     ...
@@ -21,7 +22,7 @@ create.ccf.heatmap <- function(
         cols.distance.method = distance.method,
         xaxis.lab = xaxis.lab,
         xlab.label = xlab.label,
-        yaxis.lab = colnames(x),
+        yaxis.lab = yaxis.lab,
         print.colour.key = print.colour.key,
         colourkey.labels.at = col.labels,
         colour.scheme = colour.scheme,
