@@ -94,6 +94,7 @@ create.ccf.summary.heatmap <- function(
 
     same.as.matrix <- !is.matrix(arr)
     if (same.as.matrix) {
+        # I don't know why this sequence works but simply setting as.data.frame does not work
         arr <- as.data.frame(arr)
         colnames(arr) <- as.character(unique(DF$ID))
         arr <- as.matrix(arr)
@@ -105,6 +106,7 @@ create.ccf.summary.heatmap <- function(
     hm.args <- list(
         x = hm.args.x,
         cluster.dimensions = 'none',
+        clustering.method = 'none',
         xlab.label = 'Clone',
         xlab.cex = ifelse(is.null(clone.colours), subplot.xlab.cex, 0),
         xaxis.lab = rownames(arr),
@@ -129,22 +131,13 @@ create.ccf.summary.heatmap <- function(
         hm.args$text.col <- ifelse(arr > contrast.thres, 'white', 'black');
         }
 
-    if (same.as.matrix) {
-        hm.args$yat <- 1.5
-        hm.args$row.pos <- 1.5
-        }
-
     if (nrow(hm.args.x) == 1 & ncol(hm.args.x) == 1) {
-        legend.colour.change <- hm.col.scheme[length(hm.col.scheme)]
-        hm.args$x <- as.data.frame(hm.col.scheme[length(hm.col.scheme)])
-        hm.args$input.colours <- TRUE
-        hm.args$clustering.method <- 'none'
-        hm.args$yat <- 1
-        hm.args$col.pos <- 1.5
-        hm.args$row.pos <- 1
-        legend.col <- hm.col.scheme[length(hm.col.scheme)]
-        } else {
-        legend.col <- hm.col.scheme
+        colour.scheme <- colour.scheme[length(colour.scheme)];
+        hm.args$x <- as.data.frame(colour.scheme);
+        hm.args$input.colours <- TRUE;
+        hm.args$yat <- 1;
+        hm.args$col.pos <- 1.5;
+        hm.args$row.pos <- 1;
         }
 
     hm <- do.call(BoutrosLab.plotting.general::create.heatmap, hm.args);
@@ -154,7 +147,7 @@ create.ccf.summary.heatmap <- function(
             legend = list(
                 title = 'CCF',
                 labels = c(signif(min(arr), 2), rep('', legend.size), signif(max(arr), 2)),
-                colours = legend.col,
+                colours = colour.scheme,
                 border = 'black',
                 continuous = TRUE,
                 cex = legend.label.cex

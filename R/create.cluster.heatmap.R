@@ -25,15 +25,22 @@ create.cluster.heatmap <- function(
     if (is.null(clone.colours)) {
         clone.colours <- get.colours(DF$clone.id, return.names = TRUE);
         }
-    DF              <- droplevels(DF)[order(DF$clone.id, -abs(DF$CCF)), ];
-    snv.order       <- unique(DF[, c('SNV.id', 'clone.id')]);
-    arr             <- data.frame.to.array(DF);
-    arr             <- arr[snv.order$SNV.id, rev(levels(DF$ID))];
+    DF        <- droplevels(DF)[order(DF$clone.id, -abs(DF$CCF)), ];
+    snv.order <- unique(DF[, c('SNV.id', 'clone.id')]);
+    arr       <- data.frame.to.array(DF);
+    arr       <- arr[snv.order$SNV.id, rev(levels(DF$ID))];
 
     if (!is.null(xaxis.col)) {
         xaxis.label <- unique(DF[DF$SNV.id %in% rownames(arr), xaxis.col]);
     } else {
         xaxis.label <- NULL;
+        }
+
+    if (!is.matrix(arr)) {
+        arr <- t(arr);
+        yaxis.label <- levels(DF$ID);
+    } else {
+        yaxis.label <- colnames(arr);
         }
 
     if (!is.null(ccf.limits)) {
@@ -44,30 +51,15 @@ create.cluster.heatmap <- function(
         arr[arr > ccf.limits[2]] <- ccf.limits[2];
         }
 
-    if (!is.matrix(arr)) {
-        arr <- as.data.frame(arr)
-        colnames(arr) <- as.character(unique(DF$ID))
-
-        hm <- create.ccf.heatmap(
-            x = arr,
-            cluster.dimensions = 'none',
-            xlab.label = '',
-            xaxis.lab = xaxis.label,
-            colour.scheme = colour.scheme,
-            same.as.matrix = TRUE,
-            yat = 1.5,
-            ...
-            );
-    } else {
-        hm <- create.ccf.heatmap(
-            x = arr,
-            cluster.dimensions = 'none',
-            xlab.label = '',
-            xaxis.lab = xaxis.label,
-            colour.scheme = colour.scheme,
-            ...
-            );
-    }
+    hm <- create.ccf.heatmap(
+        x = arr,
+        cluster.dimensions = 'none',
+        xlab.label = '',
+        xaxis.lab = xaxis.label,
+        yaxis.lab = yaxis.label,
+        colour.scheme = colour.scheme,
+        ...
+        );
 
     cov <- BoutrosLab.plotting.general::create.heatmap(
         x = t(clone.colours[snv.order$clone.id]),
