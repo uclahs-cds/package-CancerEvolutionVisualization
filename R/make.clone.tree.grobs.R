@@ -12,7 +12,6 @@ make.clone.tree.grobs <- function(
     seg2.col,
     cluster.list,
     add.polygons,
-    sig.shape,
     spread,
     fixed.angle,
     add.node.text,
@@ -106,7 +105,6 @@ make.clone.tree.grobs <- function(
         extra.len,
         node.col,
         spread = spread,
-        sig.shape = sig.shape,
         fixed.angle = fixed.angle,
         add.polygons = add.polygons,
         no.ccf = no.ccf
@@ -142,21 +140,20 @@ make.clone.tree.grobs <- function(
         add.normal(clone.out,node.radius,label.cex, normal.cex)
         }
 
-    if (yaxis.position != 'none' & scale.bar == FALSE) {
-        add.axes(
-            clone.out,
-            yaxis.position,
-            scale1 = scale1,
-            scale2 = scale2,
-            yat = yat,
-            axis.label.cex = axis.label.cex,
-            axis.cex = axis.cex,
-            no.ccf = no.ccf,
-            xaxis.label = xaxis.label,
-            yaxis1.label = yaxis1.label,
-            yaxis2.label = yaxis2.label
-            );
-        }
+    add.axes(
+        clone.out,
+        yaxis.position,
+        scale1 = scale1,
+        scale2 = scale2,
+        scale.bar = scale.bar,
+        yat = yat,
+        axis.label.cex = axis.label.cex,
+        axis.cex = axis.cex,
+        no.ccf = no.ccf,
+        xaxis.label = xaxis.label,
+        yaxis1.label = yaxis1.label,
+        yaxis2.label = yaxis2.label
+        );
 
     if (scale.bar) {
         scale.lengths <- prep.scale.length(

@@ -12,7 +12,7 @@ create.ccf.summary.heatmap(
     median.col = 'median.ccf.per.sample',
     clone.order = NULL,
     sample.order = NULL,
-    hm.col.scheme = c('white', 'blue'),
+    colour.scheme = c('white', 'blue'),
     clone.colours = NULL,
     subplot.xlab.cex = 1.2,
     subplot.xaxis.cex = 1,
@@ -38,7 +38,7 @@ create.ccf.summary.heatmap(
     \item{median.col}{Defaults to \dQuote{median.ccf.per.sample}}
     \item{clone.order}{Defaults to \code{NULL}}
     \item{sample.order}{Defaults to \code{NULL}}
-    \item{hm.col.scheme}{Heatmap colour scheme. Defaults to \code{c('white', 'blue')}}
+    \item{colour.scheme}{Heatmap colour scheme. Defaults to \code{c('white', 'blue')}}
     \item{clone.colours}{A named vector specifying the color to use for each clone to generate a covariate heatmap. If \code{NULL}, no covariates will be added.}
     \item{subplot.xlab.cex}{Subplot parameter. Defaults to 1.2}
     \item{subplot.xaxis.cex}{Subplot parameter. Defaults to 1}
@@ -61,3 +61,14 @@ create.ccf.summary.heatmap(
 \value{A `grob` object of the summary plot.}
 \author{Helena Winata}
 \seealso{\code{\link[BoutrosLab.plotting.general]{legend.grob}}, \code{\link[BoutrosLab.plotting.general]{create.multipanelplot}}, \code{\link[BoutrosLab.plotting.general]{create.heatmap}}}
+
+\examples{
+set.seed(123);
+snv <- do.call(rbind, lapply(split(snv, list(snv$ID, snv$clone.id)), function(df) {
+    df$median.ccf.per.sample <- median(df$CCF)
+    df$total.nsnv <- length(unique(df$SNV.id))
+    df
+    }));
+
+create.ccf.summary.heatmap(snv);
+}

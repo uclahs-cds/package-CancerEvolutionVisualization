@@ -261,7 +261,11 @@ add.tree.segs <- function(
         );
 
     if (!is.null(tree.segs2)) {
-        tree.segs2 <- tree.segs2[which(tree.segs2$basey != tree.segs2$tipy), ];
+        include.segs2 <- which(c(
+            tree.segs2$basey != tree.segs2$tipy)
+            | (tree.segs2$basex != tree.segs2$tipx
+            ));
+        tree.segs2 <- tree.segs2[include.segs2, ];
         seg.data.2 <- clone.out$v[match(tree.segs2$tip, clone.out$v$id), ];
 
         if (nrow(tree.segs2) > 0) {
@@ -281,7 +285,11 @@ add.tree.segs <- function(
             }
         }
 
-    dendrogram.ids <- clone.out$v[clone.out$v$mode == 'dendrogram', 'id'];
+    if (length(unique(clone.out$v$mode)) > 1 ) {
+        dendrogram.ids <- clone.out$v[clone.out$v$mode == 'dendrogram', 'parent'];
+    } else {
+        dendrogram.ids <- clone.out$v[clone.out$v$mode == 'dendrogram', 'id'];
+        }
     dendrogram.coords <- rbind(tree.segs1, tree.segs2);
     dendrogram.coords <- dendrogram.coords[dendrogram.coords$parent %in% dendrogram.ids, ];
 
