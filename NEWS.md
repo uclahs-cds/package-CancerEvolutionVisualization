@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2025-01-06)
+# CancerEvolutionVisualization 3.0.0 (2025-01-07)
 
 ## Added
 * Dendrogram mode
@@ -27,6 +27,7 @@
 * Report the number of SNVs per clone in the legend for the clone-genome distribution plot.
 * Updated the user guide to reflect new features.
 * Fix bug where the x-axis only renders when y-axis is also rendered.
+* Fix issue when creating polygons with more than 2 siblings
 
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.

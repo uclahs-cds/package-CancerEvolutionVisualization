@@ -140,14 +140,14 @@ position.polygons <- function(
 				parent.angle <- atan(dist / par$len);
 			    }
 		} else {
-			if (v$id == siblings$id[which.min(siblings$x.mid)]) {
+			if (vi$id == siblings$id[which.min(siblings$x.mid)]) {
 			    # Align leftmost child with left outer clone border
 				parent.angle <- ifelse(
 				    is.null(fixed.angle),
 				    yes = atan(-(abs(par$x1) / par$len)),
 				    no = -(fixed.angle)
 				    );
-			} else if (v$id == siblings$id[which.max(siblings$x.mid)]) {
+			} else if (vi$id == siblings$id[which.max(siblings$x.mid)]) {
 			    # Align rightmost child with right outer clone border
 				parent.angle <- ifelse(
 				    is.null(fixed.angle),
