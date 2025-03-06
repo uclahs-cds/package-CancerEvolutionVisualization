@@ -69,6 +69,11 @@ get.encoded.distance <- function(points) {
 #' Any colors specified in `clone.colours` are maintained in the order
 #' specified and are used as the first colors for the `clone.ids`.
 #'
+#' if `clone.colours` is NULL or an empty vector, _and_
+#' `minimum.number.of.colours` is 0, `NULL` is returned
+#' so BPG's default color selection can be used without needing to
+#' check for `NULL`.
+#'
 #' @param clone.colours A vector of colors assigned to clones. If `NULL`, colors will be generated automatically.
 #' @param clone.ids A vector of clone identifiers.
 #' @param minimum.number.of.colours An integer specifying the minimum number of colors required.
@@ -89,7 +94,7 @@ get.clone.colours <- function(clone.colours, clone.ids, minimum.number.of.colour
             );
         }
 
-    if (!is.null(clone.colours)) {
+    if (!is.null(clone.colours) && !is.null(clone.ids)) {
         unique.clone.ids <- unique(clone.ids);
         sampled.colors <- sample(colors(), size = length(unique.clone.ids));
         sampled.colors[seq_along(clone.colours)] <- clone.colours;
@@ -109,6 +114,11 @@ get.clone.colours <- function(clone.colours, clone.ids, minimum.number.of.colour
 #' Any colors specified in `clone.colours` are maintained in the order
 #' specified and are used as the first colors for the `clone.ids`.
 #'
+#' if `clone.colours` is NULL or an empty vector, _and_
+#' `minimum.number.of.colours` is 0, `NULL` is returned
+#' so BPG's default color selection can be used without needing to
+#' check for `NULL`.
+#'
 #' @param clone.colours A vector of colors assigned to clones. If `NULL`, colors will be generated automatically.
 #' @param clone.ids A vector of clone identifiers.
 #' @param clone.order An optional vector specifying the order of clones. If `NULL`, clone order is not gauranteed.
@@ -120,7 +130,11 @@ get.clone.colours <- function(clone.colours, clone.ids, minimum.number.of.colour
 #'   \item{clone.order}{The ordered clones.}
 #' }
 get.clone.colours.in.order <- function(clone.colours, clone.ids, clone.order = NULL, minimum.number.of.colours = 0) {
-    if (is.null(clone.order)) {
+    if (is.null(clone.colours) && is.null(clone.order)) {
+        clone.ids <- NULL;
+        }
+
+    if (is.null(clone.order) && !is.null(clone.ids)) {
         unique.clone.ids <- unique(clone.ids);
         clone.order <- c(clone.order, unique.clone.ids[!unique.clone.ids %in% clone.order]);
         }
