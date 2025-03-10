@@ -5,11 +5,15 @@ create.ccf.heatmap <- function(
     distance.method = 'euclidean',
     xaxis.lab = '',
     xlab.label = 'SNVs',
-    yaxis.lab = colnames(x),
+    yaxis.lab = NULL,
     print.colour.key = FALSE,
     colour.scheme = c('white', 'blue'),
     ...
     ) {
+
+    if (is.null(yaxis.lab)) {
+        yaxis.lab <- colnames(x);
+        }
 
     col.labels <- seq(min(x), max(x), length.out = 5);
 
