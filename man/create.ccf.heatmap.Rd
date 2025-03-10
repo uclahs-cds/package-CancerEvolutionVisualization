@@ -12,7 +12,7 @@ create.ccf.heatmap(
     distance.method = 'euclidean',
     xaxis.lab = '',
     xlab.label = 'SNVs',
-    yaxis.lab = colnames(x),
+    yaxis.lab = NULL,
     print.colour.key = FALSE,
     colour.scheme = c('white', 'blue'),
     ...
