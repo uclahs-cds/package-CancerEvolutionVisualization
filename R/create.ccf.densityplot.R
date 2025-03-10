@@ -23,11 +23,9 @@ create.ccf.densityplot <- function(
         clone.colours <- get.colours(x$clone.id, return.names = TRUE);
         }
 
-    # calculate mean CCF and nsnv per cluster -----------------------------------------------------
     mean.ccf <- aggregate(CCF ~ clone.id, data = x, FUN = mean);
     nsnv <- aggregate(SNV.id ~ clone.id, data = x, FUN = length);
 
-    # calculate densities for each cluster --------------------------------------------------------
     density.list <- list();
     for (k in unique(x$clone.id)) {
         density.list[[k]] <- calculate.density(
@@ -40,8 +38,6 @@ create.ccf.densityplot <- function(
     density.df <- do.call(rbind, density.list);
     density.df$y <- density.df$y * (nsnv$SNV.id[match(density.df$clone.id, nsnv$clone.id)] / nrow(x));
 
-
-    # get plot legend -----------------------------------------------------------------------------
     legend.label <- sapply(names(clone.colours), function(k) {
         nsnv <- nsnv[nsnv$clone.id == k, ]$SNV.id;
         return(paste0(k, ' (', nsnv, ')'));

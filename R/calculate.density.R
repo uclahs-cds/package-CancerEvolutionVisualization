@@ -15,5 +15,5 @@ calculate.density <- function(
     if (scale) {
         density.df$y <- nrow(x) / sum(density.df$y) * density.df$y;
         }
-    return(density.df)
+    return(density.df);
     }
