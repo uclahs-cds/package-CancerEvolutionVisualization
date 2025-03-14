@@ -122,14 +122,18 @@ get.clone.colours <- function(clone.colours, clone.ids, minimum.number.of.colour
 #' @param clone.colours A vector of colors assigned to clones. If `NULL`, colors will be generated automatically.
 #' @param clone.ids A vector of clone identifiers.
 #' @param clone.order An optional vector specifying the order of clones. If `NULL`, clone order is not gauranteed.
-#' @param minimum.number.of.colours An integer specifying the minimum number of colors required.
 #'
 #' @return A list containing:
 #' \describe{
 #'   \item{clone.colours}{A named vector of colors assigned to each clone.}
 #'   \item{clone.order}{The ordered clones.}
 #' }
-get.clone.colours.in.order <- function(clone.colours, clone.ids, clone.order = NULL, minimum.number.of.colours = 0) {
+get.clone.colours.in.order <- function(
+    clone.colours,
+    clone.ids,
+    clone.order = NULL
+    ) {
+
     if (is.null(clone.colours) && is.null(clone.order)) {
         clone.ids <- NULL;
         }
