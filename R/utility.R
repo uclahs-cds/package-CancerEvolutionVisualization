@@ -135,11 +135,22 @@ get.clone.colours.in.order <- function(clone.colours, clone.ids, clone.order = N
         }
 
     if (is.null(clone.order) && !is.null(clone.ids)) {
-        unique.clone.ids <- unique(clone.ids);
-        clone.order <- c(clone.order, unique.clone.ids[!unique.clone.ids %in% clone.order]);
+        clone.order <- unique(clone.ids);
         }
 
-    clone.colours <- get.clone.colours(clone.colours, clone.order, minimum.number.of.colours);
+    if (is.null(clone.colours) || is.null(clone.order)) {
+        clone.colours <- NULL;
+    } else {
+        sampled.colours <- sample(colors(), size = length(clone.order));
+        sampled.colours[seq_along(clone.colours)] <- clone.colours;
+        clone.colours <- setNames(
+            sampled.colours[seq_along(clone.order)],
+            clone.order
+            );
+        }
 
-    return(list(clone.colours = clone.colours, clone.order = clone.order));
+    return(list(
+        clone.colours = clone.colours,
+        clone.order = clone.order
+        ));
     }
