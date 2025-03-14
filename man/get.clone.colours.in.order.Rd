@@ -5,12 +5,7 @@
 \title{Generate a named vector of colors for every clone ID specified,
 ordered by the clone IDs in `clone.order`.}
 \usage{
-get.clone.colours.in.order(
-  clone.colours,
-  clone.ids,
-  clone.order = NULL,
-  minimum.number.of.colours = 0
-)
+get.clone.colours.in.order(clone.colours, clone.ids, clone.order = NULL)
 }
 \arguments{
 \item{clone.colours}{A vector of colors assigned to clones. If `NULL`, colors will be generated automatically.}
@@ -18,8 +13,6 @@ get.clone.colours.in.order(
 \item{clone.ids}{A vector of clone identifiers.}
 
 \item{clone.order}{An optional vector specifying the order of clones. If `NULL`, clone order is not gauranteed.}
-
-\item{minimum.number.of.colours}{An integer specifying the minimum number of colors required.}
 }
 \value{
 A list containing:
