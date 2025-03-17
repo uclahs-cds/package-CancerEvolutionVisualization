@@ -33,9 +33,9 @@ get.colours <- function(
 #' Any colors specified in `predetermined.colours` are maintained in the order
 #' specified and are used as the first colors for the `value.list`.
 #'
-#' @param predetermined.colours A vector of colors assigned to values. If `NULL`, colors will be generated automatically.
 #' @param value.list A vector of values.
 #' @param value.order An optional vector specifying the order of values. If `NULL`, value order is not gauranteed.
+#' @param predetermined.colours A vector of colors assigned to values. If `NULL`, colors will be generated automatically.
 #'
 #' @return A list containing:
 #' \describe{
@@ -43,9 +43,9 @@ get.colours <- function(
 #'   \item{value.order}{The ordered values.}
 #' }
 get.colours.in.order <- function(
-    predetermined.colours,
     value.list,
-    value.order = NULL
+    value.order = NULL,
+    predetermined.colours = NULL
     ) {
 
     if (is.null(predetermined.colours) && is.null(value.order)) {
