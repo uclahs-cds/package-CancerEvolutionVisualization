@@ -145,7 +145,7 @@ get.clone.colours.in.order <- function(
     if (is.null(clone.colours) || is.null(clone.order)) {
         clone.colours <- NULL;
     } else {
-        sampled.colours <- sample(colors(), size = length(clone.order));
+        sampled.colours <- get.colours(clone.order);
         sampled.colours[seq_along(clone.colours)] <- clone.colours;
         clone.colours <- setNames(
             sampled.colours[seq_along(clone.order)],
