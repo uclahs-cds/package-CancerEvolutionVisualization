@@ -1,17 +1,13 @@
 get.colours <- function(
     value.list,
-    return.names = FALSE,
-    predetermined.colours = NULL
+    return.names = FALSE
     ) {
+
     colours <- grDevices::colors()[grep('(white|gr(a|e)y)', grDevices::colors(), invert = T)];
-    unique.values <- unique(value.list);
+    unique.values <- sort(unique(value.list));
     n <- length(unique.values);
 
     col.list <- sample(colours, n);
-
-    if (!is.null(predetermined.colours) && !is.null(value.list)) {
-        col.list[seq_along(predetermined.colours)] <- predetermined.colours;
-        }
 
     if (is.null(levels(value.list))) {
         value.list <- factor(value.list, levels = unique.values);

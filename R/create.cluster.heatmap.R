@@ -1,6 +1,8 @@
 create.cluster.heatmap <- function(
     DF,
     ccf.limits = NULL,
+    sample.order = NULL,
+    clone.order = NULL,
     clone.colours = NULL,
     height = 6,
     width = 11,
@@ -18,9 +20,17 @@ create.cluster.heatmap <- function(
     ...
     ) {
 
-    if (is.null(levels(DF$ID))) {
-        DF$ID <- factor(DF$ID, levels = sort(unique(DF$ID)));
+    # Define the order of the samples
+    if (is.null(sample.order)) {
+        sample.order <- sort(unique(DF$ID));
         }
+    DF$ID <- factor(DF$ID, levels = sample.order);
+
+    # Define the order of the clones
+    if (is.null(clone.order)) {
+        clone.order <- sort(unique(DF$clone.id));
+        }
+    DF$clone.id <- factor(DF$clone.id, levels = clone.order);
 
     if (is.null(clone.colours)) {
         clone.colours <- get.colours(DF$clone.id, return.names = TRUE);
