@@ -3,17 +3,12 @@ get.colours <- function(
     return.names = FALSE
     ) {
 
-    colours <- grDevices::colors()[grep('(white|gr(a|e)y)', grDevices::colors(), invert = T)];
+    colours <- grDevices::colors()[grep('(white|gr(a|e)y)', grDevices::colors(), invert = TRUE)];
     unique.values <- sort(unique(value.list));
     n <- length(unique.values);
 
     col.list <- sample(colours, n);
-
-    if (is.null(levels(value.list))) {
-        value.list <- factor(value.list, levels = unique.values);
-        }
-
-    names(col.list) <- levels(value.list);
+    names(col.list) <- unique.values;
 
     if (return.names) {
         return(col.list);
