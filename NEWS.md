@@ -13,6 +13,8 @@
 * Wrapper function for `SRCgrob` to automatically save plots to file
 * Add option to annotate the CCF summary heatmap with the cell values.
 * Add support for 1xn and 1x1 heatmaps.
+* Add `get.colours.in.order` function to get a list of colours and corresponding clone ID order.
+* Add `sample.order` and `clone.order` as input parameters to `create.cluster.heatmap`
 
 ## Update
 * Fixed angle calculation bug where child angles do not follow
