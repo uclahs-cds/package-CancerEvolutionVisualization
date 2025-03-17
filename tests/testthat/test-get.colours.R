@@ -1,4 +1,4 @@
-expect.character.vector <- function (result) {
+expect.character.vector <- function(result) {
     expect_true(identical(names(result), character(0)));
     expect_true(identical(result, setNames(character(0), character(0))));
     expect_equal(length(result), 0);
@@ -77,7 +77,7 @@ test_that(
         expect.character.vector(result);
         result <- get.colours(c(), predetermined.colours = NULL);
         expect.character.vector(result);
-        result <- get.colours(c("ABC", "DEF"), predetermined.colours = c())
+        result <- get.colours(c('ABC', 'DEF'), predetermined.colours = c())
         expect_equal(names(result), c('ABC', 'DEF'));
         expect_true(!is.na(result['ABC']) && nzchar(result['ABC']));
         expect_true(!is.na(result['DEF']) && nzchar(result['DEF']));
