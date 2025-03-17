@@ -1,20 +1,76 @@
 get.colours <- function(
     value.list,
-    return.names = FALSE
+    return.names = FALSE,
+    predetermined.colours = NULL
     ) {
     colours <- grDevices::colors()[grep('(white|gr(a|e)y)', grDevices::colors(), invert = T)];
-    n <- length(unique(value.list));
+    unique.values <- unique(value.list);
+    n <- length(unique.values);
 
     col.list <- sample(colours, n);
-    if (is.null(levels(value.list))) {
-        value.list <- factor(value.list, levels = unique(value.list))
+
+    if (!is.null(predetermined.colours) && !is.null(value.list)) {
+        col.list[seq_along(predetermined.colours)] <- predetermined.colours;
         }
+
+    if (is.null(levels(value.list))) {
+        value.list <- factor(value.list, levels = unique.values);
+        }
+
     names(col.list) <- levels(value.list);
+
     if (return.names) {
         return(col.list);
     } else {
         return(col.list[value.list]);
         }
+    }
+
+#' Generate a named vector of colors for every value specified,
+#' ordered by the value in `value.order`.
+#'
+#' Assigns colors to values and ensures they follow a specified order.
+#' Any colors specified in `predetermined.colours` are maintained in the order
+#' specified and are used as the first colors for the `value.list`.
+#'
+#' @param value.list A vector of values.
+#' @param value.order An optional vector specifying the order of values. If `NULL`, value order is not gauranteed.
+#' @param predetermined.colours A vector of colors assigned to values. If `NULL`, colors will be generated automatically.
+#'
+#' @return A list containing:
+#' \describe{
+#'   \item{colours}{A named vector of colors assigned to each value.}
+#'   \item{value.order}{The ordered values.}
+#' }
+get.colours.in.order <- function(
+    value.list,
+    value.order = NULL,
+    predetermined.colours = NULL
+    ) {
+
+    if (is.null(predetermined.colours) && is.null(value.order)) {
+        value.list <- NULL;
+        }
+
+    if (is.null(value.order) && !is.null(value.list)) {
+        value.order <- unique(value.list);
+        }
+
+    if (is.null(predetermined.colours) || is.null(value.order)) {
+        predetermined.colours <- NULL;
+    } else {
+        sampled.colours <- get.colours(value.list);
+        sampled.colours[seq_along(predetermined.colours)] <- predetermined.colours;
+        predetermined.colours <- setNames(
+            sampled.colours[seq_along(value.order)],
+            value.order
+            );
+        }
+
+    return(list(
+        colours = predetermined.colours,
+        value.order = value.order
+        ));
     }
 
 get.colour.luminance <- function(colour) {

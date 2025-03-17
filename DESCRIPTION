@@ -28,3 +28,4 @@ Suggests:
 VignetteBuilder: knitr
 LazyLoad: yes
 LazyData: yes
+RoxygenNote: 7.3.1
