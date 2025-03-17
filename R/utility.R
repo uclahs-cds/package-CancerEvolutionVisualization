@@ -80,23 +80,9 @@ get.encoded.distance <- function(points) {
 #'
 #' @return A named vector of colors assigned to each clone.
 get.clone.colours <- function(clone.colours, clone.ids, minimum.number.of.colours = 0) {
-    if (is.null(clone.colours) && minimum.number.of.colours == 0) {
-        return(NULL);
-        }
-
-    if (length(clone.colours) < minimum.number.of.colours) {
-        clone.colours <- c(
-            clone.colours,
-            sample(
-                colors(),
-                size = abs(minimum.number.of.colours - length(clone.colours))
-                )
-            );
-        }
-
     if (!is.null(clone.colours) && !is.null(clone.ids)) {
         unique.clone.ids <- unique(clone.ids);
-        sampled.colors <- sample(colors(), size = length(unique.clone.ids));
+        sampled.colors <- get.colours(unique.clone.ids);
         sampled.colors[seq_along(clone.colours)] <- clone.colours;
         return(setNames(
             sampled.colors[seq_along(unique.clone.ids)],
@@ -145,7 +131,7 @@ get.clone.colours.in.order <- function(
     if (is.null(clone.colours) || is.null(clone.order)) {
         clone.colours <- NULL;
     } else {
-        sampled.colours <- sample(colors(), size = length(clone.order));
+        sampled.colours <- get.colours(clone.ids);
         sampled.colours[seq_along(clone.colours)] <- clone.colours;
         clone.colours <- setNames(
             sampled.colours[seq_along(clone.order)],
