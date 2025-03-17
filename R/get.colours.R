@@ -3,6 +3,10 @@ get.colours <- function(
     return.names = FALSE
     ) {
 
+    if (is.null(value.list)) {
+        return(setNames(character(0), character(0)));
+        }
+
     colours <- grDevices::colors()[grep('(white|gr(a|e)y)', grDevices::colors(), invert = TRUE)];
     unique.values <- sort(unique(value.list));
     n <- length(unique.values);
