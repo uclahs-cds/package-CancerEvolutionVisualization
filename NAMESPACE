@@ -27,3 +27,4 @@ export(create.clone.genome.distribution.plot)
 
 export(data.frame.to.array)
 export(update.descendant.property)
+export(get.colours.in.order)
