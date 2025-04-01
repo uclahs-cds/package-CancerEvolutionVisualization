@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2025-01-06)
+# CancerEvolutionVisualization 3.0.0 (2025-03-12)
 
 ## Added
 * Dendrogram mode
@@ -13,7 +13,10 @@
 * Wrapper function for `SRCgrob` to automatically save plots to file
 * Add option to annotate the CCF summary heatmap with the cell values.
 * Function to generate single-sample density plot
-  
+* Add support for 1xn and 1x1 heatmaps.
+* Add `get.colours.in.order` function to get a list of colours and corresponding clone ID order.
+* Add `sample.order` and `clone.order` as input parameters to `create.cluster.heatmap`
+
 ## Update
 * Fixed angle calculation bug where child angles do not follow
   their parent angle, instead moving "downward" at 0 degrees.
@@ -28,10 +31,12 @@
 * Report the number of SNVs per clone in the legend for the clone-genome distribution plot.
 * Updated the user guide to reflect new features.
 * Fix bug where the x-axis only renders when y-axis is also rendered.
+* Fix issue when creating polygons with more than 2 siblings
 
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.
 * Resolved issue for simple dendrogram trees ( < 6 nodes or binary tree), where node angles were not calculated correctly.
+
 
 # CancerEvolutionVisualization 2.0.1 (2023-11-17)
 

@@ -49,7 +49,7 @@ create.clone.genome.distribution.plot <- function(
     plt.list <- list();
     for (s in unique(snv.df$ID)) {
         # Iterate through each sample -------------------------------------------------------------
-        print(paste('Plotting clone distribution across the genome for sample:', s));
+        message(paste('Plotting clone distribution across the genome for sample:', s));
 
         sample.df <- droplevels(snv.df[snv.df$ID == s, ]);
         sample.df <- unique(sample.df[, c('clone.id', 'genome.pos', 'SNV.id', 'ID')]);

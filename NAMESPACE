@@ -28,3 +28,4 @@ export(create.ccf.densityplot)
 
 export(data.frame.to.array)
 export(update.descendant.property)
+export(get.colours.in.order)
