@@ -17,6 +17,7 @@ create.cluster.heatmap <- function(
     xaxis.fontface = 'bold',
     y.spacing = 1,
     colour.scheme = c('white', 'blue'),
+    plot.objects.heights = c(1, 0.2),
     ...
     ) {
 
@@ -112,7 +113,7 @@ create.cluster.heatmap <- function(
         plot.objects = list(hm, cov),
         layout.width = 1,
         layout.height = 2,
-        plot.objects.heights = c(1, 0.2),
+        plot.objects.heights = plot.objects.heights,
         legend = list(right = list(
             fun = legend.clone
         )),

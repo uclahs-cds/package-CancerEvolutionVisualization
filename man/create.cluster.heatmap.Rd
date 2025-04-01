@@ -24,6 +24,7 @@ create.cluster.heatmap(
     xaxis.fontface = 'bold',
     y.spacing = 1,
     colour.scheme = c('white', 'blue'),
+    plot.objects.heights = c(1, 0.2),
     ...
     );
 }
@@ -46,6 +47,7 @@ create.cluster.heatmap(
     \item{xaxis.fontface}{Defaults to \dQuote{bold}.}
     \item{y.spacing}{Spacing between heatmap and clone covariate bar. Defaults to 1}
     \item{colour.scheme}{Colour scheme for the heatmap. Defaults to \code{c('white', 'blue')}.}
+    \item{plot.objects.heights}{Object heights. Defaults to \code{c(1, 0.2)}.}
     \item{...}{Pass through argument. See BoutrosLab.plotting.general::create.heatmap() for further details.}
 }
 \value{A `grob` object of the heatmap.}

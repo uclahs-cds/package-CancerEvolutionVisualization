@@ -12,6 +12,7 @@
 * Add option to use scale bars instead of y-axes.
 * Wrapper function for `SRCgrob` to automatically save plots to file
 * Add option to annotate the CCF summary heatmap with the cell values.
+* Function to generate single-sample density plot
 * Add support for 1xn and 1x1 heatmaps.
 * Add `get.colours.in.order` function to get a list of colours and corresponding clone ID order.
 * Add `sample.order` and `clone.order` as input parameters to `create.cluster.heatmap`
@@ -35,6 +36,7 @@
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.
 * Resolved issue for simple dendrogram trees ( < 6 nodes or binary tree), where node angles were not calculated correctly.
+
 
 # CancerEvolutionVisualization 2.0.1 (2023-11-17)
 
