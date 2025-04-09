@@ -26,7 +26,7 @@ test_that(
     'Linear 30-degree plotting direction case values', {
         load('data/linear.plots.Rda');
         load('data/linear.data.Rda')
-        
+
         result.tree <- SRCGrob(
             linear.test.data$tree[, c('parent', 'length.1', 'length.2')],
             yaxis2.label = '',

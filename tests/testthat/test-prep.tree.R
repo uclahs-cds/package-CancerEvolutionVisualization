@@ -1030,9 +1030,8 @@ test_that(
 test_that(
     'prep.plotting.direction errors if value is not a scalar', {
         direction <- 1:10;
-        expect_error(
-            {
-                prep.plotting.direction(direction);
+        expect_error({
+            prep.plotting.direction(direction);
             },
             regexp = 'scalar'
         );
@@ -1095,10 +1094,9 @@ test_that(
 test_that(
     'prep.plotting.direction errors on invalid character direction', {
         direction <- 'invalid';
-        expect_error(
-            {
-                prep.plotting.direction(direction);
-                },
+        expect_error({
+            prep.plotting.direction(direction);
+            },
             regexp = 'direction'
             );
     });
@@ -1106,9 +1104,8 @@ test_that(
 test_that(
     'prep.plotting.direction errors on non-character/numeric input', {
         direction <- TRUE;
-        expect_error(
-            {
-                prep.plotting.direction(direction);
+        expect_error({
+            prep.plotting.direction(direction);
             },
             regexp = 'numeric or one of'
         );
