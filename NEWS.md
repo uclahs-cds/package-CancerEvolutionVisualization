@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2024-12-09)
+# CancerEvolutionVisualization 3.0.0 (2025-04-09)
 
 ## Added
 * Dendrogram mode
@@ -12,6 +12,7 @@
 * Add option to use scale bars instead of y-axes.
 * Wrapper function for `SRCgrob` to automatically save plots to file
 * Add option to annotate the CCF summary heatmap with the cell values.
+* `plotting.direction` argument to `SRCGrob` to support arbitrary direction of tree "flow". Can be one of 'down' (default), 'right', 'up', 'left' or any number (in degrees).
 
 ## Update
 * Fixed angle calculation bug where child angles do not follow
