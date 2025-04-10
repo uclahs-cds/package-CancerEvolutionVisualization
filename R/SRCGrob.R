@@ -34,6 +34,12 @@ SRCGrob <- function(
     scale.size.2 = NA,
     scale.padding = 1
     ) {
+    if ('CP' %in% colnames(tree) && !(plotting.direction %in% c('down', 0))) {
+        warning(paste(
+            '"plotting.direction" is not yet supported with "CP" polygon column.',
+            '"plotting.direction" will be ignored.'
+            ));
+        }
 
     add.node.text <- !is.null(node.text);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
