@@ -8,6 +8,8 @@ Creates a heatmap of cancer cell fraction (CCF) distribution across tumour sampl
 create.cluster.heatmap(
     DF,
     ccf.limits = NULL,
+    sample.order = NULL,
+    clone.order = NULL,
     clone.colours = NULL,
     height = 6,
     width = 11,
@@ -22,12 +24,15 @@ create.cluster.heatmap(
     xaxis.fontface = 'bold',
     y.spacing = 1,
     colour.scheme = c('white', 'blue'),
+    plot.objects.heights = c(1, 0.2),
     ...
     );
 }
 \arguments{
     \item{DF}{A data-frame with the following column names: 'ID', 'SNV.id', 'clone.id', 'CCF'.}
     \item{ccf.limits}{CCF limits to be applied to the heatmap. Must be a vector of length 2 for min and max thresholds. Defaults to \code{NULL}}
+    \item{clone.order}{Define clone ID order. Defaults to \code{NULL}}
+    \item{sample.order}{Define sample ID order. Defaults to \code{NULL}}
     \item{clone.colours}{Named list to provide a colour scheme for the clone ID covariate bar. If NULL, colours will be randomly generated. Defaults to \code{NULL}.}
     \item{height}{Defaults to 6}
     \item{width}{Defaults to 11}
@@ -42,6 +47,7 @@ create.cluster.heatmap(
     \item{xaxis.fontface}{Defaults to \dQuote{bold}.}
     \item{y.spacing}{Spacing between heatmap and clone covariate bar. Defaults to 1}
     \item{colour.scheme}{Colour scheme for the heatmap. Defaults to \code{c('white', 'blue')}.}
+    \item{plot.objects.heights}{Object heights. Defaults to \code{c(1, 0.2)}.}
     \item{...}{Pass through argument. See BoutrosLab.plotting.general::create.heatmap() for further details.}
 }
 \value{A `grob` object of the heatmap.}
