@@ -36,8 +36,8 @@ create.ccf.summary.heatmap(
     \item{DF}{A data-frame with the following column names: 'ID', 'SNV.id', 'clone.id', 'CCF'.}
     \item{ccf.limits}{CCF limits to be applied to the heatmap. Must be a vector of length 2 for min and max thresholds. Defaults to \code{NULL}}
     \item{median.col}{Defaults to \dQuote{median.ccf.per.sample}}
-    \item{clone.order}{Defaults to \code{NULL}}
-    \item{sample.order}{Defaults to \code{NULL}}
+    \item{clone.order}{Define clone ID order. Defaults to \code{NULL}}
+    \item{sample.order}{Define sample ID order. Defaults to \code{NULL}}
     \item{colour.scheme}{Heatmap colour scheme. Defaults to \code{c('white', 'blue')}}
     \item{clone.colours}{A named vector specifying the color to use for each clone to generate a covariate heatmap. If \code{NULL}, no covariates will be added.}
     \item{subplot.xlab.cex}{Subplot parameter. Defaults to 1.2}

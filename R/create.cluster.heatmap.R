@@ -1,6 +1,8 @@
 create.cluster.heatmap <- function(
     DF,
     ccf.limits = NULL,
+    sample.order = NULL,
+    clone.order = NULL,
     clone.colours = NULL,
     height = 6,
     width = 11,
@@ -15,25 +17,41 @@ create.cluster.heatmap <- function(
     xaxis.fontface = 'bold',
     y.spacing = 1,
     colour.scheme = c('white', 'blue'),
+    plot.objects.heights = c(1, 0.2),
     ...
     ) {
 
-    if (is.null(levels(DF$ID))) {
-        DF$ID <- factor(DF$ID, levels = sort(unique(DF$ID)));
+    # Define the order of the samples
+    if (is.null(sample.order)) {
+        sample.order <- sort(unique(DF$ID));
         }
+    DF$ID <- factor(DF$ID, levels = sample.order);
+
+    # Define the order of the clones
+    if (is.null(clone.order)) {
+        clone.order <- sort(unique(DF$clone.id));
+        }
+    DF$clone.id <- factor(DF$clone.id, levels = clone.order);
 
     if (is.null(clone.colours)) {
         clone.colours <- get.colours(DF$clone.id, return.names = TRUE);
         }
-    DF              <- droplevels(DF)[order(DF$clone.id, -abs(DF$CCF)), ];
-    snv.order       <- unique(DF[, c('SNV.id', 'clone.id')]);
-    arr             <- data.frame.to.array(DF);
-    arr             <- arr[snv.order$SNV.id, rev(levels(DF$ID))];
+    DF        <- droplevels(DF)[order(DF$clone.id, -abs(DF$CCF)), ];
+    snv.order <- unique(DF[, c('SNV.id', 'clone.id')]);
+    arr       <- data.frame.to.array(DF);
+    arr       <- arr[snv.order$SNV.id, rev(levels(DF$ID))];
 
     if (!is.null(xaxis.col)) {
         xaxis.label <- unique(DF[DF$SNV.id %in% rownames(arr), xaxis.col]);
     } else {
         xaxis.label <- NULL;
+        }
+
+    if (!is.matrix(arr)) {
+        arr <- t(arr);
+        yaxis.label <- levels(DF$ID);
+    } else {
+        yaxis.label <- colnames(arr);
         }
 
     if (!is.null(ccf.limits)) {
@@ -49,6 +67,7 @@ create.cluster.heatmap <- function(
         cluster.dimensions = 'none',
         xlab.label = '',
         xaxis.lab = xaxis.label,
+        yaxis.lab = yaxis.label,
         colour.scheme = colour.scheme,
         ...
         );
@@ -94,7 +113,7 @@ create.cluster.heatmap <- function(
         plot.objects = list(hm, cov),
         layout.width = 1,
         layout.height = 2,
-        plot.objects.heights = c(1, 0.2),
+        plot.objects.heights = plot.objects.heights,
         legend = list(right = list(
             fun = legend.clone
         )),

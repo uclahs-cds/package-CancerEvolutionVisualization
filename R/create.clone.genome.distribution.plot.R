@@ -49,7 +49,7 @@ create.clone.genome.distribution.plot <- function(
     plt.list <- list();
     for (s in unique(snv.df$ID)) {
         # Iterate through each sample -------------------------------------------------------------
-        print(paste('Plotting clone distribution across the genome for sample:', s));
+        message(paste('Plotting clone distribution across the genome for sample:', s));
 
         sample.df <- droplevels(snv.df[snv.df$ID == s, ]);
         sample.df <- unique(sample.df[, c('clone.id', 'genome.pos', 'SNV.id', 'ID')]);
@@ -104,8 +104,9 @@ create.clone.genome.distribution.plot.per.sample <- function(
             warning(paste('Skipping clone', k, 'in sample', unique(sample.df$ID), 'since there is only one SNV'));
             next;
         }
-        density.list[[k]] <- calculate.density.and.scale(
-            cluster.df = sample.df[sample.df$clone.id == k, ]
+        density.list[[k]] <- calculate.density(
+            x = sample.df[sample.df$clone.id == k, ],
+            adjust = 0.05
             );
         }
     density.df <- do.call(rbind, density.list);

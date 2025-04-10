@@ -92,9 +92,21 @@ create.ccf.summary.heatmap <- function(
         xat = sample.xaxis$at
         );
 
+    same.as.matrix <- !is.matrix(arr)
+    if (same.as.matrix) {
+        # I don't know why this sequence works but simply setting as.data.frame does not work
+        arr <- as.data.frame(arr)
+        colnames(arr) <- as.character(unique(DF$ID))
+        arr <- as.matrix(arr)
+        hm.args.x <- as.data.frame(arr)
+        } else {
+        hm.args.x <- arr
+        }
+
     hm.args <- list(
-        x = arr,
+        x = hm.args.x,
         cluster.dimensions = 'none',
+        clustering.method = 'none',
         xlab.label = 'Clone',
         xlab.cex = ifelse(is.null(clone.colours), subplot.xlab.cex, 0),
         xaxis.lab = rownames(arr),
@@ -107,7 +119,8 @@ create.ccf.summary.heatmap <- function(
         yaxis.cex = subplot.yaxis.cex,
         yaxis.fontface = subplot.yaxis.fontface,
         print.colour.key = FALSE,
-        colour.scheme = colour.scheme
+        colour.scheme = colour.scheme,
+        same.as.matrix = same.as.matrix
         );
 
     if (add.median.text) {
@@ -118,6 +131,15 @@ create.ccf.summary.heatmap <- function(
         hm.args$text.col <- ifelse(arr > contrast.thres, 'white', 'black');
         }
 
+    if (nrow(hm.args.x) == 1 & ncol(hm.args.x) == 1) {
+        colour.scheme <- colour.scheme[length(colour.scheme)];
+        hm.args$x <- as.data.frame(colour.scheme);
+        hm.args$input.colours <- TRUE;
+        hm.args$yat <- 1;
+        hm.args$col.pos <- 1.5;
+        hm.args$row.pos <- 1;
+        }
+
     hm <- do.call(BoutrosLab.plotting.general::create.heatmap, hm.args);
 
     legend.ccf <- BoutrosLab.plotting.general::legend.grob(
@@ -125,7 +147,7 @@ create.ccf.summary.heatmap <- function(
             legend = list(
                 title = 'CCF',
                 labels = c(signif(min(arr), 2), rep('', legend.size), signif(max(arr), 2)),
-                colours = c('white', 'blue'),
+                colours = colour.scheme,
                 border = 'black',
                 continuous = TRUE,
                 cex = legend.label.cex
@@ -137,6 +159,16 @@ create.ccf.summary.heatmap <- function(
         );
 
     if (!is.null(clone.colours)) {
+        if (length(clone.colours) == 1) {
+        clone.cov <- BoutrosLab.plotting.general::create.heatmap(
+            x = as.data.frame(clone.colours),
+            xlab.label = 'Clone',
+            input.colours = TRUE,
+            clustering.method = 'none',
+            print.colour.key = FALSE,
+            yaxis.tck = 0
+            );
+        } else {
         clone.cov <- BoutrosLab.plotting.general::create.heatmap(
             x = t(clone.colours[rownames(arr)]),
             xlab.label = 'Clone',
@@ -151,6 +183,7 @@ create.ccf.summary.heatmap <- function(
             print.colour.key = FALSE,
             yaxis.tck = 0
             );
+            }
         plot.list <- list(clone.bar, hm, sample.bar, clone.cov);
         layout.skip <- c(FALSE, TRUE, FALSE, FALSE, FALSE, TRUE);
         layout.height <- 3;
