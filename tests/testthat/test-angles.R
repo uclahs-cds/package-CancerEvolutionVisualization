@@ -1,5 +1,5 @@
 test_that(
-    'calculate.angles.fixed orders nodes correctly', {
+    'calculate.angles.radial orders nodes correctly', {
         num.children <- 4;
         test.tree <- data.frame(
             parent = c(-1, rep(1, num.children))
@@ -19,7 +19,8 @@ test_that(
             test.v,
             test.tree,
             spread = 1,
-            total.angle = total.angle
+            total.angle = total.angle,
+            start.angle = 0
             );
         result.order <- order(result);
         child.ids <- as.numeric(test.tree$tip[test.tree$parent == 1]);
@@ -50,7 +51,8 @@ test_that(
             test.v,
             test.tree,
             spread = 1,
-            total.angle = total.angle
+            total.angle = total.angle,
+            start.angle = 0
             );
 
         num.digits <- 6;
@@ -93,7 +95,8 @@ test_that(
             test.v,
             test.tree,
             spread = spread,
-            total.angle = total.angle
+            total.angle = total.angle,
+            start.angle = 0
             );
 
         result.range <- range(result);
@@ -127,7 +130,8 @@ test_that(
             test.v,
             test.tree,
             spread = 1,
-            total.angle = pi / 2.5
+            total.angle = pi / 2.5,
+            start.angle = 0
             );
 
         expect_equal(result[angles.to.override], override.values);
@@ -156,7 +160,8 @@ test_that(
             test.v,
             test.tree,
             spread = 1,
-            total.angle = pi / 2.5
+            total.angle = pi / 2.5,
+            start.angle = 0
             );
 
         expect_equal(mean(result[-1]), new.angle);
@@ -190,7 +195,8 @@ test_that(
             test.v,
             test.tree,
             spread = 1,
-            total.angle = total.angle
+            total.angle = total.angle,
+            start.angle = 0
             );
         result.angle.increments <- c(
             result[3] - result[2],
@@ -233,7 +239,8 @@ test_that(
             test.v,
             test.tree,
             spread = 1,
-            total.angle = total.angle
+            total.angle = total.angle,
+            start.angle = 0
             );
         result.angle.increments <- c(
             result[3] - result[2],
@@ -268,7 +275,8 @@ test_that(
         result <- calculate.angles.fixed(
             test.v,
             test.tree,
-            fixed.angle = angle
+            fixed.angle = angle,
+            start.angle = 0
             );
         expected.result <- c(0, -(angle), angle);
 
@@ -298,7 +306,8 @@ test_that(
         result <- calculate.angles.fixed(
             test.v,
             test.tree,
-            fixed.angle = pi / 4
+            fixed.angle = pi / 4,
+            start.angle = 0
             );
 
         expect_equal(result[angles.to.override], override.values);
@@ -327,7 +336,8 @@ test_that(
         result <- calculate.angles.fixed(
             test.v,
             test.tree,
-            fixed.angle = fixed.angle
+            fixed.angle = fixed.angle,
+            start.angle = 0
             );
         result.angle.range <- result[3] - result[2];
         expected.angle.range <- fixed.angle * 2 * spread;

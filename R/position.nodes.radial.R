@@ -56,8 +56,8 @@ position.nodes <- function(v, tree, extra.len) {
 			v$x[v$id == vi$id] <<- v$x[v$id == vi$parent] + dx;
 			v$y[v$id == vi$id] <<- v$y[v$id == vi$parent] + dy;
 		} else {
-		    v$x[v$id == vi$id] <<- 0;
-			v$y[v$id == vi$id] <<- distance;
+		    v$x[v$id == vi$id] <<- dx;
+			v$y[v$id == vi$id] <<- dy;
 		    }
 
 		for (child in v$id[v$parent == vi$id]) {

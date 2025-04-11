@@ -1,4 +1,10 @@
-calculate.angles.radial <- function(v, tree, spread, total.angle) {
+calculate.angles.radial <- function(
+    v,
+    tree,
+    spread,
+    total.angle,
+    start.angle
+    ) {
     root.node.id <- v$id[[1]];
     node.ids <- c(root.node.id);
 
@@ -13,7 +19,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
         parent.id <- tree$parent[tree$tip == current.node.id];
 
         if (parent.id == -1) {
-            tree$angle[tree$tip == current.node.id] <- 0;
+            tree$angle[tree$tip == current.node.id] <- start.angle;
             }
 
         child.ids <- as.numeric(
@@ -24,7 +30,7 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
         if (num.children > 0) {
             parent.angle <- angles[tree$tip == current.node.id];
             if (is.na(parent.angle) || length(parent.angle) == 0) {
-                parent.angle <- 0;
+                parent.angle <- start.angle;
                 angles[tree$tip == current.node.id] <- parent.angle;
                 }
 
@@ -140,7 +146,12 @@ split.equal.x.dist <- function(
     return(angles);
     }
 
-calculate.angles.fixed <- function(v, tree, fixed.angle) {
+calculate.angles.fixed <- function(
+    v,
+    tree,
+    fixed.angle,
+    start.angle
+    ) {
     angles <- v$angle;
     node.ids <- c(v$id[[1]]);
 
@@ -151,7 +162,7 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
 
         parent.angle <- angles[current.node.id];
         if (is.na(parent.angle) || length(parent.angle) == 0) {
-            parent.angle <- 0;
+            parent.angle <- start.angle;
             angles[current.node.id] <- parent.angle;
             }
 

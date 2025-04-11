@@ -1026,3 +1026,87 @@ test_that(
 
         expect_equal(result, expected.result);
     });
+
+test_that(
+    'prep.plotting.direction errors if value is not a scalar', {
+        direction <- 1:10;
+        expect_error({
+            prep.plotting.direction(direction);
+            },
+            regexp = 'scalar'
+        );
+    });
+
+test_that(
+    'prep.plotting.direction handles "down" plotting direction', {
+        direction <- 'down';
+        result <- prep.plotting.direction(direction);
+        expected.result <- 0;
+        expect_equal(result, expected.result);
+    });
+
+test_that(
+    'prep.plotting.direction handles "up" plotting direction', {
+        direction <- 'up';
+        result <- prep.plotting.direction(direction);
+        expected.result <- pi;
+        expect_equal(result, expected.result);
+    });
+
+test_that(
+    'prep.plotting.direction handles "left" plotting direction', {
+        direction <- 'left';
+        result <- prep.plotting.direction(direction);
+        expected.result <- -pi / 2;
+        expect_equal(result, expected.result);
+    });
+
+test_that(
+    'prep.plotting.direction handles "right" plotting direction', {
+        direction <- 'right';
+        result <- prep.plotting.direction(direction);
+        expected.result <- pi / 2;
+        expect_equal(result, expected.result);
+    });
+
+test_that(
+    'prep.plotting.direction handles numeric radian plotting direction', {
+        direction <- pi * 0.76;
+        result <- prep.plotting.direction(direction, radians = TRUE);
+        expect_equal(result, direction);
+    });
+
+test_that(
+    'prep.plotting.direction converts degrees plotting direction to radians', {
+        degrees <- 76;
+        result <- prep.plotting.direction(degrees, radians = FALSE);
+        expected.result <- degrees.to.radians(degrees)
+        expect_equal(result, expected.result);
+    });
+
+test_that(
+    'prep.plotting.direction simplifies numeric plotting direction larger than 360 degrees', {
+        true.angle <- pi / 3.5;
+        result <- prep.plotting.direction(true.angle + (2 * pi), radians = TRUE);
+        expect_equal(result, true.angle);
+    });
+
+test_that(
+    'prep.plotting.direction errors on invalid character direction', {
+        direction <- 'invalid';
+        expect_error({
+            prep.plotting.direction(direction);
+            },
+            regexp = 'direction'
+            );
+    });
+
+test_that(
+    'prep.plotting.direction errors on non-character/numeric input', {
+        direction <- TRUE;
+        expect_error({
+            prep.plotting.direction(direction);
+            },
+            regexp = 'numeric or one of'
+        );
+    });
