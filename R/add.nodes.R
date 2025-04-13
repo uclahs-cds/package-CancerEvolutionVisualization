@@ -101,7 +101,7 @@ add.normal <- function(clone.out, node.radius, label.cex, normal.cex = 1) {
         vp = vpStack(
             make.plot.viewport(clone.out, clip = 'off'),
             viewport(
-                y = unit(1, 'npc'),
+                y = unit(1, 'npc') - unit(node.radius * normal.cex, 'inches'),
                 x = unit(0, 'native'),
                 height = grobHeight(normal.box),
                 width = grobWidth(normal.box),
