@@ -99,7 +99,8 @@ calculate.coords.dendrogram <- function(
     length.colname,
     parent.id,
     offset,
-    side
+    side,
+    start.angle
     ) {
 
     angle <- x['angle'];
@@ -139,12 +140,20 @@ calculate.coords.dendrogram <- function(
     tipx <- basex;
     tipy <- as.numeric(basey + dy);
 
-    return(data.frame(
-        basex,
-        basey,
-        tipx,
-        tipy
-        ));
+    df <- data.frame(
+        basex = basex,
+        basey = basey,
+        tipx = tipx,
+        tipy = tipy
+        );
+    if (start.angle != 0) {
+        df <- rotate.dendrogram(
+            df,
+            rotate.by = start.angle
+            );
+        }
+
+    return(df);
     }
 
 ###################################################################################################
@@ -166,7 +175,8 @@ calculate.seg.coords <- function(
     length.colname,
     parent.id,
     offset,
-    side
+    side,
+    start.angle
     ) {
 
     segs <- apply(
@@ -192,13 +202,13 @@ calculate.seg.coords <- function(
                     length.colname = length.colname,
                     parent.id = parent.id,
                     offset = offset,
-                    side = side
+                    side = side,
+                    start.angle = start.angle
                     );
                 }
 
             return(coords);
-            }
-        );
+            }        );
 
     segs <- do.call('rbind', segs);
     rownames(segs) <- rownames(tree);
@@ -212,7 +222,8 @@ add.tree.segs <- function(
     line.lwd,
     scale1,
     seg1.col,
-    seg2.col
+    seg2.col,
+    start.angle
     ) {
 
     offset <- line.lwd / 96 / scale1 / 2;
@@ -222,11 +233,12 @@ add.tree.segs <- function(
         }
 
     tree.segs1 <- calculate.seg.coords(
-            clone.out$tree,
-            clone.out$v,
-            length.colname = 'length1',
-            offset = offset,
-            side = 'left'
+        clone.out$tree,
+        clone.out$v,
+        length.colname = 'length1',
+        offset = offset,
+        side = 'left',
+        start.angle = start.angle
         );
 
     second.seg.colname <- 'length2.c';
@@ -236,7 +248,8 @@ add.tree.segs <- function(
             clone.out$v,
             length.colname = second.seg.colname,
             offset = offset,
-            side = 'right'
+            side = 'right',
+            start.angle = start.angle
             );
 
     } else {

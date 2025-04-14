@@ -125,7 +125,15 @@ make.clone.tree.grobs <- function(
         get.CP.polygons(clone.out);
         }
 
-    add.tree.segs(clone.out, node.radius, default.branch.width, scale1, seg1.col, seg2.col);
+    add.tree.segs(
+        clone.out,
+        node.radius,
+        default.branch.width,
+        scale1,
+        seg1.col,
+        seg2.col,
+        start.angle
+        );
 
     if (!is.null(cluster.list)) {
         message(paste(
