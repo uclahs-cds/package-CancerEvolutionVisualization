@@ -52,9 +52,7 @@ calculate.main.plot.size <- function(
 
 	clone.out$vp <- make.plot.viewport(
 	    clone.out,
-	    clip = if (clone.out$no.ccf) 'off' else 'on',
-	    just = c('centre', 'top'),
-	    y = 0.9
+	    clip = if (clone.out$no.ccf) 'off' else 'on'
 	    );
     }
 
