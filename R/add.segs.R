@@ -335,6 +335,7 @@ get.dendrogram.connector.segs <- function(branch.coords) {
         branch.coords[, c('basex', 'basey')],
         branch.coords$parent,
         function(row) {
+            row[] <- lapply(row, function(x) round(x, 7));
             row <- row[order(row$basex, row$basey), ];
             return(list(
                 basex = row$basex[1],
