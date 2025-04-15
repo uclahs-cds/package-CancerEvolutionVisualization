@@ -334,22 +334,19 @@ add.tree.segs <- function(
     }
 
 get.dendrogram.connector.segs <- function(branch.coords) {
+    print(branch.coords)
     tree.levels <- by(
         branch.coords[, c('basex', 'basey')],
         branch.coords$parent,
         function(row) {
-            x.range <- range(row$basex);
-            y.range <- range(row$basey);
-            # y <- unique(row$basey);
-            # if (length(y) > 1) {
-            #     stop();
-            #     }
+            start <- which.min(row$basex);
+            end <- which.max(row$basex);
 
             return(list(
-                basex = x.range[1],
-                tipx = x.range[2],
-                basey = y.range[1],
-                tipy = y.range[2]
+                basex = row$basex[start],
+                tipx = row$basex[end],
+                basey = row$basey[start],
+                tipy = row$basey[end]
                 ));
             }
         );
