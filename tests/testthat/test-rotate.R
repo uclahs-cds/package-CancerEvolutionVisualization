@@ -1,7 +1,7 @@
 # Test for rotate.coords
 test_that('rotate.coords rotates points correctly around origin', {
     # 90 degrees (pi/2 radians) counter-clockwise
-    res <- rotate.coords(x = 1, y = 0, rotate.by = pi/2);
+    res <- rotate.coords(x = 1, y = 0, rotate.by = pi / 2);
     expect_equal(round(res$x), 0);
     expect_equal(round(res$y), 1);
 

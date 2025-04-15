@@ -28,6 +28,7 @@ rotate.coords <- function(
     x.shifted <- x - x.origin
     y.shifted <- y - y.origin
 
+    rotate.by <- -1 * rotate.by;
     # Rotate points
     x.rotated <- x.shifted * cos(rotate.by) - y.shifted * sin(rotate.by)
     y.rotated <- x.shifted * sin(rotate.by) + y.shifted * cos(rotate.by)

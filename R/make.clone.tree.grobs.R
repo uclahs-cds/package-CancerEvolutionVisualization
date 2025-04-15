@@ -133,7 +133,7 @@ make.clone.tree.grobs <- function(
         seg2.col,
         start.angle
         );
-
+    print(clone.out$v)
     if (!is.null(cluster.list)) {
         message(paste(
             'Clustered pie nodes will be supported in a future version.',
