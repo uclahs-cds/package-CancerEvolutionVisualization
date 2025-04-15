@@ -36,17 +36,12 @@ assign.weight <- function(node,v, extra.len, spread) {
 position.nodes <- function(v, tree, extra.len, start.angle) {
 	xpos <- ypos <- 0;
 	vi <- v[v$parent == -1, ];
-	# start.angle <- tree[tree$parent == -1, 'angle'];
-	print(start.angle);
 
 	preorder.traversal <- function(node, tree) {
 		vi <- v[v$id == node, ];
-		# distance <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
-		angle <- tree$angle[tree$tip == vi$id & tree$parent == vi$parent];
 		distance <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
-		# if (vi$mode == 'dendrogram' & angle != 0) {
-		# 	distance <- distance / cos(angle);
-		#     }
+		angle <- tree$angle[tree$tip == vi$id & tree$parent == vi$parent];
+
 		if (vi$mode == 'radial') {
 		    dx <- distance * sin(angle);
 		    dy <- distance * cos(angle);
@@ -73,8 +68,6 @@ position.nodes <- function(v, tree, extra.len, start.angle) {
 	     }
 
 	preorder.traversal(node = 1, tree = tree);
-
-	# v <- reposition.clones(tree, v);
 
 	v$len <- sapply(
 	    v$y,

@@ -328,8 +328,7 @@ compute.clones <- function(
 	v <- v[is.na(v$parent) | v$parent != -1, ];
 	v <- rbind(root, v);
 	v <- count.leaves.per.node(v);
-	print(v)
-	print(tree)
+
 	if (no.ccf) {
 	    tree$angle <- if ((is.null(fixed.angle) && nrow(v) > 6) || any(table(v$parent) > 2) || any(v$mode == 'dendrogram')) {
 			tau <- -(pi / 2.5);
@@ -351,7 +350,6 @@ compute.clones <- function(
 	        }
 
 	    tmp <- position.nodes(v, tree, extra.len, start.angle);
-		print(tmp)
 
 	    clone.env <-  new.env(parent = emptyenv());
 	    clone.env$v <- tmp$v;

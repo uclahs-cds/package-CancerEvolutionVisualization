@@ -147,7 +147,7 @@ calculate.coords.dendrogram <- function(
         tipx = tipx,
         tipy = tipy
         );
-    print(df);
+
     if (start.angle != 0) {
         df <- rotate.dendrogram(
             df,
@@ -156,8 +156,6 @@ calculate.coords.dendrogram <- function(
             y.origin = y.origin
             );
         }
-        print(df);
-
     return(df);
     }
 
