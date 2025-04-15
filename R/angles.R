@@ -18,9 +18,9 @@ calculate.angles.radial <- function(
 
         parent.id <- tree$parent[tree$tip == current.node.id];
 
-        if (parent.id == -1) {
-            tree$angle[tree$tip == current.node.id] <- start.angle;
-            }
+        # if (parent.id == -1) {
+        #     tree$angle[tree$tip == current.node.id] <- start.angle;
+        #     }
 
         child.ids <- as.numeric(
             tree$tip[tree$parent == current.node.id & !is.na(tree$parent)]
@@ -29,12 +29,12 @@ calculate.angles.radial <- function(
 
         if (num.children > 0) {
             parent.angle <- angles[tree$tip == current.node.id];
-            if (is.na(parent.angle) || length(parent.angle) == 0) {
-                parent.angle <- start.angle;
-                angles[tree$tip == current.node.id] <- parent.angle;
-                }
 
             if (unique(v$mode[v$id %in% child.ids]) == 'radial') {
+                if (is.na(parent.angle) || length(parent.angle) == 0) {
+                    parent.angle <- start.angle;
+                    angles[tree$tip == current.node.id] <- parent.angle;
+                    }
                 # if all children are radial, spread evenly by angle
                 level.spread <- calculate.level.spread(v$spread[v$id %in% child.ids]);
                 level.total.angle <- total.angle * level.spread;
@@ -52,6 +52,10 @@ calculate.angles.radial <- function(
                     angles[tree$tip %in% child.ids] <- parent.angle + angles[tree$tip %in% child.ids];
                     }
             } else if (unique(v$mode[v$id %in% child.ids]) == 'dendrogram') {
+                if (is.na(parent.angle) || length(parent.angle) == 0) {
+                    parent.angle <- 0;
+                    angles[tree$tip == current.node.id] <- parent.angle;
+                    }
                 # sort children by complexity
                 child.ids <- v$id[v$id %in% child.ids];
                 # if all children are dendrogram, spread evenly by x distance
@@ -63,6 +67,7 @@ calculate.angles.radial <- function(
                     v = v,
                     dx.scale = median(tree$length1)
                     );
+                # angles[tree$tip %in% child.ids] <- start.angle + angles[tree$tip %in% child.ids];
                 }
 
             # Appending to end of queue for breadth-first traversal

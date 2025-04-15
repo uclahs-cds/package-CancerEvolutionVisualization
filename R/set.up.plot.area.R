@@ -26,13 +26,13 @@ calculate.main.plot.size <- function(
             xmax / 2 + 2 * node.radius / scale1
             );
     } else {
+		print(clone.out$v)
         xmin <- min(c(clone.out$v$x));
         xmax <- max(c(clone.out$v$x));
         xlims <- c(xmin, xmax);
 
         width <- (max(xlims) - min(xlims)) * scale1;
         diff <- min.width - width;
-
         if (diff > 0) {
             xmin <- xmin - 0.5 * diff / scale1
             xmax <- xmax + 0.5 * diff / scale1;

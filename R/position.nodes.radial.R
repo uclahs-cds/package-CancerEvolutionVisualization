@@ -33,15 +33,20 @@ assign.weight <- function(node,v, extra.len, spread) {
 	return(node.weight);
     }
 
-position.nodes <- function(v, tree, extra.len) {
+position.nodes <- function(v, tree, extra.len, start.angle) {
 	xpos <- ypos <- 0;
 	vi <- v[v$parent == -1, ];
+	# start.angle <- tree[tree$parent == -1, 'angle'];
+	print(start.angle);
 
 	preorder.traversal <- function(node, tree) {
 		vi <- v[v$id == node, ];
-		distance <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
+		# distance <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
 		angle <- tree$angle[tree$tip == vi$id & tree$parent == vi$parent];
-
+		distance <- tree$length[tree$tip == vi$id & tree$parent == vi$parent];
+		# if (vi$mode == 'dendrogram' & angle != 0) {
+		# 	distance <- distance / cos(angle);
+		#     }
 		if (vi$mode == 'radial') {
 		    dx <- distance * sin(angle);
 		    dy <- distance * cos(angle);
@@ -50,6 +55,9 @@ position.nodes <- function(v, tree, extra.len) {
 		    x.length <- vi$x.length;
 		    dx <- if (is.na(x.length)) distance * tan(angle) else x.length;
 		    dy <- distance;
+			new.d <- rotate.coords(dx, dy, rotate.by = start.angle);
+			dx <- new.d$x;
+			dy <- new.d$y;
 	        }
 
 		if (vi$parent != -1) {
@@ -59,7 +67,6 @@ position.nodes <- function(v, tree, extra.len) {
 		    v$x[v$id == vi$id] <<- dx;
 			v$y[v$id == vi$id] <<- dy;
 		    }
-
 		for (child in v$id[v$parent == vi$id]) {
 			preorder.traversal(node = child, tree = tree);
 		    }

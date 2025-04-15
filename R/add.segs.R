@@ -123,11 +123,11 @@ calculate.coords.dendrogram <- function(
         }
 
     if (x['parent'] == -1) {
-        basey <- 0;
-        basex <- 0;
+        y.origin <- 0;
+        x.origin <- 0;
     } else {
-        basey <- v[parent.id, 'y'];
-        basex <- v[parent.id, 'x'];
+        y.origin <- v[parent.id, 'y'];
+        x.origin <- v[parent.id, 'x'];
         }
 
     dy <- x[length.colname];
@@ -135,10 +135,11 @@ calculate.coords.dendrogram <- function(
     dx <- if (is.na(x.length)) x['length'] * tan(angle) else x.length;
 
     offset.x <- offset * offset.x.modifier;
-    basex <- as.numeric(basex + dx + offset.x);
+    basex <- as.numeric(x.origin + dx + offset.x);
+    basey <- y.origin;
 
     tipx <- basex;
-    tipy <- as.numeric(basey + dy);
+    tipy <- as.numeric(y.origin + dy);
 
     df <- data.frame(
         basex = basex,
@@ -146,12 +147,16 @@ calculate.coords.dendrogram <- function(
         tipx = tipx,
         tipy = tipy
         );
+    print(df);
     if (start.angle != 0) {
         df <- rotate.dendrogram(
             df,
-            rotate.by = start.angle
+            rotate.by = start.angle,
+            x.origin = x.origin,
+            y.origin = y.origin
             );
         }
+        print(df);
 
     return(df);
     }
@@ -208,8 +213,8 @@ calculate.seg.coords <- function(
                 }
 
             return(coords);
-            }        );
-
+            }
+        );
     segs <- do.call('rbind', segs);
     rownames(segs) <- rownames(tree);
     segs <- cbind(tree, segs);
@@ -240,7 +245,6 @@ add.tree.segs <- function(
         side = 'left',
         start.angle = start.angle
         );
-
     second.seg.colname <- 'length2.c';
     if (second.seg.colname %in% colnames(clone.out$tree)) {
         tree.segs2 <- calculate.seg.coords(
@@ -272,7 +276,6 @@ add.tree.segs <- function(
             lty = seg.data.1$edge.type.1
             )
         );
-
     if (!is.null(tree.segs2)) {
         include.segs2 <- which(c(
             tree.segs2$basey != tree.segs2$tipy)
@@ -338,16 +341,17 @@ get.dendrogram.connector.segs <- function(branch.coords) {
         branch.coords$parent,
         function(row) {
             x.range <- range(row$basex);
-            y <- unique(row$basey);
-            if (length(y) > 1) {
-                stop();
-                }
+            y.range <- range(row$basey);
+            # y <- unique(row$basey);
+            # if (length(y) > 1) {
+            #     stop();
+            #     }
 
             return(list(
                 basex = x.range[1],
                 tipx = x.range[2],
-                basey = y,
-                tipy = y
+                basey = y.range[1],
+                tipy = y.range[2]
                 ));
             }
         );
