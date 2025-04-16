@@ -99,7 +99,8 @@ calculate.coords.dendrogram <- function(
     length.colname,
     parent.id,
     offset,
-    side
+    side,
+    start.angle
     ) {
 
     angle <- x['angle'];
@@ -122,11 +123,11 @@ calculate.coords.dendrogram <- function(
         }
 
     if (x['parent'] == -1) {
-        basey <- 0;
-        basex <- 0;
+        y.origin <- 0;
+        x.origin <- 0;
     } else {
-        basey <- v[parent.id, 'y'];
-        basex <- v[parent.id, 'x'];
+        y.origin <- v[parent.id, 'y'];
+        x.origin <- v[parent.id, 'x'];
         }
 
     dy <- x[length.colname];
@@ -134,17 +135,28 @@ calculate.coords.dendrogram <- function(
     dx <- if (is.na(x.length)) x['length'] * tan(angle) else x.length;
 
     offset.x <- offset * offset.x.modifier;
-    basex <- as.numeric(basex + dx + offset.x);
+    basex <- as.numeric(x.origin + dx + offset.x);
+    basey <- y.origin;
 
     tipx <- basex;
-    tipy <- as.numeric(basey + dy);
+    tipy <- as.numeric(y.origin + dy);
 
-    return(data.frame(
-        basex,
-        basey,
-        tipx,
-        tipy
-        ));
+    df <- data.frame(
+        basex = basex,
+        basey = basey,
+        tipx = tipx,
+        tipy = tipy
+        );
+
+    if (start.angle != 0) {
+        df <- rotate.dendrogram(
+            df,
+            rotate.by = start.angle,
+            x.origin = x.origin,
+            y.origin = y.origin
+            );
+        }
+    return(df);
     }
 
 ###################################################################################################
@@ -166,7 +178,8 @@ calculate.seg.coords <- function(
     length.colname,
     parent.id,
     offset,
-    side
+    side,
+    start.angle
     ) {
 
     segs <- apply(
@@ -192,14 +205,14 @@ calculate.seg.coords <- function(
                     length.colname = length.colname,
                     parent.id = parent.id,
                     offset = offset,
-                    side = side
+                    side = side,
+                    start.angle = start.angle
                     );
                 }
 
             return(coords);
             }
         );
-
     segs <- do.call('rbind', segs);
     rownames(segs) <- rownames(tree);
     segs <- cbind(tree, segs);
@@ -212,7 +225,8 @@ add.tree.segs <- function(
     line.lwd,
     scale1,
     seg1.col,
-    seg2.col
+    seg2.col,
+    start.angle
     ) {
 
     offset <- line.lwd / 96 / scale1 / 2;
@@ -222,13 +236,13 @@ add.tree.segs <- function(
         }
 
     tree.segs1 <- calculate.seg.coords(
-            clone.out$tree,
-            clone.out$v,
-            length.colname = 'length1',
-            offset = offset,
-            side = 'left'
+        clone.out$tree,
+        clone.out$v,
+        length.colname = 'length1',
+        offset = offset,
+        side = 'left',
+        start.angle = start.angle
         );
-
     second.seg.colname <- 'length2.c';
     if (second.seg.colname %in% colnames(clone.out$tree)) {
         tree.segs2 <- calculate.seg.coords(
@@ -236,13 +250,12 @@ add.tree.segs <- function(
             clone.out$v,
             length.colname = second.seg.colname,
             offset = offset,
-            side = 'right'
+            side = 'right',
+            start.angle = start.angle
             );
-
     } else {
         tree.segs2 <- NULL;
         }
-
     seg.grobs <- list();
 
     seg.data.1 <- clone.out$v[match(tree.segs1$tip, clone.out$v$id), ];
@@ -259,7 +272,6 @@ add.tree.segs <- function(
             lty = seg.data.1$edge.type.1
             )
         );
-
     if (!is.null(tree.segs2)) {
         include.segs2 <- which(c(
             tree.segs2$basey != tree.segs2$tipy)
@@ -292,7 +304,6 @@ add.tree.segs <- function(
         }
     dendrogram.coords <- rbind(tree.segs1, tree.segs2);
     dendrogram.coords <- dendrogram.coords[dendrogram.coords$parent %in% dendrogram.ids, ];
-
     if (nrow(dendrogram.coords) > 0) {
         connector.segs <- get.dendrogram.connector.segs(dendrogram.coords);
         connector.gpar <- data.frame(t(sapply(
@@ -324,27 +335,19 @@ get.dendrogram.connector.segs <- function(branch.coords) {
         branch.coords[, c('basex', 'basey')],
         branch.coords$parent,
         function(row) {
-            x.range <- range(row$basex);
-            y <- unique(row$basey);
-            if (length(y) > 1) {
-                stop();
-                }
-
+            row[] <- lapply(row, function(x) round(x, 7));
+            row <- row[order(row$basex, row$basey), ];
             return(list(
-                basex = x.range[1],
-                tipx = x.range[2],
-                basey = y,
-                tipy = y
+                basex = row$basex[1],
+                tipx = row$basex[nrow(row)],
+                basey = row$basey[1],
+                tipy = row$basey[nrow(row)]
                 ));
             }
         );
-
     # Cannot directly coerce to data.frame
     horizontal.branch.coords <- as.data.frame(t(sapply(tree.levels, function(x) x)));
     horizontal.branch.coords$i <- rownames(horizontal.branch.coords);
-
-    horizontal.levels <- as.numeric(horizontal.branch.coords$basex) != as.numeric(horizontal.branch.coords$tipx);
-    horizontal.branch.coords <- horizontal.branch.coords[horizontal.levels, ];
 
     if (nrow(horizontal.branch.coords) > 0) {
         for (missing.column in setdiff(colnames(branch.coords), colnames(horizontal.branch.coords))) {

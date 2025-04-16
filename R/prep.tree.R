@@ -331,7 +331,7 @@ check.parent.values <- function(node.names, parent.col) {
     all(sapply(
         parent.col,
         FUN = function(parent) {
-            !is.null(unlist(unique.node.names[parent])) | parent == -1;
+            !is.null(unlist(unique.node.names[as.character(parent)])) | parent == -1;
             }
         ));
     }
@@ -348,8 +348,9 @@ check.circular.node.parents <- function(tree) {
     }
 
 is.circular.node.parent <- function(tree, node) {
-    node.parent <- tree[node, 'parent'];
-    parent.parent <- tree[node.parent, 'parent'];
+    # use as.character to ensure its not indexing by row number
+    node.parent <- tree[as.character(node), 'parent'];
+    parent.parent <- tree[as.character(node.parent), 'parent'];
 
     is.root <- function(node.name) {
         is.na(node.name) || node.name == '-1';
@@ -357,7 +358,6 @@ is.circular.node.parent <- function(tree, node) {
     contains.root.node <- (is.root(node.parent)) || is.root(parent.parent);
 
     is.circular <- !contains.root.node && parent.parent == node;
-
     return(is.circular)
     }
 
