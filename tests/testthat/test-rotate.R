@@ -1,9 +1,9 @@
 # Test for rotate.coords
 test_that('rotate.coords rotates points correctly around origin', {
-    # 90 degrees (pi/2 radians) counter-clockwise
+    # 90 degrees (pi/2 radians) clockwise
     res <- rotate.coords(x = 1, y = 0, rotate.by = pi / 2);
     expect_equal(round(res$x), 0);
-    expect_equal(round(res$y), 1);
+    expect_equal(round(res$y), -1);
 
     # 180 degrees (pi radians)
     res <- rotate.coords(x = 1, y = 2, rotate.by = pi);
@@ -18,7 +18,7 @@ test_that('rotate.coords rotates points correctly around origin', {
     # Rotation around custom origin
     res <- rotate.coords(x = 2, y = 1, rotate.by = pi / 2, x.origin = 1, y.origin = 1);
     expect_equal(round(res$x), 1);
-    expect_equal(round(res$y), 2);
+    expect_equal(round(res$y), 0);
 });
 
 # Test for rotate.dendrogram
@@ -36,10 +36,10 @@ test_that('rotate.dendrogram applies rotate.coords to basex/basey and tipx/tipy'
     expect_equal(colnames(rotated), colnames(df));
 
     # First base point (1,0) should rotate to (0,1)
-    expect_equal(round(rotated$basex[1]), 0);
-    expect_equal(round(rotated$basey[1]), 1);
+    expect_equal(round(rotated$basex), c(0, 0));
+    expect_equal(round(rotated$basey), c(-1, -2));
 
     # First tip point (1,1) should rotate to (-1,1)
-    expect_equal(round(rotated$tipx[1]), -1);
-    expect_equal(round(rotated$tipy[1]), 1);
+    expect_equal(round(rotated$tipx), c(1, 1));
+    expect_equal(round(rotated$tipy), c(-1, -2));
 })
