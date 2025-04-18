@@ -14,22 +14,11 @@ calculate.main.plot.size <- function(
     min.width,
     node.radius
     ) {
-	print(clone.out$v[, c('label.text', 'len', 'y', 'x')])
-    # y1 <- clone.out$v$y[1];
-	# if (y1 > 0) {
-	# 	ymax <- max(clone.out$v$len) + y1;
-	# } else {
-	# 	print(clone.out$v[, c('label.text', 'len', 'y', 'x')])
-	# 	ymax <- - max(clone.out$v$len) + y1;
-	# 	}
-	# ymax <- clone.out$v$y[which.max(abs(clone.out$v$y))];
-	# ymax <- ymax + (sign(ymax) * node.radius / scale1)
-	# height <- (ymax) * scale1;
+
     padding <- 2 * node.radius / scale1;
-	ypad <- min(clone.out$v$len);
-	ymax <- clone.out$v$y[which.max(abs(clone.out$v$y))];
-	print(ymax);
-    height <- (ymax) * scale1;
+    ymax <- clone.out$v$y[which.max(abs(clone.out$v$y))];
+	ymax <- ymax + (- sign(ymax) * padding);
+    height <- ymax * scale1;
 
     if (is.null(min.width)) {
         xmax <- wid;
