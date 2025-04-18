@@ -14,16 +14,29 @@ calculate.main.plot.size <- function(
     min.width,
     node.radius
     ) {
-
-	ymax <- max(clone.out$v$len) + clone.out$v$y[1];
-	height <- (ymax) * scale1;
+	print(clone.out$v[, c('label.text', 'len', 'y', 'x')])
+    # y1 <- clone.out$v$y[1];
+	# if (y1 > 0) {
+	# 	ymax <- max(clone.out$v$len) + y1;
+	# } else {
+	# 	print(clone.out$v[, c('label.text', 'len', 'y', 'x')])
+	# 	ymax <- - max(clone.out$v$len) + y1;
+	# 	}
+	# ymax <- clone.out$v$y[which.max(abs(clone.out$v$y))];
+	# ymax <- ymax + (sign(ymax) * node.radius / scale1)
+	# height <- (ymax) * scale1;
+    padding <- 2 * node.radius / scale1;
+	ypad <- min(clone.out$v$len);
+	ymax <- clone.out$v$y[which.max(abs(clone.out$v$y))];
+	print(ymax);
+    height <- (ymax) * scale1;
 
     if (is.null(min.width)) {
         xmax <- wid;
         width <- wid * scale1 + 4 * node.radius;
         xlims <- c(
-            -(xmax / 2) - (2 * node.radius / scale1),
-            xmax / 2 + 2 * node.radius / scale1
+            -(xmax / 2) - padding,
+            xmax / 2 + padding
             );
     } else {
         xmin <- min(c(clone.out$v$x));
@@ -37,8 +50,8 @@ calculate.main.plot.size <- function(
             xmin <- xmin - 0.5 * diff / scale1
             xmax <- xmax + 0.5 * diff / scale1;
             xlims <- c(
-                xmin - (2 * node.radius / scale1),
-                xmax + 2 * node.radius / scale1
+                xmin - padding,
+                xmax + padding
                 );
 
             width <- (max(xlims) - min(xlims)) * scale1;
@@ -342,7 +355,8 @@ add.main <- function(
     size.units = 'npc'
     ) {
 
-	y.pos <- unit(1.08,'npc');
+	# y.pos <- unit(1.08,'npc');
+	y.pos <- unit(0.5,'npc');
 
 	if (!is.null(main.y)) {
 		pushViewport(clone.out$vp);
