@@ -360,31 +360,24 @@ spatial.col <- setNames(
     );
 
 temp.dt <- phy.dt;
-temp.dt$length.1 <- 5;
 temp.dt$node.col <- spatial.col[temp.dt$spatial];
+temp.dt$length.1 <- 0;
+temp.dt$length.1[temp.dt$spatial %in% c('Shared', 'Primary')] <- 1;
+temp.dt$edge.col.1 <- spatial.col['Primary'];
 
-# Migration path tree
-mig.dt <- data.frame(
-    parent = c(NA, 'R1', 'LN1', 'LN1'),
-    label = c('R1', 'LN1', 'LN2', 'LN3'),
-    node.col = spatial.col[c('Primary', 'Metastasis', 'Metastasis', 'Metastasis')]
-    );
-rownames(mig.dt) <- mig.dt$label;
+temp.dt$length.2 <- 0;
+temp.dt$length.2[temp.dt$spatial %in% c('Shared', 'Metastasis')] <- 1;
+temp.dt$edge.col.2 <- spatial.col['Metastasis'];
 
 plt <- SRCGrob(
     temp.dt,
     scale1 = 1.5,
+    scale2 = 0.5,
     horizontal.padding = 5,
     add.normal = TRUE,
     use.radians = TRUE
     );
 
-plt2 <- SRCGrob(
-    mig.dt,
-    node.text.cex = 0.7,
-    scale1 = 0.4,
-    add.normal = TRUE
-    );
 legend <- legendGrob(
     labels = names(spatial.col),
     pch = 15,
@@ -396,8 +389,9 @@ legend <- legendGrob(
 png(
     file = 'figures/2B_spatial-annotation-phylogeny.png',
     width = 7,
-    height = 5.5,
+    height = 6,
     units = 'in',
+    bg = background,
     res = 500
     );
 grid.draw(plt);
@@ -405,7 +399,7 @@ grid.draw(plt);
 # Define a viewport for the legend inside the plot space
 vp.legend <- viewport(
     x = 0.45,
-    y = 0.95,
+    y = 1,
     width = 0.2,
     height = 0.2,
     just = c('right', 'top')
@@ -413,22 +407,50 @@ vp.legend <- viewport(
 pushViewport(vp.legend);
 grid.draw(legend);
 popViewport();
-
-# Define a viewport for plt2 inside the plot space
-vp.plt2 <- viewport(
-    x = 0.85,
-    y = 0.8,
-    width = 0.15,
-    height = 0.33,
-    just = c('center', 'center')
-    );
-pushViewport(vp.plt2);
-# Draw a black border (rectangle) around the viewport
-# grid.rect(gp = gpar(col = 'black', fill = NA, lwd = 2));
-grid.draw(plt2);
-popViewport();
-
 dev.off();
+```
+
+```{r migration-path}
+mig.dt1 <- data.frame(
+    parent = c(NA, 'R1', 'R1', 'R1'),
+    label = c('R1', 'R2', 'LN1', 'LN2'),
+    node.col = spatial.col[c('Primary', 'Primary', 'Metastasis', 'Metastasis')],
+    edge.type.1 = c('solid', 'solid', 'solid', 'dotted')
+    );
+rownames(mig.dt1) <- mig.dt1$label;
+mig.dt2 <- mig.dt1;
+mig.dt2$parent[mig.dt2$label == 'LN2'] <- 'LN1';
+mig.dt2$angle[mig.dt2$label == 'LN2'] <- 0;
+
+mig1 <- create.phylogenetic.tree(
+    filename = 'figures/2B_migration-path-1.png',
+    mig.dt1,
+    scale1 = 0.75,
+    bg = background,
+    add.normal = TRUE
+    );
+mig2 <- create.phylogenetic.tree(
+    filename = 'figures/2B_migration-path-2.png',
+    mig.dt2,
+    scale1 = 0.75,
+    bg = background,
+    add.normal = TRUE
+    );
+```
+
+
+```{r migration-path-annotated}
+mig.text <- single.phy.text[c(1:3, 5), ];
+mig.text$node[mig.text$node == 'MRCA'] <- 'R1';
+mig.text$node[mig.text$node == '4'] <- 'LN1';
+
+create.phylogenetic.tree(
+    filename = 'figures/2B_migration-path-2-annot.png',
+    mig.dt2,
+    node.text = mig.text,
+    bg = background,
+    add.normal = TRUE
+    );
 
 ```
 
