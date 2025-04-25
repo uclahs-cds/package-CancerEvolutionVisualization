@@ -32,7 +32,6 @@ calculate.main.plot.size <- function(
 
         width <- (max(xlims) - min(xlims)) * scale1;
         diff <- min.width - width;
-
         if (diff > 0) {
             xmin <- xmin - 0.5 * diff / scale1
             xmax <- xmax + 0.5 * diff / scale1;
@@ -52,9 +51,7 @@ calculate.main.plot.size <- function(
 
 	clone.out$vp <- make.plot.viewport(
 	    clone.out,
-	    clip = if (clone.out$no.ccf) 'off' else 'on',
-	    just = c('centre', 'top'),
-	    y = 0.9
+	    clip = if (clone.out$no.ccf) 'off' else 'on'
 	    );
     }
 
