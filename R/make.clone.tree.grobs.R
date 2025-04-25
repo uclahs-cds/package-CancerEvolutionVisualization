@@ -75,7 +75,6 @@ make.clone.tree.grobs <- function(
 
     #initializing line segment dataframe and adjusting lengths to accomodate the node circles
     tree$angle <- numeric(length = nrow(tree));
-    # tree$angle[tree$parent == -1] <- start.angle;
     if ('length2' %in% colnames(tree)) {
         tree$length2.c <- tree$length2 / scale1 * scale2;
 

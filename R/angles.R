@@ -18,10 +18,6 @@ calculate.angles.radial <- function(
 
         parent.id <- tree$parent[tree$tip == current.node.id];
 
-        # if (parent.id == -1) {
-        #     tree$angle[tree$tip == current.node.id] <- start.angle;
-        #     }
-
         child.ids <- as.numeric(
             tree$tip[tree$parent == current.node.id & !is.na(tree$parent)]
             );
@@ -67,7 +63,6 @@ calculate.angles.radial <- function(
                     v = v,
                     dx.scale = median(tree$length1)
                     );
-                # angles[tree$tip %in% child.ids] <- start.angle + angles[tree$tip %in% child.ids];
                 }
 
             # Appending to end of queue for breadth-first traversal
