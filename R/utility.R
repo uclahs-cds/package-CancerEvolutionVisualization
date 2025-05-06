@@ -66,3 +66,7 @@ get.encoded.distance <- function(points) {
 
     return(encoded.distances);
     }
+
+generate.random.color <- function() {
+    rgb(runif(1), runif(1), runif(1));
+    }
