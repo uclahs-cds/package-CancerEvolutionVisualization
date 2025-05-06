@@ -10,7 +10,7 @@ randomize.tree <- function(
     spread.randomization.sd <- 0.5;
     if (randomize.angles) {
         default.spread <- 1;
-        if (is.null(tree.df$spread)) {
+        if (!('spread' %in% colnames(tree.df))) {
             tree.df$spread <- default.spread;
         } else {
             tree.df[is.na(tree.df$spread), 'spread'] <- 1;
@@ -20,6 +20,7 @@ randomize.tree <- function(
             sd = spread.randomization.sd, 
             n = nrow(tree.df)
             );
+        tree.df[tree.df$spread < 0, 'spread'] <- 0;
         }
 
     angle.randomization.sd <- 30;
