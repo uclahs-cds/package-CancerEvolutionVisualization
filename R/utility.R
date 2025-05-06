@@ -34,6 +34,10 @@ degrees.to.radians <- function(degrees) {
     return(degrees * pi / 180);
     }
 
+radians.to.degrees <- function(radians) {
+    return(radians * 180 / pi);
+}
+
 get.encoded.distance <- function(points) {
     if (!is.data.frame(points)) {
         stop(paste(
