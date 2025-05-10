@@ -5,7 +5,7 @@ randomize.tree <- function(
     randomize.border.color = TRUE,
     randomize.border.width = TRUE,
     randomize.border.type = TRUE,
-    randomize.edge.cols = TRUE,
+    randomize.edge.col = TRUE,
     randomize.edge.width = TRUE,
     randomize.plotting.direction = TRUE,
     plotting.direction = NULL,
@@ -128,7 +128,7 @@ randomize.tree <- function(
         edge.names <- 1;
         }
     for (edge.name in edge.names) {
-        if (randomize.edge.cols) {
+        if (randomize.edge.col) {
             edge.color.scheme.randomization.prob <- 0.5;
             edge.color.randomization.prob <- 0.3;
             edge.color.scheme <- if (runif(1) <= edge.color.scheme.randomization.prob) {
