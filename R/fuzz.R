@@ -5,6 +5,7 @@ randomize.tree <- function(
     randomize.border.color = TRUE,
     randomize.border.width = TRUE,
     randomize.border.type = TRUE,
+    randomize.edge.cols = TRUE,
     randomize.plotting.direction = TRUE,
     plotting.direction = NULL,
     ...
@@ -119,6 +120,34 @@ randomize.tree <- function(
             size = sum(override.border.type.i),
             replace = TRUE
             );
+        }
+
+    edge.names <- sort(get.branch.names(tree.df));
+    if (length(edge.names) < 1) {
+        edge.names <- 1;
+        }
+    for (edge.name in edge.names) {
+        if (randomize.edge.cols) {
+            edge.color.scheme.randomization.prob <- 0.5;
+            edge.color.randomization.prob <- 0.3;
+            edge.color.scheme <- if (runif(1) <= edge.color.scheme.randomization.prob) {
+                generate.random.color();
+            } else {
+                NA;
+                }
+
+            edge.col.column.name <- paste('edge.col', edge.name, sep = '.');
+            if (!(edge.col.column.name %in% colnames(tree.df))) {
+                tree.df[, edge.col.column.name] <- edge.color.scheme;
+            } else {
+                tree.df[is.na(tree.df$border.col), edge.col.column.name] <- edge.color.scheme;
+                }
+            override.edge.col.i <- runif(n = nrow(tree.df), max = 1) <= edge.color.randomization.prob;
+            tree.df[override.edge.col.i, edge.col.column.name] <- sapply(
+                1:sum(override.edge.col.i),
+                function(i) generate.random.color()
+                );
+            }
         }
 
     result <- SRCGrob(
