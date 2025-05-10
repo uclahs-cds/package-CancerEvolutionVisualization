@@ -4,6 +4,7 @@ randomize.tree <- function(
     randomize.node.color = TRUE,
     randomize.border.color = TRUE,
     randomize.border.width = TRUE,
+    randomize.border.type = TRUE,
     randomize.plotting.direction = TRUE,
     plotting.direction = NULL,
     ...
@@ -84,8 +85,9 @@ randomize.tree <- function(
         }
 
     if (randomize.border.width) {
-        border.width.randomization.prob <- 0.3;
+        border.width.randomization.sd <- 1;
         default.border.width <- 1;
+
         if (!('border.width' %in% colnames(tree.df))) {
             tree.df$border.width <- default.border.width;
         } else {
@@ -93,10 +95,30 @@ randomize.tree <- function(
             }
         tree.df[, 'border.width'] <- tree.df$border.width + rnorm(
             mean = 0,
-            sd = 1,
+            sd = border.width.randomization.sd,
             n = nrow(tree.df)
             );
         tree.df[tree.df$border.width <= 0, 'border.width'] <- 0;
+        }
+
+    if (randomize.border.type) {
+        border.type.randomization.prob <- 0.3;
+        default.border.type <- 'solid';
+
+        if (!('border.type' %in% colnames(tree.df))) {
+            tree.df$border.type <- default.border.type;
+        } else {
+            tree.df[is.na(tree.df$border.type), 'border.type'] <- default.border.type;
+            }
+        override.border.type.i <- sapply(
+            1:nrow(tree.df),
+            function(i) runif(1) <= border.type.randomization.prob
+            );
+        tree.df[override.border.type.i, 'border.type'] <- sample(
+            c('solid', 'dashed', 'dotted'),
+            size = sum(override.border.type.i),
+            replace = TRUE
+            );
         }
 
     result <- SRCGrob(
