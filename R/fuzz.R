@@ -2,7 +2,8 @@ randomize.tree <- function(
     tree.df,
     randomize.angles = TRUE,
     randomize.node.color = TRUE,
-    randomize.node.border.color = TRUE,
+    randomize.border.color = TRUE,
+    randomize.border.width = TRUE,
     randomize.plotting.direction = TRUE,
     plotting.direction = NULL,
     ...
@@ -59,27 +60,43 @@ randomize.tree <- function(
             );
         }
 
-    if (randomize.node.border.color) {
-        node.border.color.randomization.prob <- 0.3;
-        node.border.color.scheme <- if (runif(1) <= node.border.color.randomization.prob) {
+    if (randomize.border.color) {
+        border.color.randomization.prob <- 0.3;
+        border.color.scheme <- if (runif(1) <= border.color.randomization.prob) {
             generate.random.color();
         } else {
             NA;
             }
 
         if (!('border.col' %in% colnames(tree.df))) {
-            tree.df$border.col <- node.border.color.scheme;
+            tree.df$border.col <- border.color.scheme;
         } else {
             tree.df[is.na(tree.df$border.col), 'border.col'] <- node.color.scheme;
             }
-        override.node.border.col.i <- sapply(
+        override.border.col.i <- sapply(
             1:nrow(tree.df),
-            function(i) runif(1) <= node.border.color.randomization.prob
+            function(i) runif(1) <= border.color.randomization.prob
             );
-        tree.df[override.node.border.col.i, 'border.col'] <- sapply(
-            1:sum(override.node.border.col.i),
+        tree.df[override.border.col.i, 'border.col'] <- sapply(
+            1:sum(override.border.col.i),
             function(i) generate.random.color()
             );
+        }
+
+    if (randomize.border.width) {
+        border.width.randomization.prob <- 0.3;
+        default.border.width <- 1;
+        if (!('border.width' %in% colnames(tree.df))) {
+            tree.df$border.width <- default.border.width;
+        } else {
+            tree.df[is.na(tree.df$border.width), 'border.width'] <- default.border.width;
+            }
+        tree.df[, 'border.width'] <- tree.df$border.width + rnorm(
+            mean = 0,
+            sd = 1,
+            n = nrow(tree.df)
+            );
+        tree.df[tree.df$border.width <= 0, 'border.width'] <- 0;
         }
 
     result <- SRCGrob(
