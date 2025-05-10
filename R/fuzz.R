@@ -7,11 +7,15 @@ randomize.tree <- function(
     randomize.border.type = TRUE,
     randomize.edge.col = TRUE,
     randomize.edge.width = TRUE,
+    randomize.edge.type = TRUE,
     randomize.plotting.direction = TRUE,
     plotting.direction = NULL,
     ...
     ) {
     node.ids <- c(get.root.node(tree.df));
+
+    default.line.type <- 'solid';
+    line.types <- c(default.line.type, 'dotted', 'dashed');
 
     spread.randomization.sd <- 0.5;
     if (randomize.angles) {
@@ -104,8 +108,13 @@ randomize.tree <- function(
         }
 
     if (randomize.border.type) {
+        base.border.type.randomization.prob <- 0.5;
         border.type.randomization.prob <- 0.3;
-        default.border.type <- 'solid';
+        default.border.type <- if (runif(1) <= base.border.type.randomization.prob) {
+            sample(line.types, size = 1);
+        } else {
+            default.line.type;
+            }
 
         if (!('border.type' %in% colnames(tree.df))) {
             tree.df$border.type <- default.border.type;
@@ -117,7 +126,7 @@ randomize.tree <- function(
             function(i) runif(1) <= border.type.randomization.prob
             );
         tree.df[override.border.type.i, 'border.type'] <- sample(
-            c('solid', 'dashed', 'dotted'),
+            line.types,
             size = sum(override.border.type.i),
             replace = TRUE
             );
@@ -170,6 +179,29 @@ randomize.tree <- function(
             tree.df[, edge.width.column.name] <- sapply(
                 tree.df[, edge.width.column.name],
                 function(x) max(0, x)
+                );
+            }
+
+        if (randomize.edge.type) {
+            base.edge.type.randomization.prob <- 0.5;
+            edge.type.randomization.prob <- 0.3;
+            default.edge.type <- if (runif(1) <= base.edge.type.randomization.prob) {
+                sample(line.types, size = 1);
+            } else {
+                default.line.type;
+                }
+
+            edge.type.column.name <- paste('edge.type', edge.name, sep = '.');
+            if (!(edge.type.column.name %in% colnames(tree.df))) {
+                tree.df[, edge.type.column.name] <- default.edge.type;
+            } else {
+                tree.df[is.na(tree.df[, edge.type.column.name]), edge.col.column.name] <- default.edge.type;
+                }
+            override.edge.type.i <- runif(n = nrow(tree.df), max = 1) <= edge.type.randomization.prob;
+            tree.df[override.edge.type.i, edge.type.column.name] <- sample(
+                line.types,
+                size = sum(override.edge.type.i),
+                replace = TRUE
                 );
             }
         }
