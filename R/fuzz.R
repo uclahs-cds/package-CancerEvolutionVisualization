@@ -6,6 +6,7 @@ randomize.tree <- function(
     randomize.border.width = TRUE,
     randomize.border.type = TRUE,
     randomize.edge.cols = TRUE,
+    randomize.edge.width = TRUE,
     randomize.plotting.direction = TRUE,
     plotting.direction = NULL,
     ...
@@ -140,12 +141,35 @@ randomize.tree <- function(
             if (!(edge.col.column.name %in% colnames(tree.df))) {
                 tree.df[, edge.col.column.name] <- edge.color.scheme;
             } else {
-                tree.df[is.na(tree.df$border.col), edge.col.column.name] <- edge.color.scheme;
+                tree.df[is.na(tree.df[, edge.col.column.name]), edge.col.column.name] <- edge.color.scheme;
                 }
             override.edge.col.i <- runif(n = nrow(tree.df), max = 1) <= edge.color.randomization.prob;
             tree.df[override.edge.col.i, edge.col.column.name] <- sapply(
                 1:sum(override.edge.col.i),
                 function(i) generate.random.color()
+                );
+            }
+
+        if (randomize.edge.width) {
+            base.edge.width.randomization.prob <- 0.5;
+            edge.width.randomization.prob <- 0.3;
+            default.edge.width <- if (runif(1) <= base.edge.width.randomization.prob) {
+                max(0, rnorm(1, mean = 3));
+            } else {
+                3;
+                }
+
+            edge.width.column.name <- paste('edge.width', edge.name, sep = '.');
+            if (!(edge.width.column.name %in% colnames(tree.df))) {
+                tree.df[, edge.width.column.name] <- default.edge.width;
+            } else {
+                tree.df[is.na(tree.df[, edge.width.column.name]), edge.col.column.name] <- default.edge.width;
+                }
+            override.edge.width.i <- runif(n = nrow(tree.df), max = 1) <= edge.width.randomization.prob;
+            tree.df[, edge.width.column.name] <- tree.df[, edge.width.column.name] + rnorm(nrow(tree.df));
+            tree.df[, edge.width.column.name] <- sapply(
+                tree.df[, edge.width.column.name],
+                function(x) max(0, x)
                 );
             }
         }
