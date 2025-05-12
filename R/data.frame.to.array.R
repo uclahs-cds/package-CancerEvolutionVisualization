@@ -10,9 +10,9 @@ data.frame.to.array <- function(
     if (length(missing.cols) != 0) {
         stop(paste0(
             'Dataframe must contain the columns: ',
-            oxford.comma.vector.conat(required.cols),
+            oxford.comma.vector.concat(required.cols),
             '; Dataframe is missing ',
-            oxford.comma.vector.conat(missing.cols, toString(required.cols)), '.'));
+            oxford.comma.vector.concat(missing.cols, toString(required.cols)), '.'));
         }
     arr <- reshape(
         data = DF[, c(x.axis, y.axis, value)],

@@ -64,10 +64,10 @@ get.encoded.distance <- function(points) {
     }
 
 
-oxford.comma.vector.conat <- function(vec, empty.value = '', flatten.empty.value = TRUE) {
+oxford.comma.vector.concat <- function(vec, empty.value = '', flatten.empty.value = TRUE) {
     if (length(vec) == 0) {
         if (flatten.empty.value) {
-            oxford.comma.vector.conat(empty.value, flatten.empty.value = FALSE)
+            oxford.comma.vector.concat(empty.value, flatten.empty.value = FALSE)
             } else {
                 empty.value;
                 }

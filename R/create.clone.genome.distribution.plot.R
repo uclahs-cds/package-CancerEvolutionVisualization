@@ -17,9 +17,9 @@ create.clone.genome.distribution.plot <- function(
     if (length(missing.cols) != 0) {
         stop(paste0(
             'snv.df must contain the columns ',
-            oxford.comma.vector.conat(required.cols),
+            oxford.comma.vector.concat(required.cols),
             '; snv.df is missing ',
-            oxford.comma.vector.conat(missing.cols, toString(required.cols)), '.'));
+            oxford.comma.vector.concat(missing.cols, toString(required.cols)), '.'));
         }
     if (is.null(clone.order)) {
         clone.order <- sort(unique(snv.df$clone.id));
