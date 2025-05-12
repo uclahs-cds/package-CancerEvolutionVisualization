@@ -12,8 +12,10 @@ create.clone.genome.distribution.plot <- function(
     ) {
 
     # Preprocess ----------------------------------------------------------------------------------
-    if (!all(c('chr', 'pos', 'clone.id') %in% names(snv.df))) {
-        stop('snv.df does not contain at least one of chr, pos or clone.id columns')
+    required.cols <- c('chr', 'pos', 'clone.id');
+    missing.cols <- required.cols[!(required.cols %in% names(snv.df))];
+    if (length(missing.cols) != 0) {
+        stop(paste0('snv.df must contain the columns ', oxford.comma.vector.conat(required.cols),'; snv.df is missing ', oxford.comma.vector.conat(missing.cols, toString(required.cols))))
         }
     if (is.null(clone.order)) {
         clone.order <- sort(unique(snv.df$clone.id));
