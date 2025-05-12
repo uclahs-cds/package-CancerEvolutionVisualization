@@ -616,6 +616,35 @@ include_graphics('figures/2G_mixed-phylogeny.png');
 
 \pagebreak
 
+## 2G.Plotting directions
+```{r direction-tree-prep, echo=F}
+phy.dt <- multi.phylogeny;
+phy.dt$length.1 <- phy.dt$length.2 <-  NULL;
+# phy.dt$mode <- 'dendrogram';
+```
+
+```{r direction-tree}
+directions <- seq(0, 315, 45);
+for (d in directions) {
+    create.phylogenetic.tree(
+        filename = paste0('figures/2G_multi-sample-dendrogram-', d, '.png'),
+        phy.dt,
+        bg = background,
+        plotting.direction = d,
+        add.normal = TRUE,
+        scale1 = 2,
+        horizontal.padding = 1,
+        height = 7,
+        width = 7
+        );
+    }
+```
+
+```{r echo=FALSE, out.width='24%', fig.show='hold'}
+include_graphics(paste0('figures/2G_multi-sample-dendrogram-', directions, '.png'));
+```
+\pagebreak
+
 ## 2H. 500 node phylogentic tree
 ```{r phy-500}
 phy.500 <- phylogeny.500;
