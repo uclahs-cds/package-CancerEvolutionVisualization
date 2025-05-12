@@ -62,3 +62,19 @@ get.encoded.distance <- function(points) {
 
     return(encoded.distances);
     }
+
+
+oxford.comma.vector.conat <- function(vec, empty.value = '', flatten.empty.value = TRUE) {
+    if (length(vec) == 0) {
+        if (flatten.empty.value) {
+            oxford.comma.vector.conat(empty.value, flatten.empty.value = FALSE)
+            } else {
+                empty.value
+                }
+    } else if (length(vec) == 1) {
+        vec
+        } else {
+            sep <- if (length(vec) > 2) ', and ' else ' and ';
+            paste(paste(head(vec, -1), collapse = ', '), tail(vec, 1), sep = sep);
+            }
+    }
