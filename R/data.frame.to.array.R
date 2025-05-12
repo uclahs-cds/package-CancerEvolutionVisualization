@@ -5,8 +5,10 @@ data.frame.to.array <- function(
     y.axis = 'ID'
     ) {
 
-    if (is.null(DF[[x.axis]]) | is.null(DF[[value]]) | is.null(DF[[y.axis]])) {
-        stop(paste('Dataframe does not contain one of the columns:', value, x.axis, y.axis));
+    required.cols <- c(value, x.axis, y.axis);
+    missing.cols <- required.cols[!(required.cols %in% names(DF))];
+    if (length(missing.cols) != 0) {
+        stop(paste0('Dataframe must contain the columns: ', oxford.comma.vector.conat(required.cols), '; Dataframe is missing ', oxford.comma.vector.conat(missing.cols, toString(required.cols)), '.'));
         }
     arr <- reshape(
         data = DF[, c(x.axis, y.axis, value)],
