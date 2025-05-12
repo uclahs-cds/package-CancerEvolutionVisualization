@@ -8,7 +8,11 @@ data.frame.to.array <- function(
     required.cols <- c(value, x.axis, y.axis);
     missing.cols <- required.cols[!(required.cols %in% names(DF))];
     if (length(missing.cols) != 0) {
-        stop(paste0('Dataframe must contain the columns: ', oxford.comma.vector.conat(required.cols), '; Dataframe is missing ', oxford.comma.vector.conat(missing.cols, toString(required.cols)), '.'));
+        stop(paste0(
+            'Dataframe must contain the columns: ',
+            oxford.comma.vector.conat(required.cols),
+            '; Dataframe is missing ',
+            oxford.comma.vector.conat(missing.cols, toString(required.cols)), '.'));
         }
     arr <- reshape(
         data = DF[, c(x.axis, y.axis, value)],
