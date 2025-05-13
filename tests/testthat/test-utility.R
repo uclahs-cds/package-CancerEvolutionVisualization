@@ -76,3 +76,67 @@ test_that(
 
         expect_equal(order(result), expected.order);
     });
+
+test_that(
+    'oxford.comma.vector.concat returns `empty.value` when input is empty', {
+        vec <- NULL;
+        expect_equal(oxford.comma.vector.concat(vec), '');
+        expect_equal(oxford.comma.vector.concat(vec, 'default'), 'default');
+        vec <- c(NULL);
+        expect_equal(oxford.comma.vector.concat(vec), '');
+        expect_equal(oxford.comma.vector.concat(vec, 'default'), 'default');
+        vec <- c(NULL, NULL);
+        expect_equal(oxford.comma.vector.concat(vec), '');
+        expect_equal(oxford.comma.vector.concat(vec, 'default'), 'default');
+        vec <- c();
+        expect_equal(oxford.comma.vector.concat(vec), '');
+        expect_equal(oxford.comma.vector.concat(vec, 'default'), 'default');
+    });
+
+test_that(
+    'oxford.comma.vector.concat returns `empty.value` in correct format when input is empty', {
+        vec <- NULL;
+        expect_equal(oxford.comma.vector.concat(vec, flatten.empty.value = FALSE), '');
+        expect_equal(oxford.comma.vector.concat(vec, 'default', flatten.empty.value = FALSE), 'default');
+        vec <- c(NULL);
+        expect_equal(oxford.comma.vector.concat(vec, flatten.empty.value = FALSE), '');
+        expect_equal(oxford.comma.vector.concat(vec, 'default', flatten.empty.value = FALSE), 'default');
+        vec <- c(NULL, NULL);
+        expect_equal(oxford.comma.vector.concat(vec, flatten.empty.value = FALSE), '');
+        expect_equal(oxford.comma.vector.concat(vec, 'default', flatten.empty.value = FALSE), 'default');
+        vec <- c();
+        expect_equal(oxford.comma.vector.concat(vec, flatten.empty.value = FALSE), '');
+        expect_equal(oxford.comma.vector.concat(vec, 'default', flatten.empty.value = FALSE), 'default');
+
+        vec <- c();
+        vec.default <- NULL;
+        expect_null(oxford.comma.vector.concat(vec, vec.default, flatten.empty.value = FALSE));
+        vec <- c();
+        vec.default <- c(1, 2, 3);
+        expect_equal(oxford.comma.vector.concat(vec, vec.default), '1, 2, and 3');
+        expect_equal(oxford.comma.vector.concat(vec, vec.default, flatten.empty.value = FALSE), c(1, 2, 3));
+    });
+
+test_that(
+    'oxford.comma.vector.concat returns grammatically correct oxford comma', {
+        vec <- c(1);
+        expect_equal(oxford.comma.vector.concat(vec), '1');
+        vec <- c(1, 2);
+        expect_equal(oxford.comma.vector.concat(vec), '1 and 2');
+        vec <- c(1, 2, 3);
+        expect_equal(oxford.comma.vector.concat(vec), '1, 2, and 3');
+        vec <- c(1, 2, 3, 4);
+        expect_equal(oxford.comma.vector.concat(vec), '1, 2, 3, and 4');
+    });
+
+test_that(
+    'oxford.comma.vector.concat returns grammatically correct oxford comma for flattened default value', {
+        vec.default <- c(1);
+        expect_equal(oxford.comma.vector.concat(NULL, vec.default), '1');
+        vec.default <- c(1, 2);
+        expect_equal(oxford.comma.vector.concat(NULL, vec.default), '1 and 2');
+        vec.default <- c(1, 2, 3);
+        expect_equal(oxford.comma.vector.concat(NULL, vec.default), '1, 2, and 3');
+        vec.default <- c(1, 2, 3, 4);
+        expect_equal(oxford.comma.vector.concat(NULL, vec.default), '1, 2, 3, and 4');
+    });
