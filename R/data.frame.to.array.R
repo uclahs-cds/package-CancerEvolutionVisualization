@@ -12,7 +12,7 @@ data.frame.to.array <- function(
             'Dataframe must contain the columns: ',
             oxford.comma.vector.concat(required.cols),
             '; Dataframe is missing ',
-            oxford.comma.vector.concat(missing.cols, toString(required.cols)), '.'));
+            oxford.comma.vector.concat(missing.cols, paste(required.cols, collapse = ', ')), '.'));
         }
     arr <- reshape(
         data = DF[, c(x.axis, y.axis, value)],

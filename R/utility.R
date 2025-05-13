@@ -72,7 +72,7 @@ oxford.comma.vector.concat <- function(vec, empty.value = '', flatten.empty.valu
                 empty.value;
                 }
     } else if (length(vec) == 1) {
-        toString(vec);
+        paste(vec, collapse = ', ');
         } else {
             sep <- if (length(vec) > 2) ', and ' else ' and ';
             paste(paste(head(vec, -1), collapse = ', '), tail(vec, 1), sep = sep);
