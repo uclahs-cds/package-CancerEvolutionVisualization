@@ -8,6 +8,7 @@ randomize.tree <- function(
     randomize.edge.col = TRUE,
     randomize.edge.width = TRUE,
     randomize.edge.type = TRUE,
+    randomize.edge.length = TRUE,
     randomize.plotting.direction = TRUE,
     plotting.direction = NULL,
     ...
@@ -121,10 +122,7 @@ randomize.tree <- function(
         } else {
             tree.df[is.na(tree.df$border.type), 'border.type'] <- default.border.type;
             }
-        override.border.type.i <- sapply(
-            1:nrow(tree.df),
-            function(i) runif(1) <= border.type.randomization.prob
-            );
+        override.border.type.i <- runif(nrow(tree.df)) <= border.type.randomization.prob;
         tree.df[override.border.type.i, 'border.type'] <- sample(
             line.types,
             size = sum(override.border.type.i),
@@ -203,6 +201,22 @@ randomize.tree <- function(
                 size = sum(override.edge.type.i),
                 replace = TRUE
                 );
+            }
+
+        if (randomize.edge.length) {
+            edge.length.column.name <- paste('length', edge.name, sep = '.');
+            base.edge.length <- 10 ** runif(n = 1, min = 0, max = 6);
+            if (!(edge.length.column.name %in% colnames(tree.df))) {
+                tree.df[, edge.length.column.name] <- base.edge.length;
+            } else {
+                tree.df[is.na(tree.df[, edge.length.column.name]), edge.length.column.name] <- base.edge.length;
+                }
+            edge.length.randomization.sd <- median(tree.df[, edge.length.column.name]) * 0.2;
+            tree.df[, edge.length.column.name] <- tree.df[, edge.length.column.name] + rnorm(
+                sd = edge.length.randomization.sd,
+                n = nrow(tree.df)
+                );
+            tree.df[tree.df[, edge.length.column.name] < 0, edge.length.column.name]
             }
         }
 
