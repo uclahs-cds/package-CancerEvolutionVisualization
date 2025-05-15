@@ -41,14 +41,21 @@ randomize.tree <- function(
         tree.df[tree.df$spread < 0, 'spread'] <- 0;
         }
 
-    angle.randomization.sd <- 30;
-    if (randomize.plotting.direction) {
+    if (check.randomization.value(randomize.plotting.direction)) {
         if (is.null(plotting.direction)) {
             plotting.direction <- sample(c('down', 'right', 'left', 'up'), size = 1);
             }
         plotting.direction <- radians.to.degrees(
             prep.plotting.direction(plotting.direction, radians = FALSE)
             );
+        angle.randomization.sd <- if (is.numeric(randomize.plotting.direction)) {
+            if (randomize.plotting.direction <= 0) {
+                stop('"randomize.plotting.direction" standard deviation value must be positive.');
+                }
+            randomize.plotting.direction;
+        } else {
+            30
+            };
         plotting.direction <- plotting.direction + rnorm(sd = angle.randomization.sd, n = 1);
         }
 
