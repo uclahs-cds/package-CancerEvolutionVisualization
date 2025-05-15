@@ -18,8 +18,15 @@ randomize.tree <- function(
     default.line.type <- 'solid';
     line.types <- c(default.line.type, 'dotted', 'dashed');
 
-    spread.randomization.sd <- 0.5;
-    if (randomize.angles) {
+    if (check.randomization.value(randomize.angles)) {
+        spread.randomization.sd <- if (is.numeric(randomize.angles)) {
+            if (randomize.angles <= 0) {
+                stop('"randomize.angles" standard deviation value must be positive.');
+                }
+            randomize.angles;
+        } else {
+            0.5;
+            }
         default.spread <- 1;
         if (!('spread' %in% colnames(tree.df))) {
             tree.df$spread <- default.spread;
