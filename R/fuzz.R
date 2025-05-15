@@ -227,3 +227,26 @@ randomize.tree <- function(
         );
     return(result);
     }
+
+check.randomization.value <- function(
+    randomization,
+    default.value,
+    randomization.name = NULL
+    ) {
+    if (is.null(randomization.name)) {
+        randomization.name <- 'Randomization value';
+        }
+    if (length(randomization) != 1) {
+        stop(paste(randomization.name, 'must be length 1.'));
+        }
+
+    randomize.result <- FALSE;
+    if (is.numeric(randomization)) {
+        randomize.result <- TRUE;
+    } else if (is.logical(randomization)) {
+        randomize.result <- randomization;
+    } else {
+        stop(paste(randomization.name, 'must be numeric or TRUE/FALSE.'));
+        }
+    return(randomize.result);
+    }
