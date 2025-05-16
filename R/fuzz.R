@@ -89,8 +89,15 @@ randomize.tree <- function(
             );
         }
 
-    if (randomize.border.color) {
-        border.color.randomization.prob <- 0.3;
+    if (check.randomization.value(randomize.border.color)) {
+        border.color.randomization.prob <- if (is.numeric(randomize.border.color)) {
+            if (randomize.border.color < 0 || randomize.border.color > 1) {
+                stop('"randomize.border.color" probability must be between 0 and 1.')
+            }
+            randomize.border.color;
+        } else {
+            0.3;
+            }
         border.color.scheme <- if (runif(1) <= border.color.randomization.prob) {
             generate.random.color();
         } else {
