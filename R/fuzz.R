@@ -119,8 +119,15 @@ randomize.tree <- function(
             );
         }
 
-    if (randomize.border.width) {
-        border.width.randomization.sd <- 1;
+    if (check.randomization.value(randomize.border.width)) {
+        border.width.randomization.sd <- if (is.numeric(randomize.border.width)) {
+            if (randomize.border.width <= 0) {
+                stop('"randomize.border.width" standard deviation value must be positive.');
+            }
+            randomize.border.width;
+        } else {
+            1
+            };
         default.border.width <- 1;
 
         if (!('border.width' %in% colnames(tree.df))) {
