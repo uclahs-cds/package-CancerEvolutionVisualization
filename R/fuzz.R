@@ -264,15 +264,25 @@ randomize.tree <- function(
                 );
             }
 
-        if (randomize.edge.length) {
+        if (check.randomization.value(randomize.edge.length)) {
             edge.length.column.name <- paste('length', edge.name, sep = '.');
             base.edge.length <- 10 ** runif(n = 1, min = 0, max = 6);
+
+            edge.length.randomization.proportion <- if (is.numeric(randomize.edge.length)) {
+                if (randomize.edge.length <= 0) {
+                    stop('"randomize.edge.length" proportion must be positive.');
+                    }
+                randomize.edge.length;
+            } else {
+                0.2;
+                }
+
             if (!(edge.length.column.name %in% colnames(tree.df))) {
                 tree.df[, edge.length.column.name] <- base.edge.length;
             } else {
                 tree.df[is.na(tree.df[, edge.length.column.name]), edge.length.column.name] <- base.edge.length;
                 }
-            edge.length.randomization.sd <- median(tree.df[, edge.length.column.name]) * 0.2;
+            edge.length.randomization.sd <- median(tree.df[, edge.length.column.name]) * edge.length.randomization.proportion;
             tree.df[, edge.length.column.name] <- tree.df[, edge.length.column.name] + rnorm(
                 sd = edge.length.randomization.sd,
                 n = nrow(tree.df)
