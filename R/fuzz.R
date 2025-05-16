@@ -194,6 +194,18 @@ randomize.tree <- function(
         1
         };
 
+    edge.type.randomization.prob <- 0;
+    if (check.randomization.value(randomize.edge.type)) {
+        edge.type.randomization.prob <- if (is.numeric(randomize.edge.type)) {
+            if (randomize.edge.type < 0 || randomize.edge.type > 1) {
+                stop('"randomize.edge.type" probability must be between 0 and 1.')
+            }
+            randomize.edge.type;
+        } else {
+            0.3;
+            }
+        }
+
     for (edge.name in edge.names) {
         if (check.randomization.value(randomize.edge.col)) {
             edge.color.scheme <- generate.random.color();
@@ -235,14 +247,8 @@ randomize.tree <- function(
                 );
             }
 
-        if (randomize.edge.type) {
-            base.edge.type.randomization.prob <- 0.5;
-            edge.type.randomization.prob <- 0.3;
-            default.edge.type <- if (runif(1) <= base.edge.type.randomization.prob) {
-                sample(line.types, size = 1);
-            } else {
-                default.line.type;
-                }
+        if (check.randomization.value(randomize.edge.type)) {
+            default.edge.type <- sample(line.types, size = 1);
 
             edge.type.column.name <- paste('edge.type', edge.name, sep = '.');
             if (!(edge.type.column.name %in% colnames(tree.df))) {
