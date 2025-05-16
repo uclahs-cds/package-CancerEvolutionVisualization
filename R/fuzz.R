@@ -185,6 +185,15 @@ randomize.tree <- function(
             }
         }
 
+    edge.width.randomization.sd <- if (is.numeric(randomize.edge.width)) {
+        if (randomize.edge.width <= 0) {
+            stop('"randomize.edge.width" standard deviation value must be positive.');
+        }
+        randomize.edge.width;
+    } else {
+        1
+        };
+
     for (edge.name in edge.names) {
         if (check.randomization.value(randomize.edge.col)) {
             edge.color.scheme <- generate.random.color();
@@ -202,9 +211,8 @@ randomize.tree <- function(
                 );
             }
 
-        if (randomize.edge.width) {
+        if (check.randomization.value(randomize.edge.width)) {
             base.edge.width.randomization.prob <- 0.5;
-            edge.width.randomization.prob <- 0.3;
             default.edge.width <- if (runif(1) <= base.edge.width.randomization.prob) {
                 max(0, rnorm(1, mean = 3));
             } else {
@@ -217,8 +225,10 @@ randomize.tree <- function(
             } else {
                 tree.df[is.na(tree.df[, edge.width.column.name]), edge.col.column.name] <- default.edge.width;
                 }
-            override.edge.width.i <- runif(n = nrow(tree.df), max = 1) <= edge.width.randomization.prob;
-            tree.df[, edge.width.column.name] <- tree.df[, edge.width.column.name] + rnorm(nrow(tree.df));
+            tree.df[, edge.width.column.name] <- tree.df[, edge.width.column.name] + rnorm(
+                sd = edge.width.randomization.sd,
+                n = nrow(tree.df)
+                );
             tree.df[, edge.width.column.name] <- sapply(
                 tree.df[, edge.width.column.name],
                 function(x) max(0, x)
