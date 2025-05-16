@@ -172,15 +172,22 @@ randomize.tree <- function(
     if (length(edge.names) < 1) {
         edge.names <- 1;
         }
+
+    edge.color.randomization.prob <- 0;
+    if (check.randomization.value(randomize.edge.col)) {
+        edge.color.randomization.prob <- if (is.numeric(randomize.edge.col)) {
+            if (randomize.edge.col < 0 || randomize.edge.col > 1) {
+                stop('"randomize.edge.col" probability must be between 0 and 1.')
+            }
+            randomize.edge.col;
+        } else {
+            0.3;
+            }
+        }
+
     for (edge.name in edge.names) {
-        if (randomize.edge.col) {
-            edge.color.scheme.randomization.prob <- 0.5;
-            edge.color.randomization.prob <- 0.3;
-            edge.color.scheme <- if (runif(1) <= edge.color.scheme.randomization.prob) {
-                generate.random.color();
-            } else {
-                NA;
-                }
+        if (check.randomization.value(randomize.edge.col)) {
+            edge.color.scheme <- generate.random.color();
 
             edge.col.column.name <- paste('edge.col', edge.name, sep = '.');
             if (!(edge.col.column.name %in% colnames(tree.df))) {
