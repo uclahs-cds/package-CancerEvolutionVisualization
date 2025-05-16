@@ -143,13 +143,16 @@ randomize.tree <- function(
         tree.df[tree.df$border.width <= 0, 'border.width'] <- 0;
         }
 
-    if (randomize.border.type) {
-        base.border.type.randomization.prob <- 0.5;
-        border.type.randomization.prob <- 0.3;
-        default.border.type <- if (runif(1) <= base.border.type.randomization.prob) {
-            sample(line.types, size = 1);
+    if (check.randomization.value(randomize.border.type)) {
+        default.border.type <- sample(line.types, size = 1);
+
+        border.type.randomization.prob <- if (is.numeric(randomize.border.type)) {
+            if (randomize.border.type < 0 || randomize.border.type > 1) {
+                stop('"randomize.border.type" probability must be between 0 and 1.')
+            }
+            randomize.border.type;
         } else {
-            default.line.type;
+            0.3;
             }
 
         if (!('border.type' %in% colnames(tree.df))) {
