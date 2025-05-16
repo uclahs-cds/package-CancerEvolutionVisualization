@@ -59,8 +59,15 @@ randomize.tree <- function(
         plotting.direction <- plotting.direction + rnorm(sd = angle.randomization.sd, n = 1);
         }
 
-    if (randomize.node.color) {
-        node.color.randomization.prob <- 0.5;
+    if (check.randomization.value(randomize.node.color)) {
+        node.color.randomization.prob <- if (is.numeric(randomize.node.color)) {
+            if (randomize.node.color < 0 || randomize.node.color > 1) {
+                stop('"randomize.node.color" probability must be between 0 and 1.')
+                }
+            randomize.node.color;
+        } else {
+                0.5;
+            }
         node.color.scheme <- if (runif(1) <= node.color.randomization.prob) {
             generate.random.color();
         } else {
