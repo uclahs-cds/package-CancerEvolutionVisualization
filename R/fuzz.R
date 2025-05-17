@@ -18,7 +18,7 @@ randomize.tree <- function(
     default.line.type <- 'solid';
     line.types <- c(default.line.type, 'dotted', 'dashed');
 
-    if (check.randomization.value(randomize.angles)) {
+    if (check.randomization.value(randomize.angles, randomization.name = 'randomize.angles')) {
         spread.randomization.sd <- if (is.numeric(randomize.angles)) {
             if (randomize.angles <= 0) {
                 stop('"randomize.angles" standard deviation value must be positive.');
@@ -41,7 +41,7 @@ randomize.tree <- function(
         tree.df[tree.df$spread < 0, 'spread'] <- 0;
         }
 
-    if (check.randomization.value(randomize.plotting.direction)) {
+    if (check.randomization.value(randomize.plotting.direction, randomization.name = 'plotting.direction')) {
         if (is.null(plotting.direction)) {
             plotting.direction <- sample(c('down', 'right', 'left', 'up'), size = 1);
             }
@@ -54,19 +54,19 @@ randomize.tree <- function(
                 }
             randomize.plotting.direction;
         } else {
-            30
+            30;
             };
         plotting.direction <- plotting.direction + rnorm(sd = angle.randomization.sd, n = 1);
         }
 
-    if (check.randomization.value(randomize.node.color)) {
+    if (check.randomization.value(randomize.node.color, randomization.name = 'randomize.node.color')) {
         node.color.randomization.prob <- if (is.numeric(randomize.node.color)) {
             if (randomize.node.color < 0 || randomize.node.color > 1) {
                 stop('"randomize.node.color" probability must be between 0 and 1.')
                 }
             randomize.node.color;
         } else {
-                0.5;
+            0.5;
             }
         node.color.scheme <- if (runif(1) <= node.color.randomization.prob) {
             generate.random.color();
@@ -89,11 +89,11 @@ randomize.tree <- function(
             );
         }
 
-    if (check.randomization.value(randomize.border.color)) {
+    if (check.randomization.value(randomize.border.color, randomization.name = 'randomize.border.color')) {
         border.color.randomization.prob <- if (is.numeric(randomize.border.color)) {
             if (randomize.border.color < 0 || randomize.border.color > 1) {
                 stop('"randomize.border.color" probability must be between 0 and 1.')
-            }
+                }
             randomize.border.color;
         } else {
             0.3;
@@ -119,14 +119,14 @@ randomize.tree <- function(
             );
         }
 
-    if (check.randomization.value(randomize.border.width)) {
+    if (check.randomization.value(randomize.border.width, randomization.name = 'randomize.border.width')) {
         border.width.randomization.sd <- if (is.numeric(randomize.border.width)) {
             if (randomize.border.width <= 0) {
                 stop('"randomize.border.width" standard deviation value must be positive.');
-            }
+                }
             randomize.border.width;
         } else {
-            1
+            1;
             };
         default.border.width <- 1;
 
@@ -143,7 +143,7 @@ randomize.tree <- function(
         tree.df[tree.df$border.width <= 0, 'border.width'] <- 0;
         }
 
-    if (check.randomization.value(randomize.border.type)) {
+    if (check.randomization.value(randomize.border.type, randomization.name = 'randomize.border.type')) {
         default.border.type <- sample(line.types, size = 1);
 
         border.type.randomization.prob <- if (is.numeric(randomize.border.type)) {
@@ -174,28 +174,30 @@ randomize.tree <- function(
         }
 
     edge.color.randomization.prob <- 0;
-    if (check.randomization.value(randomize.edge.col)) {
+    if (check.randomization.value(randomize.edge.col, randomization.name = 'randomize.edge.col')) {
         edge.color.randomization.prob <- if (is.numeric(randomize.edge.col)) {
             if (randomize.edge.col < 0 || randomize.edge.col > 1) {
                 stop('"randomize.edge.col" probability must be between 0 and 1.')
-            }
+                }
             randomize.edge.col;
         } else {
             0.3;
             }
         }
 
-    edge.width.randomization.sd <- if (is.numeric(randomize.edge.width)) {
-        if (randomize.edge.width <= 0) {
-            stop('"randomize.edge.width" standard deviation value must be positive.');
+    if (check.randomization.value(randomize.edge.width, randomization.name = 'randomize.edge.width')) {
+        edge.width.randomization.sd <- if (is.numeric(randomize.edge.width)) {
+            if (randomize.edge.width <= 0) {
+                stop('"randomize.edge.width" standard deviation value must be positive.');
+                }
+            randomize.edge.width;
+        } else {
+            1;
+            };
         }
-        randomize.edge.width;
-    } else {
-        1
-        };
 
     edge.type.randomization.prob <- 0;
-    if (check.randomization.value(randomize.edge.type)) {
+    if (check.randomization.value(randomize.edge.type, randomization.name = 'randomize.edge.type')) {
         edge.type.randomization.prob <- if (is.numeric(randomize.edge.type)) {
             if (randomize.edge.type < 0 || randomize.edge.type > 1) {
                 stop('"randomize.edge.type" probability must be between 0 and 1.')
@@ -264,7 +266,7 @@ randomize.tree <- function(
                 );
             }
 
-        if (check.randomization.value(randomize.edge.length)) {
+        if (check.randomization.value(randomize.edge.length, randomization.name = 'randomize.edge.length')) {
             edge.length.column.name <- paste('length', edge.name, sep = '.');
             base.edge.length <- 10 ** runif(n = 1, min = 0, max = 6);
 
@@ -301,7 +303,6 @@ randomize.tree <- function(
 
 check.randomization.value <- function(
     randomization,
-    default.value,
     randomization.name = NULL
     ) {
     if (is.null(randomization.name)) {
