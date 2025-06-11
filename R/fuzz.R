@@ -293,7 +293,7 @@ randomize.tree <- function(
             }
         }
 
-    result <- SRCGrob(
+    result <- create.phylogenetic.tree(
         tree.df,
         plotting.direction = plotting.direction,
         ...
