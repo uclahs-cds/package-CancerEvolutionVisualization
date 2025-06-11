@@ -70,3 +70,18 @@ get.encoded.distance <- function(points) {
 generate.random.color <- function() {
     rgb(runif(1), runif(1), runif(1));
     }
+
+oxford.comma.vector.concat <- function(vec, empty.value = '', flatten.empty.value = TRUE) {
+    if (length(vec) == 0) {
+        if (flatten.empty.value) {
+            oxford.comma.vector.concat(empty.value, flatten.empty.value = FALSE)
+            } else {
+                empty.value;
+                }
+    } else if (length(vec) == 1) {
+        paste(vec, collapse = ', ');
+        } else {
+            sep <- if (length(vec) > 2) ', and ' else ' and ';
+            paste(paste(head(vec, -1), collapse = ', '), tail(vec, 1), sep = sep);
+            }
+    }
