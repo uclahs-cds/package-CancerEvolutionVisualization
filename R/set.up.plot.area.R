@@ -295,14 +295,14 @@ add.xaxis <- function(
 	    name = 'axis.content',
 	    at = xat,
 	    label = xlabels,
-	    gp = gpar(cex = axis.label.cex),
+	    gp = gpar(cex = axis.label.cex, vjust = 2),
 	    main = TRUE
 	    );
 
 	# Move the labels up slightly
 	xaxis.labels <- editGrob(
 	    getGrob(xaxis, 'labels'),
-	    y = unit(-0.09, 'npc'),
+		y = unit(-0.05 * axis.label.cex, 'npc'),
 	    vjust = 1
 	    );
 
