@@ -86,12 +86,13 @@ extend.axis <- function(axisGrob, limits, type) {
     }
 
 add.axis.label <- function(axisGrob, axis.label, axis.position, axis.label.cex, vp) {
+	axis.cex <- axisGrob$gp$cex;
     if (axis.position == 'bottom') {
         d <- 'y';
         just <- c('centre', 'top');
         rot <- 0;
         x <- unit(0.5, 'npc');
-        y <- (getGrob(axisGrob, 'labels')$y + getGrob(axisGrob, 'ticks')$y1) * 1.75;
+        y <- getGrob(axisGrob, 'labels')$y * max(1, (axis.label.cex + axis.cex));
 	} else {
 		pushViewport(vp);
 
@@ -114,9 +115,9 @@ add.axis.label <- function(axisGrob, axis.label, axis.position, axis.label.cex, 
 			rot <- 90;
 
 			x <- unit(
-			    convertX(grobWidth(getGrob(axisGrob, 'labels')), 'mm', valueOnly = TRUE) * -(axisGrob$gp$cex) -
-			        convertX(unit(1, 'lines') * axisGrob$gp$cex, 'mm', valueOnly = TRUE) +
-			        convertX(getGrob(axisGrob, 'labels')$x * axisGrob$gp$cex, 'mm', valueOnly = TRUE),
+			    convertX(grobWidth(getGrob(axisGrob, 'labels')), 'mm', valueOnly = TRUE) * -(axis.cex) -
+			        convertX(unit(1, 'lines') * axis.cex, 'mm', valueOnly = TRUE) +
+			        convertX(getGrob(axisGrob, 'labels')$x * axis.cex, 'mm', valueOnly = TRUE),
 			    'mm'
 			    );
 		} else if (axis.position == 'right') {
@@ -295,14 +296,14 @@ add.xaxis <- function(
 	    name = 'axis.content',
 	    at = xat,
 	    label = xlabels,
-	    gp = gpar(cex = axis.label.cex, vjust = 2),
+	    gp = gpar(cex = axis.cex, vjust = 2),
 	    main = TRUE
 	    );
 
 	# Move the labels up slightly
 	xaxis.labels <- editGrob(
 	    getGrob(xaxis, 'labels'),
-		y = unit(-0.05 * axis.label.cex, 'npc'),
+		y = getGrob(xaxis, 'ticks')$y1 * 1.5,
 	    vjust = 1
 	    );
 
