@@ -92,7 +92,12 @@ add.axis.label <- function(axisGrob, axis.label, axis.position, axis.label.cex, 
         just <- c('centre', 'top');
         rot <- 0;
         x <- unit(0.5, 'npc');
-        y <- getGrob(axisGrob, 'labels')$y * max(1, (axis.label.cex + axis.cex));
+
+		y <- unit(
+			convertY(getGrob(axisGrob, 'labels')$y, 'mm', valueOnly = TRUE) -
+			convertY(unit(1.2, 'lines') * axis.cex, 'mm', valueOnly = TRUE),
+			'mm'
+			);
 	} else {
 		pushViewport(vp);
 
@@ -134,7 +139,7 @@ add.axis.label <- function(axisGrob, axis.label, axis.position, axis.label.cex, 
 	    name = 'axis.label',
 	    axis.label,
 	    gp = gpar(cex = axis.label.cex),
-	    vjust = 0,
+	    vjust = 1,
 	    x = x,
 	    rot = rot,
 	    y = y
