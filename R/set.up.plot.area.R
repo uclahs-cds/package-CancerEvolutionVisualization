@@ -113,21 +113,21 @@ add.axis.label <- function(axisGrob, axis.label, axis.position, axis.label.cex, 
 			d <- 'x';
 			just <- c('centre', 'centre');
 			rot <- 90;
-
-			x <- unit(
-			    convertX(grobWidth(getGrob(axisGrob, 'labels')), 'mm', valueOnly = TRUE) * -(axis.cex) -
-			        convertX(unit(1, 'lines') * axis.cex, 'mm', valueOnly = TRUE) +
-			        convertX(getGrob(axisGrob, 'labels')$x * axis.cex, 'mm', valueOnly = TRUE),
-			    'mm'
-			    );
+			sign <- -1;
 		} else if (axis.position == 'right') {
 			d <- 'x';
 			just <- c('left', 'centre');
 			x <- (getGrob(axisGrob, 'labels')$x + tick.length) * 1.5;
 			rot <- 270;
+			sign <- 1;
 		    }
 
-		popViewport()
+		x <- unit(
+			sign * (
+				convertX(grobWidth(getGrob(axisGrob, 'labels')), 'mm', valueOnly = TRUE) * axis.cex +
+				convertX(unit(1, 'lines') * axis.cex, 'mm', valueOnly = TRUE)
+				) +
+			convertX(getGrob(axisGrob, 'labels')$x, 'mm', valueOnly = TRUE), 'mm');
     	}
 
 	axis.lab <- textGrob(
