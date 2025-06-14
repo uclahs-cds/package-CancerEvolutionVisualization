@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2025-03-12)
+# CancerEvolutionVisualization 3.0.0 (2025-06-13)
 
 ## Added
 * Dendrogram mode
@@ -32,6 +32,7 @@
 * Updated the user guide to reflect new features.
 * Fix bug where the x-axis only renders when y-axis is also rendered.
 * Fix issue when creating polygons with more than 2 siblings
+* Use updated `R CMD check` CI/CD action
 
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.
