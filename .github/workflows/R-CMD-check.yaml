@@ -19,4 +19,4 @@ jobs:
             libjpeg-dev \
             libpng-dev
       - uses: r-lib/actions/setup-tinytex@v2
-      - uses: uclahs-cds/tool-R-CMD-check-action@renv
+      - uses: uclahs-cds/tool-R-CMD-check-action@v2
