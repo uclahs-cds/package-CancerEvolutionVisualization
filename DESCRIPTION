@@ -24,6 +24,7 @@ Imports:
     BoutrosLab.plotting.general
 Suggests:
     testthat,
+	rmarkdown,
 	knitr
 VignetteBuilder: knitr
 LazyLoad: yes
