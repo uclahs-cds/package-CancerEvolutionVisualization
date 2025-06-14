@@ -10,6 +10,7 @@ SRCGrob(
     tree,
     node.text = NULL,
     main = NULL,
+    plotting.direction = 'down',
     horizontal.padding = 0.1,
     scale1 = 1,
     scale2 = 1,
@@ -46,6 +47,11 @@ SRCGrob(
     \item{tree}{Tree structure data.frame}
     \item{node.text}{Dataframe for text labels to be displayed next to nodes}
     \item{main}{Main plot title}
+    \item{plotting.direction}{
+    Sets the direction of flow for the tree.
+    Can be one of 'down', 'right', 'up', 'left', or a number in degrees.
+    (Default is 0, downward).
+    }
     \item{horizontal.padding}{
     Increase/reduce the plot's horizontal padding proportionally.
     A positive value will expand the padding, and a negative value will reduce it.

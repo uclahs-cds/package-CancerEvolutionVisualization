@@ -21,3 +21,17 @@ test_that(
         expect_true(compare.trees(linear.example, result.tree));
         }
     );
+
+test_that(
+    'Linear 30-degree plotting direction case values', {
+        load('data/linear.plots.Rda');
+        load('data/linear.data.Rda')
+
+        result.tree <- SRCGrob(
+            linear.test.data$tree[, c('parent', 'length.1', 'length.2')],
+            yaxis2.label = '',
+            plotting.direction = 30
+            );
+            expect_true(compare.trees(linear.30deg.example, result.tree));
+        }
+    );

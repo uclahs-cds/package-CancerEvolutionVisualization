@@ -13,6 +13,7 @@ make.clone.tree.grobs <- function(
     cluster.list,
     add.polygons,
     spread,
+    start.angle,
     fixed.angle,
     add.node.text,
     text.df,
@@ -43,7 +44,6 @@ make.clone.tree.grobs <- function(
     scale.padding,
     ...
     ) {
-
     #initializing dataframe for subclones
     if ('excluded' %in% colnames(ccf.df)) {
         v <- ccf.df[!ccf.df$excluded,];
@@ -75,7 +75,6 @@ make.clone.tree.grobs <- function(
 
     #initializing line segment dataframe and adjusting lengths to accomodate the node circles
     tree$angle <- numeric(length = nrow(tree));
-    tree$angle[tree$parent == -1] <- 0;
     if ('length2' %in% colnames(tree)) {
         tree$length2.c <- tree$length2 / scale1 * scale2;
 
@@ -105,6 +104,7 @@ make.clone.tree.grobs <- function(
         extra.len,
         node.col,
         spread = spread,
+        start.angle = start.angle,
         fixed.angle = fixed.angle,
         add.polygons = add.polygons,
         no.ccf = no.ccf
@@ -123,7 +123,15 @@ make.clone.tree.grobs <- function(
         get.CP.polygons(clone.out);
         }
 
-    add.tree.segs(clone.out, node.radius, default.branch.width, scale1, seg1.col, seg2.col);
+    add.tree.segs(
+        clone.out,
+        node.radius,
+        default.branch.width,
+        scale1,
+        seg1.col,
+        seg2.col,
+        start.angle
+        );
 
     if (!is.null(cluster.list)) {
         message(paste(

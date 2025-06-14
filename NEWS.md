@@ -12,6 +12,7 @@
 * Add option to use scale bars instead of y-axes.
 * Wrapper function for `SRCgrob` to automatically save plots to file
 * Add option to annotate the CCF summary heatmap with the cell values.
+* `plotting.direction` argument to `SRCGrob` to support arbitrary direction of tree "flow". Can be one of 'down' (default), 'right', 'up', 'left' or any number (in degrees).
 * Function to generate single-sample density plot
 * Add support for 1xn and 1x1 heatmaps.
 * Add `get.colours.in.order` function to get a list of colours and corresponding clone ID order.

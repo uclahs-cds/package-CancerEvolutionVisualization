@@ -5,7 +5,11 @@
 .RData
 .Ruserdata
 .Rproj.user
+.lintr
 
 vignettes/figures
 *.pdf
 *.html
+
+*.code-workspace
+.vscode
