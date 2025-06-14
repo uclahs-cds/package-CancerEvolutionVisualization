@@ -33,7 +33,7 @@ assign.weight <- function(node,v, extra.len, spread) {
 	return(node.weight);
     }
 
-position.nodes <- function(v, tree, extra.len) {
+position.nodes <- function(v, tree, extra.len, start.angle) {
 	xpos <- ypos <- 0;
 	vi <- v[v$parent == -1, ];
 
@@ -50,24 +50,24 @@ position.nodes <- function(v, tree, extra.len) {
 		    x.length <- vi$x.length;
 		    dx <- if (is.na(x.length)) distance * tan(angle) else x.length;
 		    dy <- distance;
+			new.d <- rotate.coords(dx, dy, rotate.by = start.angle);
+			dx <- new.d$x;
+			dy <- new.d$y;
 	        }
 
 		if (vi$parent != -1) {
 			v$x[v$id == vi$id] <<- v$x[v$id == vi$parent] + dx;
 			v$y[v$id == vi$id] <<- v$y[v$id == vi$parent] + dy;
 		} else {
-		    v$x[v$id == vi$id] <<- 0;
-			v$y[v$id == vi$id] <<- distance;
+		    v$x[v$id == vi$id] <<- dx;
+			v$y[v$id == vi$id] <<- dy;
 		    }
-
 		for (child in v$id[v$parent == vi$id]) {
 			preorder.traversal(node = child, tree = tree);
 		    }
 	     }
 
 	preorder.traversal(node = 1, tree = tree);
-
-	# v <- reposition.clones(tree, v);
 
 	v$len <- sapply(
 	    v$y,

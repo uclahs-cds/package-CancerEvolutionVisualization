@@ -1,4 +1,10 @@
-calculate.angles.radial <- function(v, tree, spread, total.angle) {
+calculate.angles.radial <- function(
+    v,
+    tree,
+    spread,
+    total.angle,
+    start.angle
+    ) {
     root.node.id <- v$id[[1]];
     node.ids <- c(root.node.id);
 
@@ -12,10 +18,6 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
 
         parent.id <- tree$parent[tree$tip == current.node.id];
 
-        if (parent.id == -1) {
-            tree$angle[tree$tip == current.node.id] <- 0;
-            }
-
         child.ids <- as.numeric(
             tree$tip[tree$parent == current.node.id & !is.na(tree$parent)]
             );
@@ -23,12 +25,12 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
 
         if (num.children > 0) {
             parent.angle <- angles[tree$tip == current.node.id];
-            if (is.na(parent.angle) || length(parent.angle) == 0) {
-                parent.angle <- 0;
-                angles[tree$tip == current.node.id] <- parent.angle;
-                }
 
             if (unique(v$mode[v$id %in% child.ids]) == 'radial') {
+                if (is.na(parent.angle) || length(parent.angle) == 0) {
+                    parent.angle <- start.angle;
+                    angles[tree$tip == current.node.id] <- parent.angle;
+                    }
                 # if all children are radial, spread evenly by angle
                 level.spread <- calculate.level.spread(v$spread[v$id %in% child.ids]);
                 level.total.angle <- total.angle * level.spread;
@@ -46,6 +48,10 @@ calculate.angles.radial <- function(v, tree, spread, total.angle) {
                     angles[tree$tip %in% child.ids] <- parent.angle + angles[tree$tip %in% child.ids];
                     }
             } else if (unique(v$mode[v$id %in% child.ids]) == 'dendrogram') {
+                if (is.na(parent.angle) || length(parent.angle) == 0) {
+                    parent.angle <- 0;
+                    angles[tree$tip == current.node.id] <- parent.angle;
+                    }
                 # sort children by complexity
                 child.ids <- v$id[v$id %in% child.ids];
                 # if all children are dendrogram, spread evenly by x distance
@@ -140,7 +146,12 @@ split.equal.x.dist <- function(
     return(angles);
     }
 
-calculate.angles.fixed <- function(v, tree, fixed.angle) {
+calculate.angles.fixed <- function(
+    v,
+    tree,
+    fixed.angle,
+    start.angle
+    ) {
     angles <- v$angle;
     node.ids <- c(v$id[[1]]);
 
@@ -151,7 +162,7 @@ calculate.angles.fixed <- function(v, tree, fixed.angle) {
 
         parent.angle <- angles[current.node.id];
         if (is.na(parent.angle) || length(parent.angle) == 0) {
-            parent.angle <- 0;
+            parent.angle <- start.angle;
             angles[current.node.id] <- parent.angle;
             }
 

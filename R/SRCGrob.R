@@ -2,6 +2,7 @@ SRCGrob <- function(
     tree,
     node.text = NULL,
     main = NULL,
+    plotting.direction = 'down',
     horizontal.padding = 0.1,
     scale1 = 1,
     scale2 = 1,
@@ -33,6 +34,12 @@ SRCGrob <- function(
     scale.size.2 = NA,
     scale.padding = 1
     ) {
+    if ('CP' %in% colnames(tree) && !(plotting.direction %in% c('down', 0))) {
+        warning(paste(
+            '"plotting.direction" is not yet supported with "CP" polygon column.',
+            '"plotting.direction" will be ignored.'
+            ));
+        }
 
     add.node.text <- !is.null(node.text);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
@@ -58,6 +65,10 @@ SRCGrob <- function(
         default.node.colour = node.col
         );
 
+    start.angle <- prep.plotting.direction(
+        plotting.direction,
+        radians = use.radians
+        );
     fixed.angle <- pi / 6;
     min.width <- get.plot.width(horizontal.padding);
     spread <- 1;
@@ -95,6 +106,7 @@ SRCGrob <- function(
         default.branch.width = 4,
         add.polygons = add.polygons,
         spread = spread,
+        start.angle = start.angle,
         fixed.angle = fixed.angle,
         add.node.text = add.node.text,
         text.on.nodes = text.on.nodes,
