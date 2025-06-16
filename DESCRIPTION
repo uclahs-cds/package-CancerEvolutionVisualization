@@ -1,7 +1,7 @@
 Package: CancerEvolutionVisualization
 Title: Publication Quality Phylogenetic Tree Plots
 Version: 3.0.0
-Date: 2025-04-09
+Date: 2025-06-13
 Authors@R: c(
 	person("Paul Boutros", role = "cre", email = "PBoutros@mednet.ucla.edu"),
 	person("Adriana Salcedo", role = "aut"),
@@ -24,6 +24,7 @@ Imports:
     BoutrosLab.plotting.general
 Suggests:
     testthat,
+	rmarkdown,
 	knitr
 VignetteBuilder: knitr
 LazyLoad: yes

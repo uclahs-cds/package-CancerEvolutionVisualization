@@ -1,4 +1,4 @@
-# CancerEvolutionVisualization 3.0.0 (2025-04-09)
+# CancerEvolutionVisualization 3.0.0 (2025-06-13)
 
 ## Added
 * Dendrogram mode
@@ -17,6 +17,7 @@
 * Add support for 1xn and 1x1 heatmaps.
 * Add `get.colours.in.order` function to get a list of colours and corresponding clone ID order.
 * Add `sample.order` and `clone.order` as input parameters to `create.cluster.heatmap`
+* Suggest rmarkdown dependency for rendering vignettes 
 
 ## Update
 * Fixed angle calculation bug where child angles do not follow
@@ -33,6 +34,7 @@
 * Updated the user guide to reflect new features.
 * Fix bug where the x-axis only renders when y-axis is also rendered.
 * Fix issue when creating polygons with more than 2 siblings
+* Use updated `R CMD check` CI/CD action
 
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.
