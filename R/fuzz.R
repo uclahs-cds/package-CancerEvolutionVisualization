@@ -35,7 +35,7 @@ randomize.tree <- function(
             }
         tree.df$spread <- tree.df$spread + rnorm(
             mean = 0,
-            sd = spread.randomization.sd, 
+            sd = spread.randomization.sd,
             n = nrow(tree.df)
             );
         tree.df[tree.df$spread < 0, 'spread'] <- 0;
