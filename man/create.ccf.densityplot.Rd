@@ -9,7 +9,6 @@ create.ccf.densityplot(
     x,
     filename = NULL,
     clone.colours = NULL,
-    breaks = 100,
     xlab.label = 'CCF',
     ylab.label = 'SNV Density',
     xlimits = c(0, 1.5),
@@ -30,7 +29,6 @@ create.ccf.densityplot(
     \item{x}{A data-frame with the following column names: 'SNV.id', 'clone.id', 'CCF'.}
     \item{filename}{Filename for tiff output, or if NULL returns the trellis object itself. Defaults to \code{NULL}.}
     \item{clone.colours}{Named list to provide a colour scheme for the clone ID covariate bar. If NULL, colours will be randomly generated. Defaults to \code{NULL}.}
-    \item{breaks}{Number of breaks for the histogram. Defaults to 100.}
     \item{xlab.label}{Defaults to \dQuote{CCF}.}
     \item{ylab.label}{Defaults to \dQuote{SNV Density}.}
     \item{xlimits}{Limits for the x-axis. Defaults to \code{c(0, 1.5)}.}

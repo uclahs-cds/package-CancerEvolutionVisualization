@@ -86,12 +86,18 @@ extend.axis <- function(axisGrob, limits, type) {
     }
 
 add.axis.label <- function(axisGrob, axis.label, axis.position, axis.label.cex, vp) {
+	axis.cex <- axisGrob$gp$cex;
     if (axis.position == 'bottom') {
         d <- 'y';
         just <- c('centre', 'top');
         rot <- 0;
         x <- unit(0.5, 'npc');
-        y <- (getGrob(axisGrob, 'labels')$y + getGrob(axisGrob, 'ticks')$y1) * 1.75;
+
+		y <- unit(
+			convertY(getGrob(axisGrob, 'labels')$y, 'mm', valueOnly = TRUE) -
+			convertY(unit(1.2, 'lines') * axis.cex, 'mm', valueOnly = TRUE),
+			'mm'
+			);
 	} else {
 		pushViewport(vp);
 
@@ -112,28 +118,28 @@ add.axis.label <- function(axisGrob, axis.label, axis.position, axis.label.cex, 
 			d <- 'x';
 			just <- c('centre', 'centre');
 			rot <- 90;
-
-			x <- unit(
-			    convertX(grobWidth(getGrob(axisGrob, 'labels')), 'mm', valueOnly = TRUE) * -(axisGrob$gp$cex) -
-			        convertX(unit(1, 'lines') * axisGrob$gp$cex, 'mm', valueOnly = TRUE) +
-			        convertX(getGrob(axisGrob, 'labels')$x * axisGrob$gp$cex, 'mm', valueOnly = TRUE),
-			    'mm'
-			    );
+			sign <- -1;
 		} else if (axis.position == 'right') {
 			d <- 'x';
 			just <- c('left', 'centre');
 			x <- (getGrob(axisGrob, 'labels')$x + tick.length) * 1.5;
 			rot <- 270;
+			sign <- 1;
 		    }
 
-		popViewport()
+		x <- unit(
+			sign * (
+				convertX(grobWidth(getGrob(axisGrob, 'labels')), 'mm', valueOnly = TRUE) * axis.cex +
+				convertX(unit(1, 'lines') * axis.cex, 'mm', valueOnly = TRUE)
+				) +
+			convertX(getGrob(axisGrob, 'labels')$x, 'mm', valueOnly = TRUE), 'mm');
     	}
 
 	axis.lab <- textGrob(
 	    name = 'axis.label',
 	    axis.label,
 	    gp = gpar(cex = axis.label.cex),
-	    vjust = 0,
+	    vjust = 1,
 	    x = x,
 	    rot = rot,
 	    y = y
@@ -295,14 +301,14 @@ add.xaxis <- function(
 	    name = 'axis.content',
 	    at = xat,
 	    label = xlabels,
-	    gp = gpar(cex = axis.label.cex),
+	    gp = gpar(cex = axis.cex, vjust = 2),
 	    main = TRUE
 	    );
 
 	# Move the labels up slightly
 	xaxis.labels <- editGrob(
 	    getGrob(xaxis, 'labels'),
-	    y = unit(-0.09, 'npc'),
+		y = getGrob(xaxis, 'ticks')$y1 * 1.5,
 	    vjust = 1
 	    );
 

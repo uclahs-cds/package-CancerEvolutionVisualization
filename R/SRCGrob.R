@@ -41,6 +41,10 @@ SRCGrob <- function(
             ));
         }
 
+    if ('CCF' %in% colnames(tree) && !('CP' %in% colnames(tree))) {
+        tree$CP <- tree$CCF;
+        }
+
     add.node.text <- !is.null(node.text);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
     text.on.nodes <- FALSE;

@@ -2,7 +2,6 @@ create.ccf.densityplot <- function(
     x,
     filename = NULL,
     clone.colours = NULL,
-    breaks = 100,
     xlab.label = 'CCF',
     ylab.label = 'SNV Density',
     xlimits = c(0, 1.5),
@@ -93,7 +92,7 @@ create.ccf.densityplot <- function(
         abline.col = 'gray50',
         add.text = TRUE,
         text.labels = lapply(mean.ccf$CCF, round, 2),
-        text.x = mean.ccf$CCF,
+        text.x = spread.values(mean.ccf$CCF, min.dist = legend.title.cex / 10),
         text.y = ymax,
         text.fontface = 'bold',
         text.cex = legend.title.cex
@@ -109,3 +108,26 @@ create.ccf.densityplot <- function(
         resolution = resolution
         ));
     }
+
+
+spread.values <- function(x, min.dist = 0.1, max.iter = 10) {
+    x.out <- x;
+    for (iter in seq_len(max.iter)) {
+        changed <- FALSE;
+        ord <- order(x.out);
+        x.sorted <- x.out[ord];
+
+        for (i in 2:length(x.sorted)) {
+            gap <- x.sorted[i] - x.sorted[i - 1];
+            if (gap < min.dist) {
+                shift <- (min.dist - gap) / 2;
+                x.sorted[i - 1] <- x.sorted[i - 1] - shift;
+                x.sorted[i]     <- x.sorted[i] + shift;
+                changed <- TRUE;
+            }
+        }
+        x.out[ord] <- x.sorted;
+        if (!changed) break;
+    };
+    return(x.out);
+}
