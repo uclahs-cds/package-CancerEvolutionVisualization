@@ -53,4 +53,4 @@ for (i in seq_len(last)) {
 
 src <- list.files('figures', full.names = TRUE)
 invisible(file.copy(src, '/out', overwrite = TRUE))
-cat('rendered', target, '->', basename(src[length(src)]), '\n')
+cat('rendered', target, '\n')
