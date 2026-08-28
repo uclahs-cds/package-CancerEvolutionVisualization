@@ -24,6 +24,7 @@ make.clone.tree.grobs <- function(
     yaxis2.label,
     axis.label.cex,
     axis.cex,
+    ylab.axis.padding,
     xaxis.label,
     min.width,
     node.radius,
@@ -108,7 +109,10 @@ make.clone.tree.grobs <- function(
         start.angle = start.angle,
         fixed.angle = fixed.angle,
         add.polygons = add.polygons,
-        no.ccf = no.ccf
+        no.ccf = no.ccf,
+        # Node radius in the tree's own (native) units, so overlaps can be
+        # measured against the node positions directly.
+        node.radius = node.radius / scale1
         );
 
     clone.out$no.ccf <- no.ccf;
@@ -197,6 +201,7 @@ make.clone.tree.grobs <- function(
         yat = yat,
         axis.label.cex = axis.label.cex,
         axis.cex = axis.cex,
+        ylab.axis.padding = ylab.axis.padding,
         no.ccf = no.ccf,
         xaxis.label = xaxis.label,
         yaxis1.label = yaxis1.label,

@@ -87,11 +87,30 @@ extend.axis <- function(axisGrob, limits, type) {
     return(axisGrob);
     }
 
-add.axis.label <- function(axisGrob, axis.label, axis.position, axis.label.cex, vp) {
+add.axis.label <- function(
+    axisGrob,
+    axis.label,
+    axis.position,
+    axis.label.cex,
+    vp,
+    axis.padding = 1
+    ) {
+
     pushViewport(vp);
 
     label.grob <- getGrob(axisGrob, 'labels');
-    gap.mm     <- convertX(unit(1.5, 'lines'), 'mm', valueOnly = TRUE);
+
+    # The gap is expressed in the plot's own text lines, so it is measured
+    # before the axis graphical parameters are applied.
+    gap.mm <- convertX(unit(1.5 * axis.padding, 'lines'), 'mm', valueOnly = TRUE);
+
+    # grid applies the axis gTree's gpar (in particular cex) to the tick labels
+    # when the axis is drawn, so the tick labels have to be measured in that
+    # context. Measuring the detached child grob understates both its offset
+    # from the axis line and its own size, and the shortfall grows with the
+    # width of the tick-label text. That left each axis title sitting a
+    # different distance from its ticks (issue #183).
+    pushViewport(viewport(gp = axisGrob$gp));
 
     if (axis.position == 'bottom') {
         just       <- c('centre', 'top');
@@ -127,7 +146,7 @@ add.axis.label <- function(axisGrob, axis.label, axis.position, axis.label.cex, 
             }
         }
 
-    popViewport();
+    popViewport(2);
 
     axis.lab <- textGrob(
         name = 'axis.label',
@@ -169,6 +188,7 @@ add.axes <- function(
     no.ccf = FALSE,
     axis.label.cex = list(x = 1.55, y = 1.55),
     axis.cex = list(x = 1, y = 1),
+    ylab.axis.padding = 1,
     plotting.direction = 'down',
     add.polygons = FALSE
     ) {
@@ -214,6 +234,7 @@ add.axes <- function(
                 no.ccf = no.ccf,
                 axis.label.cex = axis.label.cex[['y']],
                 axis.cex = axis.cex[['y']],
+                ylab.axis.padding = ylab.axis.padding,
                 ylabels = ylabels1
                 );
 
@@ -225,6 +246,7 @@ add.axes <- function(
                 no.ccf = no.ccf,
                 axis.label.cex = axis.label.cex[['y']],
                 axis.cex = axis.cex[['y']],
+                ylab.axis.padding = ylab.axis.padding,
                 ylabels = ylabels2
                 );
         } else {
@@ -235,6 +257,7 @@ add.axes <- function(
                 no.ccf = no.ccf,
                 axis.label.cex = axis.label.cex[['y']],
                 axis.cex = axis.cex[['y']],
+                ylab.axis.padding = ylab.axis.padding,
                 ylabels = ylabels1
                 );
             }
@@ -251,6 +274,7 @@ add.yaxis <- function(
     no.ccf = FALSE,
     axis.label.cex = list(x = 1.55, y = 1.55),
     axis.cex = list(x = 1, y = 1),
+    ylab.axis.padding = 1,
     ylabels = NULL
     ) {
     # Necessary to get the right positioning
@@ -292,7 +316,8 @@ add.yaxis <- function(
         axis1.label,
         axis.position = yaxis.position,
         axis.label.cex,
-        vp = vp.unclipped
+        vp = vp.unclipped,
+        axis.padding = ylab.axis.padding
         );
 
     clone.out$grobs <- c(clone.out$grobs, list(yaxis.gTree));

@@ -21,6 +21,7 @@ SRCGrob(
     ylab.cex = 1.55,
     xaxis.cex = 1.45,
     yaxis.cex = 1.45,
+    ylab.axis.padding = 1,
     xaxis.label = 'CCF',
     label.cex = NA,
     node.text.cex = 0.85,
@@ -72,6 +73,14 @@ SRCGrob(
     \item{ylab.cex}{Font size for the y-axis labels}
     \item{xaxis.cex}{Font size for the x-axis tick labels}
     \item{yaxis.cex}{Font size for the y-axis tick labels}
+    \item{ylab.axis.padding}{
+        Multiplier for the space between the y-axis tick labels and the y-axis
+        label, mirroring the parameter of the same name in
+        \code{BoutrosLab.plotting.general}. The default of \code{1} leaves a
+        gap of 1.5 text lines. Both y-axes always use the same padding, so
+        their labels stay the same distance from their tick labels regardless
+        of how wide the tick labels are. Must be a single non-negative number.
+        }
     \item{xaxis.label}{Text label for the x-axis}
     \item{label.cex}{Font size for the node labels}
     \item{node.text.cex}{Font size for the node text}

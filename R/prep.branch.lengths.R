@@ -26,6 +26,27 @@ get.branch.length.colnames <- function(col.names) {
     Filter(validate.branch.colname, col.names);
     }
 
+# A branch length column must be named 'length...'. Column names that merely
+# CONTAIN 'length' (for example 'snv.length') are not branch lengths and used to
+# be dropped silently, which is the confusion reported in issue #162.
+warn.ignored.length.columns <- function(col.names) {
+    ignored <- col.names[
+        grepl('length', col.names, ignore.case = TRUE) &
+        !validate.branch.colname(col.names)
+        ];
+
+    if (length(ignored) > 0) {
+        warning(paste(
+            'Ignoring column(s)',
+            paste(shQuote(ignored, type = 'cmd'), collapse = ', '),
+            '- a branch length column name must start with "length"',
+            '(for example "length.1" or "length.2").'
+            ));
+        }
+
+    return(invisible(ignored));
+    }
+
 validate.branch.length.values <- function(length.column) {
     return(tryCatch({
         numeric.values <- as.numeric(length.column);

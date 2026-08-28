@@ -24,7 +24,7 @@ Or to install the latest development version from GitHub:
 ```
 # install.packages("devtools")
 
-devtools::install_github("uclahs-cds/package-CancerEvolutionVisualization")
+devtools::install_github("uclahs-cds/public-R-CancerEvolutionVisualization")
 ```
 
 ## Resources
@@ -33,11 +33,11 @@ Available resources on CEV usage can be found at the package [CRAN page](https:/
 
 ## Getting help
 
-Looking for guidance or support with CEV? Check out our [Discussions](https://github.com/uclahs-cds/package-CancerEvolutionVisualization/discussions) page.
+Looking for guidance or support with CEV? Check out our [Discussions](https://github.com/uclahs-cds/public-R-CancerEvolutionVisualization/discussions) page.
 
-Submit bugs, suggest new features or see current works at our [Issues](https://github.com/uclahs-cds/package-CancerEvolutionVisualization/issues) page.
+Submit bugs, suggest new features or see current works at our [Issues](https://github.com/uclahs-cds/public-R-CancerEvolutionVisualization/issues) page.
 
-[Pull requests](https://github.com/uclahs-cds/package-CancerEvolutionVisualization/pulls) are also open for discussion.
+[Pull requests](https://github.com/uclahs-cds/public-R-CancerEvolutionVisualization/pulls) are also open for discussion.
 
 ## Contributors
 
@@ -52,7 +52,7 @@ CancerEvolutionVisualization is licensed under the GNU General Public License ve
 
 CancerEvolutionVisualization is a software package for generating publication-quality, customizable plots.
 
-Copyright (C) 2021-2023 University of California Los Angeles ("Boutros Lab") All rights reserved.
+Copyright (C) 2021-2026 University of California Los Angeles ("Boutros Lab") All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 

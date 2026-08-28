@@ -8,9 +8,10 @@ axis.overlap <- function(
     ) {
 
     # function checks if the node text will cross over the axis
+    text.anchor <- xpos + line.dist;
     node.text.xrange <- sort(c(
-        xpos + line.dist,
-        xpos + line.dist + strwidth(node.text, units = 'inches', cex = cex) * line.dist / abs(line.dist)
+        text.anchor,
+        text.anchor + strwidth(node.text, units = 'inches', cex = cex) * sign(line.dist)
         ));
 
     overlaps <- NULL;
@@ -31,6 +32,16 @@ axis.overlap <- function(
         while (!is.null(overlaps) && new.cex > 0.05) {
             new.cex <- new.cex - 0.05;
             overlaps <- axis.overlap(xpos, node.text, line.dist, axis.type, new.cex, panel.width);
+            }
+
+        # Not every overlap can be shrunk away. The point the text is anchored
+        # to may itself be past the axis, which happens whenever a branch runs
+        # outside the panel -- the normal-node stub of an angled tree, for
+        # instance -- and no text size fixes that. Returning the floor value
+        # would leave the label on the page but far too small to read, so keep
+        # the requested size and let the label overhang the axis instead.
+        if (!is.null(overlaps)) {
+            return(NULL);
             }
 
         return(new.cex);
@@ -123,7 +134,7 @@ position.node.text <- function(
     plotting.direction = 'down'
     ) {
 
-    is.horizontal <- !is.numeric(plotting.direction) && plotting.direction %in% c('left', 'right');
+    is.horizontal <- is.horizontal.direction(plotting.direction);
 
     text.grob.list <- vector('list', length(unlist(node.list)));
     orig.cex <- cex;
@@ -137,7 +148,15 @@ position.node.text <- function(
         } else {
             slope <- tree.max.adjusted$slope[s];
             intercept <- tree.max.adjusted$intercept[s];
-            y.height <- tree.max.adjusted$y0[s] - tree.max.adjusted$y1[s];
+
+            # y0 is the parent end of the branch and y1 the child end, so y0 is
+            # only above y1 on screen while the tree grows downwards. Work off
+            # the branch's vertical extent instead: for an upward-pointing
+            # branch the loop below would otherwise never be able to fit the
+            # labels inside the branch and would shrink cex to nothing.
+            branch.top <- max(tree.max.adjusted$y0[s], tree.max.adjusted$y1[s]);
+            branch.bottom <- min(tree.max.adjusted$y0[s], tree.max.adjusted$y1[s]);
+            y.height <- branch.top - branch.bottom;
 
             label.bottom <- str.heightsum <- 0;
             cex <- orig.cex;
@@ -147,9 +166,9 @@ position.node.text <- function(
                 str.heightsum == 0 |
                 (label.bottom + str.heightsum) > (main.y + panel.height) |
                 (label.nodes == FALSE &
-                (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + node.radius * 0.5))
+                (label.bottom + str.heightsum) > (branch.top + node.radius * 0.5))
             ) {
-                if ((label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + node.radius * 0.5) & length(node.list[[s]]) > 1) {
+                if ((label.bottom + str.heightsum) > (branch.top + node.radius * 0.5) & length(node.list[[s]]) > 1) {
                     split.text <- TRUE;
                     }
 
@@ -175,15 +194,15 @@ position.node.text <- function(
                     if (length(node.list[[s]]) == 1) {
                         # Centered when there is just one text row
                         # Otherwise position relative to the bottom of the textGrob
-                        label.bottom  <- tree.max.adjusted$y1[s] + y.height / 2;
+                        label.bottom  <- branch.bottom + y.height / 2;
                         vjust <- 'center';
                     } else {
-                        label.bottom  <- y.height / 2 - str.heightsum / 2 + tree.max.adjusted$y1[s];
+                        label.bottom  <- y.height / 2 - str.heightsum / 2 + branch.bottom;
                         vjust <- 'bottom';
                         }
 
                     if (s == 1 & ((str.heightsum - y.height) > node.radius) & !is.null(node.radius) & !is.null(scale)) {
-                        label.bottom <- tree.max.adjusted$y1[s] - node.radius;
+                        label.bottom <- branch.bottom - node.radius;
                         }
                 } else {
                     label.bottom <- tree.max.adjusted$y[s] - 0.5 * str.heightsum;
@@ -191,7 +210,7 @@ position.node.text <- function(
 
                 if (
                     (label.bottom + str.heightsum) > (main.y + panel.height) ||
-                    (!label.nodes && (label.bottom + str.heightsum) > (tree.max.adjusted$y0[s] + node.radius * 0.5))
+                    (!label.nodes && (label.bottom + str.heightsum) > (branch.top + node.radius * 0.5))
                 ) {
                     cex <- cex - 0.05;
                     if (cex < 0.01) {
@@ -221,6 +240,14 @@ position.node.text <- function(
                         is.infinite(slope) || is.horizontal,
                         yes = tree.max.adjusted$x1[s],
                         no = (ypos - intercept) / slope
+                        );
+
+                    # Dividing by the slope blows up for a near-horizontal
+                    # branch, and any label placed off the ends of the branch is
+                    # meaningless anyway, so keep the anchor on the segment.
+                    xpos <- min(
+                        max(xpos, min(tree.max.adjusted$x0[s], tree.max.adjusted$x1[s])),
+                        max(tree.max.adjusted$x0[s], tree.max.adjusted$x1[s])
                         );
 
                     xline.dist <- line.dist;
@@ -347,7 +374,14 @@ position.node.text <- function(
                             }
                         }
                 } else {
-                    if (slope > 0 || (is.infinite((slope)) && axis.type == 'SNV' )) {
+                    # Label the outer side of the branch, i.e. the side the
+                    # child sits on relative to its parent. A positive slope
+                    # only means "leans left" while the tree grows downwards;
+                    # for any other direction it puts sibling labels on top of
+                    # each other in the middle of the tree.
+                    leans.left <- tree.max.adjusted$x1[s] < tree.max.adjusted$x0[s];
+
+                    if (leans.left || (is.infinite((slope)) && axis.type == 'SNV' )) {
                         xline.dist <- -(abs(xline.dist));
                     } else {
                         xline.dist <- abs(xline.dist);
@@ -427,17 +461,14 @@ position.node.text <- function(
                                 }
                             }
                     } else {
-                        overlap <- check.overlap(
-                            xpos + xline.dist,
-                            ypos,
-                            node.list[[s]][g],
-                            tree.max.adjusted,
-                            hjust,
-                            node.radius
-                            );
-
-                        if (length(unlist(overlap)) > 0) {
-                            xline.dist <- -(xline.dist);
+                        # check.overlap() assumes the label is offset along x,
+                        # which is only true of the vertical layout. In the
+                        # horizontal layout the offset is applied to y, so the
+                        # point tested here is not where the text is drawn and
+                        # the resulting flip is arbitrary -- for an exactly
+                        # horizontal branch it turns on floating point noise and
+                        # splits a label stack across both sides of the branch.
+                        if (!is.horizontal) {
                             overlap <- check.overlap(
                                 xpos + xline.dist,
                                 ypos,
@@ -447,10 +478,22 @@ position.node.text <- function(
                                 node.radius
                                 );
 
-                            # May need to modify xline.dist if length(unlist(overlap)) > 0
+                            if (length(unlist(overlap)) > 0) {
+                                xline.dist <- -(xline.dist);
+                                overlap <- check.overlap(
+                                    xpos + xline.dist,
+                                    ypos,
+                                    node.list[[s]][g],
+                                    tree.max.adjusted,
+                                    hjust,
+                                    node.radius
+                                    );
 
-                            if (xline.dist != 0) {
-                                hjust <- ifelse(xline.dist > 0, 'left', 'right');
+                                # May need to modify xline.dist if length(unlist(overlap)) > 0
+
+                                if (xline.dist != 0) {
+                                    hjust <- ifelse(xline.dist > 0, 'left', 'right');
+                                    }
                                 }
                             }
 

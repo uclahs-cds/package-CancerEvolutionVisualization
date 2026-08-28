@@ -20,6 +20,9 @@
 * Suggest rmarkdown dependency for rendering vignettes 
 
 ## Update
+* Branch length column names must start with `length`. A column such as
+  `snv.length` is no longer treated as a branch, and now raises a warning
+  instead of being dropped silently.
 * Fixed angle calculation bug where child angles do not follow
   their parent angle, instead moving "downward" at 0 degrees.
 * Updated package metadata and README
@@ -40,6 +43,13 @@
 ## Bug
 * Resolved issue where the spread parameter was not applied in dendrogram mode.
 * Resolved issue for simple dendrogram trees ( < 6 nodes or binary tree), where node angles were not calculated correctly.
+* Resolved issue where `node.text` was unreadable, mispositioned or errored with
+  "invalid 'cex' value" for any `plotting.direction` other than 'down'.
+* Resolved overlapping nodes in deep trees. Child angles are offsets from the
+  parent branch, so an undamped per-tier offset accumulated and mirrored paths
+  through a symmetric tree placed two nodes at the exact same point. Angles are
+  now damped towards each node's share of the fan when, and only when, that
+  removes node collisions.
 
 
 # CancerEvolutionVisualization 2.0.1 (2023-11-17)

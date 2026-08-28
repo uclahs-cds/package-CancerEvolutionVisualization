@@ -3,13 +3,16 @@ calculate.angles.radial <- function(
     tree,
     spread,
     total.angle,
-    start.angle
+    start.angle,
+    damping = 0
     ) {
     root.node.id <- v$id[[1]];
     node.ids <- c(root.node.id);
 
     angles <- v$angle;
     x <- numeric(nrow(v));
+
+    node.wedge <- get.node.wedges(v, damping);
 
     while (length(node.ids) > 0) { # each iteration assigns an angle to the children of the current node
         # "Pops" next element in FIFO queue node.ids
@@ -32,11 +35,15 @@ calculate.angles.radial <- function(
                     angles[tree$tip == current.node.id] <- parent.angle;
                     }
                 # if all children are radial, spread evenly by angle
+                base.total.angle <- total.angle * lookup.node.wedge(
+                    node.wedge,
+                    current.node.id
+                    );
                 level.spread <- calculate.level.spread(v$spread[v$id %in% child.ids]);
-                level.total.angle <- total.angle * level.spread;
+                level.total.angle <- base.total.angle * level.spread;
 
                 angles <- divide.equal.angle(
-                    base.total.angle = total.angle,
+                    base.total.angle = base.total.angle,
                     level.total.angle = level.total.angle,
                     child.ids = child.ids,
                     angles = angles,
@@ -70,6 +77,78 @@ calculate.angles.radial <- function(
             }
         }
     return(angles);
+    }
+
+get.node.wedges <- function(v, damping = 0) {
+    # Child angles are offsets from the parent's own branch direction, so
+    # handing every tier the same angular budget lets those offsets accumulate
+    # without bound: in a symmetric tree two mirrored paths sum to the identical
+    # displacement and their nodes land exactly on top of each other, and deep
+    # branches bend past horizontal. "damping" pulls each node's budget towards
+    # its own share of its parent's, which keeps sibling subtrees from
+    # interleaving. At damping = 0 every node keeps the full fan, i.e. the
+    # undamped layout.
+    ids <- as.character(v$id);
+    wedges <- setNames(rep(1, length(ids)), ids);
+
+    if (damping <= 0 || !('parent' %in% colnames(v)) || length(ids) == 0) {
+        return(wedges);
+        }
+
+    parents <- as.character(v$parent);
+
+    leaves <- NULL;
+    if ('leaves' %in% colnames(v)) {
+        leaves <- setNames(as.numeric(v$leaves), ids);
+        }
+
+    # Root nodes are the ones whose parent is not itself a node in "v".
+    # The Normal placeholder row carries an NA parent.
+    queue <- ids[is.na(parents) | !(parents %in% ids)];
+    visited <- character(0);
+
+    while (length(queue) > 0) {
+        current <- queue[1];
+        queue <- queue[-1];
+
+        # Guards against a malformed tree sending the walk round in circles.
+        if (current %in% visited) {
+            next;
+            }
+        visited <- c(visited, current);
+
+        children <- ids[!is.na(parents) & parents == current];
+        if (length(children) == 0) {
+            next;
+            }
+
+        share <- if (length(children) == 1) {
+            # A node with a single child hands over its whole fan, so chains of
+            # single children do not narrow the layout.
+            1;
+        } else if (!is.null(leaves) && all(!is.na(leaves[children])) && sum(leaves[children]) > 0) {
+            # Split proportionally, so a bushy subtree keeps more room than a
+            # sparse one.
+            as.numeric(leaves[children] / sum(leaves[children]));
+        } else {
+            rep(1 / length(children), length(children));
+            };
+
+        wedges[children] <- wedges[[current]] * (1 - damping + damping * share);
+        queue <- c(queue, children);
+        }
+
+    return(wedges);
+    }
+
+lookup.node.wedge <- function(node.wedge, node.id) {
+    key <- as.character(node.id);
+
+    if (!(key %in% names(node.wedge))) {
+        return(1);
+        }
+
+    return(node.wedge[[key]]);
     }
 
 divide.equal.angle <- function(
@@ -150,10 +229,13 @@ calculate.angles.fixed <- function(
     v,
     tree,
     fixed.angle,
-    start.angle
+    start.angle,
+    damping = 0
     ) {
     angles <- v$angle;
     node.ids <- c(v$id[[1]]);
+
+    node.wedge <- get.node.wedges(v, damping);
 
     while (length(node.ids) > 0) {
         # "Pops" next element in FIFO queue node.ids
@@ -178,7 +260,8 @@ calculate.angles.fixed <- function(
             # It would be ideal to handle all calculations in the same way, and
             # rely more on user defined spread and explicit angle overrides.
             level.spread <- mean(v$spread[v$id %in% child.ids]);
-            child.angles <- (if (num.children == 1) c(0) else c(-1, 1)) * fixed.angle * level.spread;
+            level.angle <- fixed.angle * lookup.node.wedge(node.wedge, current.node.id);
+            child.angles <- (if (num.children == 1) c(0) else c(-1, 1)) * level.angle * level.spread;
             child.angles <- child.angles + parent.angle;
 
             for (i in seq_along(child.ids)) {

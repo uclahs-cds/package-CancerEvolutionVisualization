@@ -6,6 +6,7 @@ create.ccf.densityplot <- function(
     ylab.label = 'SNV Density',
     xlimits = c(0, 1.5),
     xat = seq(0, 1.5, 0.25),
+    breaks = 100,
     legend.size = 3,
     legend.title.cex = 1.2,
     legend.label.cex = 1,

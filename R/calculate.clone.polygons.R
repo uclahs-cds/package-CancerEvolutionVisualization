@@ -320,7 +320,8 @@ compute.clones <- function(
     beta.in = 3,
     branching = TRUE,
     no.ccf = FALSE,
-    spread = 1
+    spread = 1,
+    node.radius = NULL
     ) {
 
 	# Ensure that the root is properly defined
@@ -330,26 +331,15 @@ compute.clones <- function(
 	v <- count.leaves.per.node(v);
 
 	if (no.ccf) {
-	    tree$angle <- if ((is.null(fixed.angle) && nrow(v) > 6) || any(table(v$parent) > 2) || any(v$mode == 'dendrogram')) {
-			tau <- -(pi / 2.5);
-    		vi <- v[v$parent == -1, ];
-    		calculate.angles.radial(
-    		    v,
-    		    tree,
-    		    spread,
-    		    abs(tau),
-    		    start.angle = start.angle
-    		    );
-	    } else {
-	        calculate.angles.fixed(
-	            v,
-	            tree,
-	            fixed.angle,
-	            start.angle = start.angle
-	            );
-	        }
-
-	    tmp <- position.nodes(v, tree, extra.len, start.angle);
+	    tmp <- position.nodes.without.overlap(
+	        v,
+	        tree,
+	        extra.len = extra.len,
+	        spread = spread,
+	        start.angle = start.angle,
+	        fixed.angle = fixed.angle,
+	        node.radius = node.radius
+	        );
 
 	    clone.env <-  new.env(parent = emptyenv());
 	    clone.env$v <- tmp$v;

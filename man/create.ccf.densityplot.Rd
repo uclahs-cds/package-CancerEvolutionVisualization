@@ -13,6 +13,7 @@ create.ccf.densityplot(
     ylab.label = 'SNV Density',
     xlimits = c(0, 1.5),
     xat = seq(0, 1.5, 0.25),
+    breaks = 100,
     legend.size = 3,
     legend.title.cex = 1.2,
     legend.label.cex = 1,
@@ -33,6 +34,7 @@ create.ccf.densityplot(
     \item{ylab.label}{Defaults to \dQuote{SNV Density}.}
     \item{xlimits}{Limits for the x-axis. Defaults to \code{c(0, 1.5)}.}
     \item{xat}{Positions for the x-axis labels. Defaults to \code{seq(0, 1.5, 0.25)}.}
+    \item{breaks}{Number of histogram bins, passed through to BoutrosLab.plotting.general::create.histogram(). Defaults to 100.}
     \item{legend.size}{Width of the legend boxes in 'character' units. Defaults to 3}
     \item{legend.title.cex}{Size of titles in the legends. Defaults to 1.2}
     \item{legend.label.cex}{Size of text labels in the legends. Defaults to 1}

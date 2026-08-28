@@ -16,6 +16,8 @@ vignette: >
 library(CancerEvolutionVisualization);
 
 knitr::opts_chunk$set(
+    dpi = 96,
+    fig.retina = 1,
     warning = FALSE,
     message = FALSE,
     fig.align = 'center',
@@ -161,8 +163,7 @@ scalebar.tree <- create.phylogenetic.tree(
 ```
 
 ## Ex. 1.8: Visualizing Cellular Prevalence
-A `CP` column containing the cellular prevalence or cancer cell fraction (CCF) of each subclone can be added to the input tree dataframe. These values typically range between 0 and 1, and the sum of all child nodes must not be larger than their parent node's value. Whether you are using 'CCF, 'CP' o@Opeioc10!2022
-r any other metric, make sure the x-axis label matches the metric used.
+A `CP` column containing the cellular prevalence or cancer cell fraction (CCF) of each subclone can be added to the input tree dataframe. These values typically range between 0 and 1, and the sum of all child nodes must not be larger than their parent node's value. A subclone cannot occupy more of the tumour than the clone it arose in, so any node whose `CP` is greater than its parent's `CP` is reduced to the parent's value and a warning is issued. Whether you are using 'CCF', 'CP' or any other metric, make sure the x-axis label matches the metric used.
 
 ```{r, fig.height=4}
 CP <- simple.example$tree[, c('parent', 'length.1', 'length.2', 'CP')];

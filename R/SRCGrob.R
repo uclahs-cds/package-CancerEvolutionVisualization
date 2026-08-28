@@ -13,6 +13,7 @@ SRCGrob <- function(
     ylab.cex = 1.55,
     xaxis.cex = 1.45,
     yaxis.cex = 1.45,
+    ylab.axis.padding = 1,
     xaxis.label = 'CCF',
     label.cex = NA,
     node.text.cex = 0.85,
@@ -37,6 +38,11 @@ SRCGrob <- function(
 
     add.node.text <- !is.null(node.text);
     add.polygons <- !is.null(tree$CP) && !disable.polygons;
+    # Formerly the user-facing 'genes.on.nodes' parameter, disabled in 07aba5d
+    # and renamed in 7e06ee3. Do not re-expose this without fixing the
+    # 'label.nodes' layout in position.node.text() first: it anchors every
+    # label for a node to that node's centre, so all of a node's labels land
+    # on the same point and can be pushed outside the panel (issue #23).
     text.on.nodes <- FALSE;
     node.text.line.dist <- prep.text.line.dist(node.text.line.dist);
 
@@ -46,6 +52,12 @@ SRCGrob <- function(
     if (polygon.scale < 0) {
         stop('"polygon.scale" must be positive.');
         }
+
+    if (!is.numeric(ylab.axis.padding) || length(ylab.axis.padding) != 1
+        || is.na(ylab.axis.padding) || ylab.axis.padding < 0) {
+        stop('"ylab.axis.padding" must be a single non-negative number.');
+        }
+
     polygon.width <- 1.2 * polygon.scale;
 
     node.col <- 'white';
@@ -111,6 +123,7 @@ SRCGrob <- function(
         yaxis2.label = yaxis2.label,
         axis.label.cex = axis.label.cex,
         axis.cex = axis.cex,
+        ylab.axis.padding = ylab.axis.padding,
         xaxis.label = xaxis.label,
         min.width = min.width,
         horizontal.padding = horizontal.padding,

@@ -1,3 +1,43 @@
+###################################################################################################
+# Node geometry helpers
+#
+# A node is not drawn at "node.radius * node.size". add.node.ellipse() inflates
+# the ellipse so the node label fits inside it, which means a node occupies more
+# space than its nominal radius. adjust.branch.lengths() has to reserve exactly
+# the same amount of space at each end of an edge, otherwise the node overlaps
+# (and visually absorbs) the end of the edge that terminates on it. Keeping the
+# geometry in one place is what stops the two from drifting apart again.
+
+get.node.label.nchar <- function(labels) {
+    unname(sapply(
+        as.character(labels),
+        FUN = function(x) max(nchar(x), 1)
+        ));
+    }
+
+# The drawn ellipse has semi-axes size * sqrt(ar) and size / sqrt(ar), so "size"
+# is the radius of the equivalent circle. It is exact for the common
+# single-character label, where the aspect ratio is 1.
+get.node.ellipse.size <- function(node.radius, node.size, labels) {
+    node.radius * node.size * (1 + 0.2 * get.node.label.nchar(labels));
+    }
+
+get.node.ellipse.ar <- function(labels) {
+    1 - log2(get.node.label.nchar(labels)) / 10;
+    }
+
+get.node.plot.labels <- function(v) {
+    labels <- if (!is.null(v$plot.lab)) {
+        v$plot.lab;
+    } else if (!is.null(v$label.text)) {
+        v$label.text;
+    } else {
+        v$id;
+        }
+
+    return(as.character(labels));
+    }
+
 add.node.ellipse <- function(
     clone.out,
     node.radius,
@@ -12,11 +52,7 @@ add.node.ellipse <- function(
         }
 
     if (!('plot.lab' %in% colnames(clone.out$v))) {
-		clone.out$v$plot.lab <- if (!is.null(clone.out$v$label.text)) {
-		    clone.out$v$label.text;
-		} else {
-		    clone.out$v$id;
-		    };
+		clone.out$v$plot.lab <- get.node.plot.labels(clone.out$v);
 	    }
 
     clone.out$v$plot.lab <- as.character(clone.out$v$plot.lab);
@@ -31,13 +67,16 @@ add.node.ellipse <- function(
     circle.nodes <- clone.out$v[clone.out$v$draw.node, ];
 
 	# More precise than circleGrob
-	nchar.lab <- sapply(circle.nodes$plot.lab, function(x) max(nchar(x), 1));
 	circle.grobs <- ellipseGrob(
 	    name = node.grob.name,
 	    x = unit(circle.nodes$x, 'native'),
 	    y = unit(circle.nodes$y, 'native'),
-	    size = node.radius * circle.nodes$node.size * (1 + 0.2 * nchar.lab),
-	    ar = 1 - log2(nchar.lab) / 10,
+	    size = get.node.ellipse.size(
+	        node.radius,
+	        circle.nodes$node.size,
+	        circle.nodes$plot.lab
+	        ),
+	    ar = get.node.ellipse.ar(circle.nodes$plot.lab),
 	    gp = gpar(
 	        fill = circle.nodes$node.colour,
 	        col = circle.nodes$border.colour,

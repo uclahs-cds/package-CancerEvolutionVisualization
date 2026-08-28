@@ -7,9 +7,12 @@ compare.trees <- function(example, test) {
                 3
                 );
             }
-        length(x) == length(y) &
+        # abs() is required: get.differences() is signed, so without it the
+        # comparison passes whenever x <= y and every regression in that
+        # direction goes undetected (issue #186).
+        length(x) == length(y) &&
             all(unitType(x) == unitType(y)) &&
-            all(get.differences() <= threshold)
+            all(abs(get.differences()) <= threshold)
         }
 
     get.axis.keys <- function(x) {

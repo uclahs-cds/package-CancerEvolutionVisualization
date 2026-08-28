@@ -11,7 +11,8 @@ make.clone.polygons <- function(
     fixed.angle = NULL,
     beta.in = 3,
     add.polygons = TRUE,
-    no.ccf = FALSE
+    no.ccf = FALSE,
+    node.radius = NULL
     ) {
 
   	# If the tree is linear, the width is fixed
@@ -38,7 +39,8 @@ make.clone.polygons <- function(
 	    beta.in = beta.in,
 	    branching = branching,
 	    no.ccf = no.ccf,
-	    spread = spread
+	    spread = spread,
+	    node.radius = node.radius
 	    );
 
   	return(clone.out);
